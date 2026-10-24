@@ -474,7 +474,8 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
           candidate.failure = { kind: 'build', message: clean(error.message) }
           failure = candidate.failure
           event(b, 'check.failed', error.message, { revision })
-          if (/OpenAI|Kane|Source|exploration|observation/i.test(error.message)) throw error
+          if (/^(OpenAI|Kane|Source)|exploration did not|observation did not/i.test(error.message))
+            throw error
         }
       }
       throw Error(

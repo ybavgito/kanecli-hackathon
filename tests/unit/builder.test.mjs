@@ -42,6 +42,11 @@ test('execution scope accepts only exact configured synthetic source entrypoints
 })
 test('generated code cannot directly fetch, navigate, inject HTML or import dependencies', () => {
   validateArtifact(artifact)
+  validateArtifact({
+    ...artifact,
+    componentCode:
+      'export default function TaskInterface(){return <p>A printed label would require a printer. Check the return window.</p>}',
+  })
   for (const code of [
     "fetch('/api/tasks')",
     'window.location = "https://example.com"',
@@ -85,6 +90,8 @@ test('named nonsecret extraction overrides renamed summary without importing unr
 })
 test('React artifact compiles without executing candidate code and binds hash to bytes', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'rk-builder-test-'))
+  const oldEnvironment = process.env.NODE_ENV
+  process.env.NODE_ENV = 'development' // Vite middleware sets this in the running app.
   try {
     const compiled = await compileArtifact(artifact, dir),
       html = await readFile(join(dir, 'preview.html'), 'utf8')
@@ -94,6 +101,8 @@ test('React artifact compiles without executing candidate code and binds hash to
     assert.ok(!html.includes('process.env.NODE_ENV'))
     assert.ok(compiled.bytes > 0)
   } finally {
+    if (oldEnvironment === undefined) delete process.env.NODE_ENV
+    else process.env.NODE_ENV = oldEnvironment
     await rm(dir, { recursive: true, force: true })
   }
 })

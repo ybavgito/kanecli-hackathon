@@ -165,7 +165,10 @@ export async function explore({
     directory,
     {
       onEvent: (e) => {
-        if (e.type === 'explore_progress') onProgress('Kane is mapping reachable source states.')
+        if (e.type === 'progress')
+          onProgress(
+            `Kane has visited ${e.visited ?? 'unknown'} states; ${e.frontier ?? 'unknown'} exploration candidates remain.`,
+          )
       },
     },
   )

@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { createHash } from 'node:crypto'
 import { build } from 'vite'
 import { createRequire } from 'node:module'
+import { parseAst } from 'rolldown/parseAst'
 const resolveModule = createRequire(import.meta.url).resolve
 
 export const MODEL = process.env.BUILDER_MODEL || 'gpt-6.1-sol'
@@ -192,15 +193,66 @@ export function validateArtifact(a) {
     throw Error('Generated artifact exceeds the supported format.')
   if (!/export default function\s+\w+/.test(a.componentCode))
     throw Error('Artifact must export one React component.')
-  const unsupported = a.componentCode.match(
-    /\b(?:import|fetch|XMLHttpRequest|WebSocket|window|document|globalThis|parent|top|location|navigator|localStorage|sessionStorage|eval|Function|setTimeout|setInterval|require|process)\b|dangerouslySetInnerHTML|https?:|<\s*(?:script|iframe|img|form|a)\b|\b(?:src|href|srcDoc)\s*=/,
-  )
-  if (unsupported)
-    throw Error(
-      'Unsupported generated capability: ' +
-        unsupported[0] +
-        '. Use the approved React props and native controls only.',
-    )
+  const forbiddenNames = new Set([
+    'fetch',
+    'XMLHttpRequest',
+    'WebSocket',
+    'window',
+    'document',
+    'globalThis',
+    'parent',
+    'top',
+    'location',
+    'navigator',
+    'localStorage',
+    'sessionStorage',
+    'eval',
+    'Function',
+    'setTimeout',
+    'setInterval',
+    'require',
+    'process',
+  ])
+  const forbiddenTags = new Set([
+    'script',
+    'iframe',
+    'img',
+    'form',
+    'a',
+    'object',
+    'embed',
+    'link',
+    'meta',
+    'style',
+  ])
+  const forbiddenProps = new Set(['dangerouslySetInnerHTML', 'src', 'href', 'srcDoc', 'formAction'])
+  const tree = parseAst(a.componentCode, { lang: 'jsx' }, 'component.jsx')
+  function visit(node) {
+    if (!node || typeof node !== 'object') return
+    if (Array.isArray(node)) return node.forEach(visit)
+    const unsupported = [
+      'ImportDeclaration',
+      'ImportExpression',
+      'ExportNamedDeclaration',
+      'ExportAllDeclaration',
+    ].includes(node.type)
+      ? node.type
+      : node.type === 'Identifier' && forbiddenNames.has(node.name)
+        ? node.name
+        : node.type === 'JSXOpeningElement' && forbiddenTags.has(node.name?.name)
+          ? node.name.name
+          : node.type === 'JSXAttribute' && forbiddenProps.has(node.name?.name)
+            ? node.name.name
+            : null
+    if (unsupported)
+      throw Error(
+        'Unsupported generated capability: ' +
+          unsupported +
+          '. Use the approved React props and native controls only.',
+      )
+    for (const value of Object.values(node)) if (value && typeof value === 'object') visit(value)
+  }
+  visit(tree)
   if (/<|@import|url\s*\(|expression\s*\(/i.test(a.css))
     throw Error('Generated CSS cannot load remote resources.')
   if (!Array.isArray(a.decisions) || a.decisions.length === 0)
@@ -217,9 +269,16 @@ export async function compileArtifact(artifact, directory) {
   const built = await build({
     configFile: false,
     logLevel: 'silent',
+    oxc: { jsx: { development: false } },
     define: { 'process.env.NODE_ENV': JSON.stringify('production') },
     resolve: {
-      alias: ['react-dom/client', 'react-dom', 'react/jsx-runtime', 'react'].map((name) => ({
+      alias: [
+        'react-dom/client',
+        'react-dom',
+        'react/jsx-runtime',
+        'react/jsx-dev-runtime',
+        'react',
+      ].map((name) => ({
         find: new RegExp('^' + name + '$'),
         replacement: resolveModule(name),
       })),
