@@ -1,0 +1,166 @@
+[
+  {
+    "type": "test_md_step_end",
+    "step_index": 1,
+    "status": "passed",
+    "duration_s": 22,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-24T22:59:28.502Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 2,
+    "status": "passed",
+    "duration_s": 29.9,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-24T22:59:58.377Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 3,
+    "status": "passed",
+    "duration_s": 25.8,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-24T23:00:24.181Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 4,
+    "status": "passed",
+    "duration_s": 18.3,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-24T23:00:42.534Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 5,
+    "status": "passed",
+    "duration_s": 40.2,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-24T23:01:22.705Z"
+  },
+  {
+    "type": "test_md_evidence_ingest",
+    "status": "failed",
+    "evidence_id": "1131b37f-0d8d-4f71-a56e-33d7ec706671",
+    "stage": "ingest",
+    "v": 1,
+    "ts": "2026-10-24T23:01:26.075Z"
+  },
+  {
+    "type": "test_md_summary",
+    "overall_status": "passed",
+    "duration_s": 140,
+    "steps": {
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "replay_decisions": 0,
+      "author_decisions": 5
+    },
+    "adaptive_heal": {
+      "triggered": false
+    },
+    "commit": {
+      "committed": true,
+      "reason": "ok",
+      "testcase_id": "01M5R27514SSQPG9YR90488F1G"
+    },
+    "artifacts": {
+      "replaced": true
+    },
+    "upload": {
+      "performed": true,
+      "succeeded": true
+    },
+    "cancelled": false,
+    "v": 1,
+    "ts": "2026-10-24T23:01:26.297Z"
+  },
+  {
+    "type": "coverage",
+    "status": "written",
+    "computed_by": "local",
+    "coverage_version": 2,
+    "scope": "run",
+    "pct": 100,
+    "usecases": {
+      "total": 1,
+      "proven": 1,
+      "partial": 0,
+      "failing": 0,
+      "not_run": 0,
+      "not_designed": 0,
+      "no_criteria": 0
+    },
+    "criteria": {
+      "total": 17,
+      "proven": 17
+    },
+    "this_run": {
+      "usecases": [
+        "uc-1"
+      ],
+      "criteria_passed": [
+        "ac-1",
+        "ac-2",
+        "ac-3",
+        "ac-4",
+        "ac-5",
+        "ac-6",
+        "ac-7",
+        "ac-8",
+        "ac-9",
+        "ac-10",
+        "ac-11",
+        "ac-12",
+        "ac-13",
+        "ac-14",
+        "ac-15",
+        "ac-16",
+        "ac-17"
+      ],
+      "criteria_failed": []
+    },
+    "flags": {
+      "stale_sources": 0,
+      "sources_not_fully_extracted": [],
+      "orphaned_usecases": 0
+    },
+    "v": 1,
+    "ts": "2026-10-24T23:01:26.304Z"
+  },
+  {
+    "type": "test_md_done",
+    "overall_status": "passed",
+    "duration_s": 140,
+    "session_id": "18cb3341-409b-4d44-a683-c2171b93ab7d",
+    "coverage": {
+      "status": "written",
+      "pct": 100
+    },
+    "v": 1,
+    "ts": "2026-10-24T23:01:26.304Z"
+  }
+]

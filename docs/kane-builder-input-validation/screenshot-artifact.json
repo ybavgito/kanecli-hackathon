@@ -1,0 +1,31 @@
+{
+  "facts": {
+    "photo_id_required": "yes",
+    "max_parcel_kg": "4",
+    "label_destination": null,
+    "label_deduction": null,
+    "label_refund": null,
+    "qr_destination": null,
+    "qr_deduction": null,
+    "qr_refund": null
+  },
+  "unknowns": [
+    "Printed label requirements were not observed.",
+    "Refund destination, deduction and refund amount were not observed for either method; no quote responses were supplied.",
+    "Whether either method meets the original-payment preference is unknown."
+  ],
+  "ui_decisions": [
+    "Scope the observed photo-ID requirement and 4 kg parcel limit to QR drop-off only.",
+    "Use labeled radio controls to switch locally between methods, initially showing Printed label.",
+    "Keep Blue shoes as the only return item and Green jacket as the item to keep.",
+    "Show all unobserved terms as Unknown; do not calculate a refund from the $80.00 item price.",
+    "Prominently state that the original-payment preference cannot be verified. No destination conflict was observed.",
+    "Clearly label the interface as a synthetic offline evidence preview, with no submission control or network activity."
+  ],
+  "source_references": [
+    "Evidence initial \u2014 rendered screenshot: QR DROP-OFF instructions state \u201cBring photo ID\u201d and \u201cMaximum parcel: 4 kg\u201d.",
+    "Supplied initial source HTML \u2014 order DEMO-2, blue shoes priced $80.00 USD; return blue shoes only and keep green jacket.",
+    "Supplied initial source HTML and evidence initial \u2014 no method selected and refund terms not loaded. Quote response values were not supplied."
+  ],
+  "ui_html": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Return method \u2014 evidence preview</title><style>body{font:17px/1.5 Arial,sans-serif;color:#182b2b;background:#faf8f2;margin:0}main{max-width:850px;margin:36px auto;padding:0 22px}h1{line-height:1.2}small{font-weight:bold;letter-spacing:.04em}.card{background:white;border:1px solid #bbc7c1;border-radius:8px;padding:20px;margin:20px 0}.notice{background:#fff2cc;border:2px solid #85641c;padding:16px;border-radius:6px}fieldset{border:1px solid #8a9991;border-radius:6px;padding:16px}legend{font-weight:bold}label{display:inline-block;padding:12px;margin:4px;border:1px solid #8a9991;border-radius:4px;cursor:pointer}label:has(input:checked){background:#e0ecdf;border-color:#234f3e}input{margin-right:8px;accent-color:#234f3e}dt{font-weight:bold;margin-top:14px}dd{margin:3px 0}footer{font-size:14px;color:#465650;margin:24px 0}.muted{color:#465650}</style></head><body><main><small>SYNTHETIC \u00b7 OFFLINE INTERACTIVE EVIDENCE PREVIEW</small><h1>Choose how to return your shoes</h1><div class=\"card\"><p><strong>Order DEMO-2</strong> \u00b7 Blue shoes \u00b7 $80.00 USD item price</p><p><strong>Return:</strong> Blue shoes only<br><strong>Keep:</strong> Green jacket</p><p><strong>Refund preference:</strong> Original payment</p></div><div class=\"notice\"><strong>Original-payment refund is not verified.</strong><br>No refund destinations were supplied for either method, so a match or conflict with your preference cannot be determined.</div><p>This preview switches between supplied evidence only. It does not load current quotes.</p><fieldset><legend>Return method</legend><label><input type=\"radio\" name=\"method\" value=\"label\" checked>Printed label</label><label><input type=\"radio\" name=\"method\" value=\"qr\">QR drop-off</label></fieldset><section class=\"card\" aria-live=\"polite\" aria-atomic=\"true\"><h2 id=\"methodTitle\">Printed label</h2><dl><dt>Known requirements</dt><dd id=\"requirements\">Unknown \u2014 printed-label requirements were not observed.</dd><dt>Refund destination</dt><dd>Unknown \u2014 no quote response supplied.</dd><dt>Deduction</dt><dd>Unknown \u2014 no quote response supplied.</dd><dt>Refund amount</dt><dd>Unknown \u2014 no quote response supplied.</dd></dl><p class=\"muted\">The $80.00 item price is not a refund quote. No fee or refund amount has been inferred.</p></section><footer>Evidence: initial screenshot and supplied initial HTML. The screenshot shows QR drop-off requires photo ID and a maximum parcel weight of 4 kg. Refund terms were not loaded in the observed initial state.<br><br>Local demonstration only. No live integration. No return has been submitted.</footer></main><script>document.querySelectorAll('input[name=\"method\"]').forEach(function(input){input.addEventListener('change',function(){var qr=this.value==='qr';document.getElementById('methodTitle').textContent=qr?'QR drop-off':'Printed label';document.getElementById('requirements').textContent=qr?'Bring photo ID. Maximum parcel: 4 kg.':'Unknown \u2014 printed-label requirements were not observed.';});});</script></body></html>"
+}

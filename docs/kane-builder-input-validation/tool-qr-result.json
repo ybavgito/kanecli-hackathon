@@ -1,0 +1,80 @@
+{
+  "status": "passed",
+  "summary": "Opened the supplied return page and selected the QR drop-off method.\nReached the \u201cReview: QR drop-off\u201d page without submitting the return.\nThe review showed Store credit as the refund destination, a $5.00 deduction, and a $75.00 USD refund.\nConfirmed that Blue shoes only was selected for return and Green jacket was listed to keep.",
+  "final_state": {
+    "url": "http://127.0.0.1:38491/source",
+    "review_heading": "Review: QR drop-off",
+    "refund_destination": "Store credit",
+    "deduction": "$5.00",
+    "refund_amount": "$75.00 USD",
+    "selected_item": "Blue shoes only",
+    "keep_item": "Green jacket"
+  },
+  "duration": 30.7,
+  "credits_consumed": 17.366400000000002,
+  "exit_code": 0,
+  "wall_seconds": 39.08,
+  "screenshot_member": "tests/open-the-supplied-source-url-click-qr-dr-305e43b9/steps/5-0-5/screenshot.jpg",
+  "steps": [
+    {
+      "step": 2,
+      "status": "running",
+      "remark": "Step 1",
+      "ts": "2026-10-24T22:56:35.962Z"
+    },
+    {
+      "step": 2,
+      "status": "done",
+      "remark": "navigate: Navigate to http://127.0.0.1:38491/source",
+      "ts": "2026-10-24T22:56:35.964Z"
+    },
+    {
+      "step": 3,
+      "status": "running",
+      "remark": "Step 2",
+      "ts": "2026-10-24T22:56:40.539Z"
+    },
+    {
+      "step": 3,
+      "status": "done",
+      "remark": "click: Clicking the QR drop-off return method button",
+      "ts": "2026-10-24T22:56:45.096Z"
+    },
+    {
+      "step": 4,
+      "status": "running",
+      "remark": "Step 3",
+      "ts": "2026-10-24T22:56:45.690Z"
+    },
+    {
+      "step": 4,
+      "status": "done",
+      "remark": "analyze: the displayed refund amount is stored as {{qr_refund}}",
+      "ts": "2026-10-24T22:56:58.450Z"
+    },
+    {
+      "step": 5,
+      "status": "running",
+      "remark": "Step 4",
+      "ts": "2026-10-24T22:56:59.055Z"
+    },
+    {
+      "step": 5,
+      "status": "done",
+      "remark": "assert: the Review heading shows QR drop-off",
+      "ts": "2026-10-24T22:56:59.061Z"
+    },
+    {
+      "step": 6,
+      "status": "running",
+      "remark": "Step 5",
+      "ts": "2026-10-24T22:56:59.650Z"
+    },
+    {
+      "step": 6,
+      "status": "done",
+      "remark": "assert: Blue shoes only and Green jacket are displayed in their corresponding Selected i",
+      "ts": "2026-10-24T22:56:59.656Z"
+    }
+  ]
+}

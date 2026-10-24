@@ -1,0 +1,35 @@
+{
+  "facts": {
+    "photo_id_required": null,
+    "max_parcel_kg": null,
+    "label_destination": null,
+    "label_deduction": null,
+    "label_refund": null,
+    "qr_destination": null,
+    "qr_deduction": null,
+    "qr_refund": null
+  },
+  "unknowns": [
+    "Photo ID requirements and maximum parcel weight: instruction image contents were not supplied.",
+    "Printed label: refund destination, deduction, refund amount and method-specific requirements were not supplied.",
+    "QR drop-off: refund destination, deduction, refund amount and method-specific requirements were not supplied.",
+    "Whether either method supports or conflicts with the original-payment refund preference cannot be verified."
+  ],
+  "ui_decisions": [
+    "Clearly label the interface as a synthetic, offline evidence preview without live integration.",
+    "Preserve Blue shoes as the only return item and Green jacket as the item to keep.",
+    "Use labeled radio controls to switch methods, initially leaving both unselected as in the observed source.",
+    "Show unknown values explicitly; do not derive a refund or fee from the $80.00 USD item price.",
+    "Prominently distinguish the original-payment preference from an observed refund destination; no destination conflict is established by the supplied evidence.",
+    "Provide no submission control or network requests."
+  ],
+  "source_references": [
+    "Supplied initial HTML: order DEMO-2, blue shoes priced at $80.00 USD; return blue shoes only and keep green jacket.",
+    "Supplied initial HTML: Printed label and QR drop-off are the available method controls.",
+    "Supplied initial HTML: initial review says no method is selected and refund terms have not been loaded.",
+    "Supplied initial HTML: quote-rendering code names destination, deduction and refund fields, but no quote responses were supplied.",
+    "Supplied initial HTML: an instruction image is referenced, but its contents were not supplied.",
+    "Customer brief: original-payment refund is preferred."
+  ],
+  "ui_html": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Return method \u2014 evidence preview</title><style>body{font:17px/1.5 Arial,sans-serif;color:#182b2b;background:#faf8f2;margin:0}main{max-width:850px;margin:auto;padding:28px}h1{line-height:1.2}h2{font-size:1.2rem}.badge{font-weight:bold;letter-spacing:.05em}.card,fieldset{background:white;border:1px solid #bcc8c5;border-radius:8px;padding:20px;margin:20px 0}legend{font-weight:bold}label{display:block;padding:12px;cursor:pointer}input{margin-right:10px}.notice{border-left:5px solid #946000;background:#fff1cf;padding:16px}dt{font-weight:bold}dd{margin:0 0 14px}.muted{color:#485956}footer{border-top:1px solid #bcc8c5;padding-top:16px}button,input{font:inherit}</style></head><body><main><p class=\"badge\">SYNTHETIC \u00b7 OFFLINE EVIDENCE PREVIEW</p><h1>Choose how to return your shoes</h1><p>No live integration. Switching methods only displays the supplied evidence; it does not request a quote or submit a return.</p><section class=\"card\" aria-labelledby=\"items\"><h2 id=\"items\">Order DEMO-2</h2><p><strong>Return:</strong> Blue shoes only \u2014 listed price $80.00 USD.</p><p><strong>Keep:</strong> Green jacket.</p><p class=\"muted\">The listed price is not a verified refund amount.</p></section><aside class=\"notice\" aria-labelledby=\"preference\"><h2 id=\"preference\">Preferred refund: original payment</h2><p>No refund destination was supplied for either method. Original-payment availability and any destination conflict are <strong>unknown</strong>; the preference is not a confirmed refund term.</p></aside><fieldset><legend>Return method</legend><label><input type=\"radio\" name=\"method\" value=\"label\">Printed label</label><label><input type=\"radio\" name=\"method\" value=\"qr\">QR drop-off</label></fieldset><section class=\"card\" id=\"review\" aria-live=\"polite\" aria-atomic=\"true\"><h2 id=\"methodTitle\">No method selected</h2><p id=\"status\">Select a method to inspect its evidence summary. Refund terms have not been supplied.</p><dl><dt>Known method requirements</dt><dd>Unknown \u2014 no method-specific instructions supplied.</dd><dt>Photo ID required</dt><dd>Unknown \u2014 instruction image contents not supplied.</dd><dt>Maximum parcel weight (kg)</dt><dd>Unknown \u2014 instruction image contents not supplied.</dd><dt>Refund destination</dt><dd>Unknown \u2014 quote response not supplied.</dd><dt>Deduction</dt><dd>Unknown \u2014 quote response not supplied.</dd><dt>Refund amount</dt><dd>Unknown \u2014 quote response not supplied.</dd></dl></section><footer><p><strong>Evidence limits:</strong> Only the initial page HTML was supplied. The referenced instruction image and method quote responses were not included. Method names do not establish requirements, fees or destinations.</p><p>Preview only. No return has been submitted.</p></footer></main><script>document.querySelectorAll('input[name=\"method\"]').forEach(function(control){control.addEventListener('change',function(){var name=this.value==='label'?'Printed label':'QR drop-off';document.getElementById('methodTitle').textContent='Review: '+name;document.getElementById('status').textContent='Selected: '+name+'. No quote response or method-specific instructions were supplied; all terms below remain unknown.';});});</script></body></html>"
+}

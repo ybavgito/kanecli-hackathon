@@ -1,6 +1,6 @@
 # Raising Kane: Explore-driven interface builder
 
-Planning revision: October 24, 2026, after the bounded Explore capability experiment and testing guardrail review. **Complete implementation plan; proposed successor architecture, not shipped behavior.**
+Planning revision: October 24, 2026, after the bounded Explore experiment, builder vision comparison and testing guardrail review. **Complete implementation plan; proposed successor architecture, not shipped behavior.**
 
 This is the current plan for the user-requested agentic builder. It supersedes conflicting
 fixed-interface/no-runtime-builder scope in earlier product documents. Implementation
@@ -20,9 +20,9 @@ Discovery and evidence remain inspectable without becoming the main user experie
 ## What is established, and what is still a hypothesis
 
 `main` at `ed24246` completes two prebuilt sandbox workflows. The URL-first PoC at
-`ff1294a` accepts URLs and goals, preserves extracted source observations, renders generic
-components, supports browser takeover/resume, and adds independently checked read-only
-results. Neither branch contains the runtime builder or the complete Explore-to-generation
+`945613d` accepts URLs and goals, preserves extracted source observations, renders generic
+components, supports browser takeover/resume, and records a completed read-only catalog journey with persisted verification results.
+The latest parser tests also pass; see the [code checkpoint](latest-code-and-builder-gap.md). Neither branch contains the runtime builder or the complete Explore-to-generation
 repair loop. A new, isolated Explore capability experiment was performed for this revision;
 it does not establish that the proposed product is implemented. See the
 [experiment report](../kane-builder-validation/report.md).
@@ -56,6 +56,22 @@ Sources: [pinned package](https://www.npmjs.com/package/@testmuai/kane-cli/v/0.1
 W3C explains that automated tools cannot determine accessibility alone and require
 human judgement: [evaluation-tool limits](https://www.w3.org/WAI/test-evaluate/tools/selecting/).
 
+## Builder vision and requested model
+
+Use **`gpt-6.1-sol`** for the builder. Feed it actual Kane-captured images as image
+attachments, paired with state/step metadata, exact observations, the user contract and
+Explore's map/findings. A screenshot filename in a text prompt is not image input.
+Allow the agent to request missing source states through bounded Kane tools; do not give
+it a separate unrestricted browser. It also receives Kane images and failures from the
+generated preview during repair.
+
+The [builder input contract](builder-inputs-and-kane-vision.md) specifies the evidence
+bundle, privacy boundary, tool requests and state-to-image mapping. The
+[API-backed comparison](../kane-builder-input-validation/report.md) tests HTML, screenshots
+and Kane inspection tools on a synthetic fixture. It does not establish the full runtime
+React builder or repair loop. The [latest code checkpoint](latest-code-and-builder-gap.md)
+explains which PoC components can be reused.
+
 ## Scope and reading order
 
 **Build target:** one fully generated partial-return interface on the existing merchant
@@ -68,8 +84,12 @@ the demo. The key measured dependencies and caveats are in the linked experiment
 
 **New measurements:** a four-lease Explore run yielded two screens and five accessibility
 findings; a separate focused Kane run established the two refund branches. Machine-readable
-viewer responses and screenshots were retrieved. No generated UI, code rebuild or preview
-accessibility repair has yet been demonstrated.
+viewer responses and screenshots were retrieved. A subsequent `gpt-6.1-sol` experiment
+generated offline HTML/CSS/JS previews: a three-state screenshot bundle and an on-demand
+Kane inspection tool each recovered all eight target facts. Kane passed all five steps
+of the agentic preview's independent comparison journey. This does not establish a
+source-connected React builder, code rebuild or preview accessibility repair. See the
+[input comparison and verification record](../kane-builder-input-validation/report.md).
 
 ## Product decisions
 
@@ -188,7 +208,9 @@ cannot become enabled buttons merely because the generator can draw them.
 
 ### 5. Generate and build the preview
 
-**Input:** Frozen contract, normalized observations, approved component APIs and action IDs.
+**Input:** Frozen contract, normalized observations, actual Kane screenshots with state
+provenance, relevant semantic evidence, approved component APIs and action IDs. The builder
+can request a missing state through the bounded Kane inspection broker.
 
 **System:** Run a coding-agent job in an isolated build workspace. Produce a React module,
 manifest, preview URL and build revision. Typecheck and bundle. The generated module
@@ -454,11 +476,12 @@ No agent can declare its own candidate verified, relax the user's contract or er
 failed attempt. A successful build tool response is not a verification pass.
 
 For the hackathon, use the installed Codex non-interactive interface behind the builder
-runner; its CLI was checked as 0.164.0. Official documentation describes `codex exec
+runner, explicitly configured with `gpt-6.1-sol` and the intended API account; its CLI was checked as 0.164.0. Official documentation describes `codex exec
 --json`, structured final output, and resuming a particular session. Capture the session
 ID and file-change events; feed the failure bundle back to that build's session. There
-is no need to build a Codex chat UI. This is a proposed integration, not a new successful
-Codex build experiment. [Official non-interactive documentation](https://learn.chatgpt.com/docs/non-interactive-mode).
+is no need to build a Codex chat UI. This Codex integration remains proposed. The separate Responses API experiment has
+generated offline HTML/CSS/JS previews with `gpt-6.1-sol`; it is not a successful Codex
+workspace/React-build experiment. [Official non-interactive documentation](https://learn.chatgpt.com/docs/non-interactive-mode).
 
 The builder environment must expose the approved Kane broker tools. Do not grant it
 unrestricted source accounts merely because it has an official Kane skill. Mount only

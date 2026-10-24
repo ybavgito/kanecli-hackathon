@@ -38,6 +38,20 @@ rebuild on generated-code defects. The preview verifier and source operator requ
 separate queues/browsers to avoid a nested-job deadlock. Automatic accessibility scans
 remain partial evidence; an accessibility tree is not a full audit.
 
+## Kane screenshots as builder input
+
+The [input experiment](docs/kane-builder-input-validation/report.md) supplies actual Kane
+execution-pack screenshots to `gpt-6.1-sol` as image inputs. Initial screenshots reveal
+image-only instructions; distinct branch screenshots and structured observations reveal
+the consequences of actions. The model can request bounded Kane missions for missing
+states. This does not require an unrestricted browser for the builder.
+
+Preserve the run/step, source record, time, viewport where known, and image hash. Match
+screenshots to actual reached states, not inferred flow names or a generic "latest" image.
+The experimental helper's final-image selection is not a production metadata importer.
+Do not forward login screens, raw account context, or assume secret-variable masking
+redacts screenshot pixels. See the [complete input contract](docs/raising-kane/builder-inputs-and-kane-vision.md).
+
 ## Guardrails for the planned interface-builder tests
 
 The [testing guardrail contract](docs/raising-kane/explore-driven-builder-plan.md#prevent-real-changes-during-discovery-and-testing)

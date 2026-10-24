@@ -36,3 +36,11 @@ from previous synthetic experiments and the PoC author's historical run reports.
 The PoC is now merged into `main`; the audit remains pinned to its original commit.
 See the [implemented product and demo](implementation-and-demo.md) and
 [current verification results](verification.md) before using old gap statements as current status.
+
+## Builder inputs and latest code
+
+The [builder vision/input contract](builder-inputs-and-kane-vision.md) describes using
+Kane screenshots, state transitions and bounded follow-up inspections with `gpt-6.1-sol`.
+The [fresh input experiment](../kane-builder-input-validation/report.md) compares actual
+API-generated previews. The [latest PoC review](latest-code-and-builder-gap.md) explains
+the completed catalog journey, parser fixes and the remaining generation gap.
