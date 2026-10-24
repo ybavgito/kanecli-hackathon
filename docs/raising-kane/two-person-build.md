@@ -22,7 +22,7 @@ drop-off deduction. It is not a real refund or arbitrary website support.
 
 | Owner | Deliverable | Files |
 | --- | --- | --- |
-| Vaibhav + this Codex chat | Raising Kane UI, task state, OpenAI interpretation, Kane worker, approval/validation orchestration and integration | `src/**`, `server/index.mjs`, `server/intent.mjs`, `server/kane-worker.mjs`, `scripts/kane-verify.mjs`, package files, `.testmuai/context.md`, top-level README |
+| Vaibhav + this Codex chat | Raising Kane UI, task state, OpenAI interpretation, Kane worker, approval/validation orchestration and integration | `src/**`, `server/index.mjs`, `server/controller.mjs`, `server/intent.mjs`, `server/kane-worker.mjs`, `scripts/kane-verify.mjs`, package files, `.testmuai/context.md`, top-level README |
 | Teammate | Merchant forms and persistent source records; source-owned approval grants; duplicate-safe commit; retrievable confirmation and synthetic QR; source contract checks | `server/merchant.mjs`, new `server/merchant-contract.mjs`, new `scripts/merchant-contract-check.mjs`, merchant-specific assets |
 
 Keep edits inside the owned files. Agree on a contract change before editing the
@@ -71,6 +71,9 @@ Export `canonicalProposal(draft)` and `proposalDigest(draft)` from
 selected line IDs and quantities, reason, method, destination, currency, all money
 fields and the next-step instructions. Use integer cents and deterministic order.
 Keep the source revision as a separate `draftVersion` field on the grant.
+Return the source-computed `proposalDigest` on `getDraft(taskId)` as well, so the
+controller registers the exact digest the source provided without duplicating
+canonicalization logic.
 
 `getOperation(id)` returns `{status:'absent'}` or
 `{status:'committed', operationId, proposalDigest, requestId, return: record}`.
@@ -90,7 +93,7 @@ Preserve these routes and add the confirmation routes:
 | `POST /merchant/api/draft` | Browser draft edits with expected revision |
 | `POST /merchant/api/submit` | Browser commit with task, operation ID and proposal digest |
 | `GET /merchant/api/operations/:operationId` | Authoritative read-only reconciliation |
-| `GET /merchant/returns/:requestId` | Persistent browser confirmation, all mandatory fields visible |
+| `GET /merchant/returns/:requestId` | Persistent browser confirmation, all mandatory fields and the kept jacket visible |
 | `GET /merchant/returns/:requestId/qr` | Retrievable, clearly labeled synthetic QR artifact |
 
 Preserve the existing draft fields and values:
