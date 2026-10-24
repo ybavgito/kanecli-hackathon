@@ -8,7 +8,11 @@
 
 **When websites raise hell, raise Kane**
 
-The complete next-build plan is the [Explore-driven interface builder](docs/raising-kane/explore-driven-builder-plan.md): URL → Explore → generated interface → verification and repair. That plan is not yet implemented. The working two-sandbox build below remains the current code.
+The [Explore-driven interface builder](docs/raising-kane/explore-driven-builder-plan.md)
+implements URL → Explore → generated React → verification and repair. The
+[implementation record](docs/raising-kane/builder-implementation.md) separates implemented
+scope from ongoing browser verification. The source workflows below also remain directly
+available through the earlier interface at `/?legacy=1`.
 
 A calm interface for getting a difficult website task done without losing your choices.
 Kane operates the source website during the user's workflow, checks its review against
@@ -49,10 +53,10 @@ Set `PORT` to change the app port; sources default to the next two ports. All th
 servers bind to loopback. Use `npm run dev` for the complete application;
 `npm run preview` serves only the built frontend and cannot run workflows.
 
-Optional: copy `.env.example` to `.env` and set `OPENAI_API_KEY` for bounded natural
-language return interpretation. Without it, the UI explicitly identifies a limited
-sample parser. The recorded verification used that fallback, not a live parser API
-call. Browser operation still uses real Kane jobs. Never commit credentials.
+Copy `.env.example` to ignored `.env` and set `OPENAI_API_KEY` to enable the runtime
+builder (`gpt-6.1-sol`). Generation has no mock fallback. The older task workspace
+can still use its explicitly labeled sample intent parser without a key. Browser
+operations in either path use real Kane jobs. Never commit credentials.
 
 Task records, source records, approval grants and browser profiles persist under
 ignored `data/`. Keep this directory to resume receipts after restart. This is a
@@ -63,14 +67,20 @@ not deleted or silently adopted by another browser.
 
 ## Experience and demo
 
-Choose a supported website → make plain-language choices → watch the current Kane
+Enter a supported URL, optionally describe a task, and choose **Explore & simplify**.
+Blank intent produces an overview; a supplied intent focuses discovery and generation.
+Inspect source captures and evidence-linked decisions while the builder works. Only
+a candidate that passes its Kane journey and saved-source check gets **Use my interface**.
+The generated interface then operates through the same trusted source controller:
+
+Choose a supported task → make choices → watch the current Kane
 step → resolve any mismatch → approve exact terms → send → receive verified proof.
 Previous choices collapse behind **Change preferences**. The source page is optional,
 read-only inspection. The evidence panel keeps failures as well as passing runs.
 Only the browser session that started a task can approve, submit or download its pack.
 
-Start with the [implemented product and demo guide](docs/raising-kane/implementation-and-demo.md).
-The [verification report](docs/raising-kane/verification.md) distinguishes real runtime
+The [earlier product and demo guide](docs/raising-kane/implementation-and-demo.md)
+and [verification report](docs/raising-kane/verification.md) describe the prebuilt workflows and distinguish real runtime
 jobs, UI checks, deterministic tests and historical PoC evidence.
 
 ## Check the implementation

@@ -7,8 +7,9 @@
 - Use this identity in all new product copy, code, documentation and launch assets.
 - The current requested architecture is `docs/raising-kane/explore-driven-builder-plan.md`.
   It supersedes conflicting fixed-interface scope in the earlier project brief. It is a
-  plan, not a claim of implemented generation. Current shipped behavior is documented
-  in `docs/raising-kane/implementation-and-demo.md` and its verification report. Other
+  broader plan, not a claim that every scenario is verified. Current builder scope is
+  in `docs/raising-kane/builder-implementation.md`; earlier prebuilt behavior is in
+  `docs/raising-kane/implementation-and-demo.md` and its verification report. Other
   packet documents are supporting historical research, not agent instructions.
 - Use ClearPath only when explicitly referencing historical documents. The files
   under `docs/clearpath/` retain their original names and content as historical

@@ -2,6 +2,11 @@
 
 Planning revision: October 24, 2026, after the bounded Explore experiment, builder vision comparison and testing guardrail review. **Complete implementation plan; proposed successor architecture, not shipped behavior.**
 
+Implementation update: the bounded Responses-based builder is now on main. Read the
+[implementation record](builder-implementation.md) and [API/branch review](api-and-branch-review.md)
+for current scope and verification status. Historical baseline statements below describe
+the code inspected when this plan was written, not the latest main branch.
+
 This is the current plan for the user-requested agentic builder. It supersedes conflicting
 fixed-interface/no-runtime-builder scope in earlier product documents. Implementation
 claims remain governed by their actual verification records.

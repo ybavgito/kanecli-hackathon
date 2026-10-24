@@ -100,6 +100,14 @@ export default function Builder() {
       setPending(false)
     }
   }
+  async function readTest(candidate) {
+    try {
+      const record = await api(`/api/builder/${build.id}/verification/${candidate.revision}`)
+      setSelectedImage({ facts: record, at: record.capturedAt })
+    } catch (e) {
+      setError(e.message)
+    }
+  }
   const current = build?.candidates.at(-1),
     running = build && !['ready', 'blocked'].includes(build.status),
     evidence = build?.evidence.filter((e) => ['primary', 'alternative'].includes(e.branch)) || []
@@ -495,6 +503,11 @@ export default function Builder() {
                               </li>
                             </ul>
                           )}
+                          {c.verification?.testFile && (
+                            <button onClick={() => readTest(c)}>
+                              Read Kane’s English test <ArrowSquareOut size={14} />
+                            </button>
+                          )}
                           <small>
                             Recorded {new Date(c.verification?.at || c.createdAt).toLocaleString()}{' '}
                             ·{' '}
@@ -566,7 +579,13 @@ export default function Builder() {
             {selectedImage.imageUrl ? (
               <img src={selectedImage.imageUrl} alt="Actual Kane source capture" />
             ) : (
-              <pre className="builder-evidence-text">{display(selectedImage.facts)}</pre>
+              <pre className="builder-evidence-text">
+                {selectedImage.facts?.journey
+                  ? selectedImage.facts.requirements +
+                    '\n\n--- Kane-designed journey ---\n\n' +
+                    selectedImage.facts.journey
+                  : display(selectedImage.facts)}
+              </pre>
             )}
             <figcaption>
               {display(selectedImage.facts?.source_terms || selectedImage.facts?.name)} · Recorded{' '}

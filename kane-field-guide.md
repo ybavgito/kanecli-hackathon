@@ -11,8 +11,44 @@ The original field guide is preserved in [the historical experiment archive](doc
 ## New builder direction and fresh Explore measurements
 
 The [complete builder plan](docs/raising-kane/explore-driven-builder-plan.md) supersedes
-fixed-interface scope for the next implementation. The code described below remains the
-prebuilt version; the full agentic generation and repair loop is not implemented.
+fixed-interface scope. The bounded agentic builder is now implemented on main; consult
+its [implementation record](docs/raising-kane/builder-implementation.md) for current
+verification status. Older sections below describe their dated experiments and do not
+establish acceptance of the new runtime loop.
+
+### Runtime integration observations and exposed APIs
+
+The [API and branch review](docs/raising-kane/api-and-branch-review.md) checks the event's
+0.1.29 reference bundle against the real rc.3 integration. The event helper version is
+separate from the CLI version.
+
+- `explore run` emits `progress`, `skill_updated`, `map_delta` and `done` events in
+  the observed stream. `progress.visited` and `frontier` can drive honest progress text;
+  they are not a percent-complete estimate. Preserve `done.complete` and the stop reason.
+- The local viewer's `/api/screenshot?junction=<id>` returns JSON with a `data_url`,
+  not raw JPEG bytes. Decode the image's actual MIME type. Treating JSON as a JPEG
+  loses the visual input even when the HTTP request succeeds.
+- List rows summarize controls and findings. Read `/api/view/junctions/{id}` for
+  affordances/roles and `/api/view/findings/{id}` for occurrence details. Their envelopes
+  are `junction` and `finding`; flow detail returns `flow` and `current`. Preserve
+  missing observations as unknown. These viewer reads proxy the read-only API using
+  the CLI's authentication; they do not start another browser journey.
+- The fresh synthetic return exploration reported a color-contrast finding and blocked
+  draft POSTs under `read_only`. One reached screen and zero flow records is an honest
+  result. Separate sandbox branch missions established the fee/destination transition.
+- Detailed API reads recovered seven controls and the accessibility rule. Reported
+  findings remained `confirmed:false`; neither API detail nor a screenshot establishes
+  that our generated UI repaired the issue.
+- The direct exploration `/skill?as_of_run=<run>` endpoint can supply a written account
+  of the site. The optional adapter is implemented, but this host did not have the
+  separate Basic-auth environment pair, so that direct read is not live-verified.
+- Shared project APIs describe shared assurance, not `.context/` on a developer's
+  filesystem. Keep local candidate coverage local, or deliberately migrate/save to a
+  shared project. Do not mix stores or substitute whole-project coverage for one build.
+- A preview journey can trigger source jobs. Give the preview browser a separate owned
+  lane; if it holds the same serialized queue it waits on, the product deadlocks.
+- Pass screenshots as actual image inputs to the coding model, tied to step IDs and
+  observed values. A filename or screenshot URL appearing in prompt text is not vision.
 
 The new [capability experiment](docs/kane-builder-validation/report.md) used a synthetic
 read-only fixture and a four-lease rc.3 Explore run. It established:

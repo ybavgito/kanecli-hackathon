@@ -4,6 +4,7 @@ import { readFile, mkdir } from 'node:fs/promises'
 import { resolve, join } from 'node:path'
 import { explore, mission, assureAndVerify } from './kane.mjs'
 import { generate, compileArtifact, hash, MODEL } from './model.mjs'
+import { sourceOutcomeMatches } from './outcome.mjs'
 
 const busyStates = new Set([
   'connecting',
@@ -421,7 +422,7 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
             artifactHash: candidate.hash,
             contractHash: b.contractHash,
             taskId: test.taskId,
-            sourceMatch: task?.status === 'complete' && source.status === 'committed',
+            sourceMatch: sourceOutcomeMatches(b.kind, task, source),
             at: new Date().toISOString(),
           }
           if (result.status === 'passed' && candidate.verification.sourceMatch) {
@@ -662,6 +663,20 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
         return true
       }
       if (b.ownerId !== req.clientId) throw Error('Open this build in its original browser.')
+      if (parts[3] === 'verification' && req.method === 'GET') {
+        const candidate = b.candidates.find((c) => c.revision === Number(parts[4]))
+        const filename = candidate?.verification?.testFile
+        if (!filename || !/^[\w-]+_test\.md$/.test(filename))
+          throw Error('This candidate does not have a completed verification record yet.')
+        const directory = join(root, b.id, 'candidates', String(candidate.revision), 'verification')
+        send(res, 200, {
+          requirements: await readFile(join(directory, 'requirements.md'), 'utf8'),
+          journey: await readFile(join(directory, '.testmuai/tests', filename), 'utf8'),
+          status: candidate.verification.status,
+          capturedAt: candidate.verification.at,
+        })
+        return true
+      }
       if (parts[3] === 'image' && req.method === 'GET') {
         const relative = parts.slice(4)
         if (
