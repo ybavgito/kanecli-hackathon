@@ -2,6 +2,8 @@
 
 **When websites raise hell, raise Kane**
 
+Paste a URL → Raising Kane generates a simpler task screen → choose what to do → Kane checks and carries out the choice → the source result is confirmed.
+
 The [interface builder](docs/raising-kane/explore-driven-builder-plan.md) is now the main product path: supported sandbox URL → Kane Explore and source screenshots → generated React interface → Kane verification and up to two code repairs. A blank task creates a read-only overview; choosing a task starts a separate focused build. It uses isolated synthetic return and appointment records. The runtime loop is implemented, but a complete generated build has not yet passed a live run on this branch; see [builder status](docs/raising-kane/runtime-builder-status.md).
 
 A calm interface for getting a difficult website task done without losing your choices.

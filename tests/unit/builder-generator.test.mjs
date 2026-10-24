@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { generateInterface, validateGeneratedArtifact, validateArtifactSource } from '../../server/builder-generator.mjs'
+import { generateInterface, validateGeneratedArtifact, validateArtifactSource, normalizeBuilderOverview } from '../../server/builder-generator.mjs'
 
 const screenshot = { id: 'screen-1', description: 'Kane observed options screen', dataUrl: 'data:image/png;base64,aW1hZ2U=' }
 const allowedActions = [{ id: 'review', label: 'Review', kind: 'read', inputSchema: { type: 'object' } }]
@@ -136,4 +136,110 @@ test('incomplete or refused responses cannot publish partial artifacts', async (
   for (const extra of [{ status: 'incomplete' }, { output: [{ type: 'message', content: [{ type: 'refusal', refusal: 'Cannot complete' }] }] }]) {
     await assert.rejects(generateInterface(input(), options({ fetchImpl: async () => response(artifact(), extra) })), error => ['incomplete_response', 'empty_response'].includes(error.code))
   }
+})
+
+const overviewActions = [
+  { id: 'read_state', label: 'Read current state', kind: 'read', inputSchema: { type: 'object', properties: {}, additionalProperties: false } },
+  { id: 'check', label: 'Check observations', kind: 'read', inputSchema: { type: 'object', properties: {}, additionalProperties: false } },
+]
+const overviewModel = () => ({
+  name: 'Observed service website',
+  exploration: {
+    status: 'budget', stopReason: 'lease_limit',
+    screens: [
+      { id: 'screen-1', title: 'Your visits', knowledge: 'screen_observed', evidenceId: 'map-1' },
+      { id: 'screen-2', title: 'Available times', knowledge: 'screen_observed', evidenceId: 'map-1' },
+      { id: 'inferred-confirmation', title: 'Change confirmed', origin: 'inferred', evidenceId: 'map-1' },
+    ],
+    flows: [
+      { id: 'flow-times', title: 'Choose a time and confirm a visit', from: 'screen-1', to: 'screen-2', knowledge: 'navigation_observed', kaneStatus: 'verified', evidenceId: 'map-1' },
+      { id: 'flow-confirm', title: 'Confirm your change', from: 'screen-2', to: 'inferred-confirmation', kaneStatus: 'verified', evidenceId: 'map-1' },
+      { id: 'flow-unsupported', title: 'Unknown entry', from: 'missing', to: 'screen-1', evidenceId: 'map-1' },
+    ],
+    findings: [{ id: 'finding-1', title: 'Missing label', kind: 'accessibility', confirmed: false, evidenceId: 'map-1' }],
+    unknowns: ['The confirmation page was not visited.'],
+  },
+})
+const overviewArtifact = () => ({
+  ...artifact(), title: 'Your observed service website', summary: 'Explore the screens Kane reached. No task has started.',
+  appSource: `import React,{useState} from 'react';export default function App({bridge}){
+ const [status,setStatus]=useState('No task has started');
+ async function check(){try{const result=await bridge.invoke('check',{});setStatus(result.status)}catch(error){setStatus(error.message)}}
+ return <main><h1>Your visits</h1><p>No task has started.</p><details><summary>Available times</summary><p>Navigation observed. Confirmation is unverified.</p></details><button type="button" onClick={check}>Check observations</button><p role="status">{status}</p></main>
+}`,
+  actions: [{ id: 'check', label: 'Check observations', evidenceIds: ['screen-1'] }],
+  decisions: ['Show the reached visit and time screens with their actual observation scope.'],
+  unknowns: ['The confirmation page was not visited.'],
+})
+const overviewInput = () => ({
+  ...input(), contract: { id: 'overview-contract', mode: 'overview', intent: null, outcome: 'observed_overview' },
+  sourceModel: overviewModel(), allowedActions: overviewActions,
+  initialState: { status: 'not_started', kind: 'appointment', intent: { slotId: 'default-slot' } },
+})
+
+test('URL-only overview receives generic observed screens and read actions without a default transaction', async () => {
+  let payload
+  const supplied = overviewInput()
+  supplied.allowedActions = [...overviewActions, { id: 'submit', kind: 'synthetic-commit' }, { id: 'choose', kind: 'synthetic-draft' }, { id: 'request_approval', kind: 'review' }]
+  const before = structuredClone(supplied)
+  const result = await generateInterface(supplied, options({ fetchImpl: async (_, request) => { payload = JSON.parse(request.body); return response(overviewArtifact()) } }))
+  const context = JSON.parse(payload.input[0].content[0].text)
+  assert.deepEqual(context.allowedActions.map(action => action.id), ['read_state', 'check'])
+  assert.equal(context.contract.intent, null)
+  assert.equal(context.overview.taskStatus, 'not_started')
+  assert.equal(context.overview.coverage.exhaustive, false)
+  assert.deepEqual(context.overview.screens.map(screen => screen.title), ['Your visits', 'Available times'])
+  assert.match(payload.instructions, /Give observed flows equal prominence/)
+  assert.match(payload.instructions, /No task has started/)
+  assert.match(payload.instructions, /Never switch this component to a focused transaction/)
+  assert.equal(result.metadata.mode, 'overview')
+  assert.deepEqual(supplied, before)
+})
+
+test('overview preserves reached-state limits instead of promoting a named verified flow to a completed outcome', () => {
+  const overview = normalizeBuilderOverview(overviewModel(), [screenshot])
+  assert.equal(overview.flows[0].title, 'Choose a time and confirm a visit')
+  assert.equal(overview.flows[0].status, 'navigation_observed')
+  assert.equal(overview.flows[0].sourceReportedStatus, 'verified')
+  assert.equal(overview.flows[0].reached.title, 'Available times')
+  assert.equal(overview.flows[0].outcome, 'unverified')
+  assert.equal(overview.flows[1].status, 'entry_observed')
+  assert.equal(overview.flows[1].reached, null)
+  assert.ok(overview.flows.every(flow => flow.execution === 'informational'))
+  assert.equal(overview.flows.some(flow => flow.id === 'flow-unsupported'), false)
+  assert.ok(overview.unknowns.includes('The confirmation page was not visited.'))
+  assert.equal(overview.findings[0].confirmed, false)
+  const otherSite = { name: 'Observed shop', discovery: { ...overviewModel().exploration, flows: [], screens: [{ id: 'screen-1', title: 'Orders', knowledge: 'screen_observed' }] } }
+  const shop = normalizeBuilderOverview(otherSite, [screenshot])
+  assert.equal(shop.siteTitle, 'Observed shop')
+  assert.equal(shop.screens[0].title, 'Orders')
+  assert.ok(shop.unknowns.some(value => value.includes('No source branch')))
+})
+
+test('overview cannot publish transaction actions or mutation payloads even if supplied by a caller', async () => {
+  const all = [...overviewActions, { id: 'submit', kind: 'synthetic-commit' }, { id: 'request_approval', kind: 'review' }]
+  const mutation = { ...overviewArtifact(), actions: [{ id: 'submit', label: 'Submit', evidenceIds: ['screen-1'] }], appSource: `import React from 'react';export default function App({bridge}){return <button type="button" onClick={()=>bridge.invoke('submit',{})}>Submit</button>}` }
+  assert.throws(() => validateGeneratedArtifact(mutation, { allowedActions: all, mode: 'overview' }), { code: 'invalid_artifact' })
+  await assert.rejects(generateInterface({ ...overviewInput(), allowedActions: all }, options({ maxTurns: 1, fetchImpl: async () => response(mutation) })), { code: 'invalid_artifact' })
+  const repair = { ...overviewArtifact(), appSource: overviewArtifact().appSource.replace("'check',{}", "'check',{repair:true}") }
+  assert.throws(() => validateGeneratedArtifact(repair, { allowedActions: all, mode: 'overview' }), /empty payload/)
+  const dynamic = { ...overviewArtifact(), appSource: overviewArtifact().appSource.replace("'check',{}", "'check',somePayload") }
+  assert.throws(() => validateGeneratedArtifact(dynamic, { allowedActions: all, mode: 'overview' }), /empty payload/)
+  // A focused contract retains its existing declared source actions.
+  assert.doesNotThrow(() => validateGeneratedArtifact(mutation, { allowedActions: all, mode: 'focused' }))
+})
+
+test('overview needs a reached source screen and cannot invent one from an unobserved map', async () => {
+  let requested = false
+  await assert.rejects(generateInterface({ ...overviewInput(), sourceModel: { screens: [{ id: 'unknown', title: 'Future screen', origin: 'inferred', evidenceId: 'map-1' }] } }, options({ fetchImpl: async () => { requested = true; return response(overviewArtifact()) } })), { code: 'missing_overview_evidence' })
+  assert.equal(requested, false)
+})
+
+test('focused generation keeps its actions and does not receive an inferred overview', async () => {
+  let payload
+  await generateInterface({ ...input(), contract: { ...input().contract, mode: 'focused' } }, options({ fetchImpl: async (_, request) => { payload = JSON.parse(request.body); return response(artifact()) } }))
+  const context = JSON.parse(payload.input[0].content[0].text)
+  assert.deepEqual(context.allowedActions, allowedActions)
+  assert.equal(Object.hasOwn(context, 'overview'), false)
+  assert.doesNotMatch(payload.instructions, /THIS CONTRACT IS OVERVIEW MODE/)
 })
