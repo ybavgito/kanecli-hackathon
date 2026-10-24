@@ -19,6 +19,34 @@ The implementation is in progress. A passing build does not establish that the
 full browser journey works. Current verification status is tracked in
 [the acceptance context](.testmuai/context.md).
 
+- [Review packet index](docs/raising-kane/README.md)
+- [Original review packet ZIP](docs/raising-kane-review-packet.zip)
+- [Document replacement and verification notes](docs/raising-kane/repository-notes.md)
+- [Website-first workflow, preflight checks and two-site demo](docs/raising-kane/workflow-and-demo-design.md)
+- [50 recorded rc.3 experiment invocations and findings](docs/kane-validation/report.md)
+- [Current review bundle](docs/raising-kane-current-review.zip)
+
+The full product contracts remain partly unimplemented. Separate synthetic
+CLI experiments now demonstrate browser checks, a real failure/correction/rerun,
+parameterized replay with explicit refresh, session/context handling, Explore and
+local assurance. Our return POC has its own [runtime and UI evidence](docs/raising-kane/verification.md).
+Neither establishes a completed two-site product. Historical research and the
+original packet ZIP remain available for provenance.
+
+The recommended experience is website-first: connect a supported site, choose
+from its tested task catalog, make plain decisions, and approve an exact verified
+proposal. Rehearse integrations before enabling tasks; recheck the current source
+during each user's workflow. The target demo covers a partial return and an
+appointment change on two labeled sandboxes. The current implementation supports
+return preparation, conflict detection and correction; submission and the
+appointment integration remain unfinished.
+
+The [original ClearPath brief](docs/clearpath/clearpath-complete-project-brief.md)
+and its [earlier gap review](docs/clearpath/gap-review.md) remain available as history.
+The packet now includes the previously missing background research. Its historical
+technical review still cites three unavailable machine-local paths, listed in the
+repository notes.
+
 ## Run the proof of concept
 
 ```bash
@@ -145,7 +173,8 @@ HyperExecute by default; local orchestration is also available. Exploration
 defaults to allowing app data changes; select `--policy read_only` when that is
 not intended. Cloud access to localhost needs a LambdaTest tunnel.
 
-See the [RC workflow notes](kane-field-guide.md#current-workflow-0100-rc3).
+See the [current RC field guide](kane-field-guide.md) and the
+[measured Explore findings](docs/kane-validation/report.md#explore-scope-and-limits).
 
 ## Field guide
 

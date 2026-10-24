@@ -4,6 +4,13 @@
 
 Product name: **Raising Kane**. Tagline: **When websites raise hell, raise Kane**.
 Current specification: `docs/raising-kane/raising-kane-project-brief.md`.
+The latest workflow decision is `docs/raising-kane/workflow-and-demo-design.md`:
+connect a supported website, choose a rehearsed task, then verify the user's
+current source state during execution. Integration rehearsal is not approval of
+a live request. The return and appointment demos both require fresh review,
+preserved constraints and verified receipts. These remain target requirements;
+the status section below records the current return POC. Use ClearPath only to
+reference historical documents.
 
 Raising Kane helps a person finish a confusing website task while preserving the
 exact outcome they requested. Kane operates the source website. The application
@@ -11,7 +18,7 @@ stores intent, checks proposals, records approvals and verifies the outcome.
 OpenAI request interpretation is used when configured; the fallback sample parser
 must be disclosed and does not establish OpenAI execution.
 
-The first supported task is a partial return in a separate, working fictional merchant portal with synthetic order data and persistent records. Label the source "Merchant sandbox — simulated order." This establishes one real browser integration, not support for arbitrary websites. A different source workflow is a later integration.
+The first implemented task is a partial return in a separate, working fictional merchant portal with synthetic order data and persistent records. Label the source "Merchant sandbox — simulated order." The full MVP also requires a distinct home-service appointment source and a website-first task catalog. Those are not implemented yet; arbitrary website support is outside scope.
 
 ## Intended user journey
 
@@ -38,6 +45,18 @@ The first supported task is a partial return in a separate, working fictional me
 - The persisted receipt says "Return requested; refund pending" and states the actual item, expected amount, destination, source confirmation, and next physical step. It must survive page reload.
 - Evidence shared with a user or judge excludes credentials and secret test values.
 - The demo uses controlled test accounts and transactions; it does not create real refunds or charges.
+
+## Appointment and website-first acceptance criteria (not implemented)
+
+- Select a supported website and see its reviewed task catalog and truthful readiness.
+- Keep the existing Friday repair active while inspecting Saturday alternatives.
+- Preserve Maya as technician, the service and address, and zero additional charge.
+- Choose only a currently observed matching slot; explain rejected alternatives.
+- If no slot matches, leave the booking unchanged and ask for a revised preference.
+- Refresh the proposal before approval; bind commit to the booking version and slot availability.
+- Atomically update one booking, then require Kane to verify the exact saved date,
+  timezone, technician, service, address, fee and identifier before issuing a receipt.
+- Keep source data and sessions isolated; display the service on a distinct origin.
 
 ## Kane's roles
 

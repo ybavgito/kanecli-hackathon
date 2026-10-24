@@ -1,0 +1,71 @@
+{
+  "source": "project",
+  "coverage_version": 2,
+  "scope": "project",
+  "config": {
+    "rule": "newest_counted_verdict",
+    "weighting": "risk",
+    "weights": {
+      "high": 1.25,
+      "med": 1,
+      "low": 0.75,
+      "unknown": 1
+    }
+  },
+  "pct": 0,
+  "note": "nothing_run_yet",
+  "usecases": {
+    "total": 1,
+    "proven": 0,
+    "partial": 0,
+    "failing": 0,
+    "not_run": 1,
+    "not_designed": 0,
+    "no_criteria": 0
+  },
+  "criteria": {
+    "total": 5,
+    "proven": 0
+  },
+  "perUc": [
+    {
+      "id": "uc-1",
+      "title": "View a return receipt and refund status",
+      "risk": "high",
+      "weight": 1.25,
+      "state": "not_run",
+      "pct": 0,
+      "criteria": 5,
+      "proven": 0,
+      "manual_runs": 0,
+      "stale": false
+    }
+  ],
+  "perAc": {
+    "ac-1": {
+      "state": "not_run",
+      "uc": "uc-1"
+    },
+    "ac-2": {
+      "state": "not_run",
+      "uc": "uc-1"
+    },
+    "ac-3": {
+      "state": "not_run",
+      "uc": "uc-1"
+    },
+    "ac-4": {
+      "state": "not_run",
+      "uc": "uc-1"
+    },
+    "ac-5": {
+      "state": "not_run",
+      "uc": "uc-1"
+    }
+  },
+  "flags": {
+    "stale_sources": 0,
+    "sources_not_fully_extracted": [],
+    "orphaned_usecases": 0
+  }
+}

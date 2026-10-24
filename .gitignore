@@ -14,3 +14,5 @@ data/
 *.ndjson
 *.stderr
 .DS_Store
+__pycache__/
+*.pyc

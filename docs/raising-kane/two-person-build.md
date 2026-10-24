@@ -3,9 +3,10 @@
 **When websites raise hell, raise Kane**
 
 Current specification: [project brief](raising-kane-project-brief.md).
-Shared baseline: branch `codex/raising-kane-poc`, based on `main` at `5b02a83`.
+Shared baseline: branch `codex/raising-kane-poc`, including `main` at `b99a39f`.
+Pull this branch for the latest implementation and verification notes.
 
-## One result to deliver
+## First POC result to deliver
 
 A person requests: “Return the red shoes, keep the jacket, refund my original
 payment method.” Kane prepares the merchant form. The person adds “I don’t have
@@ -17,6 +18,12 @@ check verifies the persistent source confirmation.
 This is one supported merchant sandbox with synthetic data. The finish line is
 “Return requested; refund pending,” with an expected $75 refund after the $5 QR
 drop-off deduction. It is not a real refund or arbitrary website support.
+
+The updated main-branch specification also requires a distinct appointment
+workflow and a website-first task catalog. That is part of the full MVP, after
+this return slice is completed. The current POC does not claim that second flow
+works. Its requirements are in the current project brief and
+`workflow-and-demo-design.md`.
 
 ## Ownership
 
@@ -125,8 +132,19 @@ Preserve the existing draft fields and values:
 3. **Last 20 minutes:** approve, submit, verify the persistent source confirmation,
    reload the receipt and check uncertain-submission recovery. Save actual evidence.
 
-After that slice passes, add more complicated cases: unavailable requested refund,
-changing fees, ambiguous items, delayed submission responses and a second source.
+After that slice passes, keep the same ownership split for the required second
+source: the teammate builds the distinct appointment portal, isolated records,
+slot/version checks and atomic booking update; this chat builds its product
+adapter, shared task catalog, decisions and receipt. Agree the appointment
+contract before parallel edits. Both people integrate and verify the complete
+appointment flow before adding optional return edge cases.
+
+The appointment fixture preserves the Friday booking until approval. Saturday
+9 AM changes technician, 10 AM adds $25, and 11 AM currently matches Maya with no
+fee. Match observed options to the user's constraints; do not hardcode 11 AM as
+the answer. Use separate local origins for the two source websites in the final
+demo. Additional edge cases include slot loss, unavailable refund methods,
+changing fees, ambiguous items and delayed submission responses.
 
 ## Teammate handoff
 

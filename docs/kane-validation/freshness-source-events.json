@@ -1,0 +1,145 @@
+[
+  {
+    "path": "/seed",
+    "method": "GET",
+    "authenticated": false,
+    "at": 1792876577.642132,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876577.6449995,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876577.7188246,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876592.50378,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876592.5285225,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876614.706481,
+    "state": {
+      "destination": "Store credit",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876614.7307668,
+    "state": {
+      "destination": "Store credit",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876643.7832425,
+    "state": {
+      "destination": "Store credit",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876643.807897,
+    "state": {
+      "destination": "Store credit",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876677.5102317,
+    "state": {
+      "destination": "Store credit",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876682.5307696,
+    "state": {
+      "destination": "Store credit",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876687.7321987,
+    "state": {
+      "destination": "Store credit",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876687.7555625,
+    "state": {
+      "destination": "Store credit",
+      "saved": 0,
+      "commits": 0
+    }
+  }
+]

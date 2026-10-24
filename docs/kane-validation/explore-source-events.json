@@ -1,0 +1,46 @@
+[
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": false,
+    "at": 1792876453.5308697,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": false,
+    "at": 1792876465.1427402,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/booking",
+    "method": "GET",
+    "authenticated": false,
+    "at": 1792876470.16613,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": false,
+    "at": 1792876474.4913495,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  }
+]

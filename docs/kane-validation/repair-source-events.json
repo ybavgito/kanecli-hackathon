@@ -1,0 +1,332 @@
+[
+  {
+    "path": "/seed",
+    "method": "GET",
+    "authenticated": false,
+    "at": 1792876543.071698,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876543.0747535,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876543.1463826,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876550.7997015,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876550.8229463,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876573.9416223,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876573.9640052,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/api/save",
+    "method": "POST",
+    "authenticated": true,
+    "at": 1792876580.4339182,
+    "state": {
+      "destination": "Original payment",
+      "saved": 0,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876580.4475658,
+    "state": {
+      "destination": "Store credit",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876580.4715028,
+    "state": {
+      "destination": "Store credit",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876599.6836195,
+    "state": {
+      "destination": "Store credit",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876599.7077906,
+    "state": {
+      "destination": "Store credit",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876633.3697574,
+    "state": {
+      "destination": "Store credit",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876633.3927114,
+    "state": {
+      "destination": "Store credit",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/api/restore",
+    "method": "POST",
+    "authenticated": true,
+    "at": 1792876638.547592,
+    "state": {
+      "destination": "Store credit",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876638.5622141,
+    "state": {
+      "destination": "Original payment",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876638.5866613,
+    "state": {
+      "destination": "Original payment",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876659.5575843,
+    "state": {
+      "destination": "Original payment",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876659.580868,
+    "state": {
+      "destination": "Original payment",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876670.3534648,
+    "state": {
+      "destination": "Original payment",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876670.3775713,
+    "state": {
+      "destination": "Original payment",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/booking",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876680.3332903,
+    "state": {
+      "destination": "Original payment",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876680.3541675,
+    "state": {
+      "destination": "Original payment",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876700.013695,
+    "state": {
+      "destination": "Original payment",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876700.0368814,
+    "state": {
+      "destination": "Original payment",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/api/save",
+    "method": "POST",
+    "authenticated": true,
+    "at": 1792876703.559931,
+    "state": {
+      "destination": "Original payment",
+      "saved": 1,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876703.5762124,
+    "state": {
+      "destination": "Store credit",
+      "saved": 2,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876703.5996122,
+    "state": {
+      "destination": "Store credit",
+      "saved": 2,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/review",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876734.244054,
+    "state": {
+      "destination": "Store credit",
+      "saved": 2,
+      "commits": 0
+    }
+  },
+  {
+    "path": "/favicon.ico",
+    "method": "GET",
+    "authenticated": true,
+    "at": 1792876734.2644863,
+    "state": {
+      "destination": "Store credit",
+      "saved": 2,
+      "commits": 0
+    }
+  }
+]

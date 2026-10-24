@@ -2,8 +2,24 @@
 
 Imported October 24, 2026 from the supplied
 [raising-kane-review-packet.zip](../raising-kane-review-packet.zip).
-All 14 packet Markdown files and the ZIP are preserved byte-for-byte. This file
-is a repository integration note, not part of the supplied packet.
+The original ZIP is preserved byte-for-byte as a historical snapshot. The working
+documents have since been updated; they are no longer all byte-identical to that
+snapshot. This file is a repository integration note, not part of the original packet.
+
+## October 24 measured update
+
+The root field guide now incorporates actual rc.3 feature experiments. Its previous
+contents, including macOS reproduction notes, are preserved in
+`kane-field-guide-repo-historical.md`. The packet's field-guide filename redirects
+to the maintained root guide. See `../kane-validation/report.md` for measured
+results and `workflow-and-demo-design.md` for the website-first task catalog and
+preparation/runtime verification distinction. The product brief incorporates that
+entry experience while retaining its atomic transaction contracts.
+
+Selected published evidence packs replace only account username/email metadata;
+their provenance and hashes are explicit. No credentials, authenticated browser
+profiles or assurance stores are committed. A public red/green example does not
+claim that the full Raising Kane source integrations have been implemented.
 
 ## Which documents govern now
 
