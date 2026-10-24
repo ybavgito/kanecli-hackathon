@@ -18,6 +18,40 @@ const CHROME_START_TIMEOUT_MS = 15_000
 const STOP_GRACE_MS = 2_000
 const NATIVE_FOCUS_TIMEOUT_MS = 1_500
 
+// Exact observation names requested/consumed by the explorer and legacy demo.
+// Do not merge all context.variables: that collection also holds user inputs,
+// secret variables, and unrelated memory. Keep this allowlist explicit.
+const OBSERVATION_KEYS = new Set([
+  'page_title', 'page_url', 'url', 'access_state', 'account_label', 'account_identity',
+  'actions_json', 'actions_text', 'records_json', 'records_text',
+  'limitations_json', 'limitations_text', 'questions_json', 'questions_text',
+  'options_json', 'options_text', 'proposal_json', 'proposal_summary', 'source_url',
+  'execution_kind', 'terms_text', 'proposal_requirements_json', 'proposal_requirements_text',
+  'next_steps_json', 'next_steps_text', 'observation_summary',
+  'checks_json', 'checks_text', 'requirements_checks_json', 'requirements_checks_text',
+  'checked_terms_json', 'checked_terms_text', 'proposal_matches',
+  'result_verified', 'result_summary', 'result_url', 'result_record_id',
+  'result_fields_json', 'result_fields_text', 'result_terms_json', 'result_terms_text',
+  'order_id', 'draft_revision', 'refund_destination', 'return_request_id',
+  'returned_line_ids', 'returned_quantity', 'return_method', 'currency',
+  'deduction', 'expected_refund', 'next_step', 'jacket_kept', 'submission_response',
+])
+
+/** Preserve terminal summaries, preferring exact explicitly nonsecret observations. */
+export function extractKaneFinalState(terminal) {
+  const summary = terminal?.final_state
+  const result = summary && typeof summary === 'object' && !Array.isArray(summary) ? { ...summary } : {}
+  const variables = terminal?.context?.variables
+  if (!variables || typeof variables !== 'object' || Array.isArray(variables)) return result
+  for (const [name, entry] of Object.entries(variables)) {
+    if (!OBSERVATION_KEYS.has(name) || !entry || typeof entry !== 'object' || Array.isArray(entry)
+      || entry.type !== 'memory' || entry.secret !== false || !Object.hasOwn(entry, 'value')
+      || entry.value === undefined) continue
+    result[name] = entry.value
+  }
+  return result
+}
+
 function controlFor(taskId) {
   let control = taskControls.get(taskId)
   if (!control) {
@@ -455,9 +489,7 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
         mode: analyzerOnly ? 'analyzer' : mode,
         status,
         summary,
-        finalState: terminal?.final_state && typeof terminal.final_state === 'object'
-          ? terminal.final_state
-          : {},
+        finalState: extractKaneFinalState(terminal),
         steps,
         stepCount: steps.length,
         evidencePath: sealedPack,

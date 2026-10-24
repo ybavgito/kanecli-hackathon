@@ -76,3 +76,19 @@ book/price records. [The runtime run passed](https://test-manager.lambdatest.com
 four steps, 14.95 credits. These values came from the source; no website-specific
 adapter or fabricated cards were added. UI click-through and the persisted
 verified-result journey remain the next checks.
+
+## Card-to-result integration repair
+
+The first UI click-through passed the four card/source-evidence assertions and
+clicked Travel, then failed to show information. Kane had observed the correct
+books/prices. Inspection of the completed runtime event established the actual
+integration defect: its `final_state` was a renamed human-readable summary,
+while the exact requested values were present in `context.variables` as
+nonsecret memory entries. The worker discarded those named values. This was an
+application parser bug, not an ineligible account or inaccessible source.
+
+The repair retains explicitly allowed nonsecret memory observations. Missing
+account extraction no longer implies that the person changed accounts. The
+read-only product path is also simpler: retrieve facts, independently check each
+fact plus goal/account/source, then save a receipt. Information retrieval needs
+no transaction approval. Its live two-site proof is recorded below when complete.

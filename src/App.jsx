@@ -80,7 +80,7 @@ function updateUrl(connectionId, workflowId) {
 
 function Evidence({ entries = [] }) {
   return <section className="rk-panel rk-evidence"><div className="rk-panel-head"><span className="rk-kicker">BROWSER EVIDENCE</span><span className="rk-muted-small">{entries.length} {entries.length === 1 ? 'entry' : 'entries'}</span></div>
-    {entries.length ? <ol>{entries.slice().reverse().map((item, index) => <li key={item.id || `${item.phase}-${index}`}><span className={`rk-evidence-dot ${item.status || ''}`} /><div><strong>{textOf(item.phase) || 'Source observation'}</strong><p>{textOf(item.summary) || textOf(item.status)}</p><div className="rk-evidence-meta">{item.mode && <span>{textOf(item.mode)}</span>}{item.at && <span>{displayDate(item.at)}</span>}{item.steps != null && <span>{item.steps} steps</span>}</div>{safeUrl(item.url) && <a href={safeUrl(item.url)} target="_blank" rel="noreferrer">Open evidence <Icon name="link" size={12} /></a>}</div></li>)}</ol> : <p className="rk-empty">Kane’s source observations will appear here. No result is verified yet.</p>}
+    {entries.length ? <ol>{entries.slice().reverse().map((item, index) => <li key={item.id || `${item.phase}-${index}`}><span className={`rk-evidence-dot ${item.status || ''}`} /><div><strong>{textOf(item.phase) || 'Source observation'}</strong><p>{textOf(item.summary) || textOf(item.status)}</p><div className="rk-evidence-meta">{item.mode && <span>{textOf(item.mode)}</span>}{item.at && <span>{displayDate(item.at)}</span>}{item.steps != null && <span>{item.steps} steps</span>}{item.conditionsChecked != null && item.conditionsMatched != null && <span>{item.conditionsMatched}/{item.conditionsChecked} source checks matched</span>}</div>{safeUrl(item.url) && <a href={safeUrl(item.url)} target="_blank" rel="noreferrer">Open evidence <Icon name="link" size={12} /></a>}</div></li>)}</ol> : <p className="rk-empty">Kane’s source observations will appear here. No result is verified yet.</p>}
   </section>
 }
 
@@ -94,7 +94,12 @@ function ItemList({ title, items }) {
 }
 
 function Progress({ value, fallback }) {
-  const detail = typeof value === 'string' ? value : value?.message || value?.detail || value?.label || value?.phase
+  const phase = typeof value === 'string' ? value : value?.phase
+  const phaseLabels = {
+    'retrieve-information': 'Reading information from the website…',
+    'verify-information': 'Independently checking the source information…',
+  }
+  const detail = typeof value === 'string' ? phaseLabels[value] || value : value?.message || value?.detail || value?.label || phaseLabels[phase] || phase
   return <div className="rk-progress" role="status"><span className="rk-progress-pulse" /><span>{textOf(detail) || fallback}</span></div>
 }
 
@@ -110,6 +115,7 @@ function UrlProduct() {
   const [connection, setConnection] = useState(null)
   const [workflow, setWorkflow] = useState(null)
   const [connections, setConnections] = useState([])
+  const [savedWorkflows, setSavedWorkflows] = useState([])
   const [urlInput, setUrlInput] = useState('')
   const [goalInput, setGoalInput] = useState('')
   const [busy, setBusy] = useState('')
@@ -144,7 +150,7 @@ function UrlProduct() {
           }
         } else if (requestedConnection) {
           const data = await api(`/api/connections/${encodeURIComponent(requestedConnection)}`)
-          if (!cancelled) { setConnection(data.connection); updateUrl(data.connection?.id, null) }
+          if (!cancelled) { setConnection(data.connection); setSavedWorkflows(data.workflows || []); updateUrl(data.connection?.id, null) }
         }
       } catch (failure) {
         if (!cancelled) {
@@ -171,6 +177,7 @@ function UrlProduct() {
         try {
           const data = await api(`/api/connections/${encodeURIComponent(connectionId)}`)
           setConnection(current => current?.id === connectionId ? data.connection : current)
+          setSavedWorkflows(data.workflows || [])
         } catch { /* Retain the last visible state while reconnecting. */ }
       }
     }, 2200)
@@ -205,6 +212,7 @@ function UrlProduct() {
     try {
       const url = normalizeUrl(urlInput)
       setWorkflow(null)
+      setSavedWorkflows([])
       mutation('connect', '/api/connections', { url, goal: goalInput.trim() || undefined })
     } catch (failure) { setError(failure.message) }
   }
@@ -214,14 +222,29 @@ function UrlProduct() {
     try {
       const data = await api(`/api/connections/${encodeURIComponent(id)}`)
       setConnection(data.connection)
+      setSavedWorkflows(data.workflows || [])
       setWorkflow(null)
       updateUrl(data.connection.id, null)
     } catch (failure) { setError(failure.message) }
     finally { setBusy('') }
   }
   const openWorkflow = actionId => mutation('action', '/api/workflows', { connectionId: connection.id, actionId, goal: connection.goal || undefined }, 'workflow')
-  const backToActions = () => { setWorkflow(null); updateUrl(connection?.id, null); setError('') }
-  const newConnection = () => { setWorkflow(null); setConnection(null); setUrlInput(''); setGoalInput(''); setError(''); updateUrl(null, null) }
+  const openSavedWorkflow = async id => {
+    setBusy('saved-result')
+    setError('')
+    try {
+      const data = await api(`/api/workflows/${encodeURIComponent(id)}`)
+      setWorkflow(data.workflow)
+      if (data.connection) setConnection(data.connection)
+      updateUrl(data.connection?.id || data.workflow.connectionId, data.workflow.id)
+    } catch (failure) { setError(failure.message) }
+    finally { setBusy('') }
+  }
+  const backToActions = () => {
+    setWorkflow(null); updateUrl(connection?.id, null); setError('')
+    if (connection?.id) api(`/api/connections/${encodeURIComponent(connection.id)}`).then(data => setSavedWorkflows(data.workflows || [])).catch(() => {})
+  }
+  const newConnection = () => { setWorkflow(null); setConnection(null); setSavedWorkflows([]); setUrlInput(''); setGoalInput(''); setError(''); updateUrl(null, null) }
   const disconnect = async () => {
     const data = await mutation('disconnect', `/api/connections/${connection.id}/disconnect`, {}, 'connection')
     if (data) { setWorkflow(null); setProcessingAcknowledged(false); updateUrl(data.connection?.id || null, null) }
@@ -252,6 +275,7 @@ function UrlProduct() {
   const workflowActionDisabled = workflowBusy || !connected || needsHuman || connectionBusy
   const actions = Array.isArray(connection?.actions) ? connection.actions : []
   const records = Array.isArray(connection?.records) ? connection.records : []
+  const verifiedResults = savedWorkflows.filter(item => item.connectionId === connection?.id && item.status === 'result_verified' && item.receipt)
   const options = Array.isArray(workflow?.options) ? workflow.options : []
   const questions = Array.isArray(workflow?.questions) ? workflow.questions : []
   const checks = Array.isArray(workflow?.checks) ? workflow.checks : []
@@ -279,7 +303,11 @@ function UrlProduct() {
   const workflowStep = pausing
     ? { title: 'Stopping automation', detail: 'Raising Kane is ending the active browser step before giving you control.' }
     : workflow?.status === 'inspecting'
-    ? { title: 'Inspecting this action', detail: 'Kane is reading source terms and available choices.' }
+    ? workflow?.progress?.phase === 'retrieve-information'
+      ? { title: 'Reading website information', detail: 'Kane is retrieving the facts for this read-only action.' }
+      : workflow?.progress?.phase === 'verify-information'
+        ? { title: 'Checking the information', detail: 'A separate Kane pass is comparing the retrieved facts with the current website.' }
+        : { title: 'Inspecting this action', detail: 'Kane is reading source terms and available choices.' }
     : workflow?.status === 'needs_input'
       ? { title: 'Answer what this action needs', detail: 'These questions come from the observed website flow.' }
       : workflow?.status === 'options_observed'
@@ -291,7 +319,7 @@ function UrlProduct() {
             : workflow?.status === 'submitting'
               ? { title: 'Action in progress', detail: 'Kane is operating the source. A browser step alone is not yet a verified result.' }
               : workflow?.status === 'result_unknown'
-                ? { title: 'Checking what happened', detail: 'The source result is uncertain. Reconcile before any repeat action.' }
+                ? workflow?.proposal?.executionKind === 'read' ? { title: 'Information needs a fresh check', detail: 'Raising Kane will read the source again and independently verify the current facts.' } : { title: 'Checking what happened', detail: 'The source result is uncertain. Reconcile before any repeat action.' }
                 : workflow?.status === 'result_verified'
                   ? { title: 'Source result verified', detail: 'The receipt below reflects a checked source result.' }
                   : workflow?.status === 'needs_sign_in'
@@ -305,10 +333,10 @@ function UrlProduct() {
         <div className="rk-workspace-heading"><div><span className="rk-kicker">CONNECTED WEBSITE <span className="rk-workspace-id">{connection.id?.slice(0, 8)}</span></span><h1>{connection.siteTitle || connection.origin || connection.url}</h1><a href={safeUrl(connection.url) || '#'} target="_blank" rel="noreferrer" className="rk-origin-link">{connection.url} <Icon name="link" size={13} /></a></div><div className="rk-header-actions"><button type="button" className="rk-quiet" disabled={pausing} onClick={newConnection}>Connect another website</button>{connected && <button type="button" className="rk-quiet" disabled={Boolean(busy) || pausing} onClick={disconnect}>Disconnect</button>}</div></div>
         {error && <div className="rk-alert" role="alert">{error}<button type="button" onClick={() => setError('')} aria-label="Dismiss error">×</button></div>}
         {(connection.error || workflow?.error) && <div className="rk-alert" role="status">{workflow?.error || connection.error}</div>}
-        <div className="rk-session-strip"><span className={`rk-status-dot ${connection.status}`} /><strong>{connection.status?.replaceAll('_', ' ')}</strong><span>{connection.account?.label || (connection.account?.status === 'signed_in' ? 'Signed-in account' : 'Account not confirmed')}</span>{connection.observedAt && <small>Observed {displayDate(connection.observedAt)}</small>}</div>
+        <div className="rk-session-strip"><span className={`rk-status-dot ${connection.status}`} /><strong>{connection.status?.replaceAll('_', ' ')}</strong><span>{connection.account?.status === 'public' ? 'Public website' : connection.account?.label || (connection.account?.status === 'signed_in' ? 'Signed-in account' : 'Account not confirmed')}</span>{connection.observedAt && <small>Observed {displayDate(connection.observedAt)}</small>}</div>
         <div className="rk-workspace-grid"><div className="rk-main-column">
           {workflow ? <><div className="rk-workflow-nav"><button type="button" disabled={pausing} onClick={backToActions}>← All discovered actions</button><span>WORKFLOW REVISION {workflow.revision || 1}</span></div><CurrentStep eyebrow="CURRENT STEP" title={workflowStep.title} detail={workflowStep.detail} busy={workflowBusy}>
-            {workflow.status === 'result_unknown' && <button className="rk-primary" disabled={workflowActionDisabled} onClick={() => mutation('reconcile', `/api/workflows/${workflow.id}/reconcile`, {}, 'workflow')}>Reconcile source result <Icon name="arrow" size={16} /></button>}{workflow.status === 'needs_sign_in' && connection.status === 'ready' && <button className="rk-primary" disabled={workflowActionDisabled} onClick={() => mutation('inspect-action', `/api/workflows/${workflow.id}/answer`, { answers: workflow.answers || {}, constraints: workflow.constraints || [] }, 'workflow')}>Continue this action <Icon name="arrow" size={16} /></button>}{['error', 'blocked'].includes(workflow.status) && <button className="rk-primary" disabled={workflowActionDisabled} onClick={() => mutation('inspect-action', `/api/workflows/${workflow.id}/answer`, { answers: workflow.answers || {}, constraints: workflow.constraints || [] }, 'workflow')}>Inspect this action again <Icon name="arrow" size={16} /></button>}
+            {workflow.status === 'result_unknown' && <button className="rk-primary" disabled={workflowActionDisabled} onClick={() => mutation('reconcile', `/api/workflows/${workflow.id}/reconcile`, {}, 'workflow')}>{workflow.proposal?.executionKind === 'read' ? 'Refresh and verify information' : 'Reconcile source result'} <Icon name="arrow" size={16} /></button>}{workflow.status === 'needs_sign_in' && connection.status === 'ready' && <button className="rk-primary" disabled={workflowActionDisabled} onClick={() => mutation('inspect-action', `/api/workflows/${workflow.id}/answer`, { answers: workflow.answers || {}, constraints: workflow.constraints || [] }, 'workflow')}>Continue this action <Icon name="arrow" size={16} /></button>}{['error', 'blocked'].includes(workflow.status) && <button className="rk-primary" disabled={workflowActionDisabled} onClick={() => mutation('inspect-action', `/api/workflows/${workflow.id}/answer`, { answers: workflow.answers || {}, constraints: workflow.constraints || [] }, 'workflow')}>Inspect this action again <Icon name="arrow" size={16} /></button>}
           </CurrentStep>{workflow.progress && workflowBusy && <Progress value={workflow.progress} fallback="Kane is checking the website." />}
             <section className="rk-panel rk-action-summary"><div className="rk-panel-head"><span className="rk-kicker">SELECTED ACTION</span><span className="rk-stage">{workflow.observationStage || workflow.status?.replaceAll('_', ' ')}</span></div><h2>{workflow.action?.title || 'Selected website action'}</h2>{workflow.action?.description && <p>{workflow.action.description}</p>}<SourceQuote>{workflow.action?.sourceQuote}</SourceQuote>{workflow.goal && <p className="rk-goal"><strong>Your goal:</strong> {workflow.goal}</p>}</section>
             {canAnswer && questions.some(question => !sensitiveQuestion(question)) && <section className="rk-panel"><div className="rk-panel-head"><span className="rk-kicker">WHAT THE WEBSITE NEEDS</span><span className="rk-muted-small">{questions.length} questions</span></div><form className="rk-questions" onSubmit={submitAnswers}>{questions.filter(question => !sensitiveQuestion(question)).map(question => <label key={question.id}>{question.label}{question.required && <b>Required</b>}{question.type === 'select' ? <select value={answers[question.id] ?? ''} required={Boolean(question.required)} onChange={event => setAnswers(current => ({ ...current, [question.id]: event.target.value }))}><option value="">Choose an option</option>{(question.options || []).map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</select> : <input type={['number', 'date'].includes(question.type) ? question.type : 'text'} value={answers[question.id] ?? ''} required={Boolean(question.required)} onChange={event => setAnswers(current => ({ ...current, [question.id]: event.target.value }))} />}</label>)}<label className="rk-constraint-input">What should Raising Kane preserve? <span>Optional</span><input type="text" value={constraintInput} onChange={event => setConstraintInput(event.target.value)} placeholder="For example, do not change my refund method" /></label><button className={workflow.status === 'needs_input' ? 'rk-primary' : 'rk-secondary'} type="submit" disabled={workflowActionDisabled}>{busy === 'answer' ? 'Saving…' : 'Save answers and constraints'} <Icon name="arrow" size={16} /></button></form></section>}
@@ -317,10 +345,11 @@ function UrlProduct() {
             {constraints.length > 0 && <section className="rk-panel"><div className="rk-panel-head"><span className="rk-kicker">WHAT MUST STAY TRUE</span><Icon name="shield" size={17} /></div><ul className="rk-constraints">{constraints.map((item, index) => <li key={index}><Icon name="check" size={15} />{textOf(item)}</li>)}</ul></section>}
             {options.length > 0 && ['options_observed', 'draft_checked', 'approved', 'submitting', 'result_unknown'].includes(workflow.status) && <section className="rk-panel"><div className="rk-panel-head"><span className="rk-kicker">SOURCE-BACKED OPTIONS</span><span className="rk-muted-small">{options.length} observed</span></div><h2>Compare what changes</h2><div className="rk-options">{options.map(option => <button type="button" className={`rk-option ${candidateOption === option.id ? 'selected' : ''}`} key={option.id} onClick={() => setCandidateOption(option.id)} disabled={workflowActionDisabled || ['needs_input', 'approved', 'submitting', 'result_unknown'].includes(workflow.status)}><span className="rk-option-radio" /><span className="rk-option-body"><strong>{option.label}</strong>{option.price != null && <small className="rk-option-price">{textOf(option.price)}</small>}<ItemList title="WHAT CHANGES" items={option.changes} /><ItemList title="REQUIREMENTS" items={option.requirements} /><ItemList title="AFTERWARD" items={option.nextSteps} /><SourceQuote>{option.sourceQuote}</SourceQuote><span className="rk-knowledge">Terms observed{option.reversible ? ' · Reversible draft' : ''}</span></span></button>)}</div>{workflow.status === 'options_observed' && candidateOption !== workflow.selectedOptionId && <div className="rk-panel-action"><button type="button" className="rk-primary" disabled={!candidateOption || requiredUnanswered || workflowActionDisabled} onClick={chooseOption}>Choose observed option <Icon name="arrow" size={16} /></button></div>}</section>}
             {proposal && ['options_observed', 'draft_checked', 'approved', 'submitting', 'result_unknown'].includes(workflow.status) && <section className="rk-panel rk-proposal"><div className="rk-panel-head"><span className="rk-kicker">EXACT PROPOSAL</span><span className="rk-stage">{workflow.status === 'draft_checked' ? 'Draft checked' : workflow.status?.replaceAll('_', ' ')}</span></div><h2>{proposal.summary || 'Review these terms'}</h2><div className="rk-terms">{(proposal.terms || []).map((term, index) => <div key={index}><span>{term.label}</span><strong>{textOf(term.value)}</strong></div>)}</div><ItemList title="WHAT CHANGES" items={proposal.changes} /><ItemList title="REQUIREMENTS" items={proposal.requirements} /><ItemList title="NEXT STEPS" items={proposal.nextSteps} />{proposal.sourceUrl && safeUrl(proposal.sourceUrl) && <a className="rk-inline-link" href={safeUrl(proposal.sourceUrl)} target="_blank" rel="noreferrer">Inspect proposal on the website <Icon name="link" size={14} /></a>}{checks.length > 0 && <div className="rk-checks">{checks.map((check, index) => <div key={index} className={`rk-check ${check.status}`}><span>{check.status === 'match' ? '✓' : check.status === 'conflict' ? '!' : '·'}</span><div><strong>{check.label}</strong><p>{check.detail}</p></div></div>)}</div>}{workflow.status === 'options_observed' && (!options.length || workflow.selectedOptionId) && <div className="rk-panel-action"><button className="rk-primary" type="button" disabled={workflowActionDisabled || requiredUnanswered} onClick={() => mutation('check', `/api/workflows/${workflow.id}/check`, {}, 'workflow')}>Check this proposal <Icon name="arrow" size={16} /></button></div>}{workflow.status === 'draft_checked' && <div className="rk-panel-action"><button className="rk-primary" type="button" disabled={workflowActionDisabled || !checkable} onClick={() => mutation('approve', `/api/workflows/${workflow.id}/approve`, { revision: workflow.revision }, 'workflow')}>Approve this revision <Icon name="arrow" size={16} /></button></div>}{workflow.status === 'approved' && <div className="rk-panel-action"><p>Raising Kane will recheck the approved terms before acting. If they changed, this approval is invalid.</p><button className="rk-primary" type="button" disabled={workflowActionDisabled} onClick={() => mutation('execute', `/api/workflows/${workflow.id}/execute`, {}, 'workflow')}>{proposal.executionKind === 'read' ? 'Verify source result' : 'Perform approved action'} <Icon name="arrow" size={16} /></button></div>}</section>}
-            {workflow.status === 'result_verified' && workflow.receipt && <section className="rk-panel rk-receipt"><div className="rk-receipt-icon"><Icon name="check" size={22} /></div><span className="rk-kicker">RESULT VERIFIED</span><h2>{workflow.receipt.title || 'Source result verified'}</h2><p>{workflow.receipt.summary}</p>{workflow.receipt.recordId && <div className="rk-record-id">Record {workflow.receipt.recordId}</div>}<div className="rk-terms">{(workflow.receipt.fields || []).map((field, index) => <div key={index}><span>{field.label}</span><strong>{textOf(field.value)}</strong></div>)}</div><ItemList title="WHAT HAPPENS NEXT" items={workflow.receipt.nextSteps} />{safeUrl(workflow.receipt.sourceUrl) && <a className="rk-inline-link" href={safeUrl(workflow.receipt.sourceUrl)} target="_blank" rel="noreferrer">Open source record <Icon name="link" size={14} /></a>}{workflow.receipt.verifiedAt && <small>Verified {displayDate(workflow.receipt.verifiedAt)}</small>}</section>}
+            {workflow.status === 'result_verified' && workflow.receipt && <section className="rk-panel rk-receipt"><div className="rk-receipt-icon"><Icon name="check" size={22} /></div><span className="rk-kicker">SAVED VERIFIED RESULT</span>{workflow.proposal?.executionKind === 'read' && <span className="rk-stage">Information only · no records changed</span>}<h2>{workflow.receipt.title || 'Source result verified'}</h2><p>{workflow.receipt.summary}</p>{workflow.proposal?.executionKind === 'read' && checks.length > 0 && <p>{checks.filter(check => check.status === 'match').length}/{checks.length} source checks matched</p>}{workflow.receipt.recordId && <div className="rk-record-id">Record {workflow.receipt.recordId}</div>}<div className="rk-terms">{(workflow.receipt.fields || []).map((field, index) => <div key={index}><span>{field.label}</span><strong>{textOf(field.value)}</strong></div>)}</div><ItemList title="WHAT HAPPENS NEXT" items={workflow.receipt.nextSteps} />{safeUrl(workflow.receipt.sourceUrl) && <a className="rk-inline-link" href={safeUrl(workflow.receipt.sourceUrl)} target="_blank" rel="noreferrer">Open source record <Icon name="link" size={14} /></a>}{workflow.receipt.verifiedAt && <small>Verified {displayDate(workflow.receipt.verifiedAt)}</small>}</section>}
             {(workflow.limitations || []).length > 0 && <section className="rk-panel"><div className="rk-panel-head"><span className="rk-kicker">CURRENT LIMITS</span></div><ul className="rk-limitations">{workflow.limitations.map((item, index) => <li key={index}>{textOf(item)}</li>)}</ul></section>}
           </> : <><CurrentStep eyebrow="CURRENT STEP" title={connectionStep.title} detail={connectionStep.detail} busy={connectionBusy}>{connection.status === 'needs_sign_in' && <button className="rk-primary" disabled={Boolean(busy)} onClick={() => mutation('takeover', `/api/connections/${connection.id}/takeover`, {})}>Take over sign-in <Icon name="arrow" size={16} /></button>}{connection.status === 'error' && <button className="rk-primary" disabled={Boolean(busy)} onClick={() => mutation('inspect', `/api/connections/${connection.id}/inspect`, {})}>Inspect again <Icon name="arrow" size={16} /></button>}</CurrentStep>{connection.progress && connectionBusy && <Progress value={connection.progress} fallback="Kane is inspecting the website." />}
             {actions.length > 0 && <section className="rk-actions-section"><div className="rk-section-head"><div><span className="rk-kicker">DISCOVERED ON THIS WEBSITE</span><h2>Useful actions</h2></div><span className="rk-muted-small">{actions.length} found so far</span></div><div className="rk-action-cards">{actions.map(action => <button className="rk-action-card" type="button" key={action.id} disabled={Boolean(busy) || connection.status !== 'ready'} onClick={() => openWorkflow(action.id)}><span className="rk-action-top"><span className="rk-kind">{action.kind || 'unknown'} action</span><Icon name="arrow" size={18} /></span><strong>{action.title}</strong>{action.description && <p>{action.description}</p>}<ItemList title="BEFORE YOU START" items={action.prerequisites} /><SourceQuote>{action.sourceQuote}</SourceQuote><span className="rk-card-foot">Action discovered · Terms still to inspect</span></button>)}</div></section>}
+            {verifiedResults.length > 0 && <section className="rk-panel"><div className="rk-panel-head"><span className="rk-kicker">SAVED VERIFIED RESULTS</span><span className="rk-muted-small">{verifiedResults.length} saved</span></div><div className="rk-history-grid">{verifiedResults.map(item => <button type="button" key={item.id} onClick={() => openSavedWorkflow(item.id)} disabled={Boolean(busy) || pausing}><span className="rk-site-avatar"><Icon name="check" size={16} /></span><span><strong>{item.action?.title || item.receipt.title || 'Verified result'}</strong><small>{item.receipt.summary || item.action?.title}</small></span><span className="rk-history-status">{item.receipt.verifiedAt ? displayDate(item.receipt.verifiedAt) : 'Verified'}</span><Icon name="arrow" size={16} /></button>)}</div></section>}
             {records.length > 0 && <section className="rk-panel"><div className="rk-panel-head"><span className="rk-kicker">RECORDS ON THIS PAGE</span><span className="rk-muted-small">{records.length} observed</span></div><div className="rk-records">{records.map(record => <article key={record.id} className="rk-record"><h3>{record.title}</h3>{record.details && <p>{textOf(record.details)}</p>}<SourceQuote>{record.sourceQuote}</SourceQuote>{safeUrl(record.url) && <a href={safeUrl(record.url)} target="_blank" rel="noreferrer">Open record <Icon name="link" size={13} /></a>}</article>)}</div></section>}
             {connection.status === 'ready' && <button type="button" className="rk-discover-more" disabled={Boolean(busy)} onClick={() => mutation('inspect', `/api/connections/${connection.id}/inspect`, {})}><Icon name="reload" size={15} /> Discover more from this page</button>}
           </>}

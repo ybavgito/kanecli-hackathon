@@ -12,6 +12,12 @@ API/ownership: docs/raising-kane/url-first-contract.md.
    actions, records and access state. No invented options when blocked.
 3. Select an observed action; ask only missing non-secret questions. Inspect its
    actual options, costs, requirements, changes and next steps through reusable UI.
+   For a read-only information card, retrieve useful facts, then independently
+   verify every fact, the task, account and source page with Kane. Save a receipt
+   only when all checks pass. Reading information needs no submission approval.
+   Reload the saved workflow and retain its exact facts and verification time.
+   Prove this entire journey first on Books to Scrape, then on unrelated Wikipedia
+   using the same code, without site-specific adapters or seeded result data.
 4. Preserve earlier choices. Reversible previews require explicit source support;
    never assume Back undoes a transaction. Show conflicts and unknown terms.
 5. Independently recheck current terms before approval. Material changes invalidate

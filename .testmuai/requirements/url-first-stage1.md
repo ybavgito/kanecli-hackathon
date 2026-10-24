@@ -21,3 +21,17 @@ in directly, handling SSO, OTP, passkeys or CAPTCHA themselves. Continue reconne
 to the same browser and rechecks the page and account. Do not collect credentials
 in Raising Kane. Explain external page/evidence processing before authenticated
 resume. Disconnect cancels jobs and deletes that connection's browser profile.
+
+For browser verification of takeover, Kane must stop at the handoff and must
+not enter or receive website usernames, passwords, one-time codes, or other
+credentials. The person signs in directly in the visible website browser.
+Only after that person explicitly continues may a separate Kane check inspect
+the resumed page and account in the same browser connection. A test must not
+simulate the person's sign-in by asking Kane to type credentials.
+
+Assurance should use two independently runnable browser checks for this handoff.
+The first ends when automation stops at Take over, before website sign-in. The
+second starts from an honestly labeled prepared connection where the person
+has already signed in and explicitly selected Continue with Kane; it checks
+the same browser connection, page and account after the processing explanation.
+No Kane test waits for or performs the person's website sign-in inside a job.

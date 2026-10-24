@@ -22,7 +22,7 @@ const sameAccount = (expected, actual) => expected?.status === 'public' && actua
 const matchingTerms = (expected, actual) => expected?.length > 0 && JSON.stringify(normalizedTerms(expected)) === JSON.stringify(normalizedTerms(actual))
 const requirementsFor = w => [
   {id:'goal',requirement:w.goal},
-  {id:'source-context',requirement:JSON.stringify(w.action)},
+  {id:'source-context',requirement:JSON.stringify({title:w.action.title,url:w.action.href})},
   ...(w.selectedOption?[{id:'selected-option',requirement:JSON.stringify(w.selectedOption)}]:[]),
   ...Object.entries(w.answers).map(([key,value])=>({id:`answer:${key}`,requirement:JSON.stringify({question:w.answerLabels?.[key]||key,answer:value})})),
   ...w.constraints.map((value,index)=>({id:`constraint:${index}`,requirement:value})),
@@ -65,6 +65,8 @@ export function createExplorerController({baseUrl}) {
   function accountMatches(c,w,result){
     const observed=accountFrom(result)
     if(sameAccount(w.accountBinding,observed))return true
+    // Missing extraction is not evidence that the person switched accounts.
+    if(observed.status==='unknown')throw new Error('Kane did not return the current account state. Inspect again; no account change was inferred.')
     invalidateAccount(c,observed);return false
   }
   async function pauseForHuman(c,w,current,status='needs_sign_in',message='Sign in or handle the challenge in the original browser, then continue.'){
@@ -118,7 +120,7 @@ export function createExplorerController({baseUrl}) {
       ? 'The current source is publicly accessible and does not indicate a signed-in account.'
       : `The visible unique username, email address or account ID is exactly ${JSON.stringify(w.accountBinding?.identity)}. Do not infer identity from a display name.`
     const items=[
-      {label:'Source account and origin',condition:`${accountCondition} The current page is on origin ${JSON.stringify(c.origin)}.`},
+      {label:'Source account and page',condition:`${accountCondition} The current page URL is exactly ${JSON.stringify(expected.sourceUrl)} on origin ${JSON.stringify(c.origin)}.`},
       ...expected.terms.map(term=>({label:term.label,condition:`The current source visibly states the material term ${JSON.stringify(term.label)} with exact value ${JSON.stringify(term.value)} for this selected task: ${context(w)}.`})),
       ...requirements.map(item=>({label:item.id,condition:`The current visible source satisfies requirement ${JSON.stringify(item.id)}: ${JSON.stringify(item.requirement)}. Evaluate it for this selected task: ${context(w)}. Unknown or missing evidence must return false.`})),
     ]
@@ -133,7 +135,37 @@ export function createExplorerController({baseUrl}) {
     const checks=items.map((item,index)=>({label:item.label,status:verdicts[index]?.result===true?'match':verdicts[index]?.result===false?'conflict':'unknown',detail:text(verdicts[index]?.reason,800)||'Independent current-page analyzer verdict.'}))
     return {matches:passed(result)&&verdicts.length===items.length&&verdicts.every(item=>item?.result===true),auth:false,evidence,checks}
   }
+  async function verifyReadResult(c,w,current){
+    const expected=w.proposal
+    if(!expected||w.proposalRevision!==w.revision)throw new Error('Retrieve current information before verifying it.')
+    w.receipt=null
+    const requirements=[...requirementsFor(w),{id:'answer-summary',requirement:`This answer is supported by the current source: ${expected.summary}`}]
+    const audited=await independentlyCheck(c,w,expected,requirements,current,'verify-information')
+    if(audited.auth)return
+    w.checks=audited.checks
+    if(!audited.matches){w.status='result_unknown';w.error='Kane could not independently verify every fact against this source. No verified result was saved.';event(w,w.error,'warning');return}
+    w.receipt={title:'Information verified · no changes made',summary:expected.summary,sourceUrl:expected.sourceUrl,recordId:null,fields:structuredClone(expected.terms),nextSteps:[],verifiedAt:new Date().toISOString(),evidenceId:w.readEvidenceId,verificationEvidenceId:audited.evidence.id}
+    w.status='result_verified';w.observationStage='result_verified';w.error=null;event(w,'Kane independently checked every fact. Your read-only result is saved.','success')
+  }
+  async function readInformation(c,w,current){
+    clearObservations(w);w.readOnly=true;save()
+    if(w.accountBinding?.status!=='public'&&!(w.accountBinding?.status==='signed_in'&&w.accountBinding.identity))throw new Error('A public page or a visibly identified account is required before saving a verified result.')
+    const target=w.selectedOption?.url||w.action.href
+    const {result,evidence,auth}=await run(c,w,'retrieve-information',`Open ${target}. Read this page only. Do not click any controls, fill forms or change data. Answer this user task using only visible source information: ${context(w)}. Store up to four useful exact source facts as "result_fields_text", one per line in the format Label | Value. Store a short factual answer as "result_summary". Store the current absolute page URL as "result_url". Store any missing information or source disclaimers as "limitations_text", or "none". Store access as public, signed_in, needs_sign_in or blocked in "access_state". Use these exact five variable names. Finally verify the extracted facts are visible on this page.`,current,{mode:'action',url:target})
+    if(auth)return
+    if(!passed(result)||!evidenceRef(result))throw new Error('Kane could not retrieve evidenced information from this page. Nothing was changed.')
+    const observedAccount=accountFrom(result)
+    if(observedAccount.status!=='unknown'&&observedAccount.status!==w.accountBinding.status){invalidateAccount(c,observedAccount);return}
+    const f=result.finalState||{}, fields=fieldsFrom(f.result_fields_json,f.result_fields_text).slice(0,4), sourceUrl=sameSite(safeUrl(f.result_url||f.url),c.url), summary=text(f.result_summary,1500)
+    if(!fields.length||!sourceUrl||!summary||/^(unknown|none|null|n\/a)$/i.test(summary))throw new Error('Kane returned incomplete information. Inspect this action again; no result was invented.')
+    w.proposal={summary,sourceUrl,terms:fields,executionKind:'read',changes:[],requirements:[],nextSteps:[],submitControl:''}
+    w.proposal.digest=digest(material(w.proposal));w.proposalRevision=w.revision;w.proposalSelectionId=w.selectedOptionId;w.readEvidenceId=evidence.id
+    w.limitations=typeof f.limitations_text==='string'?f.limitations_text.split(/\r?\n/).map(line=>text(line)).filter(line=>line&&!/^(none|unknown)$/i.test(line)):[]
+    w.observationStage='terms_observed';w.observedAt=new Date().toISOString();save()
+    await verifyReadResult(c,w,current)
+  }
   async function inspect(c,w,current){
+    if(w.action.kind==='read')return readInformation(c,w,current)
     const target=w.selectedOption?.url||w.options.find(o=>o.id===w.selectedOptionId)?.url||w.action.href
     clearObservations(w);save()
     const {result,evidence,auth}=await run(c,w,'inspect-options',`Open ${target}. Reload to obtain current source state. Inspect the selected action and relevant records using only read-only navigation. You may follow at most two relevant same-origin read-only links. You may use a search or filter form with the user's answers when it only retrieves information. Do not change saved drafts, carts, bookings, or records in this inspection. User-selected task data: ${context(w)}. Discover actual alternatives and prerequisites; ask for only missing non-secret values. ${optionFields} ${accountFields}`,current,{mode:'action',url:target})
@@ -287,7 +319,7 @@ export function createExplorerController({baseUrl}) {
       else if(command==='check'){if(w.questions.some(q=>q.required&&!w.answers[q.id]))throw new Error('Answer the required questions first.');dispatch(c,w,'check-proposal',current=>check(c,w,current))}
       else if(command==='approve'){if(w.status!=='draft_checked'||w.revision!==input.revision||w.proposalRevision!==w.revision||w.proposalSelectionId!==w.selectedOptionId||!w.proposal?.checkedAt||!w.checks.length||w.checks.some(c=>c.status!=='match'))throw new Error('Check the current proposal before approving.');if(w.proposal.executionKind!=='read')throw new Error('Automatic submission is not supported. Use human takeover, then reconcile the source result.');w.approval={revision:w.revision,digest:w.proposal.digest,proposal:structuredClone(w.proposal),account:structuredClone(w.accountBinding),at:new Date().toISOString()};w.status='approved';event(w,'You approved this exact checked proposal.')}
       else if(command==='execute'){if(w.status!=='approved'||!w.approval)throw new Error('Approve the current proposal first.');dispatch(c,w,'execute',current=>execute(c,w,current))}
-      else if(command==='reconcile'){if(!w.proposal)throw new Error('No source proposal is available for reconciliation.');dispatch(c,w,'verify-result',current=>verifyResult(c,w,current))}
+      else if(command==='reconcile'){if(!w.proposal)throw new Error('No source proposal is available for reconciliation.');dispatch(c,w,'verify-result',current=>w.readOnly?readInformation(c,w,current):verifyResult(c,w,current))}
       else throw new Error('Unknown workflow action.')
       save();reply(res,202,{workflow:w});return true
     }catch(e){reply(res,400,{error:text(e.message)||'The action could not be started.'});return true}

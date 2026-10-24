@@ -29,6 +29,9 @@ Failures return `{error}`. Mutation routes accept JSON. Background jobs return
 - `POST /api/connections/:id/disconnect` -> cancels jobs, closes browser and
   removes its profile. Does not silently reuse the old account later.
 - `POST /api/workflows` with `{connectionId,actionId,goal?}` -> inspect selected action.
+  A read-only card retrieves useful source facts, independently verifies each
+  fact and the task/account/page through Kane's individual analyzer verdicts,
+  and saves a receipt automatically. No submission approval is needed to read.
 - `GET /api/workflows/:id` -> `{workflow,connection}`.
 - `POST /api/workflows/:id/answer` with `{answers, constraints?}` -> refresh options.
 - `POST /api/workflows/:id/choose` with `{optionId}` -> selects an observed option,
@@ -63,6 +66,12 @@ sourceUrl,submitControl,executionKind:'read'|'draft'|'consequential'|'unsupporte
 digest,checkedAt}`. Checks: `{label,status:'match'|'conflict'|'unknown',detail}`.
 Receipt: `{title,summary,sourceUrl,recordId,fields:[{label,value}],nextSteps:[],
 verifiedAt,evidenceId}`. A read-only result receipt must say no changes were made.
+Read-only receipts also carry `verificationEvidenceId`, pointing to the recorded
+independent analyzer checks. All verdicts must be true; exit code zero alone is
+insufficient. The extraction retains its normal sealed evidence pack. Saved
+receipts are loaded from the server after reload and can be reopened from their
+website's saved results. An uncertain read-only result can be refreshed and
+verified again; consequential reconciliation never repeats submission.
 
 Observation labels are distinct: option discovered, terms observed, draft checked,
 action submitted, result verified, result unknown. No link is a verified workflow.

@@ -1,0 +1,19 @@
+{
+  "commit_id": "0bfe7785-fce2-4706-8a68-eb7e95787437",
+  "test_id": "29a3e430-df01-4841-9a6a-742c59ffe0f3",
+  "testcase_id": "01M5QYS7TC33XNJFSG59ZG2YAB",
+  "project_id": "01M5QFXVQKQ0KCCE24PC0BJXYP",
+  "org_id": "3399082",
+  "session_name": "reject-unsupported-url-scheme",
+  "tc_id": "TC-16",
+  "executions": [
+    {
+      "execution_id": "fecb84bb-ebf6-43b6-86cf-56b4eeab7374",
+      "run_kind": "author",
+      "status": "passed",
+      "valid": true,
+      "uploaded": true,
+      "at": "2026-10-24T22:27:20.953Z"
+    }
+  ]
+}

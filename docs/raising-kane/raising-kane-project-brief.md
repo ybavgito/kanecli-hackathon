@@ -89,10 +89,12 @@ human takeover, followed by inspection of the actual result.
 
 ## Delivery and verification
 
-First deliver URL entry, generic discovery, evidenced action cards and takeover/
-resume. Next deliver dynamic questions, grounded option comparisons, approval,
-execution and verified receipts. Prove one generic engine on two unrelated sites
-and an authenticated journey using an authorized account with direct human login.
+Current delivery order: connect Kane's discoveries to usable cards; complete a
+read-only task from a card; independently verify and save its useful information
+so it survives reload; repeat on a second unrelated website with the same code.
+Read-only information does not need transaction approval. Questions, comparisons,
+approval and consequential execution remain separate later work. Browser takeover
+and resume use direct human login on an authorized test website.
 
 The implementation contract is `url-first-contract.md`; build ownership is in
 `two-person-build.md`. `.testmuai/context.md` and `verification.md` distinguish
