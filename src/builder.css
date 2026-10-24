@@ -6,6 +6,24 @@
 .builder-page a {
   color: inherit;
 }
+.builder-observation {
+  margin: 12px 0 18px;
+}
+.builder-observation > div {
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) 3fr;
+  gap: 16px;
+  padding: 6px 0;
+}
+.builder-observation dt {
+  color: #687766;
+  text-transform: capitalize;
+  font-size: 12px;
+}
+.builder-observation dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
 .builder-page .app-header > a {
   text-decoration: none;
 }

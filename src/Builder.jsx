@@ -36,6 +36,35 @@ const titles = {
 }
 const display = (value) =>
   typeof value === 'object' && value !== null ? JSON.stringify(value, null, 2) : String(value || '')
+function Observation({ value }) {
+  let parsed = value
+  if (typeof value === 'string') {
+    try {
+      parsed = JSON.parse(value)
+    } catch {
+      /* Plain English is already readable. */
+    }
+  }
+  const terms = {
+    print_label: 'Print a shipping label',
+    qr_dropoff: 'Printer-free QR drop-off',
+    original_payment: 'Original payment',
+    store_credit: 'Store credit',
+  }
+  if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+    return (
+      <dl className="builder-observation">
+        {Object.entries(parsed).map(([key, val]) => (
+          <div key={key}>
+            <dt>{key.replace(/([a-z])([A-Z])/g, '$1 $2').replaceAll('_', ' ')}</dt>
+            <dd>{typeof val === 'string' ? terms[val] || val : display(val)}</dd>
+          </div>
+        ))}
+      </dl>
+    )
+  }
+  return <p>{display(value)}</p>
+}
 const brand = (
   <span className="wordmark">
     raising<span>kane</span>
@@ -352,8 +381,8 @@ export default function Builder() {
                                     ? 'Observe the original choice'
                                     : 'Change the choice. Follow the consequences.'}
                                 </h3>
-                                <p>{display(e.facts.source_terms)}</p>
-                                <blockquote>{display(e.facts.source_transition)}</blockquote>
+                                <Observation value={e.facts.source_terms} />
+                                <Observation value={e.facts.source_transition} />
                                 <button onClick={() => setSelectedImage(e)}>
                                   <Image size={16} /> View Kane’s reached state
                                 </button>

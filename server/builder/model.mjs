@@ -260,7 +260,7 @@ export function validateArtifact(a) {
 }
 export async function compileArtifact(artifact, directory) {
   validateArtifact(artifact)
-  const entry = `import React from 'react';import {createRoot} from 'react-dom/client';import TaskInterface from './component.jsx';let state=null;const root=createRoot(document.getElementById('root'));const act=(action,payload)=>parent.postMessage({type:'rk-action',action,payload},'*');function draw(){root.render(React.createElement(TaskInterface,{task:state,act}))}addEventListener('message',e=>{if(e.source===parent&&e.data?.type==='rk-state'){state=e.data.task;draw()}});parent.postMessage({type:'rk-ready'},'*');`
+  const entry = `import React from 'react';import {createRoot} from 'react-dom/client';import TaskInterface from './component.jsx';let state=null;const element=document.getElementById('root');const root=createRoot(element);new ResizeObserver(()=>parent.postMessage({type:'rk-height',height:Math.ceil(element.getBoundingClientRect().height+48)},'*')).observe(element);const act=(action,payload)=>parent.postMessage({type:'rk-action',action,payload},'*');function draw(){root.render(React.createElement(TaskInterface,{task:state,act}))}addEventListener('message',e=>{if(e.source===parent&&e.data?.type==='rk-state'){state=e.data.task;draw()}});parent.postMessage({type:'rk-ready'},'*');`
   await writeFile(join(directory, 'entry.jsx'), entry)
   await writeFile(
     join(directory, 'component.jsx'),
