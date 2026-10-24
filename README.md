@@ -38,8 +38,8 @@ Keep the user flow, acceptance criteria, and any test data in `.testmuai/context
 ## Saved tests and parallel suites
 
 One-off checks use `verify:kane`. For flows you want to repeat, save them as
-`tests/*_test.md`: the first run authors and records the steps (uses credits), and later
-runs replay the recording without the AI.
+`tests/*_test.md`: the first run authors and records the steps, and later
+runs replay the recording.
 
 | Path | Purpose |
 | --- | --- |
@@ -65,6 +65,10 @@ Guidelines:
 
 - Write one clause per assertion, and end each step with a check on the page state.
 - Keep a single objective under about 15 steps; split longer flows.
-- Pass the target through `{{base_url}}`; `--url` does not retarget a recorded replay.
+- Pass the target through `{{base_url}}`; `--url` did not replace literal recorded navigation in the local reproduction check.
 - Decide numeric invariants in your own code from values extracted with `store X as 'name'`.
 - `.testmuai/evidence/` (sealed run packs) and `.context/` are git-ignored.
+
+## Field guide
+
+See the [Kane CLI field guide](kane-field-guide.md) for v0.9.0 observations, scripting interfaces, replay behavior and verification limits.
