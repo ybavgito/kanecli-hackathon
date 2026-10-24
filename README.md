@@ -3,6 +3,15 @@
 A web-app starter wired for Kane CLI verification. The Hack Day uses the release
 candidate; these docs were checked against `0.10.0-rc.3` on October 24, 2026.
 
+## ClearPath project brief
+
+The proposed product is [ClearPath: a clearer way through complicated websites](docs/clearpath/clearpath-complete-project-brief.md).
+The supplied brief is preserved unchanged. Read the accompanying
+[gap review and implementation decisions](docs/clearpath/gap-review.md) before
+building; it identifies approval, duplicate prevention, browser continuity and
+verification contracts that still need definition. The three supporting research
+files linked at the end of the original brief have not been supplied.
+
 ## Start building
 
 ```bash
