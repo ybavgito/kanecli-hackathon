@@ -38,6 +38,23 @@ rebuild on generated-code defects. The preview verifier and source operator requ
 separate queues/browsers to avoid a nested-job deadlock. Automatic accessibility scans
 remain partial evidence; an accessibility tree is not a full audit.
 
+## Guardrails for the planned interface-builder tests
+
+The [testing guardrail contract](docs/raising-kane/explore-driven-builder-plan.md#prevent-real-changes-during-discovery-and-testing)
+requires server-owned `inspect`, `test` and `live` contexts. Test workers reach only
+isolated sandbox records; external inspect work permits only explicitly supported read
+operations. Production actions require a separate live job and scoped authorization.
+
+Kane Explore's `--policy read_only` and `--deny` supplement this boundary; they do not
+control generated code, one-shot `run`, direct APIs or the backend source job triggered
+by a preview click. Repeat the explicit Explore policy on reruns. `--allow-post` is for
+reviewed read semantics only; setup dependencies can still have effects. An HTTP method,
+a confirmation dialog or a prompt is not sufficient proof that an operation is harmless.
+
+These are planned enforcement requirements, not newly tested capabilities. Earlier
+experiments do not establish a universal no-mutation guarantee. Label sandbox execution
+and live observation separately; never let a repair relax policy to obtain a pass.
+
 ## Implemented Raising Kane runtime — October 24 follow-up
 
 The integrated `main` implementation now completes both source workflows. Read

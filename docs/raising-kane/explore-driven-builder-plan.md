@@ -1,6 +1,6 @@
 # Raising Kane: Explore-driven interface builder
 
-Planning revision: October 24, 2026, after the bounded Explore capability experiment. **Complete implementation plan; proposed successor architecture, not shipped behavior.**
+Planning revision: October 24, 2026, after the bounded Explore capability experiment and testing guardrail review. **Complete implementation plan; proposed successor architecture, not shipped behavior.**
 
 This is the current plan for the user-requested agentic builder. It supersedes conflicting
 fixed-interface/no-runtime-builder scope in earlier product documents. Implementation
@@ -89,6 +89,9 @@ accessibility repair has yet been demonstrated.
 6. **Do not promise universal transaction support.** Public/read-only tasks can use the
    generic engine. Automated transactions require a demonstrated supported boundary;
    otherwise use human completion and source verification.
+7. **Testing has no live mutation authority.** Discovery/verification/repair jobs use
+   controller-enforced inspect or sandbox-test permissions. Real actions require a
+   separate live-use job. See [testing guardrails](#prevent-real-changes-during-discovery-and-testing).
 
 ## Exact user and system flow
 
@@ -97,7 +100,9 @@ accessibility repair has yet been demonstrated.
 **Input:** URL; optional goal; optionally a simple preference such as keyboard-only use.
 
 **System:** Validate the URL. Create a connection, source exploration project mapping,
-and build job. Bind the allowed origins, source state, task and exploration budget.
+and build job. Bind the allowed origins, source state, task and exploration budget, plus
+a server-owned inspect/test/live execution context. Do not let the supplied URL choose
+a privileged environment or let a frontend flag switch modes.
 For the first demo, use public controlled fixtures, avoiding an unresolved sign-in
 handoff between the existing runtime browser and Explore's own browser.
 
@@ -140,7 +145,9 @@ A real-site read-only pass cannot discover every state-changing branch. For the 
 use isolated, resettable fixture records and an explicitly authorized mutating Explore
 pass with final actions denied. The fixture's server must also reject final submission
 without a valid grant; the explorer prompt or deny list alone is not the commit boundary.
-Reset between scenarios; never assume browser Back undoes a mutation.
+Reset between scenarios; never assume browser Back undoes a mutation. Discovering even
+a reversible draft change on a live account is outside test authority. Full submission
+tests use a separate sandbox-only grant issuer and disposable records.
 
 **User sees:** Only consequential clarification: which record, an ambiguous goal or a
 choice whose meaning cannot be inferred. Do not ask the user to explain each click.
@@ -206,10 +213,12 @@ errors. Compilation alone does not mark it verified.
 reachable screens, dead ends, broken controls, accessibility findings and missing paths.
 Source and preview have different URLs and interfaces; their maps must remain distinct.
 
-Checking a generated interface can trigger its backend. In verification mode its bridge
-must target isolated fixture records or read-only source missions. A read-only Explore
-policy may block POST-backed preview controls; only known read-only endpoints may be
-allowlisted. Full interactive tests use a controlled verification environment.
+Checking a generated interface can trigger its backend. Its bridge must inherit an
+immutable execution context: test mode reaches only isolated sandbox sources; external
+inspect mode permits only reviewed read operations. The source worker enforces this
+independently of the preview browser. A read-only Explore policy may block POST-backed
+controls; never allowlist a mutation to make a live-site test pass. Full interaction and
+submission checks run in the sandbox, using its separate test grant authority.
 
 **User sees:** “Checking your interface.” Show specific issues and repairs when useful,
 not an accessibility score with unknown scope.
@@ -258,7 +267,8 @@ red and green evidence plus the code diff. A healed test recording is not a code
 
 **Input:** Promoted artifact, current connection and real user choices.
 
-**System:** Re-read volatile facts when loading relevant options; check material terms
+**System:** Start a separate live-use job; never promote a test job's permissions.
+Re-read volatile facts when loading relevant options; check material terms
 before approval; execute only supported authorized actions; verify the saved result.
 Reconcile uncertainty rather than blindly retry. Source behavior changes invalidate the
 affected binding and can trigger focused Explore plus a new build revision.
@@ -268,8 +278,9 @@ Use the learned map for navigation and targeted Kane jobs at meaningful state tr
 Keep the last verified artifact while checking a replacement, but disable stale actions.
 
 **User sees:** The simple interface, current costs/choices, clear approval where needed,
-and a useful persistent receipt. A Validate button rechecks the current proposal; it does
-not imply that all unseen branches have been tested.
+and a useful persistent receipt. A Validate button rechecks the current proposal without authorizing source writes; it
+does not imply that all unseen branches have been tested. Live draft preparation that
+saves data needs a separately scoped authorization.
 
 **Output/gate:** Completion means a source result was verified. Otherwise show unknown or
 blocked with a concrete next step. Preserve history across reload.
@@ -662,6 +673,7 @@ the claim to what the source confirmation actually demonstrates.
 | Auth/CAPTCHA/network failure | Pause with precise access/retry/human step; retain evidence | No speculative patch |
 | Conflicting or missing user preference | Ask the material question | No until resolved |
 | Submission timeout | Reconcile source by operation ID before any retry | Never automatic resubmission |
+| Inspect/test policy denial | Keep action blocked; correct an invalid UI binding or show unsupported scope; never weaken enforcement | Only for a genuine generated-interface defect |
 | Replay failure followed by Kane healing | Preserve both attempts; inspect unchanged expectations and source evidence | Only if actual app defect established |
 
 Promotion binds verification to the exact artifact, contract and source fixture epoch.
@@ -675,6 +687,165 @@ Persist the operation before attempting submission; reuse that ID during reconci
 Kane checks the visible review and later confirmation but does not supply atomicity.
 These contracts should reuse main's tested patterns rather than be reimplemented by
 arbitrary generated JavaScript.
+
+## Prevent real changes during discovery and testing
+
+**Product invariant:** automated discovery, preview checks, regression and code-repair
+runs must not create or modify real customer business records, transactions or messages.
+Full mutation tests run only on isolated synthetic source records. Visiting a website can
+still create access logs, analytics and cookies; do not promise literally zero server
+activity. This section is an implementation contract, not a claim that the new guardrail
+system has already been built or tested.
+
+A final-button warning is insufficient. Changing a method may autosave a return draft;
+selecting a time may hold a real slot; uploads, cart changes, reminders and cancellation
+links can have effects before a confirmation screen. “Reversible” does not mean allowed
+while testing, and browser Back or a later cleanup is not an adequate prevention boundary.
+
+### Three execution modes, selected by the controller
+
+| Mode | Permitted source behavior | Explicitly forbidden |
+| --- | --- | --- |
+| `inspect` | Bounded navigation and reviewed read operations on a supported source; isolated browser profile | Live autosave/draft changes, reservations, uploads, messages and transactions; unknown operations |
+| `test` | Full generated-interface journeys against designated sandbox sources and per-run synthetic records, including synthetic commit when needed | Any live source mutation, production approval grant or production account credentials |
+| `live` | Only the current user's supported task with fresh source checks and explicitly granted effects | Background test/rebuild runs inheriting live permissions; automatic escalation from inspect/test |
+
+Default to `inspect`. Supplying a URL does not authorize following an arbitrary
+state-changing entry URL (for example a tokenized cancellation link). Validate the
+initial target against the supported read-entry policy before the first navigation;
+unknown targets require integration review and remain unsupported meanwhile.
+External public/read-only workflow checks remain in `inspect`;
+calling them “tests” does not grant additional capabilities. If a real workflow requires
+an unreviewed or state-changing operation, stop that branch and label it unverified.
+Authentication alone grants no permission to change the account. Where available, use an
+actual source-enforced read-only account. Without that boundary or a reviewed constrained
+integration, do not launch interactive exploration against a real signed-in account.
+
+A test may change our disposable preview state and sandbox source state. Its source
+connection must be identified as synthetic in every event and receipt. A test account on
+a commercial production website is not automatically a sandbox: it can still create
+real reservations, send emails or trigger payments.
+
+The user's final approval is a separate trusted interaction in the parent application.
+A test can exercise that UI using a **sandbox-only** grant issuer, but cannot issue a
+production grant. Never offer “allow this real action to make the test pass.” Preparing
+a live draft that itself saves data needs a separately scoped user authorization; it
+must not be hidden behind a button labeled Validate. Validate remains a read check of
+current terms, not an implicit action permission.
+
+### Enforce outside generated code and agent prompts
+
+At job creation, the trusted controller records a non-editable `ExecutionContext`:
+`mode`, `purpose`, `sourceEnvironmentId`, `sourceOrigin`, `accountId`, `recordScope`,
+`allowedOperationIds`, `artifactHash`, `contractHash`, `fixtureEpoch` when testing,
+`expiresAt` and an optional live authorization reference. This is a proposed application
+record, not a Kane flag. The context is passed by server-owned reference; the browser or
+coding agent cannot select its own mode/environment by changing a request parameter.
+
+Enforcement has several necessary parts:
+
+1. **Action broker:** every generated-interface action resolves through a typed,
+   server-owned operation registry. Check context, exact target, source environment,
+   permitted operation and expiry before dispatch. Reject unknown actions and missing
+   context. Recheck at execution time, since a queued job may outlive its permission.
+2. **Worker and network isolation:** builder/build processes have no production browser
+   profile, cookie store, account secret or production network route. Test workers can
+   reach only their preview, sandbox source and necessary tool services. Run external
+   inspect jobs in a separate constrained worker. Generated UI has no direct source
+   access; restrict its origin, requests, frames and bridge. Hiding buttons or relying
+   on CORS does not prevent outgoing requests.
+3. **Source boundary:** sandbox commit endpoints accept only sandbox grants bound to the
+   environment, account, record, exact proposal, source revision and operation ID.
+   Production grants are unavailable to test workers; live endpoints reject test grants.
+   An environment label supplied by the model is not proof of which server it reached.
+4. **Browser policy:** apply Kane's supported policy/deny controls in addition to the
+   above boundaries. Use explicit `--policy read_only` on every Explore inspect run and
+   repeat it on reruns. `--deny` labels help limit actions but are not authorization.
+
+Do not assume Explore's read-only policy governs one-shot `run`, saved tests, generated
+JavaScript, direct API tools or the backend source job triggered by a preview click.
+Each path must receive its own controller enforcement. Scope and guard the source worker
+as well as the outer preview browser; the two execution lanes must carry the same task
+and environment binding.
+
+On real sites, blocking only POST/PUT/PATCH/DELETE is insufficient: GET navigation can
+mutate state, while some POST endpoints only read. Inspect mode permits an operation
+only after its endpoint semantics have been established. For supported integrations,
+restrict destination, method, route and relevant operation/body shape; revalidate every
+redirect and additional origin. Forms, new tabs, iframe activity, background fetches,
+beacons and WebSocket messages must not bypass that boundary. If the integration cannot
+enforce the required restriction, mark it unsupported instead of claiming read-only
+safety. Do not derive read permission from a model's guess about a button label.
+
+Use `--allow-post` only for an explicitly reviewed read operation; never to unblock an
+unknown endpoint after a failed run. Explore setup via `--deps` can have effects even
+under a read-only policy. First-release inspect jobs have no mutating setup steps.
+Do not copy a live authenticated browser profile into a preview/test worker. Login and
+human takeover remain separate, explicit operations; resuming does not switch modes.
+
+### Preserve useful verification without touching real records
+
+Use two clearly separated sources of evidence:
+
+- **Sandbox execution:** Kane can exercise full branching, submission, error handling,
+  reload and recovery against isolated synthetic records. Before each scenario, reset
+  or seed its own records; disable external email/payment/booking effects at the source.
+- **Live observation:** Kane can compare currently accessible, permitted source facts
+  against the interface, without executing the real transaction. This establishes only
+  the observed terms and paths, not that an unexecuted live commit will succeed.
+
+A recording or mock may help build a preview, but must be labeled as such. A sandbox pass
+cannot be promoted to a live transactional pass. Bind results to mode, source environment,
+record set, artifact and contract. Show separate labels such as “Sandbox flow passed,”
+“Live terms checked at 15:40,” and “Live submission not tested.” Use the actual timestamp.
+
+Live use starts a **new controller job** after the user chooses to proceed; it never
+upgrades an existing test token. Refresh the source, invalidate any stale draft approval,
+and require the exact supported authorization. Where an external source cannot enforce
+the required transaction boundary, hand final completion to the person in the original
+site and verify the outcome afterward. Do not extend the sandbox guarantee to that site.
+
+### Blocked actions, repairs and an accidental effect
+
+A policy denial is not automatically a generated-code defect. Return an explicit reason
+such as `source_write_not_allowed`, `unknown_operation`, `environment_mismatch`, or
+`expired_permission`. The builder may remove an invalid binding or show an unsupported
+step; it cannot edit policy, expand an allowlist, acquire live credentials or weaken the
+acceptance requirement to get green. Repairs and replays retain the original mode and
+maximum permissions. A model's request for more privileges remains denied in test mode.
+
+Persist the attempted operation, target, policy version, decision and related evidence
+without secrets. Show “Stopped before changing the source” only when enforcement evidence
+establishes rejection before dispatch. A timeout or killed browser does not prove that
+nothing changed. If an unexpected source effect is suspected, stop that task's jobs,
+revoke outstanding grants, reconcile against source records and report the uncertainty.
+Do not automatically submit, cancel or undo again; cleanup may be another real action.
+
+### Required implementation checks before external interactive testing
+
+Generate Kane journeys through assurance from these acceptance requirements, and add
+focused broker/source contract checks where a browser test cannot establish enforcement:
+
+- Test-mode calls to a live mutation route are rejected even when the generated UI sends
+  forged mode/environment fields or calls the backend directly.
+- Test grants cannot commit on the live boundary, and live grants cannot be accessed from
+  the test runtime. An expired or changed-source grant is rejected at dispatch/commit.
+- An unexpected GET mutation, POST autosave, redirect and nested source job are denied
+  under inspect policy; an explicitly supported read operation still works.
+- The test source cannot send outbound messages or perform external payment/reservation
+  effects. Production endpoints are unreachable from test workers.
+- A preview test cannot change another test's record or a live user's browser state.
+  Cancellation followed by restart does not reuse permission or duplicate an operation.
+- A blocked operation is displayed as blocked, not completed; repair cannot alter the
+  enforcement layer. Sandbox evidence is never labeled a live transaction result.
+- The permitted sandbox happy path still completes, including the synthetic approval and
+  source confirmation, so enforcement does not make the product unusable.
+
+Use controlled instrumented endpoints representing the live boundary to test rejection;
+never try a real purchase or deletion to see whether the guard catches it. Source-side
+mutation counters and operation logs must independently corroborate denied effects.
+These checks remain **planned**. Earlier Explore experiments established one blocked POST
+and real accessibility findings; they do not prove this complete guardrail architecture.
 
 ## Kane capability allocation
 
@@ -714,6 +885,7 @@ Generate execution cases through Kane assurance when implementation starts.
 | --- | --- | --- |
 | A. Baseline integration | Selectively combine latest URL-first connection/observation work with main's fixtures, styling and source contracts | Existing supported behavior retained; branch merge conflicts resolved consciously |
 | B. Explore adapter | Job runner, version-pinned map reader, pagination, snapshot provenance | Import observed screens/flow/finding details from a real run; distinguish partial map |
+| B2. Test isolation and guards | Immutable execution context, broker policy, separate worker identities/network access and sandbox grant issuer | Instrumented forbidden operations have zero source mutations; allowed sandbox flow still works |
 | C. Agent/tool loop | Bounded broker tools, task contract, decision log, isolated generated workspace | Agent requests Kane evidence and that evidence changes a generated module/manifest |
 | D. Artifact host | Build/version store, isolated preview, trusted action bridge | Artifact loads; source actions are scoped; contract/evaluator are not writable |
 | E. Verifier | Separate preview/source lanes, preview Explore, assurance journeys, business comparison | Kane uses generated UI and a nested source job completes; independent terms match |
@@ -773,7 +945,10 @@ For the first website, a new task starts from a URL/goal; real Explore findings 
 builder; a generated artifact is traceable to those findings; Kane tests its relevant
 paths and the source effects; a genuine defect can cause a code rebuild and recheck;
 then a person completes the task and receives a persisted, verified source result.
-Accessibility findings are reported with their real scope and disposition. Missing
+Discovery and testing cannot exercise live business mutations; inspect/test/live context
+is enforced across the agent, preview bridge and source worker. Sandbox passes and live
+observations remain separately labeled. Accessibility findings are reported with their
+real scope and disposition. Missing
 observations, source failures and exhausted repair budgets are explicit states.
 
 Until all these gates are demonstrated, call this a bounded prototype in progress—not
