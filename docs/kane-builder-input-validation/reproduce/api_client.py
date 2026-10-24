@@ -15,4 +15,3 @@ def request(path,payload=None):
   try:body=json.loads(e.read());code=body.get('error',{}).get('code');typ=body.get('error',{}).get('type')
   except:code=typ=None
   raise RuntimeError(f'OpenAI HTTP {e.code}; code={code}; type={typ}') from None
-
