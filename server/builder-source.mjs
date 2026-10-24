@@ -29,7 +29,45 @@ const publicOperation = (value) => {
 }
 
 /** Authored by the trusted integration, never by the generated application. */
-export function builderAcceptanceContract(kind, intent) {
+export function builderAcceptanceContract(kind, intent, mode = 'test') {
+  if (mode === 'inspect')
+    return freeze({
+      schemaVersion: 1,
+      product: 'Raising Kane',
+      kind: 'overview',
+      sourceKind: kind,
+      mode: 'overview',
+      sourceEnvironmentId: BUILDER_SOURCE_ENVIRONMENT,
+      synthetic: true,
+      constraints: {
+        readOnly: true,
+        permittedOperations: ['read_state', 'check'],
+        preserveSourceRecord: true,
+      },
+      acceptanceCriteria: [
+        {
+          id: 'observed-source',
+          text: 'Show only source facts established by a completed Kane read inspection. Label unavailable or unobserved facts honestly.',
+        },
+        {
+          id: 'read-only-overview',
+          text: 'A URL alone requests a read-only source overview. Do not choose an item, method, refund destination or appointment slot; do not prepare, approve or submit a transaction.',
+        },
+        {
+          id: 'unchanged-source',
+          text: 'The initial synthetic source record, controller choices and operation state remain unchanged. No source write was authorized or dispatched.',
+        },
+        {
+          id: 'no-transaction-claim',
+          text: 'The interface identifies an observed overview, not a completed return or appointment change. It displays no transaction receipt or preapproved transaction.',
+        },
+        {
+          id: 'accessible-overview',
+          text: 'Present observed facts with readable labels and expose an accessible read-only refresh action with progress and errors.',
+        },
+      ],
+      outcome: 'source_overview_observed',
+    })
   const common = [
     {
       id: 'synthetic-only',
@@ -135,7 +173,9 @@ function manifest(kind, mode) {
       id: 'check',
       label: 'Check current details',
       description:
-        'Run a fresh read-only Kane comparison of the current source proposal or saved confirmation.',
+        mode === 'inspect'
+          ? 'Run a fresh Kane read inspection of the source identity and visible facts without selecting or changing anything.'
+          : 'Run a fresh read-only Kane comparison of the current source proposal or saved confirmation.',
       kind: 'read',
       inputSchema: emptyInput,
     },
@@ -247,15 +287,57 @@ export function createBuilderSource({
       mode: record.executionContext.mode,
       sourceEnvironmentId: BUILDER_SOURCE_ENVIRONMENT,
       contractHash: record.executionContext.contractHash,
-      terms: canonicalProposal(task.merchant),
+      terms: record.executionContext.mode === 'inspect' ? null : canonicalProposal(task.merchant),
     }
     result.approval = publicOperation(result.approval)
     result.sourceReturn = publicOperation(result.sourceReturn)
     result.receipt = publicOperation(result.receipt)
     delete result.operationId
+    if (record.executionContext.mode === 'inspect') result.overview = overviewFacts(record, task)
     return result
   }
+  function overviewFacts(record, task) {
+    const evidence = controller
+      .builderEvidence(record.taskId, record.executionContext.id)
+      .filter((entry) => entry.phase === 'discover' && entry.status === 'passed')
+      .at(-1)
+    const values = evidence?.finalState || {}
+    const facts =
+      record.kind === 'appointment'
+        ? [
+            ...(values.booking_id ? [{ label: 'Booking ID', value: values.booking_id }] : []),
+            ...(values.current_start
+              ? [{ label: 'Current appointment start', value: values.current_start }]
+              : []),
+          ]
+        : values.order_id
+          ? [{ label: 'Order ID', value: values.order_id }]
+          : []
+    return {
+      readOnly: true,
+      observationStatus: task.status === 'observed' && evidence ? 'observed' : task.status,
+      facts,
+      observedAt: evidence?.at || null,
+      evidenceReference:
+        evidence?.sessionId || evidence?.url || (evidence?.path ? 'local-source-inspection' : null),
+      transactionRequested: false,
+    }
+  }
   function decisions(record, task) {
+    if (record.executionContext.mode === 'inspect')
+      return {
+        kind: 'overview',
+        sourceKind: record.kind,
+        name: record.kind === 'appointment' ? 'Linden Home' : 'Northstar Outfitters',
+        synthetic: true,
+        mode: 'inspect',
+        readOnly: true,
+        purpose: 'Observe this source website; no transaction has been requested.',
+        overview: overviewFacts(record, task),
+        permittedActions: ['read_state', 'check'],
+        stateShape:
+          'Read status, progress, error and overview.facts. Poll read_state while status is working. Status observed means Kane read the source; it never means a transaction completed. check performs another read-only inspection. There are no selection, preparation, approval or submission actions.',
+      }
     return {
       kind: record.kind,
       name: record.kind === 'appointment' ? 'Linden Home' : 'Northstar Outfitters',
@@ -291,6 +373,9 @@ export function createBuilderSource({
       decision,
       code,
     })
+    if (decision === 'allow' && method !== 'GET') {
+      record.authorizedWriteCount = (record.authorizedWriteCount || 0) + 1
+    }
     record.policyEvents = record.policyEvents.slice(-200)
     save()
   }
@@ -585,7 +670,113 @@ export function createBuilderSource({
           .builderEvidence(record.taskId, record.executionContext.id)
           .map((e) => ({ ...e, evidencePackPath: e.path, evidencePath: e.path }))
       },
+      verifyOverview() {
+        const task = controller.readBuilderTask(record.taskId, record.executionContext.id)
+        const boundary = controller.builderBoundary(record.taskId, record.executionContext.id)
+        const operation = controller.builderResult(record.taskId, record.executionContext.id)
+        const noCommittedSourceRecord =
+          record.kind === 'return'
+            ? merchant.listReturns(record.taskId).length === 0
+            : task.merchant.currentBooking.version === task.merchant.originalBooking.version
+        const evidence = controller.builderEvidence(record.taskId, record.executionContext.id)
+        const lastInspection = evidence.filter((entry) => entry.phase === 'discover').at(-1)
+        const observedIdentity =
+          record.kind === 'appointment'
+            ? lastInspection?.finalState?.booking_id === task.merchant.bookingId &&
+              lastInspection?.finalState?.current_start === task.merchant.currentBooking.startsAt
+            : lastInspection?.finalState?.order_id === task.merchant.orderId
+        const checks = [
+          {
+            id: 'inspect-context',
+            passed:
+              record.executionContext.mode === 'inspect' &&
+              boundary.context.mode === 'inspect' &&
+              record.executionContext.sourceEnvironmentId === BUILDER_SOURCE_ENVIRONMENT &&
+              boundary.context.recordScope === record.taskId &&
+              boundary.context.allowedOperationIds.every((id) =>
+                ['read_state', 'check'].includes(id),
+              ),
+          },
+          {
+            id: 'overview-contract',
+            passed:
+              record.contract.kind === 'overview' &&
+              record.contract.mode === 'overview' &&
+              record.contract.outcome === 'source_overview_observed' &&
+              record.executionContext.contractHash === hash(record.contract) &&
+              boundary.context.contractHash === record.executionContext.contractHash,
+          },
+          {
+            id: 'source-record-unchanged',
+            passed:
+              typeof record.initialSourceHash === 'string' &&
+              hash(task.merchant) === record.initialSourceHash,
+          },
+          {
+            id: 'no-controller-choices',
+            passed:
+              record.initialTaskRevision === task.revision &&
+              task.intent === null &&
+              task.reason === null &&
+              task.validation === null &&
+              task.approval === null &&
+              !task.submissionStarted,
+          },
+          {
+            id: 'no-source-operation',
+            passed:
+              operation.status === 'absent' &&
+              boundary.operationId === null &&
+              task.sourceReturn === null &&
+              task.receipt === null &&
+              noCommittedSourceRecord,
+          },
+          {
+            id: 'no-authorized-source-writes',
+            passed:
+              record.authorizedWriteCount === 0 &&
+              (record.policyEvents || []).every(
+                (event) => event.decision !== 'allow' || event.method === 'GET',
+              ) &&
+              evidence.every((entry) => entry.phase === 'discover'),
+          },
+          {
+            id: 'completed-source-inspection',
+            passed:
+              !boundary.busy &&
+              task.status === 'observed' &&
+              Boolean(task.baseline) &&
+              lastInspection?.status === 'passed' &&
+              lastInspection.mode === 'inspect' &&
+              lastInspection.sourceEnvironmentId === BUILDER_SOURCE_ENVIRONMENT &&
+              lastInspection.recordScope === record.taskId &&
+              Boolean(lastInspection.path || lastInspection.sessionId || lastInspection.url) &&
+              observedIdentity,
+          },
+        ]
+        return {
+          status: checks.every((check) => check.passed === true) ? 'passed' : 'failed',
+          contractHash: record.executionContext.contractHash,
+          mode: 'inspect',
+          synthetic: true,
+          sourceEnvironmentId: BUILDER_SOURCE_ENVIRONMENT,
+          recordScope: record.taskId,
+          checks,
+          receipt: null,
+        }
+      },
       verifyResult() {
+        if (record.executionContext.mode === 'inspect')
+          return {
+            status: 'failed',
+            contractHash: record.executionContext.contractHash,
+            mode: 'inspect',
+            synthetic: true,
+            sourceEnvironmentId: BUILDER_SOURCE_ENVIRONMENT,
+            recordScope: record.taskId,
+            checks: [{ id: 'transaction-not-requested', passed: false }],
+            receipt: null,
+          }
         const current = state(record),
           expected = record.contract.constraints,
           receipt = current.receipt
@@ -752,6 +943,7 @@ export function createBuilderSource({
         throw failure('unsupported_goal', 'Use a concise supported task description.', 400)
       const goalText = goal.trim()
       if (
+        mode === 'test' &&
         goalText &&
         /\b(buy|purchase|donate|cancel|exchange|delete|email|cash|pickup)\b/i.test(goalText)
       )
@@ -761,6 +953,7 @@ export function createBuilderSource({
           400,
         )
       if (
+        mode === 'test' &&
         kind === 'appointment' &&
         goalText &&
         (!/\b(move|reschedule|change)\b/i.test(goalText) ||
@@ -781,7 +974,12 @@ export function createBuilderSource({
           400,
         )
       let request = kind === 'return' ? String(goal).trim() || DEFAULT_REQUEST : ''
-      if (kind === 'return' && goalText && !/\b(return|send back)\b/i.test(request))
+      if (
+        mode === 'test' &&
+        kind === 'return' &&
+        goalText &&
+        !/\b(return|send back)\b/i.test(request)
+      )
         throw failure(
           'unsupported_goal',
           'Describe a return of the red shoes and the refund destination, or leave the optional goal blank for the sample return.',
@@ -794,6 +992,7 @@ export function createBuilderSource({
         buildId,
         kind,
         policyEvents: [],
+        authorizedWriteCount: 0,
       }
       const context = {
         id: randomUUID(),
@@ -817,6 +1016,7 @@ export function createBuilderSource({
       record.executionContext = context
       await startSource(record)
       record.sourceUrl = `http://127.0.0.1:${record.port}${kind === 'appointment' ? '/appointments' : '/merchant'}?taskId=${record.taskId}`
+      if (mode === 'inspect') record.sourceUrl += '&view=readonly'
       context.sourceOrigin = new URL(record.sourceUrl).origin
       try {
         const initial = await controller.createBuilderTask({
@@ -826,7 +1026,9 @@ export function createBuilderSource({
           executionContext: context,
           sourceUrl: record.sourceUrl,
         })
-        record.contract = builderAcceptanceContract(kind, initial.intent)
+        record.initialSourceHash = hash(initial.merchant)
+        record.initialTaskRevision = initial.revision
+        record.contract = builderAcceptanceContract(kind, initial.intent, mode)
         context.contractHash = hash(record.contract)
         controller.bindBuilderContract(record.taskId, context.id, context.contractHash)
         records.set(record.id, record)

@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { mkdtempSync, rmSync } from 'node:fs'
+import { mkdtempSync, rmSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { Readable } from 'node:stream'
@@ -14,7 +14,8 @@ const { createBuilderSource, handlePublicSource } = await import('../../server/b
 const { expectedTerms } = await import('../../server/workflows.mjs')
 const merchant = createMerchant(),
   appointments = createAppointments()
-let mismatch = false
+let mismatch = false,
+  omitDiscoveryEvidence = false
 const worker = async ({ taskId, phase, url, objective }) => {
   const target = new URL(url),
     kind = target.pathname.startsWith('/appointments') ? 'appointment' : 'return'
@@ -40,7 +41,7 @@ const worker = async ({ taskId, phase, url, objective }) => {
               current_start: adapter.getDraft(taskId).currentBooking.startsAt,
             }
           : { order_id: 'ORD-1042' },
-      evidencePath: '/controlled/discover.evidence',
+      ...(omitDiscoveryEvidence ? {} : { evidencePath: '/controlled/discover.evidence' }),
     }
   if (['prepare', 'correct'].includes(phase)) {
     if (kind === 'appointment')
@@ -404,6 +405,151 @@ test('expired contexts and closed sessions cannot resume or reuse approval', asy
   assert.equal(response.status, 403)
   assert.equal((await response.json()).code, 'expired_permission')
   await expiryBridge.shutdown()
+})
+test('URL-only overview has no transaction intent and passes only after read evidence for either source', async () => {
+  for (const kind of ['return', 'appointment']) {
+    const session = await create(kind, 'inspect', '')
+    const sibling = await create(kind, 'inspect', '')
+    assert.deepEqual(session.contract, sibling.contract)
+    assert.equal(session.contract.kind, 'overview')
+    assert.equal(session.contract.mode, 'overview')
+    assert.equal(session.contract.sourceKind, kind)
+    assert.equal(session.contract.outcome, 'source_overview_observed')
+    assert.deepEqual(
+      session.allowedActions.map((action) => action.id),
+      ['read_state', 'check'],
+    )
+    assert.equal(session.initialState.intent, null)
+    assert.equal(session.initialState.terms, null)
+    assert.equal(session.sourceModel.kind, 'overview')
+    assert.equal(session.sourceModel.choices, undefined)
+    assert.equal(session.sourceModel.approval, undefined)
+    assert.deepEqual(session.sourceModel.overview.facts, [])
+    assert.equal(session.verifyOverview().status, 'failed')
+    const before =
+      kind === 'return'
+        ? merchant.getDraft(session.initialState.id)
+        : appointments.getDraft(session.initialState.id)
+    const inspected = await session.inspect({
+      question: 'Read the website overview without choosing a transaction.',
+    })
+    assert.equal(inspected.state.status, 'observed')
+    assert.equal(inspected.sourceModel.overview.transactionRequested, false)
+    assert.ok(inspected.sourceModel.overview.facts.length > 0)
+    const report = session.verifyOverview()
+    assert.equal(report.status, 'passed')
+    assert.equal(report.contractHash, session.executionContext.contractHash)
+    assert.equal(report.mode, 'inspect')
+    assert.equal(report.synthetic, true)
+    assert.equal(report.sourceEnvironmentId, 'raising-kane-local-sandbox-v1')
+    assert.equal(report.recordScope, session.initialState.id)
+    assert.equal(report.receipt, null)
+    assert.ok(report.checks.every((check) => check.passed === true))
+    assert.equal(session.verifyResult().status, 'failed')
+    const evidenceCount = session.getEvidence().length
+    await session.inspect({ question: 'Refresh the overview.' })
+    assert.equal(session.getEvidence().length, evidenceCount + 1)
+    assert.deepEqual(
+      kind === 'return'
+        ? merchant.getDraft(session.initialState.id)
+        : appointments.getDraft(session.initialState.id),
+      before,
+    )
+  }
+})
+test('overview verification fails on missing evidence, source drift and transactional sessions', async () => {
+  const session = await create('return', 'inspect', '')
+  omitDiscoveryEvidence = true
+  await session.inspect({ question: 'Read source.' })
+  omitDiscoveryEvidence = false
+  assert.equal(
+    session.verifyOverview().checks.find((check) => check.id === 'completed-source-inspection')
+      .passed,
+    false,
+  )
+  await session.inspect({ question: 'Read source with evidence.' })
+  assert.equal(session.verifyOverview().status, 'passed')
+  await assert.rejects(session.invoke('choose', { reason: 'too_small' }), {
+    code: 'unknown_operation',
+  })
+  assert.equal(session.verifyOverview().status, 'passed')
+  const before = merchant.getDraft(session.initialState.id)
+  const request = Readable.from([
+    JSON.stringify({
+      taskId: before.taskId,
+      expectedRevision: before.revision,
+      patch: { reason: 'damaged' },
+    }),
+  ])
+  request.method = 'POST'
+  let status
+  await merchant.handle(
+    request,
+    {
+      writeHead(code) {
+        status = code
+      },
+      end() {},
+    },
+    new URL('/merchant/api/draft', 'http://localhost'),
+  )
+  assert.equal(status, 200)
+  assert.equal(session.verifyOverview().status, 'failed')
+  assert.equal(
+    session.verifyOverview().checks.find((check) => check.id === 'source-record-unchanged').passed,
+    false,
+  )
+  const transaction = await create('return', 'test', '')
+  await transaction.inspect({ question: 'Read source.' })
+  assert.equal(transaction.verifyOverview().status, 'failed')
+})
+test('overview detects controller choices and retained source-write authorization after event truncation', async () => {
+  const session = await create('return', 'inspect', '')
+  await session.inspect({ question: 'Read source.' })
+  assert.equal(session.verifyOverview().status, 'passed')
+  const changedController = {
+    ...controller,
+    readBuilderTask(id, contextId) {
+      const value = controller.readBuilderTask(id, contextId)
+      return id === session.initialState.id
+        ? { ...value, revision: value.revision + 1, reason: 'too_small' }
+        : value
+    },
+  }
+  const controllerAudit = createBuilderSource({
+    controller: changedController,
+    merchant,
+    appointments,
+    baseUrl: 'http://127.0.0.1:5173',
+    dataDir: dir,
+  })
+  const changed = controllerAudit.get(session.id).verifyOverview()
+  assert.equal(changed.status, 'failed')
+  assert.equal(changed.checks.find((check) => check.id === 'no-controller-choices').passed, false)
+  const storePath = join(dir, 'builder-source-sessions.json')
+  const stored = readFileSync(storePath, 'utf8')
+  try {
+    const records = JSON.parse(stored)
+    const record = records.find((entry) => entry.id === session.id)
+    record.authorizedWriteCount = 1
+    record.policyEvents = []
+    writeFileSync(storePath, JSON.stringify(records))
+    const policyAudit = createBuilderSource({
+      controller,
+      merchant,
+      appointments,
+      baseUrl: 'http://127.0.0.1:5173',
+      dataDir: dir,
+    })
+    const changed = policyAudit.get(session.id).verifyOverview()
+    assert.equal(changed.status, 'failed')
+    assert.equal(
+      changed.checks.find((check) => check.id === 'no-authorized-source-writes').passed,
+      false,
+    )
+  } finally {
+    writeFileSync(storePath, stored)
+  }
 })
 test('saved source sessions retain their record, contract and authority across adapter restart', async () => {
   const session = await create(),

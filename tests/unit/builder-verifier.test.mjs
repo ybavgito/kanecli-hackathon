@@ -30,3 +30,13 @@ test('infrastructure interruptions do not trigger a speculative generated-code r
   assert.equal(verdict().revision, 2)
   assert.equal(verdict().artifactDigest, 'synthetic-artifact')
 })
+test('read-only overview requires Kane evidence and an unchanged inspect record, without a transaction receipt', () => {
+  const overview = { ...source, mode: 'inspect', receipt: null,
+    checks: [{ id: 'no-writes', passed: true }, { id: 'source-observed', passed: true }] }
+  const args = { browser, source: overview, revision: 1, artifactDigest: 'synthetic-artifact',
+    contractDigest: 'synthetic-contract', mode: 'overview' }
+  assert.equal(evaluateBuilderVerification(args).status, 'passed')
+  assert.equal(evaluateBuilderVerification({ ...args, source: { ...overview, receipt: { id: 'transaction' } } }).status, 'failed')
+  assert.equal(evaluateBuilderVerification({ ...args, source: { ...overview, mode: 'test' } }).status, 'failed')
+  assert.equal(evaluateBuilderVerification({ ...args, source: { ...overview, checks: [{ id: 'no-writes', passed: false }] } }).status, 'failed')
+})

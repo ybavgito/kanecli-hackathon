@@ -84,7 +84,8 @@ export function createBuilderController({ source, baseUrl, dataDir = path.resolv
     let session
     if (job.sourceSessionId) session = await source.get(job.sourceSessionId)
     else {
-      session = await source.create({ buildId: job.id, url: job.url, goal: job.goal, mode: 'test' })
+      session = await source.create({ buildId: job.id, url: job.url, goal: job.goal,
+        mode: job.mode === 'overview' ? 'inspect' : 'test' })
       job.sourceSessionId = session.id
       job.contract = session.contract
       job.contractDigest = hash(session.contract)
@@ -118,7 +119,8 @@ export function createBuilderController({ source, baseUrl, dataDir = path.resolv
   async function mapSource(job, session) {
     transition(job, 'exploring', 'Kane is mapping the isolated source website with read-only Explore.')
     let exploration = explore.start({ connectionId: job.id, url: session.sourceUrl,
-      goal: job.goal || 'Observe this synthetic task and the available choices without submitting it.', maxLeases: 2, timeoutMs: 180000 })
+      goal: job.goal || 'Map the visible tasks, choices and public screens. Do not prepare or submit a transaction.',
+      maxLeases: job.mode === 'overview' ? 4 : 2, timeoutMs: 180000 })
     job.exploration = exploration
     save(job)
     while (['starting', 'running', 'stopping'].includes(exploration.status)) {
@@ -138,16 +140,17 @@ export function createBuilderController({ source, baseUrl, dataDir = path.resolv
   async function verify(job, session, artifact) {
     transition(job, 'verifying', `Kane is checking generated revision ${artifact.revision} against a fresh synthetic record.`)
     const testSource = await source.create({ buildId: `${job.id}-verify-${artifact.revision}-${randomUUID().slice(0, 8)}`,
-      url: job.url, goal: job.goal, mode: 'test' })
+      url: job.url, goal: job.goal, mode: job.mode === 'overview' ? 'inspect' : 'test' })
     let token
     try {
       if (hash(testSource.contract) !== job.contractDigest) throw new Error('The independent contract changed between build and test. Start a new build.')
+      if (job.mode === 'overview') await testSource.inspect({ question: 'Observe this source in read-only mode for the independent overview check.' })
       token = randomBytes(32).toString('hex')
       const capability = { token, jobId: job.id, revision: artifact.revision, session: testSource, expires: Date.now() + 900000 }
       capabilities.set(token, capability)
       const url = `${baseUrl}/api/builds/${job.id}/verification/${artifact.revision}?token=${token}`
       const report = await verifier({ buildId: job.id, revision: artifact.revision, artifactDigest: artifact.digest,
-        contractDigest: job.contractDigest, contract: job.contract, url, source: testSource,
+        contractDigest: job.contractDigest, contract: job.contract, url, source: testSource, mode: job.mode,
         onEvent(update) { if (update.type === 'step' && update.status === 'done') event(job, 'verifying', update.remark || 'Kane completed a preview step.') } })
       job.reports.push(report)
       job.verification = report
@@ -174,7 +177,9 @@ export function createBuilderController({ source, baseUrl, dataDir = path.resolv
       if (!job.screenshots.length) {
         await mapSource(job, session)
         transition(job, 'inspecting', 'Kane is reading the selected workflow and capturing the actual page.')
-        const observed = await observe(job, session, 'Read the initial source record and available choices without submitting a transaction.')
+        const observed = await observe(job, session, job.mode === 'overview'
+          ? 'Observe the available tasks and screens without preparing or submitting any source change.'
+          : 'Read the initial source record and available choices without submitting a transaction.')
         job.sourceModel = { ...(observed.sourceModel || session.sourceModel), observed: observed.observation, exploration: job.exploration }
       }
       let previousArtifact = job.rawArtifacts.at(-1), feedback = job.reports.at(-1)
@@ -221,7 +226,9 @@ export function createBuilderController({ source, baseUrl, dataDir = path.resolv
         const report = await verify(job, session, artifact)
         if (report.status === 'passed') {
           job.promotedRevision = revision
-          transition(job, 'ready', `Revision ${revision} passed the generated interface and source outcome checks. It is ready for a separate sandbox task.`)
+          transition(job, 'ready', job.mode === 'overview'
+            ? `Revision ${revision} passed Kane’s read-only overview check. Choose a supported task to build a working interface.`
+            : `Revision ${revision} passed the generated interface and source outcome checks. It is ready for a separate sandbox task.`)
           return
         }
         if (!report.repairable || attempt === 2) throw new Error(report.summary)
@@ -257,7 +264,8 @@ export function createBuilderController({ source, baseUrl, dataDir = path.resolv
         if (req.method !== 'POST') return send(res, 405, { error: 'Method not allowed.' })
         if (!req.clientId) return send(res, 403, { error: 'Open Raising Kane to start a build.' })
         const input = builderInput(await body(req))
-        const job = { id: randomUUID(), ...input, ownerId: req.clientId, status: 'preparing', createdAt: now(),
+        const job = { id: randomUUID(), ...input, mode: input.goal ? 'focused' : 'overview',
+          ownerId: req.clientId, status: 'preparing', createdAt: now(),
           events: [], evidence: [], screenshots: [], revisions: [], reports: [], rawArtifacts: [], revision: 0,
           scope: 'isolated_synthetic_sandbox', title: 'A simpler interface', error: null }
         jobs.set(job.id, job)
@@ -311,6 +319,7 @@ export function createBuilderController({ source, baseUrl, dataDir = path.resolv
           return send(res, 409, { error: 'Only the verified revision may control this task. Test revisions use a separate synthetic session.' })
         }
         const artifact = job.revisions.find(item => item.revision === revision)
+        if (suffix === 'approve' && job.mode === 'overview') return send(res, 403, { error: 'A read-only overview has no approval or transaction.' })
         if (suffix === 'actions' && !artifact?.manifest?.actions?.some(action => action.id === input.actionId)) {
           return send(res, 403, { error: 'This action is not declared by the pinned generated interface.' })
         }

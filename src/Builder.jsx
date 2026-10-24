@@ -3,6 +3,20 @@ import '@fontsource-variable/dm-sans'
 import './builder.css'
 
 const ACTIVE = new Set(['preparing', 'exploring', 'inspecting', 'generating', 'building', 'verifying', 'repairing', 'queued'])
+const FOCUSED_TASKS = {
+  return: { label: 'Build the Northstar return', goal: 'Return the red shoes, keep the jacket, and refund my original payment method. I do not have a printer.' },
+  appointment: { label: 'Build the Linden move', goal: 'Move my service visit to Saturday, October 31 in the morning. Keep Maya Chen, the same service and address, and no extra fee.' },
+}
+const OVERVIEW_STAGES = {
+  preparing: ['Preparing a read-only overview', 'Kane will observe the website before you choose a task.'],
+  exploring: ['Kane is observing the website', 'Recording the source screens and navigation within this overview’s scope.'],
+  inspecting: ['Reading the source choices', 'Gathering the observed details for a read-only overview.'],
+  generating: ['Creating your observed overview', 'The coding agent is organizing Kane’s observations without enabling transactions.'],
+  building: ['Building the overview preview', 'Compiling the generated overview for Kane to check.'],
+  verifying: ['Kane is checking the overview', 'Comparing the read-only preview with the source observations.'],
+  repairing: ['Repairing the overview', 'Using the reported verification failure to revise this read-only preview.'],
+  ready: ['Your observed overview is ready', 'This read-only revision passed the recorded Kane check. Choose a task to build a separate interface.'],
+}
 const STAGES = {
   preparing: ['Preparing your website', 'Setting the task boundary before Kane starts.'],
   queued: ['Waiting to start', 'Your interface build is queued.'],
@@ -73,6 +87,20 @@ function host(value) {
 
 function array(value) { return Array.isArray(value) ? value : [] }
 
+function isOverview(build) { return build?.mode === 'overview' || build?.contract?.mode === 'overview' }
+
+function supportedKind(build) {
+  for (const kind of [build?.contract?.kind, build?.sourceModel?.kind, build?.kind]) {
+    if (Object.hasOwn(FOCUSED_TASKS, kind)) return kind
+  }
+  try {
+    const path = new URL(build?.url).pathname
+    if (path === '/merchant') return 'return'
+    if (['/appointments', '/appointment'].includes(path)) return 'appointment'
+  } catch {}
+  return null
+}
+
 async function api(path, body) {
   const response = await fetch(path, { method: body === undefined ? 'GET' : 'POST', headers: body === undefined ? {} : { 'Content-Type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body) })
   const data = await response.json().catch(() => ({}))
@@ -89,23 +117,34 @@ function Brand() {
   return <span className="kb-brand"><span className="kb-brand-symbol">K</span><span>Raising Kane<span className="kb-brand-dot">.</span></span></span>
 }
 
-function Evidence({ build }) {
+function Evidence({ build, expanded = false }) {
   const model = build.sourceModel || {}
   const explore = model.exploration || build.exploration || {}
   const screens = array(model.screens || explore.screens)
+  const flows = array(model.flows || explore.flows)
   const findings = array(model.findings || explore.findings)
   const evidence = array(build.evidence || model.evidence)
   const screenshots = [...array(model.screenshots || build.screenshots), ...evidence.filter(item => item.thumbnailUrl)]
   const limits = array(model.limitations || explore.limitations)
-  return <details className="kb-disclosure"><summary><span><Glyph name="eye" size={16} /> What Kane found</span><span>{screens.length ? `${screens.length} screens` : 'Source evidence'}</span></summary><div className="kb-disclosure-body">
+  const screenLabel = id => { const screen = screens.find(item => item.id === id); return screen?.title || screen?.heading || screen?.url }
+  return <details className="kb-disclosure" open={expanded || undefined}><summary><span><Glyph name="eye" size={16} /> {expanded ? 'Observed source map' : 'What Kane found'}</span><span>{screens.length ? `${screens.length} screens` : 'Source evidence'}</span></summary><div className="kb-disclosure-body">
     <p className="kb-small">These are source observations. They do not establish that every path was explored or that a reported source issue was fixed.</p>
     {screens.length > 0 && <ul className="kb-observations">{screens.map((screen, index) => <li key={screen.id || index}><strong>{screen.title || screen.heading || screen.url || `Observed screen ${index + 1}`}</strong>{safeUrl(screen.url) && <a href={safeUrl(screen.url)} target="_blank" rel="noreferrer">Open source <Glyph name="external" size={12} /></a>}</li>)}</ul>}
+    {flows.length > 0 && <ul className="kb-observations" aria-label="Observed navigation">{flows.map((flow, index) => <li key={flow.id || index}><strong>{flow.title || 'Observed navigation'}</strong>{screenLabel(flow.from) && screenLabel(flow.to) && <p>{screenLabel(flow.from)} → {screenLabel(flow.to)}</p>}</li>)}</ul>}
+    {explore.mapComplete === false && <p className="kb-small">This is a partial map. Some source paths remain unexplored.</p>}
     {screenshots.length > 0 && <div className="kb-captures">{screenshots.map((shot, index) => { const url = safeUrl(typeof shot === 'string' ? shot : shot.thumbnailUrl || shot.imageUrl || shot.url); return url && <a key={shot.id || index} href={url} target="_blank" rel="noreferrer"><img src={url} alt={shot.title || shot.description || `Kane source capture ${index + 1}`} loading="lazy" /><span>{shot.title || shot.state || `Source capture ${index + 1}`}</span></a> })}</div>}
     {findings.length > 0 && <ul className="kb-observations">{findings.map((finding, index) => <li key={finding.id || index}><strong>{text(finding.title || finding.ruleId || finding.kind || 'Source finding')}</strong><p>{text(finding.description || finding.summary)}</p>{finding.confirmed !== undefined && <small>{finding.confirmed ? 'Reported as confirmed by Explore' : 'Not independently confirmed'}</small>}</li>)}</ul>}
     {evidence.length > 0 && <ul className="kb-observations">{evidence.map((item, index) => <li key={item.id || index}><strong>{text(item.title || item.phase || item.kind || 'Source observation')}</strong><p>{text(item.summary || item.message)}</p>{safeUrl(item.url) && <a href={safeUrl(item.url)} target="_blank" rel="noreferrer">Open evidence <Glyph name="external" size={12} /></a>}</li>)}</ul>}
     {limits.length > 0 && <ul className="kb-limitations">{limits.map((limit, index) => <li key={index}>{text(limit)}</li>)}</ul>}
-    {!screens.length && !evidence.length && !findings.length && !screenshots.length && <p className="kb-empty-copy">Source evidence will appear when Kane records it.</p>}
+    {!screens.length && !flows.length && !evidence.length && !findings.length && !screenshots.length && <p className="kb-empty-copy">Source evidence will appear when Kane records it.</p>}
   </div></details>
+}
+
+function OverviewChoice({ build, busy, onChoose }) {
+  const kind = supportedKind(build)
+  const task = FOCUSED_TASKS[kind]
+  const ready = build.status === 'ready'
+  return <section className="kb-overview-choice" aria-labelledby="kb-overview-choice-title"><div className="kb-section-eyebrow"><Glyph name="eye" size={17} /> READ-ONLY OBSERVED OVERVIEW</div><h2 id="kb-overview-choice-title">Choose what to build next</h2><p>This overview shows what Kane observed. It does not perform a transaction or produce a transaction receipt.</p>{task ? <div className="kb-overview-task"><span className="kb-overview-task-icon"><Glyph name={kind === 'return' ? 'package' : 'calendar'} size={23} /></span><div><strong>{kind === 'return' ? 'Return the shoes with Northstar' : 'Move the service visit with Linden'}</strong><p>{task.goal}</p><button type="button" className="kb-primary" disabled={!ready || busy} onClick={() => onChoose(kind)}>{busy ? 'Starting the focused build…' : task.label}<Glyph name="arrow" size={17} /></button>{!ready && <small>Available when this observed overview is ready.</small>}</div></div> : <p>A supported task will appear after the source is identified.</p>}<p className="kb-overview-footnote">Your choice creates a new focused build. This overview and its evidence remain saved.</p></section>
 }
 
 function Timeline({ build }) {
@@ -222,6 +261,7 @@ export default function Builder() {
       seenRequests.current.add(requestKey)
       const target = event.source
       const reply = (ok, result, errorMessage) => target.postMessage({ type: 'raising-kane:result', channel: artifact.bridgeChannel, requestId: message.requestId, ok, result, error: errorMessage }, '*')
+      if (isOverview(current) && !['read_state', 'check'].includes(message.actionId)) { reply(false, null, 'This overview is read-only. Choose a supported task in Raising Kane to create a focused interface.'); return }
       if (message.actionId === 'approve') { reply(false, null, 'Approval must happen in the Raising Kane review panel.'); return }
       setActionCount(count => count + 1)
       try {
@@ -230,6 +270,7 @@ export default function Builder() {
         if (data.build) update(data.build)
         const approvalRequest = data.approvalRequest || data.result?.approvalRequest
         if (approvalRequest) {
+          if (isOverview(current)) throw new Error('A read-only overview cannot request transaction approval.')
           if (approvalRequest.taskRevision == null || !approvalRequest.proposalDigest) throw new Error('The source did not provide a complete approval request. Check the proposal again.')
           setApproval({ ...approvalRequest, buildId: current.id, artifactRevision: artifact.revision })
           setApprovalError('')
@@ -257,7 +298,21 @@ export default function Builder() {
     finally { setBusy('') }
   }
 
+  const focusBuild = async kind => {
+    const current = buildRef.current
+    const task = FOCUSED_TASKS[kind]
+    if (!isOverview(current) || current.status !== 'ready' || !task || kind !== supportedKind(current)) return
+    const selection = ++selectionRef.current
+    setBusy('focus'); setError('')
+    try {
+      const data = await api('/api/builds', { url: current.url, goal: task.goal })
+      if (selection === selectionRef.current) { setUrl(current.url); setGoal(task.goal); update(data.build || data) }
+    } catch (failure) { if (selection === selectionRef.current) setError(failure.message) }
+    finally { setBusy('') }
+  }
+
   const approve = async () => {
+    if (isOverview(build)) return
     if (!approval || approval.buildId !== build?.id || approval.artifactRevision !== build?.artifact?.revision) { setApprovalError('The interface changed. Request a fresh source check before approving.'); return }
     setBusy('approve'); setApprovalError('')
     try {
@@ -275,7 +330,7 @@ export default function Builder() {
 
   const preset = kind => {
     setUrl(new URL(kind === 'return' ? '/merchant' : '/appointments', window.location.origin).href)
-    setGoal(kind === 'return' ? 'Return the red shoes, keep the jacket, and refund my original payment method. I do not have a printer.' : 'Move my service visit to Saturday, October 31 in the morning. Keep Maya Chen, the same service and address, and no extra fee.')
+    setGoal(FOCUSED_TASKS[kind].goal)
     setError('')
   }
 
@@ -283,7 +338,8 @@ export default function Builder() {
   const candidatePreview = safeUrl(artifact?.previewUrl || build?.previewUrl)
   const previewUrl = candidatePreview && new URL(candidatePreview).origin === window.location.origin ? candidatePreview : null
   const active = ACTIVE.has(build?.status)
-  const stage = STAGES[build?.status] || [text(build?.status).replaceAll('_', ' ') || 'Build saved', 'Follow the recorded activity below.']
+  const overview = isOverview(build)
+  const stage = (overview && OVERVIEW_STAGES[build?.status]) || STAGES[build?.status] || [text(build?.status).replaceAll('_', ' ') || 'Build saved', 'Follow the recorded activity below.']
   const sourceUrl = safeUrl(build?.sourceUrl || build?.url)
   const configuration = build?.configuration || service
   const missing = array(configuration?.missing)
@@ -296,22 +352,23 @@ export default function Builder() {
       {error && <div className="kb-notice kb-error" role="alert"><span>{error}</span><button onClick={() => setError('')} aria-label="Dismiss error"><Glyph name="close" size={16} /></button></div>}
       {connectionError && <div className="kb-notice" role="status">The server connection was interrupted. Showing the last saved build; its status may have changed.</div>}
       {!build ? <>
-        <section className="kb-hero"><div className="kb-section-eyebrow"><span className="kb-tiny-line" /> When websites raise hell, raise Kane</div><h1>A simpler way<br />to <em>get it done.</em></h1><p>Bring the website and the task. Kane explores the source, a coding agent builds your interface, and Kane tests it before you use it.</p></section>
-        <div className="kb-start-layout"><section className="kb-start-form"><div className="kb-form-heading"><span className="kb-section-eyebrow">YOUR WEBSITE. YOUR TASK.</span><span className="kb-sandbox-label">SANDBOX BUILD</span></div><form onSubmit={start}><label htmlFor="builder-url">Website URL <span>Required</span></label><div className="kb-url-field"><Glyph name="globe" size={21} /><input id="builder-url" type="text" inputMode="url" autoComplete="url" placeholder="https://website.com" required value={url} onChange={event => setUrl(event.target.value)} /></div><label htmlFor="builder-goal">What would you like to do? <span>Optional</span></label><textarea id="builder-goal" rows={3} value={goal} onChange={event => setGoal(event.target.value)} placeholder="Tell Kane the task and what matters to you." /><div className="kb-form-footer"><p>Start with a supported sandbox below. Other websites can use <a href="?mode=discover">website discovery</a>.</p><button className="kb-primary" type="submit" disabled={Boolean(busy)}>{busy === 'start' ? 'Starting your build…' : 'Build my interface'}{busy === 'start' ? <span className="kb-spinner" /> : <Glyph name="arrow" />}</button></div></form><div className="kb-presets"><span>TRY A SOURCE</span><button type="button" onClick={() => preset('return')}><Glyph name="package" size={16} /> Return an item <span>Northstar</span></button><button type="button" onClick={() => preset('appointment')}><Glyph name="calendar" size={16} /> Move a visit <span>Linden</span></button></div></section>
+        <section className="kb-hero"><div className="kb-section-eyebrow"><span className="kb-tiny-line" /> When websites raise hell, raise Kane</div><h1>A simpler way<br />to <em>get it done.</em></h1><p>Start with a website. Leave the task blank for an observed overview, or describe what you want to do. Kane explores, a coding agent builds, and Kane checks the result.</p></section>
+        <div className="kb-start-layout"><section className="kb-start-form"><div className="kb-form-heading"><span className="kb-section-eyebrow">YOUR WEBSITE. YOUR TASK.</span><span className="kb-sandbox-label">SANDBOX BUILD</span></div><form onSubmit={start}><label htmlFor="builder-url">Website URL <span>Required</span></label><div className="kb-url-field"><Glyph name="globe" size={21} /><input id="builder-url" type="text" inputMode="url" autoComplete="url" placeholder="https://website.com" required value={url} onChange={event => setUrl(event.target.value)} /></div><label htmlFor="builder-goal">What would you like to do? <span>Optional</span></label><textarea id="builder-goal" aria-describedby="builder-goal-help" rows={3} value={goal} onChange={event => setGoal(event.target.value)} placeholder="Tell Kane the task and what matters to you." /><p id="builder-goal-help" className="kb-goal-help">Leave this blank for a read-only overview, then choose a supported task.</p><div className="kb-form-footer"><p>Start with a supported sandbox below. Other websites can use <a href="?mode=discover">website discovery</a>.</p><button className="kb-primary" type="submit" disabled={Boolean(busy)}>{busy === 'start' ? 'Starting your build…' : 'Build my interface'}{busy === 'start' ? <span className="kb-spinner" /> : <Glyph name="arrow" />}</button></div></form><div className="kb-presets"><span>TRY A SOURCE</span><button type="button" onClick={() => preset('return')}><Glyph name="package" size={16} /> Return an item <span>Northstar</span></button><button type="button" onClick={() => preset('appointment')}><Glyph name="calendar" size={16} /> Move a visit <span>Linden</span></button></div></section>
         <aside className="kb-how"><div className="kb-how-top"><span className="kb-how-icon"><Glyph name="spark" size={29} /></span><h2>The task comes first.<br />The interface follows.</h2></div><ol><li><span>01</span><div><strong>Kane explores</strong><p>Real screens, choices, and consequences become the brief.</p></div></li><li><span>02</span><div><strong>A coding agent builds</strong><p>A simpler React interface is generated for the task you chose.</p></div></li><li><span>03</span><div><strong>Kane tests and checks</strong><p>Failures drive repairs. A passing revision becomes your workspace.</p></div></li></ol><div className="kb-processing-note"><Glyph name="shield" size={17} /><p>Source content and screenshots are processed by TestMu AI and the coding model. These builds use synthetic sandbox records.</p></div></aside></div>
-        {builds.length > 0 && <section className="kb-history"><div className="kb-history-heading"><div><span className="kb-section-eyebrow">PICK UP WHERE YOU LEFT OFF</span><h2>Your interfaces</h2></div><span>{builds.length} saved</span></div><div className="kb-history-list">{builds.map(item => <button key={item.id} className="kb-history-item" onClick={() => openBuild(item.id)} disabled={restoring || Boolean(busy)}><span className="kb-site-initial">{(item.title || host(item.url)).slice(0, 1).toUpperCase()}</span><span className="kb-history-copy"><strong>{item.title || item.goal || host(item.url)}</strong><small>{host(item.url)}{item.updatedAt ? ` · ${date(item.updatedAt)}` : ''}</small></span><StateBadge status={item.status} /><Glyph name="arrow" size={18} /></button>)}</div></section>}
+        {builds.length > 0 && <section className="kb-history"><div className="kb-history-heading"><div><span className="kb-section-eyebrow">PICK UP WHERE YOU LEFT OFF</span><h2>Your interfaces</h2></div><span>{builds.length} saved</span></div><div className="kb-history-list">{builds.map(item => <button key={item.id} className="kb-history-item" onClick={() => openBuild(item.id)} disabled={restoring || Boolean(busy)}><span className="kb-site-initial">{(item.title || host(item.url)).slice(0, 1).toUpperCase()}</span><span className="kb-history-copy"><strong>{item.title || item.goal || host(item.url)}</strong><small>{host(item.url)}{isOverview(item) ? ' · Observed overview' : ''}{item.updatedAt ? ` · ${date(item.updatedAt)}` : ''}</small></span><StateBadge status={item.status} /><Glyph name="arrow" size={18} /></button>)}</div></section>}
       </> : <>
-        <div className="kb-workspace-heading"><div><button className="kb-back" onClick={home}>← All interfaces</button><div className="kb-section-eyebrow">YOUR GENERATED WORKSPACE <span className="kb-sandbox-label">SANDBOX</span></div><h1>{build.title || host(build.url)}</h1>{build.goal && <p>{build.goal}</p>}</div>{sourceUrl && <a className="kb-source-link" href={sourceUrl} target="_blank" rel="noreferrer">Open original website <Glyph name="external" size={15} /></a>}</div>
+        <div className="kb-workspace-heading"><div><button className="kb-back" onClick={home}>← All interfaces</button><div className="kb-section-eyebrow">{overview ? 'OBSERVED WEBSITE OVERVIEW' : 'YOUR GENERATED WORKSPACE'} <span className="kb-sandbox-label">{overview ? 'READ-ONLY · SANDBOX' : 'SANDBOX'}</span></div><h1>{build.title || host(build.url)}</h1>{build.goal && <p>{build.goal}</p>}</div>{sourceUrl && <a className="kb-source-link" href={sourceUrl} target="_blank" rel="noreferrer">Open original website <Glyph name="external" size={15} /></a>}</div>
         <div className="kb-workspace-grid"><div className="kb-preview-column">
           <section className={`kb-stage-panel ${build.status}`} aria-live="polite"><span className="kb-stage-symbol">{active ? <span className="kb-spinner" /> : <Glyph name={build.status === 'ready' ? 'check' : 'spark'} size={23} />}</span><div><h2>{stage[0]}</h2><p>{stage[1]}</p></div><StateBadge status={build.status} /></section>
           {(build.error || build.status === 'needs_configuration') && <section className="kb-build-error"><h2>{build.status === 'needs_configuration' ? 'Connect the builder on your server' : 'Why the build stopped'}</h2><p>{text(build.error || configuration?.message) || 'The server is missing configuration needed to continue.'}</p>{missing.length > 0 && <p className="kb-config-keys">Missing: {missing.map(text).join(', ')}</p>}<button className="kb-secondary" onClick={() => mutate('retry')} disabled={Boolean(busy) || active}>{busy === 'retry' ? 'Retrying…' : 'Retry build'}<Glyph name="repeat" size={15} /></button></section>}
-          {approval && <Approval request={approval} busy={busy === 'approve'} error={approvalError} onApprove={approve} onCancel={() => { setApproval(null); setApprovalError('') }} />}
+          {overview && <OverviewChoice build={build} busy={Boolean(busy)} onChoose={focusBuild} />}
+          {approval && !overview && <Approval request={approval} busy={busy === 'approve'} error={approvalError} onApprove={approve} onCancel={() => { setApproval(null); setApprovalError('') }} />}
           {previewError && <div className="kb-notice kb-error" role="alert">{previewError}</div>}
-          <section className="kb-preview-shell" aria-label="Generated interface preview"><div className="kb-preview-toolbar"><div><span className="kb-window-dots"><i /><i /><i /></span><strong>{build.status === 'ready' ? 'Your interface' : 'Generated preview'}</strong>{artifact?.revision && <span className="kb-revision-label">v{artifact.revision}</span>}</div><div className="kb-preview-controls">{previewUrl && <><div className="kb-width-toggle" aria-label="Preview width"><button type="button" aria-pressed={width === 'desktop'} onClick={() => setWidth('desktop')}>Desktop</button><button type="button" aria-pressed={width === 'mobile'} onClick={() => setWidth('mobile')}>Mobile</button></div><button className="kb-icon-button" onClick={() => { seenRequests.current.clear(); setPreviewEpoch(epoch => epoch + 1) }} aria-label="Reload generated preview"><Glyph name="repeat" size={16} /></button></>}</div></div>
-            {previewUrl ? <><div className={`kb-frame-surround ${width}`}><iframe key={`${build.id}-${artifact?.revision}-${build.status === 'ready' ? 'ready' : 'preview'}-${previewEpoch}`} ref={frameRef} title={`${build.title || 'Raising Kane'} generated task interface`} src={previewUrl} sandbox="allow-scripts" referrerPolicy="no-referrer" /></div><div className="kb-preview-caption"><span><Glyph name={build.status === 'ready' ? 'shield' : 'eye'} size={14} />{build.status === 'ready' ? 'This revision passed the recorded Kane check.' : 'Preview only · This revision has not passed verification.'}</span>{actionCount > 0 && <span className="kb-action-running"><span className="kb-spinner" /> Checking the source…</span>}</div></> : <div className="kb-preview-empty"><span className="kb-preview-empty-icon"><Glyph name="code" size={34} /></span><h2>Your interface will appear here</h2><p>{active ? 'Kane’s source observations guide the generated layout, choices, and actions. You can follow the real activity alongside this preview.' : 'A compiled artifact is not available for this build yet.'}</p><div className="kb-preview-empty-line"><span>Source</span><Glyph name="arrow" size={15} /><span>Generated interface</span><Glyph name="arrow" size={15} /><span>Kane check</span></div></div>}
+          <section className="kb-preview-shell" aria-label="Generated interface preview"><div className="kb-preview-toolbar"><div><span className="kb-window-dots"><i /><i /><i /></span><strong>{overview ? 'Observed overview' : build.status === 'ready' ? 'Your interface' : 'Generated preview'}</strong>{artifact?.revision && <span className="kb-revision-label">v{artifact.revision}</span>}</div><div className="kb-preview-controls">{previewUrl && <><div className="kb-width-toggle" aria-label="Preview width"><button type="button" aria-pressed={width === 'desktop'} onClick={() => setWidth('desktop')}>Desktop</button><button type="button" aria-pressed={width === 'mobile'} onClick={() => setWidth('mobile')}>Mobile</button></div><button className="kb-icon-button" onClick={() => { seenRequests.current.clear(); setPreviewEpoch(epoch => epoch + 1) }} aria-label="Reload generated preview"><Glyph name="repeat" size={16} /></button></>}</div></div>
+            {previewUrl ? <><div className={`kb-frame-surround ${width}`}><iframe key={`${build.id}-${artifact?.revision}-${build.status === 'ready' ? 'ready' : 'preview'}-${previewEpoch}`} ref={frameRef} title={`${build.title || 'Raising Kane'} ${overview ? 'observed read-only overview' : 'generated task interface'}`} src={previewUrl} sandbox="allow-scripts" referrerPolicy="no-referrer" /></div><div className="kb-preview-caption"><span><Glyph name={build.status === 'ready' ? 'shield' : 'eye'} size={14} />{build.status === 'ready' ? overview ? 'Read-only overview · This revision passed the recorded Kane check.' : 'This revision passed the recorded Kane check.' : 'Preview only · This revision has not passed verification.'}</span>{actionCount > 0 && <span className="kb-action-running"><span className="kb-spinner" /> Checking the source…</span>}</div></> : <div className="kb-preview-empty"><span className="kb-preview-empty-icon"><Glyph name="code" size={34} /></span><h2>{overview ? 'Your observed overview will appear here' : 'Your interface will appear here'}</h2><p>{overview ? 'Kane’s recorded screens and observations will guide this read-only preview. Choose a task above when the overview is ready.' : active ? 'Kane’s source observations guide the generated layout, choices, and actions. You can follow the real activity alongside this preview.' : 'A compiled artifact is not available for this build yet.'}</p><div className="kb-preview-empty-line"><span>Source</span><Glyph name="arrow" size={15} /><span>{overview ? 'Read-only overview' : 'Generated interface'}</span><Glyph name="arrow" size={15} /><span>Kane check</span></div></div>}
           </section>
-          {previewUrl && !active && <div className="kb-preview-actions"><p>Recheck the current revision against its saved task contract.</p><button className="kb-secondary" disabled={Boolean(busy)} onClick={() => mutate('verify')}>{busy === 'verify' ? 'Starting verification…' : 'Run Kane verification'}<Glyph name="shield" size={15} /></button></div>}
-        </div><aside className="kb-build-sidebar"><section className="kb-build-summary"><div className="kb-side-title"><h2>Built for your task</h2><Glyph name="spark" size={17} /></div><p>{build.goal || text(build.contract?.goal || build.contract?.request) || 'The task will be established from the source observations.'}</p><dl><div><dt>Source</dt><dd>{host(build.url)}</dd></div><div><dt>Environment</dt><dd>Synthetic sandbox</dd></div>{artifact?.revision && <div><dt>Interface revision</dt><dd>{artifact.revision}</dd></div>}</dl></section><Timeline build={build} /><Evidence build={build} /><Reports build={build} /><div className="kb-trust-note"><Glyph name="shield" size={17} /><p>Source actions go through Raising Kane. Final approval stays outside the generated interface.</p></div></aside></div>
+          {previewUrl && !active && <div className="kb-preview-actions"><p>{overview ? 'Recheck this read-only revision against its observed source contract.' : 'Recheck the current revision against its saved task contract.'}</p><button className="kb-secondary" disabled={Boolean(busy)} onClick={() => mutate('verify')}>{busy === 'verify' ? 'Starting verification…' : 'Run Kane verification'}<Glyph name="shield" size={15} /></button></div>}
+        </div><aside className="kb-build-sidebar"><section className="kb-build-summary"><div className="kb-side-title"><h2>{overview ? 'Read-only source overview' : 'Built for your task'}</h2><Glyph name="spark" size={17} /></div><p>{overview ? 'Review the observed source screens and choose a supported task when you are ready.' : build.goal || text(build.contract?.goal || build.contract?.request) || 'The task will be established from the source observations.'}</p><dl><div><dt>Source</dt><dd>{host(build.url)}</dd></div><div><dt>Environment</dt><dd>Synthetic sandbox</dd></div>{artifact?.revision && <div><dt>Interface revision</dt><dd>{artifact.revision}</dd></div>}</dl></section><Timeline build={build} /><Evidence key={build.id} build={build} expanded={overview} /><Reports build={build} /><div className="kb-trust-note"><Glyph name="shield" size={17} /><p>{overview ? 'This overview has read-only source access. Supported tasks start as separate focused builds.' : 'Source actions go through Raising Kane. Final approval stays outside the generated interface.'}</p></div></aside></div>
       </>}
     </main><footer className="kb-footer"><span>When websites raise hell, raise Kane</span><span>Explore. Build. Verify.</span></footer>
   </div>

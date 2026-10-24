@@ -127,10 +127,11 @@ export function createController({
     const d = source(t).getDraft(t.id)
     t.merchant = d
     t.observedAt = new Date().toISOString()
-    t.checks = comparisons(t, d)
+    const overview = t.executionContext?.mode === 'inspect'
+    t.checks = overview ? [] : comparisons(t, d)
     t.sourceViewUrl =
       sourceBase(t) + sourcePath(t) + '?taskId=' + encodeURIComponent(t.id) + '&view=readonly'
-    if (t.kind === 'appointment') t.candidates = candidates(t, d)
+    if (t.kind === 'appointment' && !overview) t.candidates = candidates(t, d)
     if (
       t.validation &&
       !t.submissionStarted &&
@@ -176,6 +177,7 @@ export function createController({
   function sourceUrl(t, approved = false) {
     const url = new URL(sourcePath(t), sourceBase(t))
     url.searchParams.set('taskId', t.id)
+    if (t.executionContext?.mode === 'inspect') url.searchParams.set('view', 'readonly')
     if (approved) {
       url.searchParams.set('operationId', t.approval.operationId)
       url.searchParams.set('proposalDigest', t.approval.proposalDigest)
@@ -341,12 +343,15 @@ export function createController({
         jacket: structuredClone(t.merchant.lines.find((l) => l.id === 'JACKET-BLACK-M')),
       }
     }
-    t.status = t.kind === 'appointment' ? 'needs_slot' : 'needs_reason'
+    const overview = t.executionContext?.mode === 'inspect'
+    t.status = overview ? 'observed' : t.kind === 'appointment' ? 'needs_slot' : 'needs_reason'
     event(
       t,
-      t.kind === 'appointment'
-        ? 'Your current appointment is confirmed. Choose a replacement time.'
-        : 'The order is confirmed. Choose the reason for your return.',
+      overview
+        ? 'The source record was observed without choosing or changing anything.'
+        : t.kind === 'appointment'
+          ? 'Your current appointment is confirmed. Choose a replacement time.'
+          : 'The order is confirmed. Choose the reason for your return.',
       'success',
     )
   }
@@ -480,7 +485,12 @@ export function createController({
   async function createTask(input, ownerId, executionContext = null, builderSourceUrl = null) {
     const kind = input.kind || 'return'
     let intent, interpretation, request
-    if (kind === 'return') {
+    if (executionContext?.mode === 'inspect') {
+      request =
+        'Read the source website without choosing, preparing, approving or submitting a transaction.'
+      intent = null
+      interpretation = { source: 'read-only-overview' }
+    } else if (kind === 'return') {
       request =
         input.request || 'Return the red shoes, keep the jacket, refund my original payment method.'
       const parsed = await interpretRequest(request)
@@ -531,7 +541,12 @@ export function createController({
       updatedAt: new Date().toISOString(),
     }
     tasks.set(t.id, t)
-    event(t, 'Your choices are saved. Reading the source record.')
+    event(
+      t,
+      executionContext?.mode === 'inspect'
+        ? 'A read-only source overview is ready to inspect.'
+        : 'Your choices are saved. Reading the source record.',
+    )
     if (!executionContext) dispatch(t, 'discover', () => discover(t))
     else refresh(t)
     return t
@@ -734,7 +749,9 @@ export function createController({
     }
     if (match[2] === 'check') {
       dispatch(t, 'validate-review', async () => {
-        if (t.submissionStarted) {
+        if (t.executionContext?.mode === 'inspect') {
+          await discover(t)
+        } else if (t.submissionStarted) {
           if (reconcile(t)) await verifyConfirmation(t)
           else if (
             t.operationObservation.status === 'absent' &&

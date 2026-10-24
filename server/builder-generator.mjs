@@ -3,6 +3,7 @@ import { parseAst } from 'rolldown/parseAst'
 
 const LIMITS = Object.freeze({ source: 90_000, css: 24_000, context: 180_000, contract: 32_000, image: 5_000_000, images: 6, imageTotal: 16_000_000, actions: 24 })
 const ID = /^[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,127}$/
+const OVERVIEW_ACTION_IDS = new Set(['read_state', 'check'])
 const plainObject = value => value !== null && typeof value === 'object' && !Array.isArray(value)
 const bytes = value => Buffer.byteLength(value, 'utf8')
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex')
@@ -77,12 +78,13 @@ export function validateArtifactSource(source, css = '') {
   return true
 }
 
-export function validateGeneratedArtifact(value, { allowedActions = [], evidenceIds } = {}) {
+export function validateGeneratedArtifact(value, { allowedActions = [], evidenceIds, mode } = {}) {
   exactKeys(value, ['title', 'summary', 'appSource', 'css', 'actions', 'evidenceIds', 'decisions', 'unknowns'], 'Generated artifact')
   string(value.title, 'title', 160)
   string(value.summary, 'summary', 1500)
   validateArtifactSource(value.appSource, value.css)
-  const supported = new Set(allowedActions.map(action => typeof action === 'string' ? action : action.id))
+  const supported = new Set(allowedActions.map(action => typeof action === 'string' ? action : action.id)
+    .filter(id => mode !== 'overview' || OVERVIEW_ACTION_IDS.has(id)))
   if (!Array.isArray(value.actions) || value.actions.length > LIMITS.actions) reject('Action manifest exceeds its limit.')
   const used = new Set()
   for (const action of value.actions) {
@@ -97,6 +99,7 @@ export function validateGeneratedArtifact(value, { allowedActions = [], evidence
     if (node.type === 'CallExpression' && node.callee?.type === 'MemberExpression' && node.callee.property?.name === 'invoke') {
       const id = node.arguments[0]
       if (id?.type !== 'Literal' || typeof id.value !== 'string' || !used.has(id.value)) reject('Every bridge invocation must use a literal action ID in the manifest.')
+      if (mode === 'overview' && node.arguments[1] && (node.arguments[1].type !== 'ObjectExpression' || node.arguments[1].properties.length)) reject('Read-only overview actions accept only an empty payload.')
     }
     for (const child of Object.values(node)) {
       if (Array.isArray(child)) child.forEach(checkBindings)
@@ -134,6 +137,68 @@ Return exactly the requested JSON. appSource is App.jsx, a default-exported Reac
 Use visible associated labels, native buttons/selects, fieldsets where useful, explicit error text, aria-live status and a clearly visible focus style. Keep the layout usable at 320px width. The host owns product branding and verification status; focus the component on the actual task. No external images or fonts.
 Sandbox constraints: no HTTP, URLs, fetch, browser globals, document/window, DOM refs, storage, scripts, forms, iframes, dynamic import, eval, constructors or prototype access. Do not import CSS (css is a separate output). No computed object access such as state[key] or options[index]; use named fields, array .find/.map/.at and explicit handlers. No JSX href/src/srcSet/ref or dangerouslySetInnerHTML. No CSS URLs or imports. Use buttons with type=button and explicit event handlers instead of form tags. No source fixture implementation or shell commands are available. Generate only the component, CSS and manifest; never modify the contract or evaluator. When repairing, preserve the contract and fix the concrete failed expectation in the prior source.`
 
+const overviewInstructions = `
+THIS CONTRACT IS OVERVIEW MODE. The person supplied a URL without choosing a task. Build a useful read-only React overview of this website's actually observed screens and branches. Do not silently choose a return, appointment or other transactional goal from the fixture kind, default intent, request, source records, or contract constraints. No task has started. Do not ask for a task before showing the overview.
+The supplied overview snapshot is the evidence-backed list to render. Give observed flows equal prominence; use their actual labels, reached screen names, status, limitations and evidence IDs. Compose a real website-specific React interface with useful local navigation, detail expansion or filtering, not a fixed cards configuration. If no flow was observed, show the observed screens and explain that branches remain unknown. Unknown or blocked paths must remain visibly unknown or blocked. Do not turn a flow's name or a source-reported verified status into proof of completing that flow or its business outcome. navigation_observed means only the listed reached screens/transitions were seen; entry_observed means only the entry screen was reached. Show the overview's unknowns and partial coverage limits. Report accessibility findings only at their supplied scope, with no certification claim.
+Only bridge.invoke('read_state',{}) and bridge.invoke('check',{}) are permitted, and only when present in allowedActions. Never generate choose, repair, request_approval, approve or submit actions, transaction controls, default item/reason selection, approval panels or success receipts in this mode. Local controls may reveal observed details without invoking a source operation. Keep unsupported flows informational. The trusted host owns any later explicit task-start transition; do not invent a start-task bridge action or execute a flow on selection.
+Use the normalized overview values as the initial content even if initialState contains fixture task fields. You may embed those exact observed values as component data. A read_state/check result may refresh discovery if it contains corresponding observed screens/flows; otherwise retain the supplied overview and show the check status separately. Never switch this component to a focused transaction because read_state returns a source task. Include a visible statement that no task has been started and that only the listed states were observed. The overview overrides focused-task advice elsewhere in these instructions; preserve all sandbox and evidence rules.`
+
+/** Normalize only evidenced map entries; flow names/statuses never prove an outcome. */
+export function normalizeBuilderOverview(sourceModel, screenshots = []) {
+  const map = plainObject(sourceModel.exploration) ? sourceModel.exploration
+    : plainObject(sourceModel.discovery) ? sourceModel.discovery : sourceModel
+  const shots = new Set(screenshots.map(shot => shot.id))
+  const label = (value, fallback = '') => typeof value === 'string' ? value.trim().slice(0, 1200) : fallback
+  const refs = entry => [...new Set([
+    ...(typeof entry.evidenceId === 'string' ? [entry.evidenceId] : []),
+    ...(Array.isArray(entry.evidenceIds) ? entry.evidenceIds.filter(id => typeof id === 'string') : []),
+    ...(shots.has(entry.id) ? [entry.id] : []),
+  ])].slice(0, 24)
+  const screenInput = Array.isArray(map.screens) ? map.screens : []
+  const unobserved = new Set(['unobserved', 'not_reached', 'inferred', 'predicted', 'discovered', 'unknown'])
+  const screens = screenInput.filter(screen => plainObject(screen) && ID.test(screen.id)
+    && ![screen.origin, screen.knowledge, screen.status].some(value => unobserved.has(value))
+    && (screen.knowledge === 'screen_observed' || screen.origin === 'observed' || screen.observed === true || screen.status === 'observed' || refs(screen).length))
+    .slice(0, 50).map(screen => ({
+      id: screen.id, title: label(screen.title || screen.name || screen.heading, 'Observed screen'),
+      heading: label(screen.heading), status: 'screen_observed', evidenceIds: refs(screen),
+      controls: (Array.isArray(screen.controls) ? screen.controls : []).filter(plainObject).slice(0, 30)
+        .map(control => ({ label: label(control.name || control.label), status: control.status === 'policy_blocked' ? 'policy_blocked' : control.status === 'walked' ? 'walked' : 'observed' })),
+    }))
+  const byId = new Map(screens.map(screen => [screen.id, screen]))
+  const flowInput = Array.isArray(map.flows) ? map.flows : []
+  const flows = flowInput.filter(flow => plainObject(flow) && ID.test(flow.id) && byId.has(flow.from || flow.entry))
+    .slice(0, 100).map(flow => {
+      const entry = byId.get(flow.from || flow.entry), reached = byId.get(flow.to || flow.exit)
+      const observedTransition = Boolean(reached && (flow.knowledge === 'navigation_observed' || flow.origin === 'observed' || flow.observed === true))
+      return {
+        id: flow.id, title: label(flow.title || flow.name, 'Observed branch'),
+        status: observedTransition ? 'navigation_observed' : 'entry_observed',
+        sourceReportedStatus: label(flow.kaneStatus || flow.status, 'unknown'),
+        entry: { id: entry.id, title: entry.title },
+        reached: observedTransition ? { id: reached.id, title: reached.title } : null,
+        outcome: 'unverified', execution: 'informational', evidenceIds: refs(flow),
+        limitation: observedTransition ? 'Only this observed transition is established; the named task outcome is unverified.' : 'Only the entry screen was observed; the rest of this named branch is unverified.',
+      }
+    })
+  const unknowns = [...new Set([
+    ...(Array.isArray(sourceModel.unknowns) ? sourceModel.unknowns : []),
+    ...(Array.isArray(map.unknowns) ? map.unknowns : []),
+    ...(Array.isArray(map.limitations) ? map.limitations : []),
+    'Only the listed screens and transitions were observed. Final task outcomes have not been verified.',
+    ...(!flows.length ? ['No source branch was established in this bounded map.'] : []),
+    ...(screenInput.length > screens.length || flowInput.length > flows.length ? ['Map entries without observed-state evidence were omitted from the overview.'] : []),
+  ].filter(value => typeof value === 'string' && value.trim()).map(value => label(value)))].slice(0, 24)
+  return {
+    mode: 'overview', taskStatus: 'not_started', siteTitle: label(sourceModel.siteTitle || sourceModel.name || map.siteTitle, 'Observed website'),
+    screens, flows, unknowns, coverage: { status: label(map.status, 'partial'), stopReason: label(map.stopReason || map.stopReasonText || map.error), exhaustive: false },
+    findings: (Array.isArray(map.findings) ? map.findings : []).filter(plainObject).slice(0, 50).map(finding => ({
+      id: label(finding.id), title: label(finding.title), description: label(finding.description),
+      kind: label(finding.kind || finding.category), confirmed: finding.confirmed === true, evidenceIds: refs(finding),
+    })),
+  }
+}
+
 function screenshotContent(screenshots, known) {
   if (!Array.isArray(screenshots) || screenshots.length > LIMITS.images) reject('Screenshot count exceeds its limit.')
   let total = 0
@@ -165,14 +230,19 @@ export async function generateInterface(input, options = {}) {
   const sourceModel = boundedJson(input.sourceModel, 'Source model', LIMITS.context)
   if (!plainObject(contract) || !plainObject(sourceModel)) throw fail('invalid_input', 'A task contract and observed source model are required.')
   metadata.contractDigest = hash(contract)
-  const allowedActions = boundedJson(input.allowedActions || [], 'Allowed actions', 32_000)
-  if (!Array.isArray(allowedActions) || allowedActions.length > LIMITS.actions || allowedActions.some(action => !plainObject(action) || !ID.test(action.id)) || new Set(allowedActions.map(action => action.id)).size !== allowedActions.length) throw fail('invalid_input', 'Allowed action IDs must be unique and bounded.')
+  const suppliedActions = boundedJson(input.allowedActions || [], 'Allowed actions', 32_000)
+  if (!Array.isArray(suppliedActions) || suppliedActions.length > LIMITS.actions || suppliedActions.some(action => !plainObject(action) || !ID.test(action.id)) || new Set(suppliedActions.map(action => action.id)).size !== suppliedActions.length) throw fail('invalid_input', 'Allowed action IDs must be unique and bounded.')
+  const overviewMode = contract.mode === 'overview'
+  const allowedActions = overviewMode ? suppliedActions.filter(action => OVERVIEW_ACTION_IDS.has(action.id) && (!action.kind || action.kind === 'read')) : suppliedActions
   const known = evidenceIdsFrom(sourceModel)
   const images = screenshotContent(input.screenshots || [], known)
   if (!images.length) throw fail('missing_screenshot', 'Generation requires at least one actual Kane screenshot with provenance.')
   metadata.screenshotIds = input.screenshots.map(shot => shot.id)
-  const prior = input.previousArtifact ? validateGeneratedArtifact(input.previousArtifact, { allowedActions }) : null
-  const content = [{ type: 'input_text', text: JSON.stringify({ contract, sourceModel, allowedActions, initialState: boundedJson(input.initialState || {}, 'Initial state', 100_000), previousArtifact: prior, repairFeedback: input.repairFeedback ? boundedJson(input.repairFeedback, 'Repair feedback', 32_000) : null }) }, ...images]
+  const overview = overviewMode ? normalizeBuilderOverview(sourceModel, input.screenshots) : null
+  if (overview && !overview.screens.length) throw fail('missing_overview_evidence', 'A read-only overview requires at least one observed source screen.')
+  if (overview) metadata.mode = 'overview'
+  const prior = input.previousArtifact ? validateGeneratedArtifact(input.previousArtifact, { allowedActions, mode: contract.mode }) : null
+  const content = [{ type: 'input_text', text: JSON.stringify({ contract, sourceModel, allowedActions, ...(overview ? { overview } : {}), initialState: boundedJson(input.initialState || {}, 'Initial state', 100_000), previousArtifact: prior, repairFeedback: input.repairFeedback ? boundedJson(input.repairFeedback, 'Repair feedback', 32_000) : null }) }, ...images]
   const history = [{ role: 'user', content }]
   const turns = budget(options.maxTurns, 4, 6)
   const maxInspections = options.maxInspections === 0 ? 0 : budget(options.maxInspections, 2, 4)
@@ -181,7 +251,7 @@ export async function generateInterface(input, options = {}) {
   for (let turn = 0; turn < turns; turn++) {
     const canInspect = typeof options.inspect === 'function' && metadata.inspections.length < maxInspections && turn < turns - 1
     const payload = {
-      model, instructions, input: history, store: false, include: ['reasoning.encrypted_content'],
+      model, instructions: overviewMode ? instructions + overviewInstructions : instructions, input: history, store: false, include: ['reasoning.encrypted_content'],
       reasoning: { effort: options.reasoningEffort || 'medium' }, max_output_tokens: budget(options.maxOutputTokens, 14_000, 20_000),
       text: { format: { type: 'json_schema', name: 'raising_kane_artifact', strict: true, schema: artifactSchema } },
       ...(canInspect ? { tools: [inspectTool], parallel_tool_calls: false } : {}),
@@ -235,7 +305,7 @@ export async function generateInterface(input, options = {}) {
     let artifact
     try {
       try { artifact = JSON.parse(text) } catch { reject('OpenAI returned invalid artifact JSON.') }
-      artifact = validateGeneratedArtifact(artifact, { allowedActions, evidenceIds: known })
+      artifact = validateGeneratedArtifact(artifact, { allowedActions, evidenceIds: known, mode: contract.mode })
     } catch (error) {
       call.validationError = error.message
       if (turn >= turns - 1) throw fail('invalid_artifact', error.message)
