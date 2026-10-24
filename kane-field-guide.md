@@ -29,7 +29,7 @@ The strongest usage pattern is a bounded action followed by an explicit outcome 
 - **`--mode action` is not an approval or read-only boundary.** It concerns blocking/auth/error handling.
 - **Healing does not establish correctness.** Keep immutable expectations, preserve the original failure and inspect source evidence.
 - **Recorded output is not automatically safe to publish.** Recordings, screenshots and HAR files can contain customer information.
-- **The current project has two source workflows.** Abandoned Drop/Clean Vote recommendations and model-persona “Win” scores are not current decisions or measured winning probabilities.
+- **The target project requires two source workflows.** Abandoned Drop/Clean Vote recommendations and model-persona “Win” scores are not current decisions or measured winning probabilities.
 - **The event deadline is 6 PM**, according to the current official event page; the archived 5 PM advice is superseded. [Event rules and judging](https://www.kaneclihack.sh/).
 
 ## 3. Version and setup discipline
@@ -399,9 +399,9 @@ These are synthetic feature tests. They do not mean Raising Kane's complete two-
 ## 24. What remains unverified for this project
 
 - Both source workflows running end to end through Raising Kane.
-- Product-level browser/session ownership and worker restart recovery; basic same-CDP continuity passed in a synthetic fixture.
+- General authenticated-site recovery and end-to-end product recovery. The PoC now implements owned browser profiles and records selected recovery runs; its failed-discovery prerequisite gap is documented in section 26.
 - Correct parameter substitution and structured extraction on the chosen replay paths.
-- The exact NDJSON normalization and evidence correlations in our worker.
+- Complete worker normalization and evidence correlations across error/retry cases. Real PoC jobs have passed; that is partial evidence, not exhaustive verification.
 - Atomic grants, idempotent commits, slot races and timeout reconciliation in the sandbox implementation.
 - Real commercial-site authentication, source stability and submission enforcement.
 - Full workflow latency, credit consumption and fit within a live stage slot.
@@ -421,3 +421,50 @@ Primary project references:
 - [Original experiment archive](docs/raising-kane/kane-cli-field-guide-0.9-historical.md)
 
 This repository maintains the current guide at `kane-field-guide.md`. The prior repository guide, including macOS reproduction checks, is preserved in [its archive](docs/raising-kane/kane-field-guide-repo-historical.md). The packet filename redirects here. Historical measurements and abandoned idea rankings are retained as history.
+
+
+## 26. Applying the guide to the real Raising Kane PoC
+
+The [PoC review](docs/raising-kane/poc-review-and-build-priorities.md) inspects
+`codex/raising-kane-poc` at `0ad30e5`. Its controller already runs Kane during the
+user workflow, reloads the source before each job, and checks the extracted source
+revision. It preserves red/correction/green phases. This is product evidence
+separate from the earlier synthetic feature experiments.
+
+Practical updates from that review:
+
+- Pass `--assertion-failure-mode stop` explicitly for validator jobs. The worker
+  currently inherits this setting; our research profile is already `stop`.
+  Neither a stop flag nor a read-only objective is a source authorization guard.
+- Distinguish a worker's passing result from the controller accepting it. Require
+  complete typed observations and compare all mandatory business values in code.
+  Current pre-approval code checks extracted order, destination and revision but
+  does not independently compare every monetary/quantity/currency observation.
+- Record observation provenance. The PoC's read-only merchant adapter supplies
+  draft/options even after a failed browser launch. Those are source facts, not
+  successful Kane extractions. Keep these useful channels visibly distinct.
+- Reconnection does not restore business prerequisites. After initial discovery
+  failure, preparation can proceed without the baseline needed by final receipt
+  verification. Resume the missing phase, not just the next available action.
+- Keep source inspection read-only unless explicitly handing over ownership.
+  The PoC iframe is a separate editable source view; task polling returns saved
+  controller state, not automatically refreshed source state.
+- Every stable replay phase still needs freshness, identity and required-result
+  checks. Runtime phases presently use new `run` jobs; a saved landing smoke is
+  not evidence of optimized runtime replay. Benchmark before promising savings.
+- Preserve phase/run/intent/source-version links in an evidence index. A local
+  file path or cloud share URL alone is not an attached, inspected evidence pack.
+- Keep runtime Chrome profile files outside Vite's watched source tree or exclude
+  them explicitly. Fresh PoC logs showed page-reload events from browser-generated
+  HTML under `data/chrome-tasks`; this does not prove a user was interrupted.
+- `npm run dev` starts the PoC's controller, merchant and Vite. Its `preview`
+  script starts only Vite static preview; that is not a working full-app host.
+
+A representative sum of the PoC author's phase timings is 426.5 seconds before
+submission. It combines separate runs and is not a measured continuous journey.
+Use product timings for demo planning; do not substitute tiny fixture timings.
+
+The [fresh audit ledger](docs/kane-validation/poc-review-checks.json) records the
+new checks, including a real product-worker run. Source grants, duplicate-safe
+commit, persistent confirmation and the appointment workflow still need complete
+product acceptance. More CLI features cannot compensate for an unfinished result.

@@ -2,6 +2,27 @@
 
 October 24, 2026. Research synthesis and proposed interaction design; no usability study of Raising Kane has been conducted. This extends [the workflow decision memo](workflow-and-demo-design.md). The [interactive storyboard](demo-storyboard.html) uses illustrative states, not a live Kane connection.
 
+## Applying this research to the actual PoC
+
+The [implementation review](poc-review-and-build-priorities.md), pinned to
+`0ad30e5`, supersedes speculation about what is already implemented. The PoC has
+persisted task state, real browser repair and separate failed/passing evidence.
+The source transaction and complete receipt remain missing. Its source-inspection
+iframe is editable, method choice is one-way, and recovery after initial discovery
+failure can skip a required baseline. These findings turn the research into
+specific build priorities, with existing safeguards and acceptance conditions.
+
+The source adapter supplies some values; the UI must distinguish those from Kane
+observations. Show actual expected/observed values and the worker's current phase.
+Do not rebuild the task workspace just to imitate the storyboard. The storyboard
+remains an illustrative design, not an implementation or measured usability result.
+
+Recorded PoC phase times add up to about 7.1 minutes before submission in a
+representative calculation across different runs. This is not a measured total,
+but it is stronger planning evidence than the small fixture's 68-second segment.
+The four-minute outline below remains an edited video outline, not a promise of
+fresh two-site live runtime. Measure the completed product flow before stage lock.
+
 ## The central decision
 
 Give the shopper a small, understandable task workspace. Give the demo audience an expandable evidence view of the same task. Both views must read the same persisted task state.

@@ -25,3 +25,12 @@ The [UX research](ux-research-and-demo-direction.md) refines what to ask and sho
 at each checkpoint. Its [interactive storyboard](demo-storyboard.html) is a design
 artifact with illustrative states and separately labeled prior fixture evidence;
 it is not the product implementation or a new live Kane run.
+
+## PoC implementation review
+
+The [latest research-to-implementation review](poc-review-and-build-priorities.md)
+inspects the separate PoC branch at `0ad30e5`, records strengths, verifies concrete
+gaps and prioritizes the completed transaction over additional feature breadth.
+[Fresh audit observations](../kane-validation/poc-review-checks.json) are separate
+from previous synthetic experiments and the PoC author's historical run reports.
+This documentation update does not merge the PoC source into `main`.

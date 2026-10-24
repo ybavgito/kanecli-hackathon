@@ -2,8 +2,13 @@
 
 **When websites raise hell, raise Kane**
 
-A web-app starter wired for Kane CLI verification. The Hack Day uses the release
-candidate; these docs were checked against `0.10.0-rc.3` on October 24, 2026.
+This `main` checkout contains the starter and maintained research. The working
+PoC is on [`codex/raising-kane-poc`](https://github.com/ybavgito/kanecli-hackathon/tree/codex/raising-kane-poc),
+reviewed at `0ad30e5`. It uses Kane during return preparation, conflict detection
+and repair; submission remains disabled pending the merchant contract. Read the
+[implementation review and priorities](docs/raising-kane/poc-review-and-build-priorities.md)
+before treating the full specification as implemented. The checked release is
+`0.10.0-rc.3`, October 24, 2026.
 
 ## Current product specification
 
@@ -26,16 +31,17 @@ explicit failed-validation/correction demonstration.
 - [50 recorded rc.3 experiment invocations and findings](docs/kane-validation/report.md)
 - [Current review bundle](docs/raising-kane-current-review.zip)
 
-The product's implementation contracts remain specifications. Separate synthetic
-CLI experiments now demonstrate browser checks, a real failure/correction/rerun,
-parameterized replay with explicit refresh, session/context handling, Explore and
-local assurance. They do not make the starter a completed product. Historical
-research and the original packet ZIP remain available for provenance.
+The PoC implements part of the specification and has its own runtime evidence.
+The atomic source transaction, completed receipt and second source remain open.
+Separate synthetic CLI experiments demonstrate parameterized replay with explicit
+refresh, session/context handling, Explore and local assurance; they do not prove
+those features are integrated into the product. Historical research and the
+original packet ZIP remain available for provenance.
 
 The recommended experience is website-first: connect a supported site, choose
 from its tested task catalog, make plain decisions, and approve an exact verified
 proposal. Rehearse integrations before enabling tasks; recheck the current source
-during each user's workflow. The demo covers a partial return and an appointment
+during each user's workflow. The target demo covers a partial return and an appointment
 change on two labeled sandboxes.
 
 The [original ClearPath brief](docs/clearpath/clearpath-complete-project-brief.md)
