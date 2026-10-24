@@ -65,3 +65,18 @@ return only the shoes. Summary prose is not used as transaction evidence.
 
 `npm run build` passed after the fix. This verifies the saved review UI, not a
 complete user-driven submission or the future appointment workflow.
+
+## Explicit source refresh
+
+The merged rc.3 research found that repeated same-URL checks can read stale page
+state. The product controller now instructs every source job to reload before
+continuing. It still requires the extracted draft revision to match the source
+before accepting review evidence.
+
+[The runtime review rerun passed](https://test-manager.lambdatest.com/projects/01M5QFXVQKQ0KCCE24PC0BJXYP/test-cases/01M5QXH1148AM456M0F8CR102F/dashboard/share/US_IQ3OHKL6KTX0WPHB8MCUFM37MELVMAAYX4YB7G9CYVIOJD2VDUP8MD878F8XZ8W7?type=summary&agentView=true&fqdn=summary-page)
+in 67.5 seconds using 14.69 credits. Kane reloaded the source and verified
+ORD-1042, revision 6, shoes only, jacket excluded, the fit reason, QR drop-off,
+original payment, a $5 deduction and a $75 expected refund. The controller
+accepted the extracted fields and restored `ready`, without approval or a source
+return. Build passed. This tests the refreshed review path; full submission and
+the appointment flow remain unverified.

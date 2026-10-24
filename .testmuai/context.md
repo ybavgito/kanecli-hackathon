@@ -35,6 +35,8 @@ The first implemented task is a partial return in a separate, working fictional 
 - The person's requested item, quantity, item to keep, and refund preference remain visible and editable before approval.
 - OpenAI may interpret or explain the request, but the application stores the approved values as structured constraints. Unknown values stay unknown.
 - Kane reads the source site and explicitly extracts the fields needed to compare the proposed transaction with those constraints.
+- Each source job explicitly reloads the page before operating or verifying it;
+  review acceptance still compares the extracted revision to the current source.
 - One exact order containing red shoes and a jacket is resolved from source observations. An ambiguous item asks for clarification. The jacket remains excluded when the return method changes.
 - The user-driven printer-free change updates the task revision and the source draft. A late Kane result from an older revision cannot replace the current proposal.
 - A source default that conflicts with an approved constraint is corrected where possible or surfaced for a decision before completion.
@@ -90,3 +92,9 @@ Both approval and submit controls now require the source capability. A fresh
 read-only Kane check passed the saved proposal, preserved intent, evidence history,
 both disabled controls and the unavailable message. The backend independently
 refuses approval with HTTP 503 and creates no source return.
+
+After merging the main-branch stale-page research, the controller now explicitly
+reloads before every source job. A runtime review passed with that instruction:
+Kane reloaded the page, extracted source revision 6 and verified the shoes-only,
+QR, original-payment, $5 deduction/$75 refund proposal. The task returned to ready
+with no approval or submission.

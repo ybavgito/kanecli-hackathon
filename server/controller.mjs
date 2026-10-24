@@ -132,7 +132,7 @@ export function createController({ merchant, baseUrl }) {
     task.progress = { phase, text: phase.replaceAll('-', ' '), startedAt: new Date().toISOString() }
     const revision = task.revision
     save()
-    const result = await runKane({ taskId: task.id, phase, url, objective: `Go to ${url}. ${objective}`,
+    const result = await runKane({ taskId: task.id, phase, url, objective: `Go to ${url}. Reload the page to fetch the current source state before continuing. ${objective}`,
       onEvent(update) {
         if (update.type === 'step' && update.status === 'done') {
           task.progress.lastStep = update.remark
