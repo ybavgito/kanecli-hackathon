@@ -114,3 +114,32 @@ no transaction approval. Its live two-site proof is recorded below when complete
 
 Books to Scrape is explicitly a synthetic catalog with random demonstration prices.
 This proves a read-only information journey, not a real purchase or transaction.
+
+### Second complete read-only journey: Wikipedia
+
+The unchanged generic engine discovered Wikipedia article cards. The first UI
+progress-only check clicked the right card but ended stuck in the test runner;
+its failure is not counted as a passing UI run. Runtime retrieval and all 8
+independent source checks still passed. A fresh end-to-end UI run then clicked
+Battle of Schliengen, waited for its saved verified receipt, checked its source
+facts and 8/8 checks, refreshed the browser and confirmed unchanged facts, source
+link and verification time. It passed in 178.4 seconds, 43.87 credits.
+
+[Complete Wikipedia UI proof](https://test-manager.lambdatest.com/projects/01M5QFXVQKQ0KCCE24PC0BJXYP/test-cases/01M5R1Q8NHH4F9N5CNZ0R5JF7A/dashboard/share/US_JD6GYZMJBGX4R79DXEEH6UE074PBK34XQFTTC54WL86LPDZ6KPHLIHUB8795Y5VD?type=summary&agentView=true&fqdn=summary-page).
+
+Saved workflow: `c349050d-76d5-422d-8986-4bf8ef7abbc1`. Verified at
+`2026-10-24T22:52:11.484Z`. The receipt contains date, location, result and
+commanders as observed on the source. Neither website required a site-specific
+adapter. These prove two read-only examples, not universal transaction support.
+
+## Extended Kane integration checkpoint
+
+Bounded real Explore runs mapped additional public screens on both origins. A
+real named journey was recorded, independently verified, replayed in a new
+browser, read again for fresh fields and independently verified again. No live
+healing recovery was needed or claimed. A real Books HTTP response corroborated
+four saved facts; its label-keyed extraction required the strict parser fallback
+for unique expected labels. These modules are now connected to the controller
+and interface; their combined UI verification remains pending at this checkpoint.
+CI/cloud workflows are configured but were not dispatched. See the Explore,
+reusable-journey and regression/maintenance documents for detailed limits.

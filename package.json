@@ -7,8 +7,18 @@
     "dev": "node server/index.mjs",
     "build": "vite build",
     "preview": "vite preview",
+    "test": "node --test tests/unit/*.test.mjs",
     "check:kane": "node scripts/kane-preflight.mjs",
-    "verify:kane": "node scripts/kane-verify.mjs"
+    "verify:kane": "node scripts/kane-verify.mjs",
+    "verify:kane:suite": "node scripts/kane-suite.mjs",
+    "verify:kane:plan": "node scripts/kane-suite.mjs --dry-run",
+    "verify:kane:public": "node scripts/kane-suite.mjs --suite public",
+    "verify:kane:cloud": "node scripts/kane-suite.mjs --remote",
+    "kane:coverage": "node scripts/kane-coverage.mjs",
+    "kane:maintain": "node scripts/kane-maintain.mjs",
+    "kane:reconcile": "node scripts/kane-maintain.mjs reconcile",
+    "kane:evolve": "node scripts/kane-maintain.mjs evolve",
+    "kane:ci-auth": "node scripts/kane-ci-auth.mjs"
   },
   "dependencies": {
     "react": "^19.3.1",

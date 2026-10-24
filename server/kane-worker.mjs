@@ -4,12 +4,15 @@ import { existsSync } from 'node:fs'
 import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { homedir } from 'node:os'
+import { createJourneyStore, savedJourneyExecution } from './kane-journeys.mjs'
 
 // Browser jobs are serialized even across tasks: Kane's local Chrome/CDP ports
 // are not safe to treat as independent without an explicit external browser.
 let lastJob = Promise.resolve()
 const taskBrowsers = new Map()
 const taskControls = new Map()
+const journeyStore = createJourneyStore()
+const completedRuns = new WeakMap()
 
 const MAX_OUTPUT_BYTES = 8 * 1024 * 1024
 const MAX_LINE_BYTES = 1024 * 1024
@@ -32,6 +35,8 @@ const OBSERVATION_KEYS = new Set([
   'checked_terms_json', 'checked_terms_text', 'proposal_matches',
   'result_verified', 'result_summary', 'result_url', 'result_record_id',
   'result_fields_json', 'result_fields_text', 'result_terms_json', 'result_terms_text',
+  'network_kind', 'network_source_url', 'network_status', 'network_checks_text',
+  'network_result_matches', 'network_summary',
   'order_id', 'draft_revision', 'refund_destination', 'return_request_id',
   'returned_line_ids', 'returned_quantity', 'return_method', 'currency',
   'deduction', 'expected_refund', 'next_step', 'jacket_kept', 'submission_response',
@@ -308,7 +313,7 @@ async function assertNoDefaultStartUrl() {
   }
 }
 
-async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headless, mode, analyzerOnly, conditions, currentPage, control, generation }) {
+async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headless, mode, analyzerOnly, conditions, currentPage, control, generation, journeyPlan }) {
   const startedAt = Date.now()
   if (control && (control.paused || control.disconnected || control.generation !== generation)) {
     return cancelledResult(phase, taskId)
@@ -343,6 +348,8 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
   return new Promise((resolve) => {
     const stepByKey = new Map()
     let terminal = null
+    const savedEvents = []
+    let currentObservations = {}
     let childError = null
     let timedOut = false
     let outputTooLarge = false
@@ -352,16 +359,24 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
     let coveragePack = null
     let finished = false
 
-    const args = analyzerOnly
+    const replaying = journeyPlan?.kind === 'replay'
+    const args = replaying
+      ? ['testmd', 'run', journeyPlan.testPath, '--url', url, '--agent', '--mode', mode,
+        '--final-validation', 'on', '--timeout', String(Math.ceil(timeoutMs / 1000)), '--on-lock-conflict', 'fail']
+      : analyzerOnly
       ? ['run', '--analyzer-only', '--allow-missing-url', '--agent', '--timeout', String(Math.ceil(timeoutMs / 1000))]
       : ['run', objective, ...(currentPage ? ['--allow-missing-url'] : ['--url', url]), '--agent', '--mode', mode,
         '--final-validation', 'on', '--timeout', String(Math.ceil(timeoutMs / 1000))]
     if (analyzerOnly) for (const condition of conditions) args.push('--condition', condition)
+    if (journeyPlan) {
+      if (!replaying) args.push('--name', journeyPlan.name)
+      args.push('--global-context', journeyPlan.contextPath, '--local-context', journeyPlan.contextPath)
+    }
     if (browser) args.push('--cdp-endpoint', browser.endpoint)
     else if (headless) args.push('--headless')
 
     const child = spawn('kane-cli', args, {
-      cwd: process.cwd(),
+      cwd: journeyPlan?.cwd || process.cwd(),
       env: { ...process.env, KANE_CLI_USER_AGENT: 'codex' },
       stdio: ['ignore', 'pipe', 'pipe'],
       shell: false,
@@ -370,6 +385,8 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
     if (control) control.activeChild = child
 
     notify(onEvent, { type: 'start', phase, at: new Date().toISOString() })
+    if (journeyPlan) notify(onEvent, { type: 'journey', phase,
+      mode: replaying ? 'replaying' : 'recording', healingUsed: false })
 
     const consumeLine = (line) => {
       if (!line.trim()) return
@@ -382,6 +399,17 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
       if (!event || typeof event !== 'object') return
       if (event.type === 'run_end') {
         terminal = event
+        // These values came from this invocation's live events. Never load
+        // previous Result.md, execution.json, or a cache's stored final_state.
+        currentObservations = { ...currentObservations, ...extractKaneFinalState(event) }
+      } else if (replaying && ['test_md_done', 'test_md_summary', 'test_md_adaptive_heal'].includes(event.type)) {
+        savedEvents.push(event)
+        if (event.type === 'test_md_adaptive_heal') notify(onEvent, { type: 'journey', phase, mode: 'healing', healingUsed: true })
+      } else if (replaying && event.type === 'test_md_step_end') {
+        const step = { step: event.step_index, status: event.status === 'passed' ? 'done' : event.status,
+          remark: event.status === 'passed' ? 'Recorded source step completed.' : 'Recorded source step did not pass.' }
+        stepByKey.set(`saved:${event.step_index}`, step)
+        notify(onEvent, { type: 'step', phase, ...step })
       } else if (event.type === 'coverage' && typeof event.pack === 'string') {
         coveragePack = event.pack
       } else if (typeof event.step === 'number' && typeof event.status === 'string') {
@@ -443,6 +471,8 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
       consumeLine(lineBuffer)
 
       const steps = [...stepByKey.values()].filter((step) => ['done', 'failed'].includes(step.status))
+      const saved = savedJourneyExecution(savedEvents)
+      const completedStatus = replaying ? saved.done?.overall_status : terminal?.status
       const rawConditionResults = analyzerOnly && Array.isArray(terminal?.condition_results)
         ? terminal.condition_results : null
       const conditionResults = analyzerOnly ? conditions.map((condition, index) => ({
@@ -462,11 +492,11 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
           ? 'timeout'
           : outputTooLarge
             ? 'error'
-            : exitCode === 0 && terminal?.status === 'passed' && (!analyzerOnly || allConditionsTrue)
+            : exitCode === 0 && completedStatus === 'passed' && (!analyzerOnly || allConditionsTrue)
               ? 'passed'
               : analyzerOnly && rawConditionResults?.some((value) => value === false)
                 ? 'failed'
-              : exitCode === 1 || terminal?.status === 'failed'
+              : exitCode === 1 || completedStatus === 'failed'
                 ? 'failed'
                 : 'error'
       const summary = wasCancelled
@@ -477,19 +507,21 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
           ? 'Kane CLI is not installed.'
           : timedOut
             ? 'Kane did not finish before the time limit.'
+            : replaying && saved.done
+              ? `Kane ${saved.healed ? 'healed and completed' : saved.replayDecisions > 0 ? 'replayed' : 'authored'} the saved read-only journey (${saved.done.overall_status}). Fresh source verification is required.`
             : clipped(terminal?.summary || terminal?.one_liner, 1000)
               || knownDiagnostic(stderrTail)
               || `Kane did not produce a completed result (exit ${exitCode ?? 'unknown'}).`
-      const sealedPack = await evidencePackPath(coveragePack, terminal)
+      const sealedPack = await evidencePackPath(coveragePack, replaying ? saved.done : terminal)
 
       notify(onEvent, { type: 'complete', phase, status, summary: clipped(summary, 500) })
 
-      resolve({
+      const result = {
         phase,
         mode: analyzerOnly ? 'analyzer' : mode,
         status,
         summary,
-        finalState: extractKaneFinalState(terminal),
+        finalState: replaying ? currentObservations : extractKaneFinalState(terminal),
         steps,
         stepCount: steps.length,
         evidencePath: sealedPack,
@@ -497,8 +529,8 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
         runDir: terminal?.run_dir || null,
         sessionDir: terminal?.session_dir || null,
         runId: terminal?.run_id || null,
-        sessionId: terminal?.session_id || null,
-        testUrl: terminal?.test_url || null,
+        sessionId: (replaying ? saved.done?.session_id : terminal?.session_id) || null,
+        testUrl: (replaying ? saved.done?.share_url : terminal?.test_url) || null,
         reasonCode: clipped(terminal?.reason_code, 80) || null,
         reason: clipped(terminal?.reason, 500) || null,
         creditsConsumed: terminal?.credits_consumed != null && Number.isFinite(Number(terminal.credits_consumed))
@@ -515,7 +547,9 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
         browserReconnected: browser?.reconnected ?? false,
         conditionResults,
         allConditionsTrue,
-      })
+      }
+      completedRuns.set(result, { taskId, generation, startedAt, finishedAt: Date.now(), analyzerOnly })
+      resolve(await journeyStore.finish(journeyPlan, result, saved))
     })
   })
 }
@@ -524,7 +558,7 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
  * Execute an actual Kane browser objective. A successful process exit without a
  * passing terminal event is an error, never a pass. Browser jobs are serialized.
  */
-export function runKane({ taskId, phase = 'browser', objective, url, onEvent, timeoutMs = DEFAULT_TIMEOUT_MS, headless = false, mode = 'testing', analyzerOnly = false, conditions = [], currentPage = false } = {}) {
+export function runKane({ taskId, phase = 'browser', objective, url, onEvent, timeoutMs = DEFAULT_TIMEOUT_MS, headless = false, mode = 'testing', analyzerOnly = false, conditions = [], currentPage = false, journey = null } = {}) {
   if (taskId != null && (typeof taskId !== 'string' || !taskId.trim() || taskId.length > 200)) {
     return Promise.reject(new TypeError('A task ID must be a non-empty string under 200 characters.'))
   }
@@ -551,10 +585,55 @@ export function runKane({ taskId, phase = 'browser', objective, url, onEvent, ti
   const control = taskId ? controlFor(taskId) : null
   const generation = control?.generation ?? 0
   if (control?.paused || control?.disconnected) return Promise.resolve(cancelledResult(phase, taskId))
-  return enqueue(control, () => runJob({ taskId, phase, objective: analyzerOnly ? '' : objective.trim(),
-    url: parsedUrl?.href, onEvent, timeoutMs, headless, mode, analyzerOnly, currentPage,
-    conditions: analyzerOnly ? conditions.map((condition) => condition.trim()) : [], control, generation }),
+  return enqueue(control, async () => {
+    const input = { taskId, phase, objective: analyzerOnly ? '' : objective.trim(),
+      url: parsedUrl?.href, onEvent, timeoutMs, headless, mode, analyzerOnly, currentPage,
+      conditions: analyzerOnly ? conditions.map((condition) => condition.trim()) : [], control, generation }
+    let journeyPlan = null
+    try { journeyPlan = await journeyStore.prepare({ ...input, journey }) }
+    catch { notify(onEvent, { type: 'warning', phase, message: 'The reusable journey cache is unavailable. Kane will read the source live.' }) }
+    const result = await runJob({ ...input, journeyPlan })
+    if (journeyPlan?.kind !== 'replay' || result.status !== 'passed') return result
+    // RC.3 replays execute the recorded browser actions and emit a sealed pack,
+    // but do not emit extraction memory in NDJSON. Never read the old cached
+    // variables to fill this gap. Perform a fresh Kane read, then let the caller
+    // independently judge its current facts and the unchanged requirements.
+    notify(onEvent, { type: 'journey', phase, mode: 'refreshing', healingUsed: result.journey?.healingUsed === true })
+    const fresh = await runJob({ ...input, objective: `Read every requested value afresh from the current source during this invocation. Do not reuse any previous observations.\n${input.objective}` })
+    const execution = { replayDecisions: result.journey?.replayedSteps, authorDecisions: result.journey?.authoredSteps,
+      healed: result.journey?.healingUsed }
+    await journeyStore.finish(journeyPlan, fresh, execution)
+    fresh.journey.freshObservationMode = 'live-read'
+    fresh.journeyEvidence = {
+      phase: 'replay-journey', mode, status: result.status, summary: result.summary,
+      evidencePath: result.evidencePath, evidencePackPath: result.evidencePackPath,
+      sessionId: result.sessionId, testUrl: result.testUrl, stepCount: result.stepCount,
+      creditsConsumed: result.creditsConsumed, durationMs: result.durationMs,
+    }
+    return fresh
+  },
   () => cancelledResult(phase, taskId))
+}
+
+/** Promote a recorded recipe only after this worker's fresh independent check. */
+export async function confirmKaneJourney({ result, verification } = {}) {
+  const source = result && completedRuns.get(result)
+  const checked = verification && completedRuns.get(verification)
+  const control = source?.taskId && taskControls.get(source.taskId)
+  if (!source || !checked?.analyzerOnly || checked.taskId !== source.taskId
+    || checked.generation !== source.generation || checked.startedAt < source.finishedAt
+    || !control || control.paused || control.disconnected || control.generation !== source.generation) {
+    if (result?.journey) result.journey.status = 'not_saved'
+    return result?.journey || null
+  }
+  completedRuns.delete(verification)
+  try { return await journeyStore.confirm({ result, verification }) }
+  catch {
+    // Recipe persistence is optional; it must not discard a separately verified
+    // source result or make the controller invent a successful cache write.
+    if (result?.journey) result.journey.status = 'not_saved'
+    return result?.journey || null
+  }
 }
 
 export function analyzeTaskBrowser({ taskId, conditions, onEvent, timeoutMs } = {}) {

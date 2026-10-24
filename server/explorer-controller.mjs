@@ -1,6 +1,8 @@
 import { randomUUID } from 'node:crypto'
 import { mkdirSync, readFileSync, writeFileSync, renameSync } from 'node:fs'
 import * as browser from './kane-worker.mjs'
+import { createKaneExplore } from './kane-explore.mjs'
+import { corroborateSource } from './kane-network.mjs'
 import { text, strings, digest, websiteUrl, safeUrl, sameSite, accountFrom, discoveryFrom, optionsFrom, fieldsFrom, requirementChecksFrom, checkedFrom, receiptFrom, validateAnswers } from './observations.mjs'
 
 const storeFile = new URL('../data/explorer.json', import.meta.url)
@@ -38,19 +40,34 @@ export function createExplorerController({baseUrl}) {
     const saved=JSON.parse(readFileSync(storeFile,'utf8'))
     for(const c of saved.connections||[]) { if(['discovering','pausing'].includes(c.status)) {c.status='error';c.error='Browser work was interrupted. Take over before signing in or continuing.'} c.generation=c.generation||0;connections.set(c.id,c) }
     for(const w of saved.workflows||[]) {
-      if(w.status==='submitting') {w.status='result_unknown';w.error='Execution was interrupted. Inspect the source result before doing anything else.'}
+      if(w.status==='network_checking'){w.status=w.receipt?'result_verified':'result_unknown';w.corroboration={status:'unavailable',summary:'The optional response check was interrupted. No corroboration is claimed.'}}
+      else if(w.status==='submitting') {w.status='result_unknown';w.error='Execution was interrupted. Inspect the source result before doing anything else.'}
       else if(w.status==='inspecting') {w.status='error';w.error='Inspection was interrupted. Check the current source again.'}
       workflows.set(w.id,w)
     }
   } catch(e) {if(e.code!=='ENOENT') throw e}
+  let projectId
+  try{projectId=JSON.parse(readFileSync(new URL('../.testmuai/assurance.json',import.meta.url),'utf8')).projectId}catch{/* Explore can allocate an isolated project per origin. */}
+  const explore=createKaneExplore({projectId,onUpdate:job=>{
+    const c=connections.get(job.connectionId);if(!c)return
+    c.exploration=job
+    if(!job.mapError&&c.explorationGeneration===c.generation&&c.account?.status==='public'&&!['disconnected','human_control','pausing'].includes(c.status)&&job.actions?.length){
+      const observed=(job.actions||[]).filter(action=>sameSite(action.href,c.url)&&text(action.title)&&text(action.sourceQuote))
+      c.actions=[...new Map([...c.actions.filter(action=>action.source!=='kane-explore'),...observed].map(action=>[action.href,action])).values()].slice(0,12)
+    }
+    save()
+  }})
+  for(const c of connections.values())if(c.exploration?.id){
+    try{c.exploration=explore.get(c.exploration.id)}catch{c.exploration={...c.exploration,status:'interrupted',error:'The prior exploration job is unavailable. No completion is claimed.'}}
+  }
   function save(){mkdirSync(new URL('../data/',import.meta.url),{recursive:true});writeFileSync(storeTemp,JSON.stringify({connections:[...connections.values()],workflows:[...workflows.values()]},null,2),{mode:0o600});renameSync(storeTemp,storeFile)}
   function event(target,message,kind='info'){target.events.push({at:new Date().toISOString(),text:message,kind});target.events=target.events.slice(-50);target.updatedAt=new Date().toISOString();save()}
-  function publicConnection(c){const {generation,...safe}=c;return safe}
+  function publicConnection(c){const {generation,explorationGeneration,...safe}=c;return safe}
   function record(c,w,phase,r){const item={id:randomUUID(),phase,status:r.status,summary:`${phase.replaceAll('-',' ')} Kane run ${r.status}. Extracted observations are checked separately.`,url:safeUrl(r.testUrl),at:new Date().toISOString(),mode:r.mode||'testing',steps:r.stepCount,credits:r.creditsConsumed,...(Array.isArray(r.conditionResults)?{conditionsChecked:r.conditionResults.length,conditionsMatched:r.conditionResults.filter(item=>item?.result===true).length}:{})};c.evidence.push(item);if(w)w.evidence.push(item);save();return item}
   function invalidate(w){w.approval=null;w.checks=[];if(w.proposal)delete w.proposal.checkedAt;w.revision++}
-  function clearObservations(w){w.proposal=null;w.proposalRevision=null;w.proposalSelectionId=null;w.questions=[];w.options=[];w.records=[];w.receipt=null;w.observationStage='option_discovered'}
+  function clearObservations(w){w.proposal=null;w.proposalRevision=null;w.proposalSelectionId=null;w.questions=[];w.options=[];w.records=[];w.receipt=null;w.corroboration=null;w.journey=null;w.observationStage='option_discovered'}
   function requireConnection(c){if(!c)throw new Error('Website connection not found.');if(['pausing','human_control','needs_sign_in','disconnected','blocked'].includes(c.status))throw new Error('Take over, then continue with Kane after finishing the website challenge.')}
-  function requireIdle(c){if(active.has(c.id))throw new Error('Kane is still working in this browser. Take over to pause it first.')}
+  function requireIdle(c){if(active.has(c.id)||['starting','running','stopping','interrupted'].includes(c.exploration?.status))throw new Error('Kane is still working for this website. Stop Explore or take over to pause it first.')}
   function taskFor(c){return [...workflows.values()].filter(w=>w.connectionId===c.id)}
   function invalidateAccount(c, observed){
     c.account=observed;c.actions=[];c.records=[]
@@ -79,18 +96,21 @@ export function createExplorerController({baseUrl}) {
   function dispatch(c,w,phase,job){
     requireConnection(c);requireIdle(c)
     const generation=c.generation||0, revision=w?.revision, token=randomUUID()
-    active.set(c.id,token);c.automationPaused=false;c.progress={phase};if(w){w.status=phase==='execute'?'submitting':'inspecting';w.progress={phase};w.error=null}else c.status='discovering'
+    active.set(c.id,token);c.automationPaused=false;c.progress={phase};if(w){w.status=phase==='execute'?'submitting':phase==='corroborate-source'?'network_checking':'inspecting';w.progress={phase};w.error=null}else c.status='discovering'
     c.error=null;event(w||c,`Kane is ${phase.replaceAll('-',' ')}.`)
     const current=()=>c.generation===generation&&active.get(c.id)===token&&(!w||w.revision===revision)
     void (async()=>{try{await job(current)}catch(e){if(current()){const message=text(e.message)||'The browser step could not be completed.';if(w){w.status=w.executionStarted?'result_unknown':'error';w.error=message}else {c.status='error';c.error=message}event(w||c,message,'error')}}finally{if(active.get(c.id)===token){active.delete(c.id);c.progress=null;if(w)w.progress=null;save()}}})()
   }
-  async function run(c,w,phase,objective,current,{mode='testing',url=c.url,currentPage=false}={}){
+  async function run(c,w,phase,objective,current,{mode='testing',url=c.url,currentPage=false,journey=null}={}){
     if(!current())throw new Error('This browser job was interrupted.')
-    const result=await browser.runKane({taskId:c.id,phase,mode,url,currentPage,objective:`${guard}\n${objective}`,onEvent:e=>{
+    const result=await browser.runKane({taskId:c.id,phase,mode,url,currentPage,journey,objective:`${guard}\n${objective}`,onEvent:e=>{
       if(current()&&e.type==='step'){const progress={phase,step:e.step,status:e.status};c.progress=progress;if(w)w.progress=progress;save()}
+      if(current()&&w&&e.type==='journey'){w.journey={...(w.journey||{}),...e};save()}
     }})
     if(!current())throw new Error('This browser job was interrupted; its result cannot replace current state.')
     const evidence=record(c,w,phase,result)
+    if(result.journeyEvidence)record(c,w,'replay-journey',result.journeyEvidence)
+    if(w&&result.journey){w.journey=result.journey;save()}
     const access=text(result.finalState?.access_state,40).toLowerCase()
     if(access==='needs_sign_in'||isAuth(result)&&!passed(result)){
       await pauseForHuman(c,w,current)
@@ -114,7 +134,7 @@ export function createExplorerController({baseUrl}) {
     if(c.status==='blocked'){await pauseForHuman(c,null,current,'blocked','The page access state is unknown. Kane has stopped; take over before continuing.');return}
     event(c,c.status==='ready'?`Found ${c.actions.length} actions on this page. These are discovered options, not verified workflows.`:'This website needs human attention before discovery can continue.')
   }
-  const context=w=>JSON.stringify({action:w.action,goal:w.goal,constraints:w.constraints,answers:w.answers,answerLabels:w.answerLabels||{},selectedOption:w.selectedOption||w.options.find(o=>o.id===w.selectedOptionId)||null})
+  const context=w=>JSON.stringify({action:{title:w.action.title,href:w.action.href,kind:w.action.kind},goal:w.goal,constraints:w.constraints,answers:w.answers,answerLabels:w.answerLabels||{},selectedOption:w.selectedOption||w.options.find(o=>o.id===w.selectedOptionId)||null})
   async function independentlyCheck(c,w,expected,requirements,current,phase){
     const accountCondition=w.accountBinding?.status==='public'
       ? 'The current source is publicly accessible and does not indicate a signed-in account.'
@@ -125,6 +145,7 @@ export function createExplorerController({baseUrl}) {
       ...requirements.map(item=>({label:item.id,condition:`The current visible source satisfies requirement ${JSON.stringify(item.id)}: ${JSON.stringify(item.requirement)}. Evaluate it for this selected task: ${context(w)}. Unknown or missing evidence must return false.`})),
     ]
     if(!current())throw new Error('This source check was interrupted.')
+    c.progress={phase,status:'running'};w.progress=c.progress;save()
     const result=await browser.analyzeTaskBrowser({taskId:c.id,conditions:items.map(item=>`${guard} Read-only assessment: ${item.condition}`),onEvent:event=>{
       if(current()&&event.type==='step'){const progress={phase,step:event.step,status:event.status};c.progress=progress;w.progress=progress;save()}
     }})
@@ -133,9 +154,9 @@ export function createExplorerController({baseUrl}) {
     if(isAuth(result)&&!passed(result)){await pauseForHuman(c,w,current);return {matches:false,auth:true,evidence,checks:[]}}
     const verdicts=Array.isArray(result.conditionResults)?result.conditionResults:[]
     const checks=items.map((item,index)=>({label:item.label,status:verdicts[index]?.result===true?'match':verdicts[index]?.result===false?'conflict':'unknown',detail:text(verdicts[index]?.reason,800)||'Independent current-page analyzer verdict.'}))
-    return {matches:passed(result)&&verdicts.length===items.length&&verdicts.every(item=>item?.result===true),auth:false,evidence,checks}
+    return {matches:passed(result)&&verdicts.length===items.length&&verdicts.every(item=>item?.result===true),auth:false,evidence,checks,result}
   }
-  async function verifyReadResult(c,w,current){
+  async function verifyReadResult(c,w,current,readResult){
     const expected=w.proposal
     if(!expected||w.proposalRevision!==w.revision)throw new Error('Retrieve current information before verifying it.')
     w.receipt=null
@@ -144,6 +165,8 @@ export function createExplorerController({baseUrl}) {
     if(audited.auth)return
     w.checks=audited.checks
     if(!audited.matches){w.status='result_unknown';w.error='Kane could not independently verify every fact against this source. No verified result was saved.';event(w,w.error,'warning');return}
+    if(readResult?.journey)w.journey=await browser.confirmKaneJourney({result:readResult,verification:audited.result})
+    if(!current())throw new Error('The connection changed before the verified result could be saved.')
     w.receipt={title:'Information verified · no changes made',summary:expected.summary,sourceUrl:expected.sourceUrl,recordId:null,fields:structuredClone(expected.terms),nextSteps:[],verifiedAt:new Date().toISOString(),evidenceId:w.readEvidenceId,verificationEvidenceId:audited.evidence.id}
     w.status='result_verified';w.observationStage='result_verified';w.error=null;event(w,'Kane independently checked every fact. Your read-only result is saved.','success')
   }
@@ -151,7 +174,7 @@ export function createExplorerController({baseUrl}) {
     clearObservations(w);w.readOnly=true;save()
     if(w.accountBinding?.status!=='public'&&!(w.accountBinding?.status==='signed_in'&&w.accountBinding.identity))throw new Error('A public page or a visibly identified account is required before saving a verified result.')
     const target=w.selectedOption?.url||w.action.href
-    const {result,evidence,auth}=await run(c,w,'retrieve-information',`Open ${target}. Read this page only. Do not click any controls, fill forms or change data. Answer this user task using only visible source information: ${context(w)}. Store up to four useful exact source facts as "result_fields_text", one per line in the format Label | Value. Store a short factual answer as "result_summary". Store the current absolute page URL as "result_url". Store any missing information or source disclaimers as "limitations_text", or "none". Store access as public, signed_in, needs_sign_in or blocked in "access_state". Use these exact five variable names. Finally verify the extracted facts are visible on this page.`,current,{mode:'action',url:target})
+    const {result,evidence,auth}=await run(c,w,'retrieve-information',`Open ${target}. Read this page only. Do not click any controls, fill forms or change data. Answer this user task using only visible source information: ${context(w)}. Store up to four useful exact source facts as "result_fields_text", one per line in the format Label | Value. Store a short factual answer as "result_summary". Store the current absolute page URL as "result_url". Store any missing information or source disclaimers as "limitations_text", or "none". Store access as public, signed_in, needs_sign_in or blocked in "access_state". Use these exact five variable names. Finally verify the extracted facts are visible on this page.`,current,{mode:'action',url:target,journey:{readOnly:true,sourceUrl:target,goal:w.goal,account:w.accountBinding,requirements:JSON.parse(context(w))}})
     if(auth)return
     if(!passed(result)||!evidenceRef(result))throw new Error('Kane could not retrieve evidenced information from this page. Nothing was changed.')
     const observedAccount=accountFrom(result)
@@ -162,7 +185,21 @@ export function createExplorerController({baseUrl}) {
     w.proposal.digest=digest(material(w.proposal));w.proposalRevision=w.revision;w.proposalSelectionId=w.selectedOptionId;w.readEvidenceId=evidence.id
     w.limitations=typeof f.limitations_text==='string'?f.limitations_text.split(/\r?\n/).map(line=>text(line)).filter(line=>line&&!/^(none|unknown)$/i.test(line)):[]
     w.observationStage='terms_observed';w.observedAt=new Date().toISOString();save()
-    await verifyReadResult(c,w,current)
+    await verifyReadResult(c,w,current,result)
+  }
+  async function corroborate(c,w,current){
+    const saved=structuredClone(w.receipt)
+    w.corroboration={status:'running',summary:'Comparing the saved facts with a source response.'};save()
+    try{
+      const {result,observation}=await corroborateSource({taskId:c.id,sourceUrl:saved.sourceUrl,terms:saved.fields,account:w.accountBinding,onEvent:e=>{
+        if(current()&&e.type==='step'){c.progress={phase:'corroborate-source',step:e.step,status:e.status};w.progress=c.progress;save()}
+      }})
+      if(!current())return
+      const evidence=record(c,w,'corroborate-source',result)
+      w.corroboration={...observation,evidenceId:evidence.id}
+      if(observation.status==='conflict'){w.status='result_unknown';w.receipt=null;w.error=observation.summary;event(w,w.error,'warning')}
+      else{w.status='result_verified';event(w,observation.summary,observation.status==='matched'?'success':'warning')}
+    }catch(error){if(current()){w.status='result_verified';w.corroboration={status:'unavailable',summary:text(error.message),checkedAt:new Date().toISOString()};event(w,'The extra response check was unavailable. The saved browser verification was retained.','warning')}}
   }
   async function inspect(c,w,current){
     if(w.action.kind==='read')return readInformation(c,w,current)
@@ -244,13 +281,27 @@ export function createExplorerController({baseUrl}) {
         const c=connections.get(id);if(!c){reply(res,404,{error:'Connection not found.'});return true}
         if(req.method==='GET'){reply(res,200,{connection:publicConnection(c),workflows:taskFor(c)});return true}
         const input=await body(req)
+        if(command==='explore'){
+          requireConnection(c);requireIdle(c)
+          if(c.account?.status!=='public')throw new Error('Explore currently maps public pages in a separate browser. It cannot use a signed-in connection.')
+          c.explorationGeneration=c.generation;c.exploration=explore.start({connectionId:c.id,url:c.pageUrl||c.url,goal:c.goal||'',maxLeases:4,timeoutMs:240000});save();reply(res,202,{connection:publicConnection(c)});return true
+        }
+        if(command==='explore-stop'){
+          if(c.exploration?.id)c.exploration=await explore.stop(c.exploration.id)
+          save();reply(res,200,{connection:publicConnection(c)});return true
+        }
+        if(command==='explore-refresh'){
+          if(c.exploration?.id)c.exploration=await explore.refresh(c.exploration.id)
+          save();reply(res,200,{connection:publicConnection(c)});return true
+        }
         if(command==='takeover'||command==='disconnect'){
           if(c.status==='pausing')throw new Error('Browser work is still stopping. Wait for takeover to finish.')
           if(c.status==='disconnected'){reply(res,200,{connection:publicConnection(c)});return true}
           const generation=++c.generation, token=randomUUID()
           active.set(c.id,token);c.status='pausing';c.automationPaused=false;c.progress={phase:'pausing'}
           for(const item of taskFor(c)){
-            if(item.status==='submitting'||item.executionStarted&&item.status!=='result_verified'||item.proposal?.executionKind==='unsupported')item.status='result_unknown'
+            if(item.status==='network_checking'){item.status=item.receipt?'result_verified':'result_unknown';item.corroboration={status:'unavailable',summary:'You stopped the optional response check. No corroboration is claimed.'}}
+            else if(item.status==='submitting'||item.executionStarted&&item.status!=='result_verified'||item.proposal?.executionKind==='unsupported')item.status='result_unknown'
             else if(item.status==='inspecting')item.status='blocked'
             else if(['approved','draft_checked'].includes(item.status))item.status='options_observed'
             item.progress=null;item.approval=null;item.checks=[];if(item.proposal)delete item.proposal.checkedAt
@@ -258,6 +309,7 @@ export function createExplorerController({baseUrl}) {
           save()
           const current=()=>c.generation===generation&&active.get(c.id)===token
           try {
+            if(c.exploration?.id&&['starting','running','stopping','interrupted'].includes(c.exploration.status))await explore.stop(c.exploration.id)
             await browser.pauseTaskBrowser(c.id)
             if(!current())throw new Error('The connection changed while browser work was stopping.')
             if(command==='disconnect'){
@@ -320,9 +372,10 @@ export function createExplorerController({baseUrl}) {
       else if(command==='approve'){if(w.status!=='draft_checked'||w.revision!==input.revision||w.proposalRevision!==w.revision||w.proposalSelectionId!==w.selectedOptionId||!w.proposal?.checkedAt||!w.checks.length||w.checks.some(c=>c.status!=='match'))throw new Error('Check the current proposal before approving.');if(w.proposal.executionKind!=='read')throw new Error('Automatic submission is not supported. Use human takeover, then reconcile the source result.');w.approval={revision:w.revision,digest:w.proposal.digest,proposal:structuredClone(w.proposal),account:structuredClone(w.accountBinding),at:new Date().toISOString()};w.status='approved';event(w,'You approved this exact checked proposal.')}
       else if(command==='execute'){if(w.status!=='approved'||!w.approval)throw new Error('Approve the current proposal first.');dispatch(c,w,'execute',current=>execute(c,w,current))}
       else if(command==='reconcile'){if(!w.proposal)throw new Error('No source proposal is available for reconciliation.');dispatch(c,w,'verify-result',current=>w.readOnly?readInformation(c,w,current):verifyResult(c,w,current))}
+      else if(command==='corroborate'){if(w.status!=='result_verified'||!w.readOnly||!w.receipt)throw new Error('Verify a read-only result before checking its source response.');if(w.accountBinding?.status!=='public')throw new Error('Response corroboration currently supports public pages only.');dispatch(c,w,'corroborate-source',current=>corroborate(c,w,current))}
       else throw new Error('Unknown workflow action.')
       save();reply(res,202,{workflow:w});return true
     }catch(e){reply(res,400,{error:text(e.message)||'The action could not be started.'});return true}
   }
-  return {handle}
+  return {handle,shutdown:()=>explore.shutdown()}
 }

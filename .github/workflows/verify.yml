@@ -1,0 +1,85 @@
+name: Raising Kane verification
+
+on:
+  push:
+    branches: [main, 'codex/**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+
+  kane-readiness:
+    runs-on: ubuntu-latest
+    outputs:
+      ready: ${{ steps.credentials.outputs.ready }}
+    steps:
+      - id: credentials
+        env:
+          KANE_USERNAME: ${{ secrets.KANE_USERNAME }}
+          KANE_ACCESS_KEY: ${{ secrets.KANE_ACCESS_KEY }}
+        run: |
+          if [ -n "$KANE_USERNAME" ] && [ -n "$KANE_ACCESS_KEY" ]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo '### Kane browser verification: pending / skipped' >> "$GITHUB_STEP_SUMMARY"
+            echo 'KANE_USERNAME and KANE_ACCESS_KEY are unavailable. Build/unit checks can pass; no Kane browser pass is claimed.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  kane-local-regression:
+    needs: [build-and-unit, kane-readiness]
+    if: needs.kane-readiness.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      KANE_URL: http://127.0.0.1:5173
+      KANE_CLI_USER_AGENT: codex
+      KANE_CLI_CHROME_PATH: /usr/bin/google-chrome
+      KANE_FOLDER_ID: '01M5QFXW4JRPP77HF88D61TWW9'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm install -g @testmuai/kane-cli@0.10.0-rc.3
+      - id: auth
+        run: npm run kane:ci-auth
+        env:
+          KANE_USERNAME: ${{ secrets.KANE_USERNAME }}
+          KANE_ACCESS_KEY: ${{ secrets.KANE_ACCESS_KEY }}
+      - name: Start Raising Kane
+        run: |
+          test -x "$KANE_CLI_CHROME_PATH"
+          mkdir -p data/verification
+          npm run dev > data/verification/dev-server.log 2>&1 &
+          node scripts/wait-for-app.mjs
+      - name: Run generated URL validation regression
+        run: npm run verify:kane:suite -- --suite ui --parallel 2
+      - name: Read shared coverage
+        if: always() && steps.auth.outcome == 'success'
+        run: npm run kane:coverage
+      - name: Explain verification status
+        if: always()
+        run: node scripts/kane-ci-summary.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raising-kane-verification-status
+          path: data/verification/kane-*.json
+          if-no-files-found: warn

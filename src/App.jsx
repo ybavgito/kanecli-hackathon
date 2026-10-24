@@ -4,6 +4,7 @@ import MerchantDemo from './MerchantDemo.jsx'
 const CONNECTION_KEY = 'raising-kane-connection-id'
 const WORKFLOW_KEY = 'raising-kane-workflow-id'
 const params = new URLSearchParams(window.location.search)
+const EXPLORE_ACTIVE_STATUSES = ['starting', 'running', 'stopping', 'interrupted']
 
 function Icon({ name, size = 18 }) {
   const paths = {
@@ -78,9 +79,97 @@ function updateUrl(connectionId, workflowId) {
   else localStorage.removeItem(WORKFLOW_KEY)
 }
 
+function evidenceEntries(value) {
+  return Array.isArray(value) ? value.filter(Boolean) : value && typeof value === 'object' ? [value] : []
+}
+
+function mergeEvidence(...collections) {
+  const seen = new Set()
+  return collections.flatMap(evidenceEntries).filter(item => {
+    if (!item.id) return true
+    if (seen.has(item.id)) return false
+    seen.add(item.id)
+    return true
+  })
+}
+
 function Evidence({ entries = [] }) {
-  return <section className="rk-panel rk-evidence"><div className="rk-panel-head"><span className="rk-kicker">BROWSER EVIDENCE</span><span className="rk-muted-small">{entries.length} {entries.length === 1 ? 'entry' : 'entries'}</span></div>
-    {entries.length ? <ol>{entries.slice().reverse().map((item, index) => <li key={item.id || `${item.phase}-${index}`}><span className={`rk-evidence-dot ${item.status || ''}`} /><div><strong>{textOf(item.phase) || 'Source observation'}</strong><p>{textOf(item.summary) || textOf(item.status)}</p><div className="rk-evidence-meta">{item.mode && <span>{textOf(item.mode)}</span>}{item.at && <span>{displayDate(item.at)}</span>}{item.steps != null && <span>{item.steps} steps</span>}{item.conditionsChecked != null && item.conditionsMatched != null && <span>{item.conditionsMatched}/{item.conditionsChecked} source checks matched</span>}</div>{safeUrl(item.url) && <a href={safeUrl(item.url)} target="_blank" rel="noreferrer">Open evidence <Icon name="link" size={12} /></a>}</div></li>)}</ol> : <p className="rk-empty">Kane’s source observations will appear here. No result is verified yet.</p>}
+  return <section id="rk-evidence" className="rk-panel rk-evidence"><div className="rk-panel-head"><span className="rk-kicker">SOURCE EVIDENCE</span><span className="rk-muted-small">{entries.length} {entries.length === 1 ? 'entry' : 'entries'}</span></div>
+    {entries.length ? <ol>{entries.slice().reverse().map((item, index) => <li id={item.id ? `evidence-${item.id}` : undefined} key={item.id || `${item.phase}-${index}`}><span className={`rk-evidence-dot ${item.status || ''}`} /><div><strong>{textOf(item.phase)?.replaceAll('-', ' ') || textOf(item.kind)?.replaceAll('-', ' ') || 'Source observation'}</strong><p>{textOf(item.summary) || textOf(item.status)?.replaceAll('_', ' ')}</p><div className="rk-evidence-meta">{item.mode && <span>{textOf(item.mode)}</span>}{(item.at || item.checkedAt) && <span>{displayDate(item.at || item.checkedAt)}</span>}{item.steps != null && <span>{item.steps} steps</span>}{item.committedDeltaCount != null && <span>{item.committedDeltaCount} committed map updates</span>}{item.conditionsChecked != null && item.conditionsMatched != null && <span>{item.conditionsMatched}/{item.conditionsChecked} source checks matched</span>}</div>{safeUrl(item.url) && <a href={safeUrl(item.url)} target="_blank" rel="noreferrer">Open evidence <Icon name="link" size={12} /></a>}</div></li>)}</ol> : <p className="rk-empty">Kane’s source observations will appear here. No result is verified yet.</p>}
+  </section>
+}
+
+function ExploreMap({ exploration, onStop, stopDisabled }) {
+  if (!exploration) return null
+  const screens = Array.isArray(exploration.screens) ? exploration.screens : []
+  const flows = Array.isArray(exploration.flows) ? exploration.flows : []
+  const actions = Array.isArray(exploration.actions) ? exploration.actions : []
+  const findings = Array.isArray(exploration.findings) ? exploration.findings : []
+  const evidence = evidenceEntries(exploration.evidence)
+  const active = EXPLORE_ACTIVE_STATUSES.includes(exploration.status)
+  const statusLabels = {
+    starting: 'Preparing exploration', running: 'Exploring public screens', stopping: 'Stopping exploration',
+    completed: 'Exploration finished', budget: 'Lease limit reached', stopped: 'Exploration stopped',
+    timed_out: 'Time limit reached', error: 'Exploration needs attention', interrupted: 'Exploration interrupted',
+  }
+  const progress = exploration.progress
+  const progressDetail = progress && typeof progress === 'object'
+    ? [Number.isFinite(progress.visited) && `${progress.visited} visits reported`, Number.isFinite(progress.frontier) && `${progress.frontier} destinations pending`, Number.isFinite(progress.elapsedSeconds) && `${Math.round(progress.elapsedSeconds)} seconds elapsed`].filter(Boolean).join(' · ')
+    : progress
+  const screenLabel = id => {
+    const screen = screens.find(item => item.id === id)
+    return screen?.title || screen?.heading || screen?.url || null
+  }
+  return <section className="rk-panel rk-explore-map" aria-labelledby="rk-explore-title">
+    <div className="rk-panel-head"><span className="rk-kicker">KANE EXPLORE · OBSERVED MAP</span><span className={`rk-stage ${active ? 'rk-stage-pending' : ''}`}>{statusLabels[exploration.status] || textOf(exploration.status)?.replaceAll('_', ' ')}</span></div>
+    <h2 id="rk-explore-title">Public screens found so far</h2>
+    <p>Explore uses a separate public browser. It cannot use this connection’s signed-in session. Discovered actions still need a fresh read and verification.</p>
+    {active && <Progress value={progressDetail} fallback="Kane is following public, read-only links within this exploration’s limits." />}
+    <dl className="rk-map-counts"><div><dt>Observed screens</dt><dd>{screens.length}</dd></div><div><dt>Navigation flows</dt><dd>{flows.length}</dd></div><div><dt>Read actions</dt><dd>{actions.length}</dd></div><div><dt>Findings</dt><dd>{findings.length}</dd></div></dl>
+    <div className="rk-map-budget">{Number.isFinite(exploration.leases) && <span>{exploration.leases}{Number.isFinite(exploration.maxLeases) ? ` of ${exploration.maxLeases}` : ''} leases used</span>}{Number.isFinite(exploration.credits) && <span>{exploration.credits.toLocaleString(undefined, { maximumFractionDigits: 3 })} credits reported</span>}{Number.isFinite(exploration.timeoutMs) && <span>{Math.round(exploration.timeoutMs / 1000)} second time limit</span>}</div>
+    {exploration.status === 'budget' && <p className="rk-map-note">The lease limit ended this run. This is a partial map; the whole website has not been explored.</p>}
+    {!active && exploration.status !== 'budget' && exploration.mapComplete === false && <p className="rk-map-note">This map is partial. Some destinations remain unexplored.</p>}
+    {exploration.error && <div className="rk-alert" role="status">{textOf(exploration.error)}</div>}
+    {exploration.mapError && <div className="rk-alert" role="status">Map evidence could not be fully read: {textOf(exploration.mapError)}</div>}
+    {screens.length ? <ol className="rk-map-screens">{screens.map((screen, index) => {
+      const controls = Array.isArray(screen.controls) ? screen.controls : []
+      return <li key={screen.id || screen.url || index}><span className="rk-map-number">{index + 1}</span><div><strong>{screen.title || screen.heading || screen.url}</strong>{safeUrl(screen.url) && <a href={safeUrl(screen.url)} target="_blank" rel="noreferrer">{screen.url} <Icon name="link" size={12} /></a>}{controls.length > 0 && <details><summary>{controls.length} observed controls</summary><ul>{controls.map((control, controlIndex) => <li key={`${control.name}-${controlIndex}`}><span>{control.name || control.role || 'Observed control'}</span><small>{control.status === 'policy_blocked' ? 'Blocked by read-only policy' : control.status === 'walked' ? 'Visited' : 'Observed'}</small></li>)}</ul></details>}</div></li>
+    })}</ol> : <p className="rk-empty">No screens have been recorded in this map yet.</p>}
+    {flows.length > 0 && <details className="rk-map-details"><summary>{flows.length} observed navigation {flows.length === 1 ? 'flow' : 'flows'}</summary><ul>{flows.map((flow, index) => <li key={flow.id || index}><strong>{flow.title || 'Observed navigation'}</strong>{screenLabel(flow.from) && screenLabel(flow.to) && <span>{screenLabel(flow.from)} → {screenLabel(flow.to)}</span>}</li>)}</ul></details>}
+    {findings.length > 0 && <details className="rk-map-details"><summary>{findings.length} exploration {findings.length === 1 ? 'finding' : 'findings'}</summary><p>These are exploration observations, not verified workflow outcomes.</p><ul>{findings.map((finding, index) => <li key={finding.id || index}><strong>{finding.title || textOf(finding.kind)}</strong>{finding.description && <span>{finding.description}</span>}</li>)}</ul></details>}
+    {Array.isArray(exploration.limitations) && exploration.limitations.length > 0 && <details className="rk-map-details"><summary>Exploration limits</summary><ul className="rk-limitations">{exploration.limitations.map((limit, index) => <li key={index}>{textOf(limit)}</li>)}</ul></details>}
+    <div className="rk-panel-action rk-explore-footer">{evidence.length > 0 && <a className="rk-inline-link" href="#rk-evidence">{evidence.length} map evidence {evidence.length === 1 ? 'entry' : 'entries'} <Icon name="arrow" size={13} /></a>}{active && <button type="button" className="rk-secondary" disabled={stopDisabled || exploration.status === 'stopping'} onClick={onStop}>{exploration.status === 'stopping' ? 'Stopping exploration…' : 'Stop exploration'} <Icon name="pause" size={14} /></button>}</div>
+  </section>
+}
+
+function JourneyStatus({ journey }) {
+  if (!journey) return null
+  const modes = { recorded: 'Recorded from this source read', replayed: 'Saved journey replayed', healed: 'Saved journey adapted by Kane', authored: 'New journey steps authored', live: 'Live source read' }
+  const statuses = { candidate: 'Candidate journey', proven: 'Proven journey', not_saved: 'Journey not saved' }
+  return <section className="rk-panel rk-journey"><div className="rk-panel-head"><span className="rk-kicker">REUSABLE READ JOURNEY</span><span className="rk-stage">{statuses[journey.status] || 'Journey status unknown'}</span></div><h2>{modes[journey.mode] || 'Source read journey'}</h2>
+    {journey.status === 'candidate' && <p>This recording must pass independent source verification before it can be reused.</p>}
+    {journey.status === 'proven' && <p>This journey passed independent browser verification for its original requirements.</p>}
+    {journey.status === 'not_saved' && <p>This read has no saved reusable journey.</p>}
+    <div className="rk-journey-facts">{Number.isFinite(journey.replayedSteps) && <span>{journey.replayedSteps} replayed steps</span>}{Number.isFinite(journey.authoredSteps) && <span>{journey.authoredSteps} authored steps</span>}{(journey.healingUsed || journey.mode === 'healed') && <span>Healing used</span>}{journey.freshObservationMode === 'live-read' && <span>Fresh observation: live read</span>}</div>
+    <p className="rk-map-note">Every replay still needs a fresh source read and an independent browser check. Saved journeys do not reuse previous answers.</p>
+    {journey.requirementsPreserved === false && <p className="rk-journey-warning">The original requirements were not confirmed for this run.</p>}
+  </section>
+}
+
+function Corroboration({ value, checking, canCheck, disabled, onCheck, evidence = [] }) {
+  if (!value && !canCheck) return null
+  const kind = value?.kind === 'api' ? 'API' : 'HTTP'
+  const statuses = { running: 'Checking source response', matched: 'Matched the saved facts', conflict: 'Conflicts with the saved facts', unavailable: 'Additional check unavailable' }
+  const checks = Array.isArray(value?.checks) ? value.checks : []
+  return <section className={`rk-corroboration ${value?.status || ''}`} aria-label="Source response corroboration">
+    <div className="rk-panel-head"><span className="rk-kicker">{kind} CORROBORATION</span><span className={`rk-stage ${checking ? 'rk-stage-pending' : ''}`}>{checking ? 'Checking source response' : statuses[value?.status] || 'Not checked'}</span></div>
+    <p>{textOf(value?.summary) || 'Compare the browser-verified facts with the public source response.'}</p>
+    {checking && <Progress fallback="Reading the public response and comparing the saved facts…" />}
+    {value?.status === 'unavailable' && <p className="rk-corroboration-note">The browser-verified receipt remains available. The additional response check could not confirm these facts.</p>}
+    {value?.status === 'conflict' && <p className="rk-corroboration-note">The response did not match the saved facts. The receipt is no longer verified; refresh and verify the information.</p>}
+    {checks.length > 0 && <div className="rk-checks">{checks.map((check, index) => <div key={index} className={`rk-check ${check.status === 'matched' ? 'match' : check.status}`}><span>{['match', 'matched'].includes(check.status) ? '✓' : check.status === 'conflict' ? '!' : '·'}</span><div><strong>{textOf(check.label)}</strong><p>{textOf(check.detail)}</p></div></div>)}</div>}
+    <div className="rk-corroboration-meta">{Number.isFinite(value?.statusCode) && <span>{kind} {value.statusCode}</span>}{value?.checkedAt && <span>Checked {displayDate(value.checkedAt)}</span>}{safeUrl(value?.url) && <a className="rk-inline-link" href={safeUrl(value.url)} target="_blank" rel="noreferrer">Open checked source <Icon name="link" size={12} /></a>}{value?.evidenceId && evidence.some(item => item.id === value.evidenceId) && <a className="rk-inline-link" href={`#evidence-${value.evidenceId}`}>View response evidence <Icon name="arrow" size={12} /></a>}</div>
+    {canCheck && <button type="button" className="rk-secondary" disabled={checking || disabled} onClick={onCheck}>{checking ? 'Checking source response…' : 'Check source response'} <Icon name="shield" size={15} /></button>}
   </section>
 }
 
@@ -269,20 +358,26 @@ function UrlProduct() {
 
   const connected = connection && connection.status !== 'disconnected'
   const pausing = connection?.status === 'pausing'
+  const exploration = connection?.exploration
+  const exploring = EXPLORE_ACTIVE_STATUSES.includes(exploration?.status)
+  const publicConnection = connection?.account?.status === 'public'
+  const networkChecking = workflow?.status === 'network_checking' || workflow?.corroboration?.status === 'running' || busy === 'corroborate'
   const connectionBusy = ['discovering', 'pausing'].includes(connection?.status) || busy === 'connect' || busy === 'inspect'
-  const workflowBusy = ['inspecting', 'submitting'].includes(workflow?.status) || Boolean(busy) || pausing
+  const workflowBusy = ['inspecting', 'submitting', 'network_checking'].includes(workflow?.status) || Boolean(busy) || pausing
   const needsHuman = ['needs_sign_in', 'human_control'].includes(connection?.status)
-  const workflowActionDisabled = workflowBusy || !connected || needsHuman || connectionBusy
+  const workflowActionDisabled = workflowBusy || !connected || needsHuman || connectionBusy || exploring
   const actions = Array.isArray(connection?.actions) ? connection.actions : []
   const records = Array.isArray(connection?.records) ? connection.records : []
-  const verifiedResults = savedWorkflows.filter(item => item.connectionId === connection?.id && item.status === 'result_verified' && item.receipt)
+  const verifiedResults = savedWorkflows.filter(item => item.connectionId === connection?.id && ['result_verified', 'network_checking'].includes(item.status) && item.receipt)
   const options = Array.isArray(workflow?.options) ? workflow.options : []
   const questions = Array.isArray(workflow?.questions) ? workflow.questions : []
   const checks = Array.isArray(workflow?.checks) ? workflow.checks : []
   const proposal = workflow?.proposal
   const constraints = Array.isArray(workflow?.constraints) ? workflow.constraints : []
-  const workflowEvidence = Array.isArray(workflow?.evidence) ? workflow.evidence : []
-  const connectionEvidence = Array.isArray(connection?.evidence) ? connection.evidence : []
+  const workflowEvidence = evidenceEntries(workflow?.evidence)
+  const connectionEvidence = mergeEvidence(connection?.evidence, exploration?.evidence)
+  const receiptVisible = ['result_verified', 'network_checking'].includes(workflow?.status) && workflow?.receipt
+  const canCorroborate = Boolean(receiptVisible) && publicConnection && proposal?.executionKind === 'read'
   const checkable = proposal?.checkedAt && workflow?.status === 'draft_checked' && checks.length > 0 && checks.every(check => check.status === 'match')
   const canAnswer = Boolean(workflow) && ['needs_input', 'options_observed', 'draft_checked', 'error', 'blocked'].includes(workflow.status) && !workflow.executionStarted
   const sensitiveQuestion = question => /password|passcode|one.time|otp|secret|token|captcha|verification code/i.test(`${question.id} ${question.label} ${question.type}`)
@@ -290,6 +385,8 @@ function UrlProduct() {
 
   const connectionStep = pausing
     ? { title: 'Stopping automation', detail: 'Raising Kane is ending the active browser step before giving you control.' }
+    : exploring
+    ? { title: exploration.status === 'stopping' ? 'Stopping exploration' : 'Exploring public screens', detail: 'Kane is mapping read-only navigation in a separate public browser. The observed map updates below.' }
     : connection?.status === 'discovering'
     ? { title: 'Finding useful actions', detail: 'Kane is inspecting this page in a bounded, read-only pass.' }
     : needsHuman
@@ -302,6 +399,8 @@ function UrlProduct() {
 
   const workflowStep = pausing
     ? { title: 'Stopping automation', detail: 'Raising Kane is ending the active browser step before giving you control.' }
+    : networkChecking
+    ? { title: 'Checking the public source response', detail: 'The browser-verified receipt stays visible while Raising Kane compares its facts with the source response.' }
     : workflow?.status === 'inspecting'
     ? workflow?.progress?.phase === 'retrieve-information'
       ? { title: 'Reading website information', detail: 'Kane is retrieving the facts for this read-only action.' }
@@ -345,13 +444,24 @@ function UrlProduct() {
             {constraints.length > 0 && <section className="rk-panel"><div className="rk-panel-head"><span className="rk-kicker">WHAT MUST STAY TRUE</span><Icon name="shield" size={17} /></div><ul className="rk-constraints">{constraints.map((item, index) => <li key={index}><Icon name="check" size={15} />{textOf(item)}</li>)}</ul></section>}
             {options.length > 0 && ['options_observed', 'draft_checked', 'approved', 'submitting', 'result_unknown'].includes(workflow.status) && <section className="rk-panel"><div className="rk-panel-head"><span className="rk-kicker">SOURCE-BACKED OPTIONS</span><span className="rk-muted-small">{options.length} observed</span></div><h2>Compare what changes</h2><div className="rk-options">{options.map(option => <button type="button" className={`rk-option ${candidateOption === option.id ? 'selected' : ''}`} key={option.id} onClick={() => setCandidateOption(option.id)} disabled={workflowActionDisabled || ['needs_input', 'approved', 'submitting', 'result_unknown'].includes(workflow.status)}><span className="rk-option-radio" /><span className="rk-option-body"><strong>{option.label}</strong>{option.price != null && <small className="rk-option-price">{textOf(option.price)}</small>}<ItemList title="WHAT CHANGES" items={option.changes} /><ItemList title="REQUIREMENTS" items={option.requirements} /><ItemList title="AFTERWARD" items={option.nextSteps} /><SourceQuote>{option.sourceQuote}</SourceQuote><span className="rk-knowledge">Terms observed{option.reversible ? ' · Reversible draft' : ''}</span></span></button>)}</div>{workflow.status === 'options_observed' && candidateOption !== workflow.selectedOptionId && <div className="rk-panel-action"><button type="button" className="rk-primary" disabled={!candidateOption || requiredUnanswered || workflowActionDisabled} onClick={chooseOption}>Choose observed option <Icon name="arrow" size={16} /></button></div>}</section>}
             {proposal && ['options_observed', 'draft_checked', 'approved', 'submitting', 'result_unknown'].includes(workflow.status) && <section className="rk-panel rk-proposal"><div className="rk-panel-head"><span className="rk-kicker">EXACT PROPOSAL</span><span className="rk-stage">{workflow.status === 'draft_checked' ? 'Draft checked' : workflow.status?.replaceAll('_', ' ')}</span></div><h2>{proposal.summary || 'Review these terms'}</h2><div className="rk-terms">{(proposal.terms || []).map((term, index) => <div key={index}><span>{term.label}</span><strong>{textOf(term.value)}</strong></div>)}</div><ItemList title="WHAT CHANGES" items={proposal.changes} /><ItemList title="REQUIREMENTS" items={proposal.requirements} /><ItemList title="NEXT STEPS" items={proposal.nextSteps} />{proposal.sourceUrl && safeUrl(proposal.sourceUrl) && <a className="rk-inline-link" href={safeUrl(proposal.sourceUrl)} target="_blank" rel="noreferrer">Inspect proposal on the website <Icon name="link" size={14} /></a>}{checks.length > 0 && <div className="rk-checks">{checks.map((check, index) => <div key={index} className={`rk-check ${check.status}`}><span>{check.status === 'match' ? '✓' : check.status === 'conflict' ? '!' : '·'}</span><div><strong>{check.label}</strong><p>{check.detail}</p></div></div>)}</div>}{workflow.status === 'options_observed' && (!options.length || workflow.selectedOptionId) && <div className="rk-panel-action"><button className="rk-primary" type="button" disabled={workflowActionDisabled || requiredUnanswered} onClick={() => mutation('check', `/api/workflows/${workflow.id}/check`, {}, 'workflow')}>Check this proposal <Icon name="arrow" size={16} /></button></div>}{workflow.status === 'draft_checked' && <div className="rk-panel-action"><button className="rk-primary" type="button" disabled={workflowActionDisabled || !checkable} onClick={() => mutation('approve', `/api/workflows/${workflow.id}/approve`, { revision: workflow.revision }, 'workflow')}>Approve this revision <Icon name="arrow" size={16} /></button></div>}{workflow.status === 'approved' && <div className="rk-panel-action"><p>Raising Kane will recheck the approved terms before acting. If they changed, this approval is invalid.</p><button className="rk-primary" type="button" disabled={workflowActionDisabled} onClick={() => mutation('execute', `/api/workflows/${workflow.id}/execute`, {}, 'workflow')}>{proposal.executionKind === 'read' ? 'Verify source result' : 'Perform approved action'} <Icon name="arrow" size={16} /></button></div>}</section>}
-            {workflow.status === 'result_verified' && workflow.receipt && <section className="rk-panel rk-receipt"><div className="rk-receipt-icon"><Icon name="check" size={22} /></div><span className="rk-kicker">SAVED VERIFIED RESULT</span>{workflow.proposal?.executionKind === 'read' && <span className="rk-stage">Information only · no records changed</span>}<h2>{workflow.receipt.title || 'Source result verified'}</h2><p>{workflow.receipt.summary}</p>{workflow.proposal?.executionKind === 'read' && checks.length > 0 && <p>{checks.filter(check => check.status === 'match').length}/{checks.length} source checks matched</p>}{workflow.receipt.recordId && <div className="rk-record-id">Record {workflow.receipt.recordId}</div>}<div className="rk-terms">{(workflow.receipt.fields || []).map((field, index) => <div key={index}><span>{field.label}</span><strong>{textOf(field.value)}</strong></div>)}</div><ItemList title="WHAT HAPPENS NEXT" items={workflow.receipt.nextSteps} />{safeUrl(workflow.receipt.sourceUrl) && <a className="rk-inline-link" href={safeUrl(workflow.receipt.sourceUrl)} target="_blank" rel="noreferrer">Open source record <Icon name="link" size={14} /></a>}{workflow.receipt.verifiedAt && <small>Verified {displayDate(workflow.receipt.verifiedAt)}</small>}</section>}
+            {receiptVisible && <section className="rk-panel rk-receipt">
+              <div className="rk-receipt-icon"><Icon name="check" size={22} /></div><span className="rk-kicker">SAVED VERIFIED RESULT</span>{workflow.proposal?.executionKind === 'read' && <span className="rk-stage">Information only · no records changed</span>}
+              <h2>{workflow.receipt.title || 'Source result verified'}</h2><p>{workflow.receipt.summary}</p>
+              <div className="rk-verification-summary"><strong><Icon name="shield" size={14} /> Browser verified</strong>{workflow.proposal?.executionKind === 'read' && checks.length > 0 && <span>{checks.filter(check => check.status === 'match').length}/{checks.length} source checks matched</span>}</div>
+              {workflow.receipt.recordId && <div className="rk-record-id">Record {workflow.receipt.recordId}</div>}<div className="rk-terms">{(workflow.receipt.fields || []).map((field, index) => <div key={index}><span>{field.label}</span><strong>{textOf(field.value)}</strong></div>)}</div>
+              <ItemList title="WHAT HAPPENS NEXT" items={workflow.receipt.nextSteps} /><div className="rk-receipt-links">{safeUrl(workflow.receipt.sourceUrl) && <a className="rk-inline-link" href={safeUrl(workflow.receipt.sourceUrl)} target="_blank" rel="noreferrer">Open source record <Icon name="link" size={14} /></a>}{workflowEvidence.length > 0 && <a className="rk-inline-link" href="#rk-evidence">{workflowEvidence.length} evidence {workflowEvidence.length === 1 ? 'entry' : 'entries'} <Icon name="arrow" size={13} /></a>}</div>
+              {workflow.receipt.verifiedAt && <small>Browser verified {displayDate(workflow.receipt.verifiedAt)}</small>}
+              <Corroboration value={workflow.corroboration} checking={networkChecking} canCheck={canCorroborate} disabled={workflowActionDisabled} onCheck={() => mutation('corroborate', `/api/workflows/${workflow.id}/corroborate`, {}, 'workflow')} evidence={workflowEvidence} />
+            </section>}
+            {!receiptVisible && workflow.corroboration && <section className="rk-panel"><Corroboration value={workflow.corroboration} checking={networkChecking} evidence={workflowEvidence} /></section>}
+            <JourneyStatus journey={workflow.journey} />
             {(workflow.limitations || []).length > 0 && <section className="rk-panel"><div className="rk-panel-head"><span className="rk-kicker">CURRENT LIMITS</span></div><ul className="rk-limitations">{workflow.limitations.map((item, index) => <li key={index}>{textOf(item)}</li>)}</ul></section>}
-          </> : <><CurrentStep eyebrow="CURRENT STEP" title={connectionStep.title} detail={connectionStep.detail} busy={connectionBusy}>{connection.status === 'needs_sign_in' && <button className="rk-primary" disabled={Boolean(busy)} onClick={() => mutation('takeover', `/api/connections/${connection.id}/takeover`, {})}>Take over sign-in <Icon name="arrow" size={16} /></button>}{connection.status === 'error' && <button className="rk-primary" disabled={Boolean(busy)} onClick={() => mutation('inspect', `/api/connections/${connection.id}/inspect`, {})}>Inspect again <Icon name="arrow" size={16} /></button>}</CurrentStep>{connection.progress && connectionBusy && <Progress value={connection.progress} fallback="Kane is inspecting the website." />}
-            {actions.length > 0 && <section className="rk-actions-section"><div className="rk-section-head"><div><span className="rk-kicker">DISCOVERED ON THIS WEBSITE</span><h2>Useful actions</h2></div><span className="rk-muted-small">{actions.length} found so far</span></div><div className="rk-action-cards">{actions.map(action => <button className="rk-action-card" type="button" key={action.id} disabled={Boolean(busy) || connection.status !== 'ready'} onClick={() => openWorkflow(action.id)}><span className="rk-action-top"><span className="rk-kind">{action.kind || 'unknown'} action</span><Icon name="arrow" size={18} /></span><strong>{action.title}</strong>{action.description && <p>{action.description}</p>}<ItemList title="BEFORE YOU START" items={action.prerequisites} /><SourceQuote>{action.sourceQuote}</SourceQuote><span className="rk-card-foot">Action discovered · Terms still to inspect</span></button>)}</div></section>}
+          </> : <><CurrentStep eyebrow="CURRENT STEP" title={connectionStep.title} detail={connectionStep.detail} busy={connectionBusy || exploring}>{connection.status === 'needs_sign_in' && <button className="rk-primary" disabled={Boolean(busy)} onClick={() => mutation('takeover', `/api/connections/${connection.id}/takeover`, {})}>Take over sign-in <Icon name="arrow" size={16} /></button>}{connection.status === 'error' && <button className="rk-primary" disabled={Boolean(busy) || exploring} onClick={() => mutation('inspect', `/api/connections/${connection.id}/inspect`, {})}>Inspect again <Icon name="arrow" size={16} /></button>}</CurrentStep>{connection.progress && connectionBusy && <Progress value={connection.progress} fallback="Kane is inspecting the website." />}
+            {actions.length > 0 && <section className="rk-actions-section"><div className="rk-section-head"><div><span className="rk-kicker">DISCOVERED ON THIS WEBSITE</span><h2>Useful actions</h2></div><span className="rk-muted-small">{actions.length} found so far</span></div><div className="rk-action-cards">{actions.map(action => <button className="rk-action-card" type="button" key={action.id} disabled={Boolean(busy) || exploring || connection.status !== 'ready'} onClick={() => openWorkflow(action.id)}><span className="rk-action-top"><span className="rk-kind">{action.kind || 'unknown'} action</span><Icon name="arrow" size={18} /></span><strong>{action.title}</strong>{action.description && <p>{action.description}</p>}<ItemList title="BEFORE YOU START" items={action.prerequisites} /><SourceQuote>{action.sourceQuote}</SourceQuote><span className="rk-card-foot">{action.source === 'kane-explore' ? 'Discovered by Explore' : 'Action discovered'} · Terms still to inspect</span></button>)}</div></section>}
             {verifiedResults.length > 0 && <section className="rk-panel"><div className="rk-panel-head"><span className="rk-kicker">SAVED VERIFIED RESULTS</span><span className="rk-muted-small">{verifiedResults.length} saved</span></div><div className="rk-history-grid">{verifiedResults.map(item => <button type="button" key={item.id} onClick={() => openSavedWorkflow(item.id)} disabled={Boolean(busy) || pausing}><span className="rk-site-avatar"><Icon name="check" size={16} /></span><span><strong>{item.action?.title || item.receipt.title || 'Verified result'}</strong><small>{item.receipt.summary || item.action?.title}</small></span><span className="rk-history-status">{item.receipt.verifiedAt ? displayDate(item.receipt.verifiedAt) : 'Verified'}</span><Icon name="arrow" size={16} /></button>)}</div></section>}
             {records.length > 0 && <section className="rk-panel"><div className="rk-panel-head"><span className="rk-kicker">RECORDS ON THIS PAGE</span><span className="rk-muted-small">{records.length} observed</span></div><div className="rk-records">{records.map(record => <article key={record.id} className="rk-record"><h3>{record.title}</h3>{record.details && <p>{textOf(record.details)}</p>}<SourceQuote>{record.sourceQuote}</SourceQuote>{safeUrl(record.url) && <a href={safeUrl(record.url)} target="_blank" rel="noreferrer">Open record <Icon name="link" size={13} /></a>}</article>)}</div></section>}
-            {connection.status === 'ready' && <button type="button" className="rk-discover-more" disabled={Boolean(busy)} onClick={() => mutation('inspect', `/api/connections/${connection.id}/inspect`, {})}><Icon name="reload" size={15} /> Discover more from this page</button>}
+            {connected && <section className="rk-discovery-tools" aria-label="Discover website actions"><div><button type="button" className="rk-discover-more" disabled={Boolean(busy) || exploring || connection.status !== 'ready'} onClick={() => mutation('inspect', `/api/connections/${connection.id}/inspect`, {})}><Icon name="reload" size={15} /> Discover more from this page</button><button type="button" className="rk-secondary" disabled={Boolean(busy) || exploring || connection.status !== 'ready' || !publicConnection} onClick={() => mutation('explore', `/api/connections/${connection.id}/explore`, {})}><Icon name="spark" size={15} />{exploring ? 'Exploring more screens…' : 'Explore more screens'}</button></div><p>{publicConnection ? 'Explore follows public, read-only links in a separate browser with a bounded work and time budget.' : 'Explore is available only for a confirmed public website. Its separate browser cannot use a signed-in session.'}</p></section>}
+            <ExploreMap exploration={exploration} stopDisabled={Boolean(busy) || pausing} onStop={() => mutation('explore-stop', `/api/connections/${connection.id}/explore-stop`, {})} />
           </>}
         </div><aside className="rk-side-column"><section className="rk-panel rk-browser-panel"><div className="rk-panel-head"><span className="rk-kicker">YOUR BROWSER SESSION</span><Icon name="eye" size={17} /></div><p>This connection uses a dedicated Chrome session. Open the original website to inspect it yourself.</p><div className="rk-browser-actions"><button type="button" onClick={() => mutation('open', `/api/connections/${connection.id}/open`, {})} disabled={!connected || connectionBusy || workflowBusy}>Open website <Icon name="link" size={14} /></button>{connected && connection.status !== 'human_control' && <button type="button" onClick={() => mutation('takeover', `/api/connections/${connection.id}/takeover`, {})} disabled={Boolean(busy) || pausing}>Take over <Icon name="pause" size={14} /></button>}</div>{connection.browserFocusMessage && <p role="status">{connection.browserFocusMessage}</p>}{(needsHuman || connection.status === 'human_control') && <div className="rk-handoff"><strong>Finish sign-in on the original website.</strong><p>Passwords, OTPs, passkeys and CAPTCHAs stay in that browser. They are never entered here.</p><p>{connection.processingNotice}</p><label><input type="checkbox" checked={processingAcknowledged} onChange={event => setProcessingAcknowledged(event.target.checked)} /><span>I understand Kane sends page content and screenshots to TestMu AI for processing and may upload run evidence when I continue.</span></label><button type="button" className="rk-primary" disabled={!processingAcknowledged || Boolean(busy)} onClick={resume}>Continue with Kane <Icon name="arrow" size={15} /></button></div>}</section><Evidence entries={workflow ? workflowEvidence : connectionEvidence} />{workflow?.records?.length > 0 && <section className="rk-panel"><div className="rk-panel-head"><span className="rk-kicker">RELEVANT RECORDS</span></div><div className="rk-records">{workflow.records.map(record => <article key={record.id} className="rk-record"><h3>{record.title}</h3>{record.details && <p>{textOf(record.details)}</p>}<SourceQuote>{record.sourceQuote}</SourceQuote>{safeUrl(record.url) && <a href={safeUrl(record.url)} target="_blank" rel="noreferrer">Open record <Icon name="link" size={13} /></a>}</article>)}</div></section>}</aside></div>
       </>}

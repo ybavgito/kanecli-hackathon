@@ -1,0 +1,86 @@
+name: Raising Kane optional cloud regression
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: Public HTTPS deployment of Raising Kane reachable from HyperExecute
+        type: string
+        required: true
+      execute:
+        description: Execute browser tests after the dry run (uses Kane credits); otherwise validate only
+        type: boolean
+        default: false
+      parallel:
+        description: Parallel grid workers
+        type: string
+        default: '2'
+
+permissions:
+  contents: read
+
+jobs:
+  readiness:
+    runs-on: ubuntu-latest
+    outputs:
+      ready: ${{ steps.credentials.outputs.ready }}
+    steps:
+      - id: credentials
+        env:
+          KANE_USERNAME: ${{ secrets.KANE_USERNAME }}
+          KANE_ACCESS_KEY: ${{ secrets.KANE_ACCESS_KEY }}
+        run: |
+          if [ -n "$KANE_USERNAME" ] && [ -n "$KANE_ACCESS_KEY" ]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo '### Kane cloud verification: pending / skipped' >> "$GITHUB_STEP_SUMMARY"
+            echo 'Kane credentials are unavailable. No grid job was dispatched and no browser pass is claimed.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  cloud:
+    needs: readiness
+    if: needs.readiness.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      KANE_URL: ${{ inputs.target_url }}
+      KANE_PARALLEL: ${{ inputs.parallel }}
+      KANE_CLI_USER_AGENT: codex
+      KANE_FOLDER_ID: '01M5QFXW4JRPP77HF88D61TWW9'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: npm install -g @testmuai/kane-cli@0.10.0-rc.3
+      - id: auth
+        run: npm run kane:ci-auth
+        env:
+          KANE_USERNAME: ${{ secrets.KANE_USERNAME }}
+          KANE_ACCESS_KEY: ${{ secrets.KANE_ACCESS_KEY }}
+      - run: |
+          kane-cli plugin install remote-execution
+          kane-cli plugin doctor remote-execution
+      - name: Validate cloud plan only
+        if: ${{ !inputs.execute }}
+        run: npm run verify:kane:cloud -- --dry-run
+      - name: Execute cloud regression after its plan passes
+        if: ${{ inputs.execute }}
+        run: npm run verify:kane:cloud
+      - name: Read shared coverage
+        if: always() && steps.auth.outcome == 'success'
+        run: npm run kane:coverage
+      - name: Explain verification status
+        if: always()
+        run: node scripts/kane-ci-summary.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raising-kane-cloud-status
+          path: data/verification/kane-*.json
+          if-no-files-found: warn

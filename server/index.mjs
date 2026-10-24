@@ -44,6 +44,7 @@ let stopping = false
 async function stop() {
   if (stopping) return
   stopping = true
+  await explorer.shutdown()
   await shutdownAllTaskBrowsers()
   await vite.close()
   server.close(() => process.exit(0))

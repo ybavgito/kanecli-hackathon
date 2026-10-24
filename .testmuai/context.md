@@ -38,14 +38,28 @@ API/ownership: docs/raising-kane/url-first-contract.md.
 
 ## Implementation status for this revision
 
-The generic controller, observation parsers and URL-first state/API are implemented.
-The frontend and browser handoff changes are being integrated. They are not yet
-Kane-verified. Current build checks pass. The generic engine uses Kane-native
-analysis/extraction; it does not use the limited shoes parser from the legacy demo.
-Assurance stage1 requirements are in .testmuai/requirements/url-first-stage1.md,
-linked to existing Test Manager project 01M5QFXVQKQ0KCCE24PC0BJXYP. Test design and
-execution results will be recorded separately. No complete generic authenticated
-or consequential journey is claimed yet.
+The generic URL-to-card-to-read-to-verified-receipt flow passed on Books to
+Scrape and Wikipedia using the same code. Real Kane UI runs clicked cards,
+checked source-backed facts, refreshed the browser, and retained the same saved
+facts and verification time. Each source result passed 8 independent checks.
+See docs/raising-kane/url-first-verification.md for evidence and prior failures.
+
+The next integration checkpoint adds actual bounded Explore maps in separate
+public browsers, public read-only journey recording/replay with fresh reads and
+independent verification, optional HTTP/API response corroboration, generated
+parallel suite commands, coverage/maintenance reporting, and CI/cloud workflows.
+Module-level live Explore, replay and HTTP probes passed. Combined UI proof is
+still pending at this checkpoint. CI/cloud execution is not claimed: it needs
+configured credentials and, for cloud, an externally reachable target.
+
+Replay recipes become proven only after all current-source analyzer conditions
+pass. RC.3 replay emits no fresh extracted variables, so replay is followed by a
+fresh live read and independent verification. No speed claim is made. Account,
+source, goal, requirements or objective drift prevents reuse; signed-in or
+query-bearing URLs remain live. Healing must preserve the original requirements.
+Explore must finish stopping before takeover claims automation is paused.
+Optional response checks distinguish HTTP HTML from API JSON; unavailable checks
+retain the timestamped browser receipt, while evidenced conflicts require refresh.
 
 ## Existing merchant regression evidence (historical)
 
