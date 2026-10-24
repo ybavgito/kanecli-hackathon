@@ -2,6 +2,8 @@
 
 **When websites raise hell, raise Kane**
 
+The proposed next architecture is the [Explore-driven interface builder](docs/raising-kane/explore-driven-builder-plan.md): URL → Explore → generated interface → verification and repair. That plan is not yet implemented. The working two-sandbox build below remains the current code.
+
 A calm interface for getting a difficult website task done without losing your choices.
 Kane operates the source website during the user's workflow, checks its review against
 saved preferences, and verifies the resulting confirmation. The app blocks submission

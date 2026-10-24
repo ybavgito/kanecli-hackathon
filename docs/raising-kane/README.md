@@ -2,7 +2,7 @@
 
 When websites raise hell, raise Kane.
 
-Start with raising-kane-project-brief.md. It is the current consolidated specification.
+For the new URL-to-generated-interface direction, start with the [Explore-driven builder plan](explore-driven-builder-plan.md). It is a proposed successor architecture, with explicit Explore and accessibility boundaries. The existing project brief and implementation guide describe the earlier two-sandbox build.
 
 The three direct research attachments are:
 - clearpath-kane-feature-audit.md
