@@ -8,9 +8,11 @@ Complete product, scope, architecture and hackathon demo brief. October 24, 2026
 
 **Status:** product implementation in progress. The shared POC branch contains the return interface, task controller and Kane worker; its actual runtime and UI checks are listed in [verification notes](verification.md). Submission and the appointment workflow remain incomplete. Separate synthetic rc.3 feature experiments support specific browser, validation, correction and assurance patterns; see [measured results](../kane-validation/report.md). They do not prove the full product, commercial integration or transaction contracts. The [workflow and demo decision memo](workflow-and-demo-design.md) refines the entry experience and two-site presentation.
 
-**Review revision:** specifies the sandbox's atomic approval/commit contract, stable operation keys for duplicate prevention, browser continuity, mandatory completion evidence, persisted receipts, and a deliberately failing Kane validation followed by a green rerun. These are implementation requirements, not results already obtained.
+**Review revision:** specifies the sandbox's atomic approval/commit contract, stable operation keys for duplicate prevention, browser continuity, mandatory completion evidence, persisted receipts, and a deliberately failing Kane validation followed by a green rerun. These are the complete implementation requirements; only the subset explicitly recorded in the PoC review has been exercised.
 
 **Two-website scope revision:** the core demo now includes two independently working source websites and different workflows: a merchandise return and an existing home-service appointment change. The second website is essential scope. Earlier research recommending one source is superseded by this decision; arbitrary-site support remains outside scope.
+
+**UX research revision:** [the interaction and demo guidance](ux-research-and-demo-direction.md) specifies question timing, concise evidence views, handling changed intent and a realistic video outline. The linked storyboard is illustrative, not an implemented transaction flow.
 
 ## 1. The project in one paragraph
 
@@ -296,6 +298,8 @@ Record the task revision, source URL, time, observed fields, run identifier and 
 
 ### Requirement result
 
+Each result must identify its origin: source-adapter value, Kane browser extraction, or deterministic comparison. Persist expected and observed values, observation time, task revision, source draft version and evidence reference. A source-adapter refresh after a failed browser job is not a successful Kane observation. Before approval, compare all mandatory extracted business fields with the source and immutable intent/reviewed terms; a passing summary plus three matching identifiers is insufficient for the complete contract.
+
 For each requirement, retain the expected value, observed value, result and supporting evidence. Useful results are **matches**, **conflicts**, **not verified** and **needs a user decision**. Avoid a numerical confidence score that implies an unmeasured reliability rate.
 
 ### Approval
@@ -343,6 +347,8 @@ If the worker crashes after the source commits but before Raising Kane stores th
 An arbitrary external merchant without idempotency and a reliable lookup does not inherit this guarantee. There, ambiguous submission requires reconciliation or human intervention rather than automatic resubmission.
 
 ### Contract C: browser continuity across bounded jobs
+
+Recovery must restore task prerequisites as well as browser connectivity. A failed discovery cannot be bypassed by selecting a reason if the unchanged-item baseline has not been established. Retry discovery for the same task before preparation, retaining the person's input. Inspection uses a read-only view or captured evidence; interactive source takeover pauses worker ownership and invalidates affected observations before resuming.
 
 For the MVP, the worker owns one Chrome instance and dedicated profile per active task/account context. Successive one-shot Kane jobs attach to that same browser through the documented CDP connection mechanism. A task-level lock permits one browser job at a time. Store the browser association, source identity and current task revision in durable application state; keep credentials and browser control endpoints private.
 
@@ -536,9 +542,11 @@ Code written today, public repository, OpenAI used in the build, and Kane eviden
 
 ## 13. Implementation order
 
-First establish the entire working task with minimal presentation: source order and draft, Raising Kane intent, one Kane job, user input, approval, commit and receipt.
+**PoC-informed priority update:** preserve the existing runtime verification loop. First finish the source grant/operation/confirmation contract and a verified persistent receipt. Then close incomplete business-field comparisons, restore discovery prerequisites after failure, distinguish source inspection from editable takeover, and support reversing a choice. Expose the existing worker's phase/progress and requirement comparison before adding animation or more features. Complete the required appointment adapter after this return slice works. See [the detailed review](poc-review-and-build-priorities.md) for existing mitigations and acceptance conditions.
 
-Next add the changed-method branch, explicit requirement comparison and correction. This is the core demonstration value.
+The representative sum of recorded PoC phases is about 7.1 minutes before submission, not an end-to-end timing measurement. The small earlier fixture's faster results must not be used as product timing. Measure the actual full flow before promising a live duration; prepared state and compressed video waits must be labeled.
+
+Finish the existing return slice with approval, source commit and a verified receipt. Retain the already implemented changed-method branch, failed review, separate correction and unchanged passing check.
 
 Then add correlated network/result verification, evidence links and recovery from ambiguous completion. Preserve real build feedback from the coding agent and Kane.
 
@@ -554,7 +562,7 @@ The proposed product distinction is persistent user intent across a supported op
 
 After the hackathon, validate usefulness with people who currently need help on the supported task. Measure task completion, assistance required, misunderstood choices, unresolved outcomes and total time. Do not claim the product is faster or more reliable without evidence.
 
-A possible distribution path is an assisted-task interface for organizations operating complicated existing portals. That would require a willing partner, a dependable integration and evidence that the experience helps users. Broader commercial-site support and registration flows remain future integration opportunities. The demonstrated appointment flow is already part of the two-website MVP.
+A possible distribution path is an assisted-task interface for organizations operating complicated existing portals. That would require a willing partner, a dependable integration and evidence that the experience helps users. Broader commercial-site support and registration flows remain future integration opportunities. The required appointment workflow is part of the two-website MVP, but is not implemented in the reviewed PoC.
 
 ## 15. Known limitations and how they affect the promise
 

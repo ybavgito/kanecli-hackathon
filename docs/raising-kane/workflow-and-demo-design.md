@@ -2,6 +2,15 @@
 
 Decision memo, October 24, 2026. This refines the product brief; it does not claim the full proposed product is implemented. The shared POC branch now contains a partial return implementation; see its [verification status](verification.md). The separate [rc.3 experiments](../kane-validation/report.md) establish specific CLI behaviors on synthetic fixtures.
 
+The [UX research and demo direction](ux-research-and-demo-direction.md) adds primary-source findings, exact question/feedback timing, evidence presentation, interruption behavior and a timed video outline. The [interactive storyboard](demo-storyboard.html) illustrates those states without executing Kane or submitting anything.
+
+**Implementation update:** the [PoC review](poc-review-and-build-priorities.md)
+checks this design against `codex/raising-kane-poc` at `0ad30e5`. The PoC has one
+request-first return flow and real runtime checking/repair. The website catalog,
+second source and completed submission remain requirements. Its source is one
+page, so multi-page navigation is not yet demonstrated. Finish the transaction
+and verified receipt before broadening the interface.
+
 ## Recommendation
 
 **Let people start with a website, then choose from a small set of tested tasks. Keep exact-request verification inside every task.**

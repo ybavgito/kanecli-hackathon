@@ -70,3 +70,12 @@ The first two have same-named documents in the packet, but the original linked
 files were not supplied separately for identity verification. The execution trace
 is absent. These references are retained as historical citations, not available
 runtime evidence. No evidence pack or application implementation was included.
+
+## PoC implementation review
+
+The [latest research-to-implementation review](poc-review-and-build-priorities.md)
+inspects the separate PoC branch at `0ad30e5`, records strengths, verifies concrete
+gaps and prioritizes the completed transaction over additional feature breadth.
+[Fresh audit observations](../kane-validation/poc-review-checks.json) are separate
+from previous synthetic experiments and the PoC author's historical run reports.
+This documentation update does not merge the PoC source into `main`.

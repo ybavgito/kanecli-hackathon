@@ -1,0 +1,109 @@
+{
+  "scope": "Design storyboard only. Does not operate a merchant or prove the proposed product.",
+  "cli_version": "0.10.0-rc.3",
+  "source_sha256": "6f156345b9b2435541c8a9900d47b4f3f177a32b22c148357a6a95c675958511",
+  "browser_layout_check": {
+    "widths": [
+      728,
+      390
+    ],
+    "all_six_stage_selectors_exercised": true,
+    "transaction_controls_disabled": true,
+    "preview_fallback": "T3 preview blocked by host AppArmor; inspected isolated local Chrome screenshots"
+  },
+  "kane_runs": [
+    {
+      "case": "vite-run",
+      "status": "failed",
+      "duration_reported_seconds": 47.5,
+      "reason": "Checkpoint assertion failed: \"the heading is Return requested; refund pending\"",
+      "interpretation": "Confounded by a source styling edit between click and assertion; Vite could reload and reset the page.",
+      "checks": {
+        "interactive_design_concept_check": {
+          "extracted_value": "true",
+          "expected_value": "true",
+          "operator": "equals",
+          "reasoning": "value: 'true' -> 'true'; equals 'true' -> PASS"
+        },
+        "kane_running_check": {
+          "extracted_value": "false",
+          "expected_value": "false",
+          "operator": "equals",
+          "reasoning": "value: 'false' -> 'false'; equals 'false' -> PASS"
+        },
+        "submission_check": {
+          "extracted_value": "false",
+          "expected_value": "false",
+          "operator": "equals",
+          "reasoning": "value: 'false' -> 'false'; equals 'false' -> PASS"
+        },
+        "receipt_heading_check": {
+          "extracted_value": "Your refund choice changed on the website",
+          "expected_value": "Return requested; refund pending",
+          "operator": "equals",
+          "reasoning": "value: 'Your refund choice changed on the website' -> 'Your refund choice changed on the website' after ['strip']; equals 'Return requested; refund pending' -> FAIL"
+        }
+      }
+    },
+    {
+      "case": "static-literal",
+      "status": "failed",
+      "duration_reported_seconds": 40.8,
+      "reason": "Checkpoint assertion failed: \"the heading is Return requested; refund pending\"",
+      "interpretation": "Full heading extracted correctly, but the compiled expected value omitted the semicolon suffix.",
+      "checks": {
+        "interactive_design_concept_visible": {
+          "extracted_value": "true",
+          "expected_value": "true",
+          "operator": "equals",
+          "reasoning": "value: 'true' -> 'true'; equals 'true' -> PASS"
+        },
+        "refund_pending_visible": {
+          "extracted_value": "true",
+          "expected_value": "true",
+          "operator": "equals",
+          "reasoning": "value: 'true' -> 'true'; equals 'true' -> PASS"
+        },
+        "return_requested_heading": {
+          "extracted_value": "Return requested; refund pending",
+          "expected_value": "Return requested",
+          "operator": "equals",
+          "reasoning": "value: 'Return requested; refund pending' -> 'Return requested; refund pending' after ['strip']; equals 'Return requested' -> FAIL"
+        }
+      }
+    },
+    {
+      "case": "static-variable",
+      "status": "passed",
+      "duration_reported_seconds": 45.9,
+      "reason": "Objective completed",
+      "interpretation": "Full expected heading supplied as a variable; receipt and disabled conflict control checked.",
+      "checks": {
+        "interactive_design_concept_check": {
+          "extracted_value": "Interactive design concept.",
+          "expected_value": "Interactive design concept",
+          "operator": "contains",
+          "reasoning": "value: 'Interactive design concept.' -> 'Interactive design concept.' after ['strip']; contains 'Interactive design concept' -> PASS"
+        },
+        "main_heading_text_check": {
+          "extracted_value": "Return requested; refund pending",
+          "expected_value": "{{global.receipt_heading}}",
+          "operator": "equals",
+          "reasoning": "value: 'Return requested; refund pending' -> 'Return requested; refund pending' after ['strip']; equals 'Return requested; refund pending' -> PASS"
+        },
+        "submission_blocked_visible": {
+          "extracted_value": "true",
+          "expected_value": "true",
+          "operator": "equals",
+          "reasoning": "value: 'true' -> 'true'; equals 'true' -> PASS"
+        },
+        "cannot_submit_proposal_disabled": {
+          "extracted_value": "false",
+          "expected_value": "false",
+          "operator": "equals",
+          "reasoning": "value: 'false' -> 'false'; equals 'false' -> PASS"
+        }
+      }
+    }
+  ]
+}

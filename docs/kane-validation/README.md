@@ -28,3 +28,18 @@ Raw NDJSON, authenticated profiles, recordings and the context store stay outsid
 Exit zero is not synonymous with every condition passing. Expected failures are essential to these experiments. Read the report's interpretation alongside each command, the command-specific terminal event and source state.
 
 The original stale-page probe intentionally remains in the ledger. Its apparent negative-case pass is explained by the page not being refreshed, with source request logs as corroboration. The corrected freshness probe is recorded separately.
+
+
+## Actual PoC review, separate from feature experiments
+
+[poc-review-checks.json](poc-review-checks.json) records the audit of the separate
+PoC branch at `0ad30e5`: successful build, deliberately failed discovery, a real
+Kane preparation run, source/API comparisons, a real Kane stale-display inspection
+and the backend's HTTP 409 stale-approval rejection. The passed inspection proves
+the inconsistent display was present; it does not mean the product passed that
+acceptance condition. No complete submission or appointment run is claimed.
+
+The [captured viewport](evidence/poc-stale-display.jpg) is unmodified synthetic
+UI imagery from that inspection. It shows the active-task layout; the below-fold
+value disagreement is recorded in the extracted observations. Original evidence
+packs are identified by hashes and share links in the ledger and remain private.

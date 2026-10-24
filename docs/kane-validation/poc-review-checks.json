@@ -1,0 +1,151 @@
+{
+  "reviewed_at": "2026-10-24",
+  "source_branch": "codex/raising-kane-poc",
+  "source_commit": "0ad30e5fb845a2b724f8ae4fe2a9e8e163371bd5",
+  "kane_version": "0.10.0-rc.3",
+  "environment": "Isolated detached worktree; port 5183; synthetic local merchant; OpenAI key intentionally absent; existing authenticated research Kane profile. No teammate data modified.",
+  "scope": "Targeted defect reproductions and safeguard checks, not complete product acceptance or assurance coverage. No production source edits.",
+  "build": {
+    "command": "npm ci && npm run build",
+    "result": "passed"
+  },
+  "checks": [
+    {
+      "id": "discovery-failure",
+      "method": "Start unmodified PoC with KANE_CLI_CHROME_PATH=/bin/false; POST /api/tasks with supported sample request",
+      "observed": {
+        "status": "needs_attention",
+        "error": "The dedicated task browser did not become ready.",
+        "reason": null,
+        "sourceOptionsPresent": true,
+        "baselinePresent": false
+      },
+      "conclusion": "Browser-launch failure still leaves merchant-adapter options available; not a total UI dead end."
+    },
+    {
+      "id": "prepare-after-failed-discovery",
+      "method": "Restart same server with working Chrome, POST /api/tasks/:id/choice with reason too_small; real product worker invokes Kane",
+      "status": "passed",
+      "wall_ms": 127084,
+      "credits": 47.346225000000004,
+      "task_status": "ready",
+      "baseline_present": false,
+      "extracted": {
+        "url": "http://127.0.0.1:5183/merchant?taskId=e312bb07-0361-4549-aeb1-8df43eea2ed7",
+        "order_id": "ORD-1042",
+        "draft_revision": "4",
+        "refund_destination": "original_payment",
+        "deduction": "$0.00",
+        "expected_refund": "$80.00"
+      },
+      "evidence_url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QXVENFGDG5HYDX1VAJXK2K/dashboard/share/US_A18ACSPJN4GHIP1UA0JJADL087L0JCMA58JZ3KUF9FJ8T73QO751ZZ7DVJO45NJV?type=summary&agentView=true&fqdn=summary-page",
+      "raw_pack_sha256": "a7a3add761b1681956513bc564809cb1321774f795130552b63b57664e3a1a7c",
+      "conclusion": "Ready reached without baseline. Code requires baseline.jacket for final verification. Full confirmation was not runnable because source contract is missing."
+    },
+    {
+      "id": "unsupported-approval",
+      "method": "POST /api/tasks/:id/approve against matching prepared draft",
+      "observed": {
+        "http": 503,
+        "body": {
+          "error": "This demo supports preview and verification. Merchant submission is not available yet."
+        }
+      },
+      "conclusion": "Missing submission capability fails closed."
+    },
+    {
+      "id": "reverse-method",
+      "method": "POST /api/tasks/:id/choice with method print_label and noPrinter false",
+      "observed": {
+        "http": 400,
+        "body": {
+          "error": "Choose a reason or request printer-free drop-off."
+        }
+      },
+      "conclusion": "Current API lacks a reverse-method choice. UI also renders printed-label option as noninteractive text."
+    },
+    {
+      "id": "stale-source-snapshot",
+      "method": "POST /merchant/api/draft to change destination to store_credit; GET saved task and source state",
+      "observed": {
+        "task_status": "ready",
+        "saved_revision": 4,
+        "saved_destination": "original_payment",
+        "all_saved_checks_match": true,
+        "source_revision": 5,
+        "source_destination": "store_credit",
+        "return_count": 0
+      }
+    },
+    {
+      "id": "stale-display-browser-inspection",
+      "method": "Real read-only Kane run against saved task; open source iframe and inspect conflicting displayed destinations plus disabled controls",
+      "command_flags": [
+        "run",
+        "--agent",
+        "--headless",
+        "--assertion-failure-mode",
+        "stop",
+        "--timeout",
+        "180",
+        "--max-steps",
+        "15"
+      ],
+      "exit_code": 0,
+      "status": "passed",
+      "wall_seconds": 72.13,
+      "reported_duration_seconds": 63,
+      "credits": 27.2953275,
+      "observations": {
+        "url": "http://127.0.0.1:5183/?taskId=e312bb07-0361-4549-aeb1-8df43eea2ed7",
+        "product_review_refund_method": "Refund to original payment method",
+        "checked_against_request_status": "All matched",
+        "refund_destination": "Store credit",
+        "approve_proposal_disabled": "true",
+        "submit_return_request_disabled": "true"
+      },
+      "evidence_url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QY0CW6R4VYRHTCV9RFK4H6/dashboard/share/US_ECNPXJHKT2JOK0RQ0MPY3XQK23BLPC53MGZAZSZDPUV8ARAVNSC0DK2HN5QRXLC4?type=summary&agentView=true&fqdn=summary-page",
+      "raw_pack_sha256": "bdc598e7dde5d5c5f6c846f9d36c03f313b0d06e02c2de288765296d5cdc7cd1",
+      "published_screenshot": "evidence/poc-stale-display.jpg",
+      "screenshot_archive_member": "tests/inspect-this-saved-raising-kane-task-wit-9f28dba4/steps/9-0-9/screenshot.jpg",
+      "screenshot_sha256": "81543565f78c23ed15ac208bbea0d21f72d815b354eb3334c154f56012855903",
+      "conclusion": "Passing inspection confirms the inconsistent UI state exists. It is not a product acceptance pass or a bug fix."
+    },
+    {
+      "id": "stale-approval-rejection",
+      "method": "POST approval after source edit and UI inspection",
+      "observed": {
+        "http": 409,
+        "body": {
+          "error": "Kane must verify this exact current draft before approval."
+        },
+        "taskStatus": "conflict",
+        "validation": null,
+        "approval": null,
+        "sourceReturns": [],
+        "sourceRevision": 5,
+        "taskSnapshotRevision": 5
+      },
+      "conclusion": "Backend refresh detects changed draft, rejects approval, clears validation, and leaves zero source returns."
+    },
+    {
+      "id": "runtime-profile-watcher",
+      "method": "Observed PoC development-server stdout during real browser preparation; inspected server/index.mjs and installed Vite resolveChokidarOptions",
+      "observed": [
+        "14:42:45 page reload data/chrome-tasks/<owned-profile>/Default/Extensions/<extension>/html/craw_window.html",
+        "14:42:45 page reload data/chrome-tasks/<owned-profile>/Default/Extensions/<extension>/offscreendocument.html",
+        "14:43:48 page reload data/chrome-tasks/<owned-profile>/WasmTtsEngine/20261005.1/offscreen.html"
+      ],
+      "conclusion": "Runtime profile HTML files trigger development reload messages. Impact on a user session was not measured; no fix executed in this docs-only audit."
+    }
+  ],
+  "not_executed": [
+    "Complete approved submission",
+    "Persistent confirmation/QR and receipt reload",
+    "Appointment workflow",
+    "Live OpenAI intent extraction",
+    "Wrong-money acceptance with a real passing Kane run",
+    "Production multi-user isolation"
+  ],
+  "evidence_handling": "Original sealed packs remain private on the research host; hashes and cloud share URLs identify them. Only the inspected synthetic-source screenshot and reduced observations are published; no raw browser profiles, account metadata or NDJSON are included."
+}
