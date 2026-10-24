@@ -1,5 +1,13 @@
 # ClearPath brief: gaps and decisions before implementation
 
+Historical review of the original brief. The later
+[Raising Kane specification](../raising-kane/raising-kane-project-brief.md)
+now defines contracts addressing items 1–5 and adds acceptance criteria and a
+required failed-validation demonstration. Those additions resolve specification
+gaps, not runtime verification. Missing background documents noted below are now
+included in the [review packet](../raising-kane/README.md). See the
+[replacement notes](../raising-kane/repository-notes.md) for current document status.
+
 Reviewed October 24, 2026 against the [supplied project brief](clearpath-complete-project-brief.md).
 The brief is preserved unchanged. This review proposes decisions; it does not
 silently amend the scope or claim any ClearPath implementation has passed.

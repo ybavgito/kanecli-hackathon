@@ -5,25 +5,31 @@
 A web-app starter wired for Kane CLI verification. The Hack Day uses the release
 candidate; these docs were checked against `0.10.0-rc.3` on October 24, 2026.
 
-## Product direction and historical research
+## Current product specification
 
 The product is **Raising Kane**: a simpler interface for completing a supported
 web task while preserving the user's choices and verifying the source result.
 Use the name and tagline above for all new product copy and documentation.
 
+Start with the [Raising Kane project brief](docs/raising-kane/raising-kane-project-brief.md).
+It is the current consolidated specification and supersedes the earlier brief
+where requirements differ. It adds atomic approval/commit, idempotent submission,
+browser continuity, mandatory completion evidence, reload persistence and an
+explicit failed-validation/correction demonstration.
+
+- [Review packet index](docs/raising-kane/README.md)
+- [Original review packet ZIP](docs/raising-kane-review-packet.zip)
+- [Document replacement and verification notes](docs/raising-kane/repository-notes.md)
+
+The packet's implementation contracts are specifications, not executed evidence.
+Its research files retain historical names and claims; the consolidated brief
+governs current scope.
+
 The [original ClearPath brief](docs/clearpath/clearpath-complete-project-brief.md)
-and its [gap review](docs/clearpath/gap-review.md) are historical documents from
-before the rename, preserved unchanged. The review identifies approval, duplicate
-prevention, browser continuity and verification contracts that need definition.
-
-Historical supporting research (original names retained):
-
-- [Independent Sol product review](docs/clearpath/clearpath-sol-review.md)
-- [Product and demo analysis](docs/clearpath/clearpath-product-and-demo.md)
-- [Kane feature audit](docs/clearpath/clearpath-kane-feature-audit.md)
-
-These source documents are preserved unchanged. Their references to older
-`kane-consumer-fresh-paths.md` and `kane-cli-field-guide.md` inputs remain unavailable.
+and its [earlier gap review](docs/clearpath/gap-review.md) remain available as history.
+The packet now includes the previously missing background research. Its historical
+technical review still cites three unavailable machine-local paths, listed in the
+repository notes.
 
 ## Start building
 

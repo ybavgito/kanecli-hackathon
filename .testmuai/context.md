@@ -3,6 +3,9 @@
 ## Application
 
 Product name: **Raising Kane**. Tagline: **When websites raise hell, raise Kane**.
+Current product specification: `docs/raising-kane/raising-kane-project-brief.md`.
+Use it over older briefs where scope differs; its contracts still need implementation
+and verification.
 Use ClearPath only to reference historical documents. The current UI is still the
 starter described below; these naming instructions do not claim the product is built.
 
