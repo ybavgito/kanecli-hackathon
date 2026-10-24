@@ -5,3 +5,11 @@ dist/
 !.env.example
 .testmuai/output-*/
 
+# Kane CLI: sealed evidence packs and the assurance store are large / single-writer
+.testmuai/evidence/
+.context/
+
+# Local run output
+*.ndjson
+*.stderr
+.DS_Store

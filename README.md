@@ -34,3 +34,37 @@ KANE_URL=https://your-deployment.example KANE_OBJECTIVE='Verify a user can creat
 ```
 
 Keep the user flow, acceptance criteria, and any test data in `.testmuai/context.md`.
+
+## Saved tests and parallel suites
+
+One-off checks use `verify:kane`. For flows you want to repeat, save them as
+`tests/*_test.md`: the first run authors and records the steps (uses credits), and later
+runs replay the recording without the AI.
+
+| Path | Purpose |
+| --- | --- |
+| `tests/*_test.md` | Tests: YAML frontmatter, then one `## Heading` per step |
+| `output-<name>/` | Recordings next to each test (created on first run; commit these) |
+| `scripts/run-suite.sh` | Runs all tests as one parallel suite |
+
+```bash
+# One test (app must be running)
+kane-cli testmd run tests/example_test.md --agent --headless
+
+# The whole suite in parallel (use this, not several concurrent testmd runs)
+scripts/run-suite.sh 4
+
+# Validate the selection without executing anything
+scripts/run-suite.sh 4 --dry-run
+```
+
+Exit codes: `0` passed, `1` failed, `2` error, `3` timeout or cancelled.
+A failed run is not necessarily a product bug: read `failure.yaml` in the evidence pack.
+
+Guidelines:
+
+- Write one clause per assertion, and end each step with a check on the page state.
+- Keep a single objective under about 15 steps; split longer flows.
+- Pass the target through `{{base_url}}`; `--url` does not retarget a recorded replay.
+- Decide numeric invariants in your own code from values extracted with `store X as 'name'`.
+- `.testmuai/evidence/` (sealed run packs) and `.context/` are git-ignored.
