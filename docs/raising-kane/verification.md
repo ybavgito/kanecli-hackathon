@@ -41,3 +41,27 @@ module’s read-only draft view, which exposes the same state as
 `GET /merchant/api/state`. The source grant, operation lookup, persistent
 confirmation and synthetic QR remain the teammate’s integration work. Product
 submission is disabled until the required source APIs exist.
+
+## Saved review screen and coding-agent repair
+
+A read-only Kane check of the saved product screen found a real frontend defect:
+the approval button remained enabled while the backend refused unsupported
+submission. The source stayed unchanged. The coding agent added the source
+capability gate to both approval and submit controls, rebuilt, and reran Kane.
+
+- [Failing UI check](https://test-manager.lambdatest.com/projects/01M5QFXVQKQ0KCCE24PC0BJXYP/test-cases/01M5QX74S9NXWWDWC7GVSTEYC6/dashboard/share/US_OBGTSJS6GA9L814VCF87PAQ27QMX16NW9CTZCPBCIKGDLHOVY5GHXQ4KNBH7XO31?type=summary&agentView=true&fqdn=summary-page): 38 seconds.
+- [Passing UI check](https://test-manager.lambdatest.com/projects/01M5QFXVQKQ0KCCE24PC0BJXYP/test-cases/01M5QXC74TP6TYVQBZENFCC8GV/dashboard/share/US_L8CQNJJHI4NPNQO2BFMNVA5I8L5MDAFM6AR2T4D3Q35GG8NROD7WXCGZEMNAQNBN?type=summary&agentView=true&fqdn=summary-page): 43 seconds,
+  nine completed steps, 15.73 credits.
+- Preserved intent, QR drop-off, original payment, $5 deduction, $75 expected
+  refund, matching constraints and both failed/passed review evidence were checked.
+- Approval disabled, submission disabled and the unavailable message each passed
+  a separate assertion. The rerun used the same expected behavior.
+- The backend also returned HTTP 503 for unsupported approval, preserving the
+  ready task with no approval and zero source returns.
+
+The passing run's narrative summary mistakenly calls this a jacket return.
+Its explicit intent assertion keeps the jacket; the proposal and source state
+return only the shoes. Summary prose is not used as transaction evidence.
+
+`npm run build` passed after the fix. This verifies the saved review UI, not a
+complete user-driven submission or the future appointment workflow.

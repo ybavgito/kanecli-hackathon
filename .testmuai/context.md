@@ -65,3 +65,9 @@ operation lookup, persistent confirmation and synthetic QR are assigned to the
 teammate. The product disables submission until the source grant and operation
 APIs exist. No live OpenAI request has been verified; the current local task used
 the explicitly labeled sample parser. See the two-person build plan for ownership.
+
+Kane also caught an enabled approval button while source submission was unavailable.
+Both approval and submit controls now require the source capability. A fresh
+read-only Kane check passed the saved proposal, preserved intent, evidence history,
+both disabled controls and the unavailable message. The backend independently
+refuses approval with HTTP 503 and creates no source return.
