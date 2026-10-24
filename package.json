@@ -1,10 +1,10 @@
 {
-  "name": "kanecli-hackathon",
+  "name": "raising-kane",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node server/index.mjs",
     "build": "vite build",
     "preview": "vite preview",
     "check:kane": "node scripts/kane-preflight.mjs",

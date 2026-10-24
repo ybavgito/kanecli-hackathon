@@ -2,43 +2,33 @@
 
 **When websites raise hell, raise Kane**
 
-A web-app starter wired for Kane CLI verification. The Hack Day uses the release
-candidate; these docs were checked against `0.10.0-rc.3` on October 24, 2026.
+Raising Kane helps a person finish a complicated website task while preserving
+their choices. The first proof of concept handles a partial return in a fictional
+merchant portal. Kane CLI operates the portal; the application tracks intent,
+checks the draft, requires approval, and records the source outcome.
 
-## Current product specification
+## Build together
 
-The product is **Raising Kane**: a simpler interface for completing a supported
-web task while preserving the user's choices and verifying the source result.
-Use the name and tagline above for all new product copy and documentation.
+Start with the [two-person build plan](docs/raising-kane/two-person-build.md).
+It defines file ownership, the integration contract, and the one-hour POC goal.
+The [current project brief](docs/raising-kane/raising-kane-project-brief.md) is the
+authoritative specification. Supporting research is indexed in
+[the review packet](docs/raising-kane/README.md).
 
-Start with the [Raising Kane project brief](docs/raising-kane/raising-kane-project-brief.md).
-It is the current consolidated specification and supersedes the earlier brief
-where requirements differ. It adds atomic approval/commit, idempotent submission,
-browser continuity, mandatory completion evidence, reload persistence and an
-explicit failed-validation/correction demonstration.
+The implementation is in progress. A passing build does not establish that the
+full browser journey works. Current verification status is tracked in
+[the acceptance context](.testmuai/context.md).
 
-- [Review packet index](docs/raising-kane/README.md)
-- [Original review packet ZIP](docs/raising-kane-review-packet.zip)
-- [Document replacement and verification notes](docs/raising-kane/repository-notes.md)
-
-The packet's implementation contracts are specifications, not executed evidence.
-Its research files retain historical names and claims; the consolidated brief
-governs current scope.
-
-The [original ClearPath brief](docs/clearpath/clearpath-complete-project-brief.md)
-and its [earlier gap review](docs/clearpath/gap-review.md) remain available as history.
-The packet now includes the previously missing background research. Its historical
-technical review still cites three unavailable machine-local paths, listed in the
-repository notes.
-
-## Start building
+## Run the proof of concept
 
 ```bash
 npm install
 npm run dev
 ```
 
-The app runs at `http://127.0.0.1:5173` by default.
+Raising Kane runs at `http://127.0.0.1:5173`. The separate merchant portal is at
+`http://127.0.0.1:5173/merchant`. Both use synthetic data. Runtime task and
+merchant records are saved in ignored `data/` files.
 
 ## Verify with Kane
 
@@ -62,27 +52,26 @@ npm run verify:kane
 set `KANE_URL` and `KANE_OBJECTIVE`:
 
 ```bash
-KANE_URL=https://your-deployment.example KANE_OBJECTIVE='Verify a user can create a project and see it in the list.' npm run verify:kane
+KANE_URL=https://your-deployment.example KANE_OBJECTIVE='Verify Raising Kane loads and identifies its merchant sandbox.' npm run verify:kane
 ```
 
 Keep the user flow, acceptance criteria, and any test data in `.testmuai/context.md`.
 
 ## Saved tests and parallel suites
 
-One-off checks use `verify:kane`. The existing `tests/example_test.md` is a legacy
-smoke test. Generate new requirements-linked tests through the official Kane
+One-off checks use `verify:kane`. Generate new requirements-linked tests through the official Kane
 skill's assurance workflow below. First execution records the steps; later runs
 replay the recording.
 
 | Path | Purpose |
 | --- | --- |
-| `tests/*_test.md` | Tests: YAML frontmatter, then one `## Heading` per step |
+| `.testmuai/tests/*_test.md` | Generated or recorded Kane journeys |
 | `output-<name>/` | Recordings next to each test (created on first run; commit these) |
-| `scripts/run-suite.sh` | Runs all tests as one parallel suite |
+| `scripts/run-suite.sh` | Legacy suite runner for `tests/*_test.md`; pass generated paths explicitly to `testrun` |
 
 ```bash
 # One test (app must be running)
-kane-cli testmd run tests/example_test.md --agent --headless
+kane-cli testmd run .testmuai/tests/raising-kane-smoke_test.md --agent --headless
 
 # The whole suite in parallel (use this, not several concurrent testmd runs)
 scripts/run-suite.sh 4
