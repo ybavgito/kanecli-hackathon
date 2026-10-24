@@ -194,10 +194,13 @@ demo. Assign owners and a cutoff for implementation versus submission assets.
 
 - All nine pinned Kane documentation URLs in the supplied brief returned HTTP 200
   during this review. Their existence does not verify the proposed implementation.
-- The three relative research links point to files absent from Downloads and this
-  repo: `clearpath-kane-feature-audit.md`, `clearpath-sol-review.md` and
-  `clearpath-product-and-demo.md`. They remain unresolved in the preserved original.
-  Supply those documents or remove their dependency in a future brief revision.
+- **Resolved after review:** the three supporting research documents have now been
+  supplied and committed unchanged alongside the brief: `clearpath-kane-feature-audit.md`,
+  `clearpath-sol-review.md` and `clearpath-product-and-demo.md`. The brief's research
+  links now resolve. Those documents additionally cite `kane-consumer-fresh-paths.md`
+  and `kane-cli-field-guide.md`, which have not been supplied. The repository's
+  `kane-field-guide.md` has a different filename and is not assumed to be the exact
+  historical input. Adding the research does not close the implementation gaps above.
 - The Happy Returns page could not be retrieved by the web tool (HTTP 403).
   Its competitive claim remains unverified in this review. AURA's public repository
   does describe adaptive presentation of real pages; that does not establish a moat.

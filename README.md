@@ -9,8 +9,16 @@ The proposed product is [ClearPath: a clearer way through complicated websites](
 The supplied brief is preserved unchanged. Read the accompanying
 [gap review and implementation decisions](docs/clearpath/gap-review.md) before
 building; it identifies approval, duplicate prevention, browser continuity and
-verification contracts that still need definition. The three supporting research
-files linked at the end of the original brief have not been supplied.
+verification contracts that still need definition.
+
+Supporting research:
+
+- [Independent Sol product review](docs/clearpath/clearpath-sol-review.md)
+- [Product and demo analysis](docs/clearpath/clearpath-product-and-demo.md)
+- [Kane feature audit](docs/clearpath/clearpath-kane-feature-audit.md)
+
+These source documents are preserved unchanged. Their references to older
+`kane-consumer-fresh-paths.md` and `kane-cli-field-guide.md` inputs remain unavailable.
 
 ## Start building
 
