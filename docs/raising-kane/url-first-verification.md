@@ -92,3 +92,25 @@ account extraction no longer implies that the person changed accounts. The
 read-only product path is also simpler: retrieve facts, independently check each
 fact plus goal/account/source, then save a receipt. Information retrieval needs
 no transaction approval. Its live two-site proof is recorded below when complete.
+
+### First complete read-only journey: Books to Scrape
+
+- Real Kane UI verification clicked the discovered **Travel** card and observed
+  the corresponding source task start. The four cards and source labels passed.
+  [Card click evidence](https://test-manager.lambdatest.com/projects/01M5QFXVQKQ0KCCE24PC0BJXYP/test-cases/01M5R173R5ZR764AT2ACVW1KSB/dashboard/share/US_KGR66SVBDJQHTHCTZDAZMWJ0BHMSB5DG6W3SQDS7U9FM9VHY3QWOZ72IY486VKHP?type=summary&agentView=true&fqdn=summary-page).
+- The runtime extracted Travel, 11 results, **It's Only the Himalayas**, and
+  **£45.17** from the actual catalog. A separate analyzer matched **8/8** conditions:
+  source/account, four facts, task goal, selected source context, and answer summary.
+  It then persisted workflow `9e225a25-de87-48ee-8baa-9a2995074cca` with a verified
+  receipt at `2026-10-24T22:43:40.792Z`.
+  [Source extraction evidence](https://test-manager.lambdatest.com/projects/01M5QFXVQKQ0KCCE24PC0BJXYP/test-cases/01M5R18Y1NFY7GJDAZYBWNKCH9/dashboard/share/US_1BVT7YDVENHZ6GIIIN0B6257G4FAS2NRHT2WBCR8AE7CKWLGON0S5PA34YC43Y3V?type=summary&agentView=true&fqdn=summary-page).
+- A subsequent Kane UI run passed the receipt facts/source/check-count assertions,
+  refreshed the page, checked the unchanged verification time, then returned to
+  All discovered actions and reopened the saved Travel result. The action log
+  records a successful browser refresh at `22:44:37.384Z`.
+  [Persistence and history evidence](https://test-manager.lambdatest.com/projects/01M5QFXVQKQ0KCCE24PC0BJXYP/test-cases/01M5R1BS0QYPJ00Y5WMZZZE0Z0/dashboard/share/US_PY5DFM4RUTYY42Z95RZQ4W9PKU0OOMMZ5LRZKBP4ZGC6GTFDGY788HZ01ZDRIGDO?type=summary&agentView=true&fqdn=summary-page).
+- A before/after API comparison confirmed receipt and evidence were unchanged:
+  reloading/reopening did not run the task again. The receipt on disk matched the API.
+
+Books to Scrape is explicitly a synthetic catalog with random demonstration prices.
+This proves a read-only information journey, not a real purchase or transaction.
