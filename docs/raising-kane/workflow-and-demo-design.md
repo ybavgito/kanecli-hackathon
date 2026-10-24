@@ -1,6 +1,6 @@
 # Raising Kane: tested tasks, a simpler interface, verified outcomes
 
-Decision memo, October 24, 2026. This refines the product brief; it does not claim the proposed product is implemented. The repository currently contains the React starter. The separate [rc.3 experiments](../kane-validation/report.md) establish specific CLI behaviors on synthetic fixtures.
+Decision memo, October 24, 2026. This refines the product brief; it does not claim the full proposed product is implemented. The shared POC branch now contains a partial return implementation; see its [verification status](verification.md). The separate [rc.3 experiments](../kane-validation/report.md) establish specific CLI behaviors on synthetic fixtures.
 
 The [UX research and demo direction](ux-research-and-demo-direction.md) adds primary-source findings, exact question/feedback timing, evidence presentation, interruption behavior and a timed video outline. The [interactive storyboard](demo-storyboard.html) illustrates those states without executing Kane or submitting anything.
 
