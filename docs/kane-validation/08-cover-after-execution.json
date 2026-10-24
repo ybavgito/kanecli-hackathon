@@ -1,0 +1,75 @@
+{
+  "source": "project",
+  "coverage_version": 2,
+  "scope": "project",
+  "config": {
+    "rule": "newest_counted_verdict",
+    "weighting": "risk",
+    "weights": {
+      "high": 1.25,
+      "med": 1,
+      "low": 0.75,
+      "unknown": 1
+    }
+  },
+  "pct": 100,
+  "usecases": {
+    "total": 1,
+    "proven": 1,
+    "partial": 0,
+    "failing": 0,
+    "not_run": 0,
+    "not_designed": 0,
+    "no_criteria": 0
+  },
+  "criteria": {
+    "total": 5,
+    "proven": 5
+  },
+  "perUc": [
+    {
+      "id": "uc-1",
+      "title": "View a return receipt and refund status",
+      "risk": "high",
+      "weight": 1.25,
+      "state": "proven",
+      "pct": 100,
+      "criteria": 5,
+      "proven": 5,
+      "manual_runs": 0,
+      "stale": false
+    }
+  ],
+  "perAc": {
+    "ac-1": {
+      "state": "proven",
+      "uc": "uc-1",
+      "deciding_run": "ee540c81-22ec-4591-8a00-90ea42af4b04"
+    },
+    "ac-2": {
+      "state": "proven",
+      "uc": "uc-1",
+      "deciding_run": "ee540c81-22ec-4591-8a00-90ea42af4b04"
+    },
+    "ac-3": {
+      "state": "proven",
+      "uc": "uc-1",
+      "deciding_run": "ee540c81-22ec-4591-8a00-90ea42af4b04"
+    },
+    "ac-4": {
+      "state": "proven",
+      "uc": "uc-1",
+      "deciding_run": "ee540c81-22ec-4591-8a00-90ea42af4b04"
+    },
+    "ac-5": {
+      "state": "proven",
+      "uc": "uc-1",
+      "deciding_run": "ee540c81-22ec-4591-8a00-90ea42af4b04"
+    }
+  },
+  "flags": {
+    "stale_sources": 0,
+    "sources_not_fully_extracted": [],
+    "orphaned_usecases": 0
+  }
+}

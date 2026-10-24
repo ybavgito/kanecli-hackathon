@@ -1,0 +1,972 @@
+{
+  "cli_version": "0.10.0-rc.3",
+  "date": "2026-10-24",
+  "scope": "Synthetic fixtures; not full Raising Kane acceptance",
+  "commands": [
+    {
+      "experiment": "kane-fieldguide-rc3-check",
+      "case": "01-author-network",
+      "exit": 1,
+      "wall_seconds": 52.88,
+      "source_state": null,
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "failed",
+          "duration": 36.5
+        },
+        {
+          "type": "test_md_summary",
+          "overall_status": "failed",
+          "duration_s": 41
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "failed",
+          "duration_s": 41,
+          "session_id": "befb5d4b-623d-411c-a319-3166ec51cf0f"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-fieldguide-rc3-check-r2",
+      "case": "01-author-network",
+      "exit": 0,
+      "wall_seconds": 38.84,
+      "source_state": null,
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 29.8
+        },
+        {
+          "type": "test_md_summary",
+          "overall_status": "passed",
+          "duration_s": 34
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "passed",
+          "duration_s": 34,
+          "session_id": "172270ca-3196-4542-9cfd-702badd2dc44"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-fieldguide-rc3-check-r2",
+      "case": "02-fault-strict-replay",
+      "exit": 1,
+      "wall_seconds": 14.02,
+      "source_state": null,
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "failed",
+          "duration": 6.6
+        },
+        {
+          "type": "test_md_summary",
+          "overall_status": "failed",
+          "duration_s": 11
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "failed",
+          "duration_s": 11,
+          "session_id": "0bf22018-363c-42ff-9b76-1a70beb0b3ce"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-fieldguide-rc3-check-r2",
+      "case": "03-restored-strict-replay",
+      "exit": 0,
+      "wall_seconds": 9.65,
+      "source_state": null,
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 1.61
+        },
+        {
+          "type": "test_md_summary",
+          "overall_status": "passed",
+          "duration_s": 6
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "passed",
+          "duration_s": 6,
+          "session_id": "704fae7a-bc48-4726-8ccc-f75f6bf0e182"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-fieldguide-rc3-check-r3",
+      "case": "01-author-dom",
+      "exit": 0,
+      "wall_seconds": 53.55,
+      "source_state": null,
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 44.6
+        },
+        {
+          "type": "test_md_summary",
+          "overall_status": "passed",
+          "duration_s": 49
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "passed",
+          "duration_s": 49,
+          "session_id": "958957f4-b8bf-4445-b5d1-78ad09c0d715"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-fieldguide-rc3-check-r3",
+      "case": "02-fault-strict-replay",
+      "exit": 1,
+      "wall_seconds": 26.43,
+      "source_state": null,
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "failed",
+          "duration": 18.99
+        },
+        {
+          "type": "test_md_summary",
+          "overall_status": "failed",
+          "duration_s": 23
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "failed",
+          "duration_s": 23,
+          "session_id": "eb5ca3d3-197f-4634-994b-a413eecb8dec"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-fieldguide-rc3-check-r3",
+      "case": "03-restored-strict-replay",
+      "exit": 0,
+      "wall_seconds": 16.43,
+      "source_state": null,
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 8.96
+        },
+        {
+          "type": "test_md_summary",
+          "overall_status": "passed",
+          "duration_s": 13
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "passed",
+          "duration_s": 13,
+          "session_id": "53cfcc28-57f2-4dbf-82c6-0f4b43d275c9"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-fieldguide-rc3-check-r3",
+      "case": "04-analyzer-current-page",
+      "exit": 0,
+      "wall_seconds": 26.63,
+      "source_state": null,
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 21.03,
+          "condition_results": [
+            true,
+            false
+          ],
+          "condition_reasons": [
+            "Reading the signed-in account name: value: 'fixture-user' -> 'fixture-user' after ['strip']; equals 'fixture-user' -> PASS",
+            "Reading the displayed refund destination: value: 'Original payment' -> 'Original payment' after ['strip']; equals 'Store credit' -> FAIL"
+          ]
+        }
+      ]
+    },
+    {
+      "experiment": "kane-fieldguide-rc3-check-r3",
+      "case": "05-absolute-api",
+      "exit": 0,
+      "wall_seconds": 40.75,
+      "source_state": null,
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 32.4
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-runtime",
+      "case": "01-variable-author",
+      "exit": 0,
+      "wall_seconds": 22.87,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 13.6
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "passed",
+          "duration_s": 18,
+          "session_id": "d7840f3c-0019-4f0f-bf80-9b794b7e3e5b"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-runtime",
+      "case": "02-variable-replay-changed-input",
+      "exit": 1,
+      "wall_seconds": 28.96,
+      "source_state": {
+        "destination": "Store credit",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "failed",
+          "duration": 20.66
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "failed",
+          "duration_s": 25,
+          "session_id": "c12300b6-6764-4261-a727-f5b68d99ebb5"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-runtime",
+      "case": "03-variable-replay-negative",
+      "exit": 0,
+      "wall_seconds": 24.11,
+      "source_state": {
+        "destination": "Store credit",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 15.78
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "passed",
+          "duration_s": 20,
+          "session_id": "c95d4eee-8995-44ac-bc48-3906fbc98e96"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-runtime",
+      "case": "04-extract-booking",
+      "exit": 0,
+      "wall_seconds": 27.26,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 19.3
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-runtime",
+      "case": "05-context-next-job",
+      "exit": 0,
+      "wall_seconds": 25.54,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 17.4
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-runtime",
+      "case": "06-current-page-analyzer",
+      "exit": 0,
+      "wall_seconds": 10.49,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 4.93,
+          "condition_results": [
+            true,
+            true
+          ],
+          "condition_reasons": [
+            "Reading the technician name from the booking details: value: 'Maya' -> 'Maya' after ['strip']; equals 'Maya' -> PASS",
+            "Checking whether the booking technician is Leo: value: 'false' -> 'false'; equals 'false' -> PASS"
+          ]
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-runtime",
+      "case": "07-session-retained",
+      "exit": 0,
+      "wall_seconds": 21.96,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 13.8
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-runtime",
+      "case": "08-fresh-browser-no-auth",
+      "exit": 1,
+      "wall_seconds": 21.72,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "failed",
+          "duration": 13
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-runtime",
+      "case": "09-failure-after-save",
+      "exit": 1,
+      "wall_seconds": 40.96,
+      "source_state": {
+        "destination": "Store credit",
+        "saved": 1,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "failed",
+          "duration": 32.3
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-runtime",
+      "case": "10-final-validation",
+      "exit": 0,
+      "wall_seconds": 26.17,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 1,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 17.8
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-freshness",
+      "case": "01-author",
+      "exit": 0,
+      "wall_seconds": 31.19,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 21.4
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "passed",
+          "duration_s": 26,
+          "session_id": "0b926b61-6c47-4fe4-9d01-ee80bdeea36e"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-freshness",
+      "case": "02-changed-input",
+      "exit": 0,
+      "wall_seconds": 29.03,
+      "source_state": {
+        "destination": "Store credit",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 20.79
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "passed",
+          "duration_s": 25,
+          "session_id": "151549b9-e1a9-4455-9d55-a1db45a03591"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-freshness",
+      "case": "03-mismatch",
+      "exit": 1,
+      "wall_seconds": 32.25,
+      "source_state": {
+        "destination": "Store credit",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "failed",
+          "duration": 23.92
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "failed",
+          "duration_s": 28,
+          "session_id": "008a4dbe-96c3-4261-9b8b-86a5c6bc712d"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-freshness",
+      "case": "04-fresh-run-variable",
+      "exit": 0,
+      "wall_seconds": 31.29,
+      "source_state": {
+        "destination": "Store credit",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 22.4
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-repair",
+      "case": "01-guard-author",
+      "exit": 0,
+      "wall_seconds": 23.38,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 13.8
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "passed",
+          "duration_s": 18,
+          "session_id": "0046181d-a743-494a-aa42-683a56d68b12"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-repair",
+      "case": "02-change-draft",
+      "exit": 0,
+      "wall_seconds": 27.93,
+      "source_state": {
+        "destination": "Store credit",
+        "saved": 1,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 19.4
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-repair",
+      "case": "03-guard-red",
+      "exit": 1,
+      "wall_seconds": 31.59,
+      "source_state": {
+        "destination": "Store credit",
+        "saved": 1,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "failed",
+          "duration": 23.52
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "failed",
+          "duration_s": 28,
+          "session_id": "8c623571-f5d5-4631-8859-d3f5053190fc"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-repair",
+      "case": "04-agent-correction",
+      "exit": 0,
+      "wall_seconds": 28.43,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 1,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 18.2
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-repair",
+      "case": "05-guard-green",
+      "exit": 0,
+      "wall_seconds": 7.89,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 1,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 0.39
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "passed",
+          "duration_s": 5,
+          "session_id": "f28a2190-ea78-420c-9349-01247fa20426"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-repair",
+      "case": "06-continue-after-failed-assertion",
+      "exit": 1,
+      "wall_seconds": 65.12,
+      "source_state": {
+        "destination": "Store credit",
+        "saved": 2,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "failed",
+          "duration": 56.1
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-repair",
+      "case": "07-stop-after-failed-assertion",
+      "exit": 1,
+      "wall_seconds": 31.26,
+      "source_state": {
+        "destination": "Store credit",
+        "saved": 2,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "failed",
+          "duration": 22.7
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-explore",
+      "case": "01-explore-readonly",
+      "exit": 0,
+      "wall_seconds": 47.15,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "done",
+          "state": "stopped",
+          "exit_code": 0,
+          "stop_reason": "budget_leases",
+          "complete": false
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-explore",
+      "case": "02-explore-list",
+      "exit": 0,
+      "wall_seconds": 0.92,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "done",
+          "status": "ok",
+          "exit_code": 0
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-explore",
+      "case": "03-explore-other-url",
+      "exit": 2,
+      "wall_seconds": 0.92,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "done",
+          "state": null,
+          "exit_code": 2,
+          "stop_reason": null,
+          "complete": false
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-suite",
+      "case": "01-author-return",
+      "exit": 0,
+      "wall_seconds": 22.23,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 13.1
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "passed",
+          "duration_s": 17,
+          "session_id": "4ba37ae1-b5f0-4982-acab-6ac573ae809f"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-suite",
+      "case": "01-author-booking",
+      "exit": 0,
+      "wall_seconds": 23.87,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "run_end",
+          "status": "passed",
+          "duration": 14.9
+        },
+        {
+          "type": "test_md_done",
+          "overall_status": "passed",
+          "duration_s": 19,
+          "session_id": "fd1814fb-0de0-405a-9c3e-bec42d5c4346"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-suite",
+      "case": "02-suite-preflight",
+      "exit": 0,
+      "wall_seconds": 0.52,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": []
+    },
+    {
+      "experiment": "kane-rc3-extended-suite",
+      "case": "03-suite-two-workers",
+      "exit": 0,
+      "wall_seconds": 8.58,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "testrun_done",
+          "overall_status": "passed"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-assurance",
+      "case": "01-ingest",
+      "exit": 0,
+      "wall_seconds": 0.92,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": []
+    },
+    {
+      "experiment": "kane-rc3-extended-assurance",
+      "case": "02-extract",
+      "exit": 1,
+      "wall_seconds": 0.92,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "done",
+          "status": "error",
+          "exit_code": 1
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-assurance",
+      "case": "03-list",
+      "exit": 0,
+      "wall_seconds": 0.87,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": []
+    },
+    {
+      "experiment": "kane-rc3-extended-assurance",
+      "case": "04-fsck",
+      "exit": 0,
+      "wall_seconds": 0.82,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": []
+    },
+    {
+      "experiment": "kane-rc3-extended-assurance-fixed",
+      "case": "01-ingest",
+      "exit": 0,
+      "wall_seconds": 0.87,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": []
+    },
+    {
+      "experiment": "kane-rc3-extended-assurance-fixed",
+      "case": "02-extract",
+      "exit": 0,
+      "wall_seconds": 12.9,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "done",
+          "status": "complete",
+          "exit_code": 0
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-assurance-fixed",
+      "case": "03-list",
+      "exit": 0,
+      "wall_seconds": 0.87,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": []
+    },
+    {
+      "experiment": "kane-rc3-extended-assurance-fixed",
+      "case": "04-fsck",
+      "exit": 0,
+      "wall_seconds": 0.87,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": []
+    },
+    {
+      "experiment": "kane-rc3-extended-assurance-fixed",
+      "case": "05-design",
+      "exit": 0,
+      "wall_seconds": 35.8,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "done",
+          "status": "complete",
+          "exit_code": 0
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-assurance-fixed",
+      "case": "06-cover-before-execution",
+      "exit": 0,
+      "wall_seconds": 0.87,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": []
+    },
+    {
+      "experiment": "kane-rc3-extended-assurance-fixed",
+      "case": "07-run-designed-test",
+      "exit": 0,
+      "wall_seconds": 58.45,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": [
+        {
+          "type": "testrun_done",
+          "overall_status": "passed"
+        }
+      ]
+    },
+    {
+      "experiment": "kane-rc3-extended-assurance-fixed",
+      "case": "08-cover-after-execution",
+      "exit": 0,
+      "wall_seconds": 0.87,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": []
+    },
+    {
+      "experiment": "kane-rc3-extended-assurance-fixed",
+      "case": "09-fsck-after-design",
+      "exit": 0,
+      "wall_seconds": 0.87,
+      "source_state": {
+        "destination": "Original payment",
+        "saved": 0,
+        "commits": 0
+      },
+      "terminal": []
+    }
+  ]
+}

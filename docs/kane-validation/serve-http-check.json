@@ -1,0 +1,6 @@
+{
+  "http_status": 200,
+  "bytes": 679584,
+  "matches_local_sha256": true,
+  "scope": "pack HTTP serving only; hosted viewer rendering not tested"
+}

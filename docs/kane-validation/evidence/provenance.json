@@ -1,0 +1,43 @@
+[
+  {
+    "case": "red",
+    "original_execution_id": "0ae93f89-cc4f-441a-9b1b-3c877d8fc045",
+    "original_sha256": "dc91d27fd73437a9a8a0c7d128027e4f3a58c6892345a67389dd5f952b244a97",
+    "published_file": "red-metadata-redacted.evidence",
+    "published_sha256": "ed83059a5579b4668267ac26967530c66a29acc2b0b0011b935525fb55cc2c79",
+    "redaction": "Only user_name and user_email metadata fields replaced; test definitions, outcomes and screenshots unchanged.",
+    "changed_members": [
+      "tests/guard-9621603a/result.yaml"
+    ],
+    "validation": {
+      "valid": true,
+      "status": "finalized",
+      "diagnostics": [
+        {
+          "code": "l1.failure.status_disagrees",
+          "severity": "warning",
+          "location": "tests/guard-9621603a/steps/3-0-3/failure.yaml",
+          "message": "failure record status \"broken\" disagrees with result.yaml step status \"failed\""
+        }
+      ]
+    },
+    "validation_exit": 0
+  },
+  {
+    "case": "green",
+    "original_execution_id": "a99ebe64-ccde-4b9a-8056-762c7b13b7dd",
+    "original_sha256": "5136d1392fa183f506bf34d88447921a1f2f430c5bec44b860949b8e84dd1d57",
+    "published_file": "green-metadata-redacted.evidence",
+    "published_sha256": "482804335a414f8fd4b2b10939d09c2a9987836025f671a6e8b41d483a378ae6",
+    "redaction": "Only user_name and user_email metadata fields replaced; test definitions, outcomes and screenshots unchanged.",
+    "changed_members": [
+      "tests/guard-9621603a/result.yaml"
+    ],
+    "validation": {
+      "valid": true,
+      "status": "finalized",
+      "diagnostics": []
+    },
+    "validation_exit": 0
+  }
+]

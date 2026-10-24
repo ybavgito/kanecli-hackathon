@@ -1,477 +1,421 @@
-# Kane CLI field guide: current workflow and historical measurements
-
-## Current workflow (0.10.0-rc.3)
-
-Reviewed October 24, 2026 using the official Kane CLI skill 0.2.0, public docs
-and installed `0.10.0-rc.3` command help. npm's `rc` tag pointed to that version;
-`latest` still pointed to `0.9.0`. Install the event version with
-`npm install -g @testmuai/kane-cli@rc`. These are documentation and help checks,
-not end-to-end tests of RC features. The public changelog does not yet provide
-a 0.10 RC breakdown, so this is not an exact list of rc.3 changes.
-
-### What changes for this starter
-
-- **Shared projects (0.10+):** assurance work can live in the team's Test Manager
-  project instead of a local store. Link with
-  `kane-cli context ingest requirements.md --project <id> --mode agent`.
-  `.testmuai/assurance.json` records the link, which covers only that folder.
-  Without `--project`, an unconfigured folder in agent mode defaults to local work.
-- **Explicit saves:** extraction and design finish in a session. Save with
-  `kane-cli context sessions save <sid> --yes --mode agent` before expecting the
-  team to see the work. Check the save's file and Test Manager errors too.
-- **Pull shared tests:** installed help confirms `context pull --project`,
-  `--use-case` and `--overwrite`. A teammate can join and download tests with
-  `kane-cli context pull --project <id> --mode agent`; an already linked folder
-  uses `kane-cli context pull --mode agent`. Downloading is not test execution.
-- **Requirement-linked execution:** keep generated files directly in
-  `.testmuai/tests/`, run the files returned by the design save, and inspect
-  `kane-cli cover --mode agent`. Their runs attach to the scenario's Test Manager
-  case and contribute to shared coverage, which can lag by up to five minutes.
-- **Exploration (0.10+):** `kane-cli explore` maps screens, flows and findings,
-  with evidence. Its assurance jobs can design and save tests into the project;
-  they do not execute them. Pull, fill variables and run tests separately. Check
-  `explore context status` before calling designs ready.
-- **Exploration controls:** the default queues on HyperExecute and returns before
-  execution finishes; `--local-orchestration` runs from this machine. The default
-  permits changes; `--policy read_only` restricts exploration writes, while
-  explicitly requested setup steps still run. One project holds one exploration
-  of one URL. Pass the intended policy and limits again on re-runs.
-- **Integration APIs:** the Hack OS docs describe read-only project coverage,
-  requirements, tests and runs, plus exploration maps, findings and live updates.
-  These can feed a companion dashboard. Keep credentials on its server, not in a
-  browser bundle; the event APIs may change after the hackathon.
-
-### Migration boundaries
-
-Generate → execute → prove, mobile execution, evidence packs and requirement
-coverage already existed before 0.10. Shared projects and exploration extend
-that workflow; do not describe everything as newly introduced in rc.3.
-
-Generate new tests from actual requirements through the official skill's assurance
-workflow. Review proposed use cases before using `design tests --allow-unreviewed`
-in a shared project. A local `.context/` and a shared link cannot coexist in one
-folder. Linking does not change the profile project used by quick `kane-cli run`
-uploads. `context review`, `cover gaps` and `testrun --from-context` are not the
-shared-project workflow; follow its own documentation.
-
-The starter's suite script still selects `tests/*_test.md`; its example remains
-a legacy smoke test. Run generated `.testmuai/tests/` files explicitly. This
-documentation update does not link a project or execute RC exploration or
-assurance. The v0.9.0 timings and failure modes below have not been revalidated
-on the RC.
-
-Sources: [official shared-project documentation](https://github.com/LambdaTest/kane-cli/blob/main/docs/user-guide/assurance/shared-projects.md),
-[official overview](https://github.com/LambdaTest/kane-cli#readme), and the installed
-official skill's `shared-projects.md`, `explore.md`, `agent-contract.md` and
-`testrun.md` references, plus Hack OS's `references/kane-apis.md`.
-
-## Historical v0.9.0 field notes
-
-Measured with `@testmuai/kane-cli` v0.9.0 on small test apps, one machine, October 2026. Independent field notes for developers evaluating browser-test workflows; this is not official guidance. Treat timings as indicative, not as benchmarks.
-
-## TL;DR
-
-Kane CLI is a replay-first browser agent: author a flow once, replay the recording, and use `testrun` for parallel suites. The table after this list distinguishes reported run observations from package checks and documentation; a separate section records fresh reproduction results.
-
-1. **Author once, then replay.** A 3 to 4 step flow took about 2 minutes to author; passing replays took 14 to 18 seconds in these small examples.
-2. **`--url` does not retarget a replay.** Verified with server logs on a clean recording: the original port took all 6 requests and the new one took none. A recording damaged by a healed run is re-authored instead, which took 84 seconds. Use a `{{base_url}}` variable.
-3. **Parallel runs go through `testrun run --parallel N`.** Concurrent standalone `testmd run` processes can interfere with each other. A fresh two-process check produced one pass and one failure; both passed as a suite.
-4. **Healing is a separate pass.** On 5 members it took 96 s against 35 s for strict replay. It rewrote `execution.json`, a step's actions and `Result.md`; a strict replay only appended to the run history in `meta.json`.
-5. **`failed` does not mean a bug was found.** In the evidence pack, a genuine assertion failure and an infrastructure error are both `broken`. Tell them apart by the message in `failure.yaml`: `assertion_failed` or `TargetClosedError`.
-6. **Every run needs internet, including a pure replay.** Offline, a replay exits 2 with "TMS did not return an org\_id".
-7. **Build on the terminal event and the exit code.** `run_end` (run), `test_md_done` (testmd), `testrun_done` (testrun). Exit codes are 0 pass, 1 fail, 2 error, 3 timeout or cancel.
-8. **The evidence pack is a plain zip** with screenshots, a HAR, console logs and a failure record. In failing runs its model-written triage named the actual bug.
-9. **`--analyzer-only` works.** It judged 3 conditions on a Chrome started separately in 15 seconds, and exited 0 even though one condition was false.
-10. **Kane verifies stated expectations well and discovers problems poorly.** Give it explicit, single-clause assertions and decide numeric invariants in your own code.
-11. **Not run at all:** mobile, the assurance commands, the agent skill install, the GitHub Action and headless login with an access key. Their details come from the docs.
-
-## How much of this is verified
-
-"Verified by run" labels observations reported in the original field notes. The original raw artifacts are not included here; this label does not mean every observation has been independently reproduced. Fresh checks are listed separately below.
-
-| Claim | Status | Evidence |
-| --- | --- | --- |
-| Authoring, replay and failure timings | Reported observations | Small test apps on one machine |
-| `--url` does not retarget a replay | Verified by run | Clean recording, `replay_decisions: 3`, request counts per server |
-| `testrun --parallel` works; concurrent `testmd` fails because of one shared debug port | Verified by run | Sampled Chrome processes (both on port 9222), `TargetClosedError` in a pack |
-| Healing rewrites recordings, strict replay does not | Verified by run | Checksums of the test folder before and after |
-| Healing passes a cosmetic change and still fails real bugs | Verified by run, small sample | 1 cosmetic variant, 3 real bugs |
-| A replay needs internet | Verified by run | Network namespace with loopback only, exit 2 |
-| `--analyzer-only` against an external Chrome | Verified by run | 3 conditions, correct verdicts |
-| Stream shapes, `run_end` keys, exit codes | Verified by run | Captured `run`, `testmd` and `testrun` streams |
-| Evidence pack layout and `failure.yaml` | Verified by run | Unzipped packs from these runs |
-| Loops (`@while`) and the live event stream | Verified by run | One run each |
-| Recordings survive a re-implementation of the same UI | Verified by run, simple pages only | Several separately written servers |
-| Flag lists | Verified in the package | Installed `--help` output |
-| `testrun` needs `< /dev/null`; `ask_user` is off without a terminal | Documented only | Docs; stdin was always redirected |
-| Agent skill, status strip, GitHub Action | Documented only | Not installed or run |
-| Mobile and real devices, plan requirements | Documented only | Not run |
-| Assurance commands (`context`, `design`, `cover`) | Documented only | Not run |
-| Headless login with an access key | Documented only | OAuth was used |
+# Kane CLI field guide — rc.3 and Raising Kane
 
-## Fresh reproduction checks
+Updated October 24, 2026. Practical reference for the event release and the two-website Raising Kane project.
 
-Checked on October 24, 2026, with the installed v0.9.0 CLI on macOS. Two local HTTP servers served the same page containing a single heading. One step navigated to the first server's literal URL and asserted that heading. Adaptive healing was disabled throughout.
+**Version checked:** npm currently publishes `rc = 0.10.0-rc.3` and `latest = 0.9.0`. The rc.3 publication timestamp is `2026-10-24T16:27:21.712Z`; its GitHub release is marked prerelease. These are point-in-time registry/release checks, not a reason to upgrade an environment automatically. [npm metadata](https://registry.npmjs.org/@testmuai%2Fkane-cli), [rc.3 release](https://github.com/LambdaTest/kane-cli/releases/tag/0.10.0-rc.3).
 
-- **Authoring baseline:** the one-step test passed (exit 0).
-- **URL override:** replaying with `--url` pointing to the second server passed (exit 0), with one replay decision and zero author decisions. During that run the original server received 2 requests; the second received 0. This confirms that `--url` did not replace the recorded literal navigation in this test.
-- **Concurrent standalone runs:** two copies of that recording ran simultaneously. One passed (exit 0); one failed (exit 1), with `action_failed: navigate @ step 1` in its evidence pack. This reproduces interference, but does not establish its cause or mean both processes always fail.
-- **Parallel suite:** those two test copies both passed under `testrun run a_test.md b_test.md --parallel 2 --agent --headless --no-adaptive-heal < /dev/null` (exit 0; 2 passed, 0 failed or broken).
+**Status labels:** “documented” means the pinned release docs describe it; “observed” means an experiment recorded it; “proposed” means our product must implement and demonstrate it. The user authorized extensive new tests and a separate account profile. See the dated validation section and its report for measured results; examples outside that section remain recipes, not proof of execution. Tests use synthetic local fixtures, not customer transactions.
 
-The copies had separate test filenames and output folders. These checks cover a tiny static page, two workers and a literal recorded URL; they do not establish behavior for every app, variable-based navigation or larger suites. Other measurements below remain historical observations from the original field notes.
+The original field guide is preserved in [the historical experiment archive](docs/raising-kane/kane-cli-field-guide-0.9-historical.md). Its 0.9.0 timings, credit figures, concurrency behavior and old product rankings are historical. This guide governs current usage; the [Raising Kane project brief](docs/raising-kane/raising-kane-project-brief.md) governs product scope.
 
-## Integration surface
+## 1. What Kane does, and what our app supplies
 
-Build integrations around the CLI's NDJSON stdout, exit codes and evidence files. Use `run` for one-off checks, `testmd run` for a saved test and `testrun run` for a suite. The sections below describe those interfaces and how to read their results.
+Kane executes natural-language objectives in a browser, evaluates explicit checks, extracts values and records evidence. It also supports native mobile execution, recorded journeys, exploration, requirement-driven test design and coverage. The main documented lifecycle is generate, execute and prove. [Guide index](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/README.md).
 
-## Setup
+It is a backend CLI integration, not a frontend SDK or a general-purpose truth engine. An ordinary web page does not acquire control of a user's logged-in browser simply because it invokes our API.
 
-Install, sign in and run one flow before relying on it, so the first real run is not also the first install.
+For Raising Kane, OpenAI interprets the goal and explains observed options; Kane observes and operates each supported source; application code stores intent, compares exact values, schedules jobs and enforces approval. The controlled source enforces atomic commit and duplicate prevention. No runtime coding-agent UI is required.
 
-1. **Install for Hack Day:** `npm install -g @testmuai/kane-cli@rc`. The measurements below used v0.9.0. Bare npm or Homebrew installation may select a different channel. Google Chrome (stable) must be installed. A non-standard path goes in `KANE_CLI_CHROME_PATH`.
-2. **Sign in:** `kane-cli login --oauth`. The CLI waits on a `http://127.0.0.1:<port>/callback` address, so the browser that completes the sign-in must run on the same machine. It opens the system default browser, which decides which Google session is used. Headless machines are documented to use `kane-cli login --username <user> --access-key <key>`, with the key from the TestMu dashboard under Settings, Keys; this was not run.
-3. **Check:** `kane-cli whoami`. Confirm `whoami` shows the account you intend after every login.
-4. **Run one flow:** `kane-cli run "Go to https://example.com and assert the page title contains 'Example'" --agent --headless`.
-5. **Keep the internet on.** Verified: with only a loopback interface, a replay exits 2 in 2 seconds with "TMS did not return an org\_id".
-6. **Agent skill (optional, documented, not run):** `npx @testmuai/kane-cli-skill` for Claude Code, Codex CLI and Gemini CLI, then restart the agent. Cursor and Copilot read an `AGENTS.md` instead. `npx @testmuai/kane-cli-skill strip enable` adds a live status line to Claude Code and edits its settings file with a backup.
-7. **Mobile (documented, not run):** on an Apple Silicon Mac with Xcode 16 or newer, `kane-cli doctor --target simulator --install`. Check the current product documentation for real-device access requirements.
+The strongest usage pattern is a bounded action followed by an explicit outcome check. A browser run passing establishes the checks it actually performed, not every implied business promise. A screenshot, a generated test, an Explore map and a model-written explanation each provide different evidence.
 
-Each run is saved to a Test Manager project (the first sign-in auto-selected one). Tag runs with `KANE_CLI_USER_AGENT=<your-agent>` as the skill documents; its effect was not checked.
+## 2. Important corrections to the old guide
 
-## Commands worth knowing
+- **Explore is available in the event release.** Earlier one-shot “explore this app” prompts did not evaluate the new `explore` command family.
+- **Replay costs and timings are observations, not guarantees.** Some old replays consumed zero measured credits; investigation and re-authoring can consume credits. Do not promise free, offline or instant operation.
+- **Concurrency is command-specific.** Old concurrent `testmd` processes collided on port 9222. That is not a universal rc.3 limit. Explore's local/cloud limits do not describe suite or app-worker capacity.
+- **A failed run can still have changed the site.** Reconcile the source after an interrupted submission.
+- **A passed assertion can describe a stale page.** Reusing a CDP session at the same URL did not automatically reload our fixture. Explicitly refresh/refetch the review and bind its source version to approval.
+- **Exit code meanings differ.** Analyzer exit zero can include false conditions. Assurance exit three can mean paused. Queued exploration is not a passing application test.
+- **`--mode action` is not an approval or read-only boundary.** It concerns blocking/auth/error handling.
+- **Healing does not establish correctness.** Keep immutable expectations, preserve the original failure and inspect source evidence.
+- **Recorded output is not automatically safe to publish.** Recordings, screenshots and HAR files can contain customer information.
+- **The current project has two source workflows.** Abandoned Drop/Clean Vote recommendations and model-persona “Win” scores are not current decisions or measured winning probabilities.
+- **The event deadline is 6 PM**, according to the current official event page; the archived 5 PM advice is superseded. [Event rules and judging](https://www.kaneclihack.sh/).
 
-Four commands do almost everything: `run` for one-offs, `testmd run` for one saved test, `testrun run` for suites, and `evidence` for proof. All flags below were confirmed in the installed v0.9.0 `--help`.
+## 3. Version and setup discipline
 
-| Command | Use it for | Notes |
-| --- | --- | --- |
-| `kane-cli run "<objective>" --agent --headless --timeout N` | One-shot task or check | Start the objective with `Go to <url> and`. `--name x` writes `.testmuai/tests/x_test.md` and a pack in `.testmuai/evidence/` (verified). |
-| `kane-cli testmd run <file> --agent` | Author a saved test, or replay it | Verified in `--help`: `--no-adaptive-heal`, `--author`, `--variables`, `--variables-file`, `--on-lock-conflict`, `--bug-detection`, `--name`, `--timeout`. There is no `--chrome-profile` (it errors with `unknown option`). |
-| `kane-cli testrun run [paths] --parallel N < /dev/null` | A suite as one execution, one exit code, one evidence pack | Verified in `--help`: `--match`, `--tags`, `--parallel`, `--on-failure`, `--dry-run`, `--remote`, `--no-adaptive-heal`, `--author`, `--bug-detection`, `--headless`, `--stream-members`. There is no `--timeout` and no `--variables`. It takes file paths, or none to scan the current folder; a folder argument is refused. |
-| `kane-cli run --analyzer-only --condition "..." --agent` | Judge true or false conditions on the current page | Verified: 3 conditions on an external Chrome (`--cdp-endpoint`, `--allow-missing-url`) took 15 s. Verdicts come in `run_end.condition_results` in condition order. Exit 0 means judged, not true. |
-| `kane-cli evidence serve\|validate\|merge` | Open, check or combine evidence packs | In `--help`. Packs were read with `unzip`; these subcommands were not run. |
-| `kane-cli context ingest\|extract\|review`, `design tests`, `cover`, `cover gaps`, `maintain reconcile` | Requirements to tests to coverage | Documented, not run. Interactive by default; use `--mode agent` or `--mode ci` when headless. |
-| `kane-cli login`, `whoami`, `profiles`, `config` | Account and defaults | `login --oauth` and `whoami` verified. |
-| `kane-cli devices list`, `apps list`, `doctor --target ...` | Mobile setup | Documented, not run. Simulator and emulator need an Apple Silicon Mac. |
+For a reproducible rc.3 environment, the explicit package is `@testmuai/kane-cli@0.10.0-rc.3`. Installing the unqualified package can select 0.9.0 because of the current tag assignment. The event installer used `@rc`; that tag can move later.
 
-**Flags that matter**
+Useful commands when setup is authorized:
 
-- `--agent` gives NDJSON on stdout and the UI on stderr (verified). The help text says it turns on by itself when stdin is not a terminal.
-- `--headless` is needed on a machine without a display (documented).
-- `--no-adaptive-heal` makes a replay miss final. Verified: it left the recording content alone and only added a history entry in `meta.json`.
-- `--cdp-endpoint <url>` attaches to a Chrome started with remote debugging. Verified with `--analyzer-only`; not tried with a normal run. `--ws-endpoint` attaches to a Playwright websocket (documented).
-- `--assertion-mode dom|visual` defaults to `dom` with a vision fallback (from the help text).
-- `--bug-detection off|stop|continue` flags suspected product bugs while authoring. A confirmed one is documented as `result_code: "740"` plus a verdict.
-- `--session-context <json>` chains runs by passing the `context` object from a previous `run_end` (documented, not run).
-- `--dataset-id` and `--dataset-row` use a Test Manager dataset row as the parameters (in the help text, not run).
+```bash
+npm install -g @testmuai/kane-cli@0.10.0-rc.3
+kane-cli --version
+kane-cli whoami
+kane-cli balance
+kane-cli run --help
+kane-cli testmd run --help
+kane-cli explore run --help
+```
 
-## Authoring, replay and healing
+Record the actual version with artifacts. Use the help for the exact command: flags do not transfer automatically between `run`, `testmd`, `testrun` and `explore`.
 
-Every saved test works the same way: the first run authors each step with the AI and records it, later runs replay the recording with no AI, and a replay that breaks may trigger healing.
+Kane authentication and the hackathon event helper's pairing are separate. The user's Mac installer already reported Kane authentication and the Codex skill; this guide is not an instruction to repeat pairing or change the Mac configuration.
 
-**The test file.** A `_test.md` has YAML frontmatter, then one `## Heading` per step with a plain-English objective. Useful frontmatter keys: `mode`, `url`, `tags`, `max_steps`, `variables`, `chrome_profile`, `target`, `headless`. A step can be a single `@import ./helpers/login.md` line.
+Earlier experiments used isolated installations under `/tmp/kane-research/inst` and `/tmp/kane-rc3-review`. `KANE_CLI_SYSTEM_NODE=1` was used there; it is not established as necessary on every machine. Temporary paths may disappear. Prefer a documented project setup over dependence on those historical installations.
 
-**Where recordings live.** Next to the test: `output-<name>/Result.md` (human report) and `output-<name>/.internal/` (`execution.json`, `steps/`, `meta.json`). The folder is commit-safe, so teammates and CI replay the same recordings.
+## 4. Choose the right surface
 
-**When a step replays.** A step replays only if its recording exists, its text and its YAML block are unchanged, and no earlier step was invalidated. Editing step N re-authors step N and every authorable step after it. `--author` forces re-authoring. Steps marked `@db`, `@api`, `@js`, `@smartui`, `@network_query` or `@network_assertion` are replay-only and cannot be re-authored.
+**`run`:** a bounded browser mission, extraction or assertion. Suitable for runtime jobs whose values and context change.
 
-**What a replay stores.**
+**`run --analyzer-only`:** evaluate conditions on the current desktop page without action steps or a saved test. It cannot independently navigate to evidence elsewhere.
 
-- A step that navigates to a hard-coded URL keeps that URL, and `--url` on a replay does not change it. Verified: with a clean recording and `--url` pointing at a second server, the original server took all 6 requests and the second took none.
-- With `{{base_url}}` in step 1, the recording stored the URL as a variable value, and a run with another value went to the new address. Verified: a replay with `base_url` set to a broken variant's port failed at the step that variant breaks.
-- Variables given with `--variables` appear in the recording as `{{global.name}}`. Variables set in the file's frontmatter worked the same in a solo replay (verified).
-- Kane adds steps of its own to a recording. `refresh`, `clear_local_storage` and `wait` steps appeared in a pack's `result.yaml`.
-- Assertions default to DOM checks with a vision fallback (documented). DOM checks and vision checks were not measured separately.
+**`testmd run`:** execute a named, committed journey with step structure and recorded replay. Good for supported recurring phases and regression checks.
 
-**Adaptive healing.** When a replay step fails, the runner tries up to three shrinking replay windows, then re-authors the failing steps (documented; only `adaptive_heal.triggered` being true was confirmed). Observed:
+**`testrun run`:** execute multiple test files as a suite. Good for isolated regression scenarios, not automatically for continuing one shopper's session through multiple tasks.
 
-- Verified by checksum: a healing run on a failing replay rewrote `execution.json`, a step's `actions.ndjson`, `meta.json` and `Result.md`, and marked that run `valid: false` in the run history. A strict run changed only `meta.json`, which gained one history entry.
-- Verified: the damaged recording was not replayed on the next run. All 3 steps were re-authored (`author_decisions: 3`), which took 84 seconds.
-- Timing: one failing step took 79 seconds with healing, against 35 seconds without. Five members took 96 seconds against 35 seconds.
-- Effect: it did not hide any of 3 real bugs, and it passed 1 renamed button after 90 seconds. That is a small sample.
+**`explore`:** map a supported app and design scenarios. Good for integration preparation; not proof of task completion.
 
-**Recordings survive a re-implementation of the same UI.** A flow recorded on one hand-written app replayed 5 of 5 on three separately written servers, and an email flow recorded on one app also ran correctly on two others. This held while the pages kept the same visible labels (button text, field label), which suggests recordings match elements by what they say, not by app-specific selectors. Only simple pages were tried.
+**Assurance commands:** connect requirements, reviewed criteria, scenarios, execution and gaps. Good for integration coverage, not a full design cycle on every customer request.
 
-**Writing objectives that replay well (documented guidance; only the store-as pattern was verified).**
+**`evidence`:** view, integrity-check and package completed execution artifacts. It does not decide whether the expected business outcome was correct.
 
-- Name the start URL or use `url:` in frontmatter. Phrase actions as goals and keep exact values literal or in variables.
-- End every step with a claim about the page state, such as `then verify the cart shows 2 items`. A closing assertion is what makes a replay pass or fail on the real end state.
-- Use `store X as 'name'` for anything you need back. Vague words like `read` or `tell me` observe without saving.
-- Keep a single objective under about 15 steps. Split longer flows.
+The [execution guide](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/running-tests.md) and [saved-flow guide](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/testmd/running.md) are the primary references for these execution surfaces.
 
-**Loops (`@while`, `@if`).** The marker goes after a step label, for example `## Waiting room is showing @while` with the condition as the step body, then the loop steps, then `## Queue is over @end-while`. A marker with no label is refused at parse time with a message that shows the fix. A flow authored against a waiting room waited out a 20 second queue (3 iterations of a 2 second wait) and finished. A recorded loop is dynamic: it waits a different number of times each run. But a loop has a default cap of 5 iterations, a 500 ms settle and fail-on-exhaustion (reported observation; not independently reproduced). With a 40 second queue the replay looped 5 times, moved on with the room still closed, and failed. For long waits put a long wait inside the loop (for example 10 seconds). Control-flow tests are documented in the CLI's own error text as agent-mode only, so run them with `--agent`. Marker lines count as steps in the totals, and each loop iteration emits its own step events.
+## 5. Write objectives that can actually be checked
 
-## Output contract for scripts and agents
+Name the exact record and expected outcome. Separate navigation from assertions: first open the relevant record, then assert its fields. End each phase with a result check rather than a bare click.
 
-With `--agent`, stdout is one JSON object per line and the last meaningful line differs by command, so key on the terminal event plus the exit code.
+Bad objective: “Finish the return and make sure everything is correct.”
 
-| Command | Terminal event | Other events worth reading |
-| --- | --- | --- |
-| `run` | `run_end` | Untyped progress lines `{step, status, remark}` where status is `running`, `done` or `failed`. There is no `run_start` in this stream. |
-| `testmd run` | `test_md_done` | `test_md_step_start`, `test_md_step_end`, inner `step_event` lines (screenshot, reasoning, action, assertion), `test_md_summary` with `replay_decisions`, `author_decisions` and `adaptive_heal.triggered`. |
-| `testrun run` | `testrun_done` | `testrun_plan`, `testrun_member_end` (path, status, duration\_s), `testrun_summary` with `totals`. |
+Better objective, illustrative only:
 
-**Fields in `run_end`** (verified from a real run): `status`, `summary`, `one_liner`, `reason`, `reason_code`, `result_code`, `duration`, `final_state`, `context`, `run_id`, `session_dir`, `run_dir`, `test_url`, `total_runs`, `bifurcated`, `per_flow_metadata`, `v` and `ts`. `final_state` also held the values the objective asserted (`pay_button_visible: "true"`) and the final `url`.
+> Open the prepared return review for the specified order. Verify that the review belongs to that order and is fully loaded. Store the selected order-line IDs, quantities, return method, refund destination, currency and deduction. Assert that the selected line and quantity match the supplied intent and that the refund destination is Original payment. Do not submit.
 
-**Exit codes:** 0 passed, 1 failed, 2 error (login, setup, a bad flag, no network), 3 timeout or cancelled. 0, 1 and 2 were observed; 3 is documented.
+The text “do not submit” helps scope the objective; hard prevention still belongs to the supported source/controller. A model instruction is not atomic enforcement.
 
-**Result codes and verdicts (22 runs).** Read `result_code` and `verdict.family`, not `reason`.
+Use explicit `store … as …` extraction instructions for values needed downstream. Earlier vague requests to “read” or “tell me” did not reliably create reusable structured output. Normalize returned values in code, reject missing fields and correlate them with the intended record.
 
-| `result_code` | Status | Verdict family and category | Seen |
-| --- | --- | --- | --- |
-| 100 | passed | none | 13 runs |
-| 740 | failed | `application_issue`: `validation_defect`, `functional_defect`, `ui_data_defect` | 5 runs, all genuine defects |
-| 330 | failed | `automation_bug`: `agent_misstep` | 2 runs, where Kane blamed itself for a wrong total and a missing button |
-| none | failed | none | 2 runs, both refusals (no start URL) |
+Check existence and identity before negative or disabled-state assertions. An empty/broken screen must not pass “the jacket is absent” or “this option cannot be selected.” Compute arithmetic in code from observed numbers and the user's constraints; don't ask a second model to independently invent the correct total.
 
-The `reason` text "AP determined agent is stuck - no viable actions remain" appeared for both 330 and 740 outcomes, so it does not say who is at fault.
+### Additional flags confirmed in installed rc.3 help
 
-**Rules for a parser**
+`--assertion-failure-mode stop|continue` controls failed assertions during authoring; replay still stops on failures. Use `stop` for a bounded validator whose failure must remain visible. This differs from `--bug-detection`, which controls bug investigation, and from adaptive healing on recorded execution.
 
-- Skip any line that is not JSON, ignore unknown fields and event types, and never assume the first line is a progress line. A plain `run` printed `stream_start`, `recording_state`, `skill_update_available`, `memory`, `bifurcation` and `test_md_bundle_sync` lines among the progress lines.
-- Every line carries `v` and `ts`, and the first line is `stream_start` with `cli_version` and `surface`. Verified for `run`, `testmd` and `testrun`.
-- Progress lines in a plain `run` are untyped `{step, status, remark}`. The names `step_start`, `step_end` and `step_event` describe the inner stream of `testmd`.
-- The same failure is named differently by surface. `test_md_done.overall_status` said `failed`, the evidence pack said `broken`, and `testrun_summary.totals` counted `failed`. Read `failure.yaml` to learn why.
-- Always check the exit code too. A refusal can exit without the normal terminal event.
-- Documented, not reproduced: with a terminal on stdin, `testrun run` waits for a keypress, so end its lines in `< /dev/null`.
-- Documented, not reproduced: `ask_user` prompts are disabled when stdin is not a terminal, so write objectives that never need an answer.
+`--task-skills` is present as experimental. Its behavior has not been evaluated here and Raising Kane does not depend on it. Experimental WebSocket/SSE capture flags are on one-shot `run`; do not assume they are valid on saved/suite commands. The installed `run` help includes `--chrome-profile`, while the inspected `testmd run` help does not; saved flows can declare supported root browser settings or attach through CDP.
 
-**Other signals.** Every stream is also written to `<session_dir>/events.ndjson`. A live run leaves a pointer file at `~/.testmuai/kaneai/sessions/active/<pid>.json`, so another process can follow it. Hints such as `evidence: view locally with ...` go to stderr, not stdout.
+## 6. Practical runtime command patterns
 
-**Live event stream.** With `testrun run --stream-members`, a 5-member suite produced 161 stdout events in 25.6 seconds: a plan, a start, a member start and progress event per member at 0.7 s, 135 per-step member events as the run went, member ends at about 23 s and a summary at 24.9 s. Events arrive during the run, in bursts, not at the end. On a remote grid the per-member detail arrives only after the job ends and `testrun_progress` is not emitted (documented, not tested).
+These examples assume an already authenticated, worker-owned browser and prepared synthetic source. URLs, IDs, files and ports are illustrative. They are not a complete integration or commands to execute against customer accounts.
 
-## Evidence packs and files on disk
+### Observe a source review
 
-Every run seals one `.evidence` file, a plain zip you can read with `unzip`, and that file is the only place run logs now live.
+```bash
+kane-cli run \
+  'Open {{review_url}}. Verify the displayed order is {{order_id}}. Store the refund destination as refund_destination. Store the deduction as deduction. Verify the review summary is visible. Do not submit.' \
+  --variables-file ./runtime/task-values.json \
+  --cdp-endpoint http://127.0.0.1:9331 \
+  --mode action --agent --max-steps 20 --timeout 120
+```
 
-**Inside a pack** (per test, under `tests/<test-id>/`):
+An illustrative variables file is:
 
-- At the root: `run.yaml` (title, status, `environment.run_kind` such as `replay`, `environment.origin` such as `testmd`, and `totals` of passed, failed, broken and skipped) and a run-level `failure.yaml` when something failed.
-- `test.md` and `result.yaml` (status, a per-step list with kind and duration, user and project IDs, and `environment.model`, which read `v16-alpha`).
-- `steps/<n>-<flow>-<m>/`, for example `1-0-1/`, with `screenshot.jpg` (a JPEG, not a PNG), `step.json` (kind, status, summary, duration, URL, action ID) and, on action steps, `annotated.png`.
-- `logs/` with `<n>-actions.ndjson`, `<n>-console.ndjson`, `<n>-network.har` and `<n>-run.log` per run index, plus `runner-stderr.log`, `tui.log` and `meta.yaml`. For a local page the HAR was about 1 KB and the console files were empty; how logs are attributed to steps was not checked.
-- `auteur/execution.json`, the full execution trajectory.
+```json
+{
+  "review_url": {"value": "http://127.0.0.1:4101/returns/draft/demo-1"},
+  "order_id": {"value": "DEMO-ORDER-1"}
+}
+```
 
-`failure.yaml` holds `error.type` and `error.message`, `page_state`, pointers into the console and network logs, and a `triage` block with a root cause, category, confidence, severity and a suggested fix, written by an agent named `v16-investigation/replay`. Two messages seen: `assertion_failed: @ step 11` for a genuine wrong total, and `replay_dispatch_error: TargetClosedError` when a concurrent run closed the browser. Both were recorded as status `broken`, so the message is what separates a found bug from an infrastructure error. In these runs the triage named the real bug ("Cart total includes an unexplained $2 charge"). The docs advise treating it as a lead, not an instruction.
+Pass secrets through the documented secret mechanism and keep runtime files outside committed artifacts. When implementing the worker, spawn the CLI with an argument array instead of constructing a shell command from the user's text.
 
-**Useful commands:** `unzip -l <pack>`, `unzip -p <pack> "tests/*/result.yaml"`, `kane-cli evidence serve <pack>` (local server, nothing uploaded), `kane-cli evidence validate <pack>`, `kane-cli evidence merge <packs> --run-id <id>`.
+### Check the current page without navigation
 
-**Where files go**
+```bash
+kane-cli run --analyzer-only --agent --allow-missing-url \
+  --cdp-endpoint http://127.0.0.1:9331 \
+  --condition 'The complete review for DEMO-ORDER-1 is present' \
+  --condition 'The refund destination is Original payment'
+```
 
-| Path | What | Commit it? |
-| --- | --- | --- |
-| `output-<name>/` next to a test | Recordings and `Result.md` | Yes |
-| `.testmuai/evidence/*.evidence` | Sealed packs for named runs, testmd and testrun | No |
-| `.testmuai/context.md` | Project notes for the agent | Yes |
-| `.testmuai/variables/*.json` | Project variables (mark secrets with `secret: true`) | No secrets |
-| `.testmuai/tests/` | Tests recorded with `run --name` | Move into the repo |
-| `.context/` | Assurance store, append-only and single-writer | No. Never merge it with git. |
-| `~/.testmuai/kaneai/sessions/<id>/` | Session log, `events.ndjson`, the pack | No |
-| `~/.testmuai/kaneai/` | `config.json`, `tui-config.json`, `global-memory.md`, `profiles/`, `chrome-profile/`, `variables/` | No |
+Inspect every `condition_results` value. This command may exit zero even when the second condition is false. For the demo's visibly failed Kane run, use a normal validation objective with a failing assertion instead of displaying analyzer exit zero as a failure.
 
-## Parallelism: what works and what breaks
+### Execute a recorded validation phase
 
-Use `testrun run --parallel N` for concurrent browser runs. The original notes reported interference between standalone `testmd run` processes; the fresh check below also had one standalone failure.
+```bash
+kane-cli testmd run ./flows/return_validate_test.md \
+  --cdp-endpoint http://127.0.0.1:9331 \
+  --variables-file ./runtime/task-values.json \
+  --agent --no-adaptive-heal
+```
 
-| Approach | Result | Verdict |
-| --- | --- | --- |
-| 5 concurrent `testmd run`, inline `--variables`, default profile | The good build failed at step 2; failing steps differed from solo runs | Do not use |
-| Same, with `chrome_profile:` set per copy | The good build failed at step 1 in 0.2 s, on the `{{global.base_url}}` navigation | Do not use |
-| Same, with `base_url` in each copy's frontmatter and its own profile | The good build still failed at step 1 | Do not use |
-| 2 concurrent `testmd run` of a clean recording, no variables | Both failed at step 1 | Do not use |
-| `testrun run --parallel 5`, five copies of the test, each with its own `base_url` in frontmatter | 35 s wall, good build passed, all 4 broken variants failed | Use this |
+The referenced file must actually exist and express the current expected values. `--no-adaptive-heal` belongs to saved execution; an earlier attempt to pass it to one-shot `run` was rejected. No such flow files were created or executed by this documentation update.
 
-**Reported cause in the original field notes.** Sampling Chrome while two runs overlapped showed both launching with `--remote-debugging-port=9222`, each with its own temp profile. They share one debug port and attach to each other's browser. A pack from the five-way run recorded `replay_dispatch_error: TargetClosedError: ... browser has been closed`, status `broken`. A per-run profile therefore does not help. The docs say `testrun` gives each worker an isolated Chrome, and it worked with 5 members, but its ports were not inspected. Untested alternative: start your own Chrome per run on distinct ports and pass `--cdp-endpoint`.
+## 7. Parse completion by command, not by color or prose
 
-**Local cap.** Local parallelism is capped at 9 Chromes by the 9222-9230 port range. In a 16-member run, 9 passed and 7 ended `broken` with "CDP ports 9222-9230 are in use". More needs `--remote`, which needs a HyperExecute plan.
+For one-shot `run`, use the terminal `run_end` result and process exit. For `testmd run`, use `test_md_done.overall_status`; embedded `run_end` events can end individual steps. Local suites use `testrun_done`; remote execution also has `remote_done`. Generation emits `generate_done`. Assurance has its own envelope and terminal `done`; shared-project sessions can finish without being saved.
 
-**Suite mechanics (verified).**
+Always handle missing terminal events, nonzero exits, malformed output and canceled processes. Progress is useful for display but does not authorize the next transaction phase. Tolerate unknown event types and preserve raw NDJSON for diagnosis.
 
-- Each member is its own `_test.md` file, with its own `output-<stem>/` folder copied from the recording. `<stem>` is the file name without `_test.md`, so `m0_test.md` needs `output-m0/`.
-- Per-member values (URL, email) go in each file's frontmatter `variables:`.
-- Easiest way to build a variant suite: author once, copy the file and its output folder N times, then edit the variables.
+Classify business outcomes separately from execution outcomes: passed required checks, explicit constraint conflict, automation failure, source unavailable, or ambiguous submission. A partial extraction from a failed job may be useful diagnostically; it is not a successful phase result.
 
-**How to set up a variant suite**
+Typical execution exits are 0 passed, 1 failed, 2 setup/usage/error, 3 canceled/timed out. Analyzer and assurance are exceptions with their own contracts. Do not write a single universal “exit zero means safe” handler.
 
-1. Author the test once on the good build, with the URL in a `{{base_url}}` variable.
-2. Copy the test file and its `output-<name>/` folder once per variant (`good_test.md`, `variant1_test.md`, ...), renaming the output folder to match.
-3. Put each variant's `variables: base_url: value: http://localhost:<port>` in its own frontmatter.
-4. From the folder that holds them, run `kane-cli testrun run --parallel 5 --no-adaptive-heal --headless --agent < /dev/null` and read `testrun_member_end` per file.
+Use a worker-wide deadline as well as CLI limits. In a prior rc.3 fixture, `--timeout 150` accompanied about 192 seconds from stream start to final event. After killing a worker, assume the source may still have changed and reconcile. [Output and command completion](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/running-tests.md).
 
-**Limits not yet measured:** how many workers one laptop sustains, and what 20 or more members do to Chrome memory.
+## 8. Browser state, task context and user intent are different
 
-## Measured results
+**Browser state** includes cookies, tabs and the current source page. Sequential steps within a saved execution share a browser. A worker-owned Chrome can be attached through CDP for separate bounded jobs. For Raising Kane this is a proposed integration, not a demonstrated commercial-session handoff.
 
-Strict replay failed on every real bug in 20 to 35 seconds, and healing passed the one cosmetic change. These runs used a tiny shop app with a good build and four variants: no email validation, wrong cart total, hidden "Add to cart" button, and a renamed button label.
+**Kane context** supplies background and extracted information. `--session-context` does not restore Chrome or authenticate a new profile. Preserve values explicitly; the earlier VisitFit fixture passed a stored value into application code, which constructed the next objective.
 
-**Timings**
+**Application intent** includes exact choices, exclusions, revisions and approval. Keep it in the app's durable database, not only model memory or shared context files.
 
-| Run | Wall time | Outcome |
-| --- | --- | --- |
-| Author 3-step flow on the good build | 120 s | passed |
-| Author 4-step flow with `{{base_url}}` | 101 s | passed |
-| Author a 1-step probe with `store as` and `--name` | 18 s run time | passed |
-| Replay on the good build, solo | 18 s | passed |
-| Strict replay, variant on the recorded port: no validation | 31 s | failed at step 2 |
-| Strict replay: wrong total | 35 s | failed at step 1 |
-| Strict replay: hidden button | 20 s | failed at step 1 |
-| Healing on, wrong total | 79 s | failed, recordings rewritten |
-| Run after that, `--url` pointed at the no-validation build | 84 s | recording rejected, all 3 steps re-authored, failed at step 2 |
-| Solo replay retargeted by `{{base_url}}` to the no-validation build | 26 s | failed at step 3, as expected |
-| Clean recording, `--url` to a second server | not measured | passed, but every request went to the original server |
-| `testrun --parallel 5`, healing off | 35 s | good passed, 4 variants failed |
-| `testrun --parallel 5`, healing on | 96 s | good and renamed label passed, 3 failed |
-| Replay with only a loopback interface | 2 s | exit 2, "TMS did not return an org\_id" |
-| 2 concurrent `testmd run` | not measured | both failed at step 1 |
-| `--analyzer-only`, 3 conditions | 15 s | verdicts true, false, true; all correct |
+Use one active browser operation per task/account session. The return and service sources get isolated session ownership. On frontend reload, reconnect to the existing task; do not relaunch the task or resubmit. After browser loss, re-establish identity and reconcile the draft/operation before another write.
 
-**Strict versus healed outcome by variant**
+Within `_test.md`, root settings govern browser/auth context; an imported helper cannot create an independent authenticated role merely by declaring a different profile. [Composition](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/testmd/composition.md).
 
-| Variant | Real behavior change? | Strict | Healed |
-| --- | --- | --- | --- |
-| Good build | no | passed | passed |
-| No email validation | yes | failed | failed |
-| Wrong total | yes | failed | failed |
-| Hidden button | yes | failed | failed |
-| Renamed button label | no | failed | passed after 90 s |
+## 9. Variables, stored values and dates
 
-**Reading it.** In this sample, a replay that failed strict and passed healed was cosmetic drift, and one that failed both was a real regression. That is one cosmetic variant against three bugs, so treat it as a promising pattern to retest, not a rule. A passing replay took about 8 seconds for browser start plus about 1 second per step. A strict kill also reports as `broken` in the pack, so classify it by the `failure.yaml` message.
+The documented variable-file format uses entries with a `value` and optional `secret`. Values are strings; numbers are accepted as strings. Boolean/object/array values are not generic variable values. CLI/file overrides and test frontmatter have distinct resolution rules; do not assume arbitrary per-run overrides defeat the file's declarations.
 
-## Checking invariants under concurrency
+Stored values produced inside a run can be referenced as stored values in later instructions. Do not invent a `{{...}}` variable reference for a value that was never declared or extracted. Missing variables can produce warnings and literal text rather than preventing execution, so prevalidate required values in our controller.
 
-Several parallel browsers exercising a shared-state app (a counter that must not go negative, a vote that must count once) showed what Kane can and cannot judge. Small samples, one machine.
+Dataset syntax `${column}` refers to supplied rows. Datasets do not automatically generate meaningful personas or all combinations. Use explicit scenario inputs and separate expected outcomes.
 
-- Five parallel members against a naive shared-counter build hit the race in 4 of 4 runs, and a safe build held in 3 of 3. Eight parallel members also worked. Every member flow "passed" even when the build was wrong, so the invariant has to be checked separately.
-- A race needs a realistic window. A 2.5 second simulated step made 5 browsers starting within seconds collide every time.
-- A member flow can run a scripted attack playbook (vote, clear cookies and localStorage, reload, vote again) from plain English alone.
-- A count invariant alone can miss a provenance problem: totals matched while forged tokens were accepted. Only a counter of items whose source was never issued caught it. Define invariants about where each counted item came from, not just totals.
+Smart dates are documented in UTC. For appointments, supply the actual source timezone and explicit local date/time; “Saturday morning” must be resolved with the user/task context, not a server's UTC day boundary.
 
-| Method for checking the invariant | Outcome | Note |
-| --- | --- | --- |
-| One-shot run, compound assertion (value not negative and total at most 3) | failed twice, passed once | One false pass in 3 runs, so the verdict is flaky |
-| One-shot run, single clause: the value in the response body is greater than or equal to 0 | failed correctly with a fix hint; passed on the safe build | About 36 s |
-| Extract with `store as` and compare in code | exact values returned | Deterministic; the best option |
-| `--analyzer-only` on a JSON page via an external Chrome | `condition_results` false, false | Exit 0 and status passed; read the booleans |
-| One-shot run with an API call but no start URL | exit 1, status `failed`, reason "No start URL provided" | Looks like a failed check; read the reason |
+Nonsecret values and shared context may sync to Test Manager. Keep private user state out of broad project instructions. Secret masking does not guarantee that screenshots or server responses contain no personal data. [Variables and context](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/variables-and-context.md).
 
-**Takeaways**
+## 10. Checkpoints and corroboration
 
-1. Decide invariants in your own code from extracted values, and treat Kane's pass or fail as corroboration. Where a model-judged assertion matters, use one clause per assertion and require agreement across runs.
-2. Pass a start URL on every one-shot run, even one that only calls an API.
-3. Compute checks from the server's own state or summary endpoint, not from Kane's English verdict.
+Kane supports assertions, extraction and if/else conditions using visual, DOM, URL/title and DevTools evidence. DOM is the documented default with visual fallback; optional final validation is distinct from explicit end assertions. Do not replace exact checks with a broad final “looks good.” [Checkpoint overview](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/features/checkpoints/overview.md).
 
-## What Kane is good and bad at (measured)
+DevTools checks can query network data, console, performance, cookies, local storage and the test clipboard. The mechanism generates a query over captured data; it is not an omniscient backend inspection. [DevTools](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/features/checkpoints/devtools/overview.md).
 
-Kane is strong at checking stated expectations in a real browser and weak at discovering problems on its own. Small samples, one machine.
+Network capture resets per step. The documented cap is 5,000 requests, with oldest entries evicted, and response bodies capped at 64 KB; binary response bodies are skipped. Extract needed values in the same step. Match the intended endpoint, record and operation ID; a nearby HTTP 200 is not enough. Request inspection after submission detects an error but cannot prevent the already-sent transaction. [Network](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/features/checkpoints/devtools/network.md).
 
-**Good at**
+An objective can also explicitly make an API call, save its response and use it later. This is distinct from observing page traffic. A supported read endpoint can corroborate a saved result. A seeded record/reset endpoint belongs only to an authorized controlled environment. [API calls](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/features/api-calls.md).
 
-- Authoring a flow from plain English, then replaying the recording quickly.
-- Verdicts on explicit single-clause assertions: 5 of 5 correct across 5 shop builds (good and renamed-label builds passed; wrong total, missing validation and hidden button failed).
-- Extracting values with `store X as 'name'` exactly.
-- Browser actions such as clearing cookies and localStorage, reloading, and waiting out queues with loops.
-- Running parallel browsers through `testrun`, and replaying across re-implementations of the same UI when visible labels match.
-- Sealing a complete evidence pack whose triage usually names the real bug.
+**Fresh rc.3 observation:** an objective phrased as “Assert that the GET /api/draft response…” was interpreted as a new API call and failed on the relative URL. The revised instruction, “Using captured browser network traffic only, assert that the response body for the request whose URL ends with /api/draft… Do not issue a separate API request,” produced an actual `devtool_network` check. It passed, failed when the returned destination changed, and passed after restoration. A separate explicit API objective using an absolute URL successfully retrieved and extracted a synthetic receipt. Inspect the emitted actions; phrasing alone is not an enforcement boundary.
 
-**Bad at**
+Do not assume an exported HAR contains response bodies. Our initial pack recorded the draft request and HTTP 200 but omitted its body text, even though the server supplied JSON. The later successful network check exposed the actual response in its runtime context. Runtime capture and evidence-export completeness are separate checks.
 
-- Discovering bugs unprompted: unscripted exploration with bug detection on found 0 of 3 real bugs. It called a $22 total for two $10 widgets "correct" and blamed its own steps for a hidden button. It raised no false alarms on the good and renamed-label builds.
-- Classifying failures reliably: of 3 real bugs, missing validation and hidden button came back as confirmed application defects (`result_code` 740) with usable fix hints, but the wrong total came back as `agent_misstep`, blaming the agent.
-- Creative attacks: given only a goal, it found a cookie-based hole on a weak build by clearing cookies and revoting, but on a stronger build it tried a new tab and a reload, missed forged tokens, and reported "no". It runs a small playbook (refresh, clear cookies, new tab, double click) and misses anything else.
-- Compound English assertions: one false pass in 3 runs on a two-part check.
+Cookie/storage operations apply to the relevant origin. The clipboard is an isolated test clipboard, not the person's OS clipboard. These capabilities do not create a general session backup or undo facility. [Browser state](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/features/browser-state.md).
 
-**Design rules this implies**
+## 11. Saved flows, replay and healing
 
-1. Give Kane explicit expectations, one clause each. Do not rely on it to notice what is wrong.
-2. Treat `agent_misstep` or `automation_bug` classifications as inconclusive and re-run before blaming the product or the agent.
-3. Script the attacks or edge cases you care about; do not expect creativity.
-4. Decide numeric and provenance invariants in your own code from extracted values.
+Tests end in `_test.md`; helpers do not. Steps have H2 headings and a prose objective or one `@import` body. Imported helpers inherit the root browser and variables; mixing an import with prose in the same body is invalid. Do not mark a mandatory business check `optional: true`.
 
-## Mistakes to avoid
+First authoring records supported steps. Replay selection depends on recordings and unchanged objectives/configuration; an edit can invalidate later authorable steps. Adaptive healing can retry/re-author supported failures. Strict validation should preserve failure evidence and keep its expected outcome unchanged. [File format](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/testmd/overview.md), [replay](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/testmd/running.md).
 
-The first three give a false pass or a hidden bad result.
+The old experiment showed that changing `--url` did not retarget a recorded hard-coded navigation. Parameterize the source URL and record identity from the start. Do not infer that a rerun used new values merely because the command line changed; establish that during implementation.
 
-| Mistake | What happens | Fix |
-| --- | --- | --- |
-| Pointing `--url` at another build during a replay | The recording still goes to its original URL, so the replay passes against the wrong build (verified with server logs) | Use a `{{base_url}}` variable in step 1, or serve each variant on the recorded port in turn |
-| Reading exit 1 or `failed` as "a bug was found" | A browser closed by a concurrent run and a real assertion failure look alike; the pack calls both `broken` | Read `failure.yaml`: `assertion_failed` is a finding, `TargetClosedError` is infrastructure |
-| Leaving adaptive healing on for strict checks | A harmless UI change is healed and passes; a failing step took about twice as long in this sample | `--no-adaptive-heal` first, healing as a labelled second pass |
-| Healing against a bad build with your only copy of the test | The recording is rewritten and marked invalid, so the next run re-authors every step (84 s in this sample) | Give each variant its own copy of the test folder |
-| Running several `testmd run` processes at once, or trusting `chrome_profile` to isolate them | Standalone runs can interfere with each other; the original notes observed a shared debug port | Use `testrun run --parallel N` |
-| Giving `testrun` a folder, `--timeout` or `--variables` | `not a *_test.md file` or `unknown option`, exit 2 (verified) | Give file paths or none, and put values in frontmatter |
-| Giving `testmd run` a `--chrome-profile` flag | `unknown option`, exit 2 in about 1 second (verified) | Set `chrome_profile:` in the file's frontmatter |
-| Relying on a replay without internet | Exit 2 in 2 seconds: "TMS did not return an org\_id" (verified) | Keep the machine online |
-| Piping `testrun run` without `< /dev/null` | Documented: it waits for a keypress on a terminal | End every `testrun` line in `< /dev/null` |
-| Writing `read the price` instead of `store the price as 'price'` | Documented: Kane observes but saves nothing to `final_state` | Use the `store ... as '<name>'` pattern (verified: it filled `final_state`) |
-| Asserting the trigger, such as `verify the Submit button is visible` | Documented: it fails exactly when the action worked | Assert the outcome on the page |
-| Writing a long objective | Documented: runs drift and stall past about 15 steps | Split it and run the parts in parallel |
-| Expecting `ask_user` answers in CI | Documented: prompts are disabled without a terminal and the step fails | Write objectives that never need an answer |
-| A short loop on a long wait | The default cap of 5 iterations is exhausted and the flow moves on too early | Put a long wait inside the loop |
-| Trusting the `failure.yaml` triage blindly | It is a model's opinion; it was right in these runs, but the docs warn against pasting its fix into a test | Check the HAR, console and screenshot first |
-| Committing `.testmuai/evidence/` or `.context/` | Documented: large binary packs, and a corrupted single-writer store if merged | Commit only `output-*/` and `.testmuai/context.md` |
-| Assuming which account signed in | The wrong Google session can be picked up by the default browser | Check `kane-cli whoami` after every login |
+For Raising Kane, split discover/prepare, validate, correct, commit and confirm. Saved preparation must not run through user approval automatically. Never replay commit blindly after timeout. A successful navigation repair is not permission to substitute a different refund or booking.
 
-## How to use Kane
+Archive recordings with the applicable test when needed, but inspect and sanitize before publishing. Generated Playwright export is optional; an exported file is not a separate successful execution or proof that the user journey passed.
 
-Author each flow once and early, use strict replays for checks, and investigate failures before trying healing. Patterns 1 and 2 are built from measured behavior but were not run end to end with a coding agent; pattern 4 rests on documentation, and the GitHub Action was not run.
+Loops and conditional markers worked in small old 0.9.0 experiments, with a five-iteration cap observed there. Do not treat that observation as a freshly verified rc.3 contract. Prefer bounded missions and explicit waits; don't build long-running reconciliation around an assumed unlimited browser loop.
 
-**1. The agent loop**
+## 12. Explore in rc.3
 
-1. The coding agent changes code. A hook or the agent itself runs `kane-cli testmd run <file> --agent --headless --no-adaptive-heal` for the affected flow.
-2. Read only the terminal event (`test_md_done`) and the exit code. If it passed, stop.
-3. If it failed, open the pack: `failure.yaml`, the failing step's `annotated.png`, and the HAR and console slice for that step. Map the failing request or element to code and fix.
-4. Rerun. Cap the loop at 3 attempts, then hand a short evidence summary to a human.
+Explore walks a source, creates a map and designs tests. It does not execute those designed tests. A finding is not automatically a confirmed defect; completed exploration is not proof of business correctness.
 
-Keep the verifier independent of the builder: a verifier that was not scripted to pass is more trustworthy.
+A project retains one exploration of one URL. Pass `--project` explicitly. For Raising Kane's two sources, use distinct exploration projects and isolated working directories. An earlier public-URL attempt without explicit project selection was rejected because the default project already mapped a different localhost URL.
 
-**2. Variant suites (alternate builds, rewrites, PR builds)**
+Remote orchestration is the default; an agent launch can return after queuing. Local orchestration waits for its run, but completed/budget outcomes still are not task passes. Limits inspected in rc.3 were 1–4 local and 1–20 cloud exploration browsers; these are not general suite limits.
 
-- Author once on the baseline with `{{base_url}}`. Copy the test and its `output-<name>/` folder per variant, with each `base_url` in that copy's frontmatter.
-- Run `testrun run --parallel N --no-adaptive-heal`, then run only the failures again with healing on.
-- Read results from `testrun_member_end` and the summary; keep each variant's pack for evidence.
+Always specify the mutation policy for each run; defaults and most options are not retained. `read_only` has exceptions, including setup actions, allowed POSTs and source behavior that mutates through a page load. GraphQL reads can be blocked as POSTs. Review any allow-list rather than broadly permitting a host. Ctrl+C can detach from a remote run rather than stop it. [Explore](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/exploration.md).
 
-**3. Give Kane context**
+Illustrative local mapping command for a controlled source:
 
-- Put test accounts, routes, seeded data and known quirks in `.testmuai/context.md`. Let the builder agent keep it current.
-- Put secrets in variables marked `secret: true`. They are masked in logs.
+```bash
+kane-cli explore run --project YOUR_MERCHANT_PROJECT_ID \
+  --url http://127.0.0.1:4101 \
+  --prompt 'Map order review, return-method choices and the pre-submit review.' \
+  --policy read_only --deny 'Submit return' \
+  --local-orchestration --browser local --headless \
+  --max-parallel 1 --max-leases 6 --no-context --agent
+```
 
-**4. CI**
+Project and URLs are placeholders; read-only mapping may not reach every draft action. With cloud browsers, localhost needs a supported tunnel and its lifetime must cover the run. Do not combine a local browser with a cloud-only tunnel assumption.
 
-- Use the composite GitHub Action `LambdaTest/kane-cli/integrations/github-action/kane-cli-browser-run@main`. It needs `LT_USERNAME` and `LT_ACCESS_KEY` secrets, uploads the evidence pack and comments the verdict on the pull request.
-- Always pass `--headless`, authenticate with `--username` and `--access-key`, and gate on the exit code.
+Use Explore during source onboarding. In the product, target the known task rather than explore the entire site per customer. Model interpretation of the map still needs reviewed semantics for approval and consequences.
 
-**5. Layered use**
+## 13. Shared projects: avoid state and evidence collisions
 
-- Use Kane as a verifier for generated code, as a performer that does tasks and extracts values, and as an application's own regression test.
+Profile project configuration, a folder's assurance link, and an explicitly selected exploration project are different things. A one-shot run can upload to the profile's project even when assurance work is linked elsewhere. Do not change global profile settings concurrently between workers.
 
-## Open questions and what was not verified
+A shared-project session finishing is not necessarily saved. Follow the actual save instruction and retain its result. `context pull --project …` can link a fresh directory and retrieve the project's tests; a first local execution may still need authoring. Read the pinned joining instructions rather than relying on older “only ingest/extract can link” prose in the same documentation.
 
-- **A concurrency alternative to `testrun`.** Whether one Chrome per run on distinct ports, passed with `--cdp-endpoint`, avoids the shared-port failure.
-- **Scale of `testrun --parallel`.** 5 to 16 members were tested. Laptop limits, Chrome memory use at 20 or more are unknown.
-- **Whether the healed-versus-strict split holds.** One cosmetic variant against three bugs is too small a sample.
-- **Log attribution on a real app.** The test app makes no network calls, so the HAR and console were nearly empty and per-step attribution could not be checked.
-- **Not run at all:** mobile and real devices, remote grid runs, Test Manager dataset rows, the assurance commands, the agent skill and status strip, the GitHub Action, and headless login with an access key.
+Shared assurance uses `.testmuai/assurance.json`; a local store uses `.context/`. They are different modes. Do not combine them casually or merge an append-only `.context/` store through Git. [Shared projects](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/assurance/shared-projects.md).
 
-## Reference
+A suite must belong to one organization/project. Evidence merge also rejects incompatible projects. If merchant and service evidence live in different projects, keep both original packs and a task manifest/ZIP. Do not rename a ZIP of unrelated packs to claim it is a single valid Kane pack. Select an actual primary pack for submission and link additional evidence.
 
-**Environment variables.** Consult the installed version's documentation before relying on these settings.
+## 14. Assurance, design, coverage and headless modes
 
-| Variable | Effect |
-| --- | --- |
-| `KANE_CLI_CHROME_PATH` | Chrome binary to use |
-| `KANE_CLI_SKIP_BROWSER_DOWNLOAD` | Skip the Chrome check, use `chrome` on PATH |
-| `KANE_CLI_CDP_TIMEOUT_MS`, `KANE_CLI_CDP_RETRIES` | Chrome start timeout (default 30000) and launch retries (default 2) |
-| `KANE_CLI_USER_AGENT` | Tags runs with the calling agent, for example `claude-code` |
-| `KANE_CLI_SYSTEM_NODE` | Use the system Node instead of the bundled one |
-| `KANE_SYNC_GIT_TOKEN`, `KANE_SYNC_S3_ACCESS_KEY_ID`, `KANE_SYNC_S3_SECRET_ACCESS_KEY` | Context sync credentials for CI |
-| `KANE_CONTEXT_GITIGNORE` | Set to 0 to keep `.context/` out of `.gitignore` handling |
-| `KANE_TESTRUN_MEMBER_DEBUG` | Show per-member output in `testrun` |
+Use reviewed task requirements to establish criteria and expected outcomes, then design bounded scenarios and run them. Generated designs are not executions. Pairwise/3-wise expansion is available for design; it does not manufacture customer personas or clone an authenticated source. [Design](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/assurance/design.md).
 
-**Sources**
+`--mode agent` in assurance is different from `--agent` for execution and from execution's `--mode action`. Assurance agent sessions can pause with exit 3 and need a resume/answer. CI and override modes have different decision policies. Consume the actual pending question and next-step contract; don't treat a pause or a finished unsaved session as complete coverage. [Automation](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/assurance/automation.md).
 
-- [Kane CLI repository](https://github.com/LambdaTest/kane-cli)
-- [Kane CLI on npm](https://www.npmjs.com/package/@testmuai/kane-cli)
-- [Kane CLI introduction](https://www.testmuai.com/support/docs/kane-cli-introduction/)
-- [Kane CLI skills for coding agents](https://www.testmuai.com/docs/kane-cli-skills.md)
-- [Kane CLI NDJSON agent mode](https://www.testmuai.com/blog/kane-cli-ndjson-agent-mode/)
+Coverage distinguishes execution evidence and design gaps. Proper test/criterion linkage is required. Shared project coverage can lag new runs by minutes and aggregate others' executions; local lenient views can count stale passed criteria while surfacing staleness. `cover gaps` availability differs by store mode. Do not display any of these aggregate percentages as this customer's verified receipt. [Coverage](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/assurance/coverage.md).
 
-Command output and timings above come from runs with `@testmuai/kane-cli` 0.9.0 in October 2026.
+The old guide's blanket “assurance costs credits” was too broad. Extraction/design/maintenance inference consumes credits; local listing/inspection/coverage operations differ. [Lifecycle and costs](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/assurance/overview.md).
+
+For Raising Kane, assurance is integration preparation and development coverage. Immediate task checks and per-claim receipts belong to our runtime controller.
+
+## 15. Evidence files and interpretation
+
+Evidence packs are sealed ZIP-format artifacts containing objectives, results, screenshots and execution logs. Session packs live under the Kane session directory; project-store copying varies: named one-shot sessions and saved/suite executions have documented behavior. Capture returned paths rather than assuming every run appears in the current folder.
+
+`evidence serve` exposes a sealed pack through a local viewer server; it is not a live unsealed screenshot stream. `evidence validate` checks artifact integrity/completeness, not whether the expected refund is true. `evidence merge` requires compatible sealed inputs. [Evidence guide](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/evidence.md).
+
+Keep failure and repair evidence, timestamps, objectives, version, task/intent revisions and operation identity. A readable receipt should link each required claim to its source observation. A missing field stays unknown.
+
+Inspect `failure.yaml`, the screenshot and relevant network/console records together. Prior triage sometimes contradicted the screenshot. `confirmed:false`, confidence, status and result-code family are separate signals. Result code 740 is a useful diagnostic lead, not independent proof of root cause; 330 is not proof the source was correct.
+
+Use synthetic customer data in public evidence. Secret-variable masking does not necessarily redact rendered personal information or arbitrary response bodies. A local viewer's no-upload behavior is distinct from normal execution's Test Manager upload behavior. [Test Manager integration](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/test-manager-integration.md).
+
+## 16. Concurrency, remote execution and mobile
+
+`testrun` gives desktop workers fresh isolated Chrome profiles. That is useful for independent fixture scenarios. It does not share a shopper login, private character knowledge or the exact current draft between workers. Different browser profiles can still hit the same server records; isolate source data too. [Batch runs](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/testrun.md).
+
+The old 0.9.0 separate-process collision and nine-browser limit are historical observations, not rc.3 throughput guarantees. For the proposed runtime, serialize jobs per task; give independently owned browsers distinct control endpoints rather than assuming safe automatic allocation.
+
+`--remote` moves supported suites to HyperExecute and requires its plugin/plan. CDP/WebSocket endpoints instead attach a browser to an execution still running locally. A successful dry run does not prove runtime authentication or source reachability. [Remote execution](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/remote-execution.md).
+
+Native mobile requires an app build and the appropriate device/environment. It does not mean automatic operation of any website in a consumer's existing phone session. Mobile, remote grids and large parallel scenario runs are outside Raising Kane's two-desktop-source MVP.
+
+## 17. Recorded observations: preserve their actual scope
+
+### 0.9.0 synthetic shop and concurrency experiments
+
+Small explicit checks detected injected wrong totals, missing validation and a hidden button. One-shot free exploration missed those defects. Passing replay commonly took 14–18 seconds with zero measured credits; failing replay and healing took additional time/credits. Several parallel buyers exposed overselling in a naive fixture. Those findings concern tiny controlled applications, not general reliability, load capacity, security or current-release pricing. Exact measurements, scripts and limitations remain in the [archive](docs/raising-kane/kane-cli-field-guide-0.9-historical.md).
+
+### rc.3 wrong-total fixture
+
+A bounded Explore run inspected very little and reported a missing HTML language attribute; it did not establish the requested arithmetic result. An explicit assertion failed against the wrong total. One root-cause explanation contradicted the screenshot. A corrected fixture passed; a subsequent recorded replay passed; restoring the wrong total failed the unchanged strict check. This supports explicit assertions and artifact inspection, not a broad detection benchmark. [Research record](docs/raising-kane/kane-community-agent-research.md).
+
+### rc.3 project isolation failure and public-site limitations
+
+A public-calendar exploration without an explicit project was refused because the selected project already belonged to a localhost URL. No public-site browser journey occurred. [Explorer record](docs/raising-kane/kane-realworld-explorer.md).
+
+Earlier IKEA exploration notes recorded navigation drift and no correctness assertions. They do not establish an external consumer integration. Avoid treating a list of blocked background requests as confirmed product defects. [Capability review](docs/raising-kane/kane-capability-product-review.md).
+
+### rc.3 contextual VisitFit fixture
+
+A short extraction passed in 22.8 reported seconds and supplied `booking_end = 12:00`; Python calculated the next allowed time and constructed a subsequent objective. The scenario initially failed on an accidental JavaScript escaping bug. The coding agent read Kane's console finding, repaired the fixture and reran the same objective successfully.
+
+The successful scenario took 177.7 reported seconds, about 192 seconds wall time despite `--timeout 150`. An intermediate disabled-state assertion had passed on the broken page, while the overall run failed. Lessons: explicit cross-job state, independent arithmetic, existence before disabled-state checks, whole-job completion and external deadlines. All travel/weather data was fictional. [Full experiment record](docs/raising-kane/visitfit-commitment-workflow-check.md).
+
+### rc.3 role-handoff attempt
+
+The client run failed after about 87.7 seconds wall time when its step budget ended before final verification, although the source request had been saved. The controller did not start the manager. This demonstrates that failed execution can have effects; it does not establish two-role handoff. Historical local records: `/tmp/kane-role-spike/summary.json` and `run.py`. No retry is performed by this update.
+
+## 18. Raising Kane: runtime design for two websites
+
+**Website one:** merchandise return. Preserve the exact returned line/quantity, jacket exclusion, original-payment preference, chosen method and disclosed deduction.
+
+**Website two:** home-service rescheduling. Preserve technician, service and address, require the requested local time window and no added fee, and keep the existing booking until the approved replacement commits.
+
+Both are working sandboxes proposed by the [project brief](docs/raising-kane/raising-kane-project-brief.md), not completed integrations. The same controller/UI serves both; each has a source-specific adapter, record schema, browser session and checks.
+
+Use bounded phases:
+
+1. Observe the exact account/record and resolve the user's intent.
+2. Ask for missing input and discover supported choices.
+3. Prepare a reversible draft or quote; preserve earlier constraints.
+4. Validate the current draft against exact expected values.
+5. If conflicting, withhold submission, correct an allowed draft action or ask the user, and validate again.
+6. After explicit matching approval, commit through the supported source boundary.
+7. Reconcile the operation and verify the saved record.
+8. Persist a claim-by-claim receipt, including unknown/pending outcomes.
+
+Use browser calls for observations and actions, not every keystroke or explanation. Fixed UI components render structured options. Do not build a second coding agent to generate that interface.
+
+## 19. The failed Kane case we must demonstrate
+
+In the merchant sandbox, changing to printer-free return deliberately resets the refund destination to store credit. The validator's expectation remains Original payment.
+
+The validation job must produce a genuine failed assertion/result. Do not silently fix inside that same validator, use an analyzer exit-zero result as a fake red run, or fabricate an evidence pack. Retain the failed run and show that no commit was authorized. Correct the draft in a separate job and rerun the same expected check; retain its green result. Then obtain the exact proposal approval and complete submission/confirmation checks.
+
+A strict saved validator can disable adaptive healing to preserve the observable failure. An explicit one-shot assertion can also serve; don't pass the saved-flow-only flag to it. The expectation must not be rewritten to match the wrong destination.
+
+Label the challenge as intentional fault injection. Whether Kane detects it remains to be demonstrated. Runtime correction is distinct from a coding agent changing implementation after a Kane result; the hackathon asks for the latter interaction too.
+
+## 20. Application contracts Kane cannot supply
+
+**Atomic approval:** the controlled source binds a grant to the exact draft version, canonical payload digest, intent revision and operation ID. The source checks the grant and unchanged draft, creates/updates the record and consumes the grant in one database transaction. Browser checks before that transaction do not close the race by themselves.
+
+**Duplicate prevention:** persist an operation ID before the first commit. The source uniquely records it with the request digest and result. Same-key/same-payload repeats return the original result; a different payload is rejected. After timeout, look up the operation. A missing result can race with a delayed request, so any permitted retry retains the same key. An arbitrary external merchant may not support this guarantee.
+
+**Appointment atomicity:** validate current slot availability and the existing booking revision in the same update transaction. Keep exactly one active booking. If no matching slot exists, leave the original intact and request a user decision.
+
+**Session continuity:** worker-owned browser, task lock, exact account verification after resume, durable job state. Context JSON alone does not restore a browser. A frontend reload reads the existing task and receipt without issuing another commit.
+
+**Completion:** require matching approval, passed review validation, a committed operation ID, fresh confirmation of all mandatory business fields and successful final verification. A committed task with missing evidence is “submitted; verification incomplete,” not fully verified and not automatically resubmitted. A refund request is not a settled refund.
+
+The full schemas, fields and boundaries are in the project brief. These mechanisms are proposed application work, not built-in Kane guarantees.
+
+## 21. Source-specific mission examples
+
+These are objective templates, not executed tests or universal site automation.
+
+**Return validator:** inspect the identified complete review; extract the exact item IDs and quantities, return method, destination, currency, subtotal and fee; assert the approved fields and exclusion. No submission. Compare integer monetary values in application code.
+
+**Return confirmation:** open the exact operation's resulting request; verify request/order identity, returned lines, destination, method and amount. Preserve the corresponding submission response in the step where it is available. Confirm the jacket's relevant state against the baseline.
+
+**Appointment discovery:** inspect the existing booking and source timezone; store its version and details; enumerate the supported Saturday-morning slots and their actual technician/fee quotes. Ask for no booking/cancellation action in this phase, backed by the source's preparation boundary.
+
+**Appointment validation:** check the selected slot's exact local date/time, timezone, technician, service, address and additional charge. Inspect the still-active original booking. A 9 AM slot with a different technician and a 10 AM slot with a fee must not pass just because both are Saturday morning.
+
+**Appointment confirmation:** inspect the updated booking ID/version, approved values and active-booking count for this operation. Use source-side uniqueness/atomicity to prevent duplicates; browser evidence alone cannot guarantee them.
+
+Neither template assumes that a future real merchant uses the same terminology, URLs or internal API shape as the sandbox.
+
+## 22. Coding-agent feedback and demonstration evidence
+
+When implementation is authorized, keep a real record of the coding agent running Kane, reading its result and changing its next action or code. Verify the result again without weakening the requirement. Preserve any failure's provenance: accidental bug, deliberate mutation, unsupported source state or automation failure.
+
+For the live product, show both sources, the user's persistent constraints, the actual failed validation/correction, the appointment options and the final receipts. Replay may reduce waiting; it is not a guaranteed live runtime. Timestamp prepared state and label any compressed recording.
+
+The official rubric accepts a full green user journey as proof as well as a failure/green-rerun sequence. Raising Kane deliberately includes the latter to make the verifier's consequence visible. No score or win probability follows from feature count. [Official event](https://www.kaneclihack.sh/).
+
+## 23. October 24 extensive rc.3 validation
+
+The [validation report](docs/kane-validation/report.md) records the controlled experiments, commands, outcomes and remaining gaps. Runnable fixture code and selected evidence are in [the validation directory](docs/kane-validation/README.md). The tests use the installed `0.10.0-rc.3` binary, isolated local sites and owned Chrome profiles.
+
+Key observations already established:
+
+- Both a network-response check and a displayed-value check detected the injected Original payment → Store credit mismatch. Strict saved replays failed and passed again after harness restoration. This restoration is not an agent repair.
+- A browser's session cookie survived separate jobs attached to the same CDP endpoint. A fresh browser without that cookie failed the signed-in assertion as expected. Worker/crash recovery is a different, unverified capability.
+- Explicit booking extraction supplied values to a separate job through the returned `context` object and `--session-context`. The next job checked the booking ID, technician and time against those values.
+- Analyzer returned exit zero and `status: passed` with `condition_results: [true, false]`. Controllers must inspect the array.
+- A read-only Explore run mapped a route and aborted a write attempt with `policy_violation`; source counters remained unchanged. It ended at its lease budget with `complete: false`, despite exit zero. This is a partial map, not a full passing user journey.
+- Two recorded tests passed through a two-worker `testrun`; this does not establish authenticated role isolation or production throughput.
+- Evidence validation accepted a pack missing a screenshot with a warning; removing `run.yaml` made validation fail. Inspect diagnostics and check required artifacts separately.
+- Merging the failed and passing attempts preserved nested attempt evidence, but the merged top-level totals reflected the latest passing attempt. Keep original packs and an explicit failure-to-rerun index.
+- Same-URL browser reuse exposed stale-state validation. A mandatory freshness step belongs before checking the draft, not merely before obtaining approval.
+- Adding an explicit refresh produced the expected parameterized replay results: changed expected/source values passed, and a mismatched expectation failed. The earlier failure was not proof of broken variable substitution.
+- A separate synthetic repair experiment completed the full Kane action → red validator → Kane correction → unchanged green validator sequence. This is stronger evidence than the earlier harness-restored cases, but still not the complete product.
+- With assertion-failure mode `continue`, an impossible amount check led to an unrequested draft-changing action before the overall failure. Use `stop` for validators and enforce allowed actions in application/source code; stopping on failure does not undo earlier actions.
+- Local assurance ingestion, extraction, design and generated-test execution succeeded after repairing dependency resolution in the isolated installation. Coverage moved from 0/5 to 5/5 generated criteria. Shared-team save/pull was not exercised.
+- Some cloud evidence ingests failed with 422/missing-blob errors although local packs existed. Code export also failed with 422. Do not substitute a presumed cloud link for a checked local artifact.
+
+These are synthetic feature tests. They do not mean Raising Kane's complete two-website product, atomic approvals, idempotency or final receipts have been implemented or validated.
+
+## 24. What remains unverified for this project
+
+- Both source workflows running end to end through Raising Kane.
+- Product-level browser/session ownership and worker restart recovery; basic same-CDP continuity passed in a synthetic fixture.
+- Correct parameter substitution and structured extraction on the chosen replay paths.
+- The exact NDJSON normalization and evidence correlations in our worker.
+- Atomic grants, idempotent commits, slot races and timeout reconciliation in the sandbox implementation.
+- Real commercial-site authentication, source stability and submission enforcement.
+- Full workflow latency, credit consumption and fit within a live stage slot.
+- Any benefit to real users, accessibility effectiveness or willingness to pay.
+
+Documentation and earlier fixture results inform the implementation; they do not satisfy these project acceptance criteria.
+
+## 25. Sources and maintenance
+
+All CLI feature references above are pinned to `0.10.0-rc.3`. Recheck the registry tags and command-specific help before adopting another version; retain old artifacts with their actual version. A docs/help mismatch is an implementation question, not permission to assume a flag exists.
+
+Primary project references:
+
+- [Raising Kane complete project brief](docs/raising-kane/raising-kane-project-brief.md)
+- [Feature audit](docs/raising-kane/clearpath-kane-feature-audit.md)
+- [Independent Sol review](docs/raising-kane/clearpath-sol-review.md)
+- [Original experiment archive](docs/raising-kane/kane-cli-field-guide-0.9-historical.md)
+
+This repository maintains the current guide at `kane-field-guide.md`. The prior repository guide, including macOS reproduction checks, is preserved in [its archive](docs/raising-kane/kane-field-guide-repo-historical.md). The packet filename redirects here. Historical measurements and abandoned idea rankings are retained as history.

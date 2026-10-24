@@ -6,13 +6,15 @@ Tell Raising Kane what you need. Make the choices that matter. See what the webs
 
 Complete product, scope, architecture and hackathon demo brief. October 24, 2026.
 
-**Status:** proposed implementation, informed by the Kane CLI 0.10.0-rc.3 documentation audit and independent product review. This document does not claim that Raising Kane has been built, that a commercial merchant integration works, or that the proposed runtime has been measured. No new tests or implementation were performed to produce this brief.
+**Status:** proposed product implementation. The repository still contains the React starter. Extensive synthetic rc.3 feature experiments now support specific browser, validation, correction and assurance patterns; see [measured results](../kane-validation/report.md). They do not prove the full product, commercial integration or transaction contracts. The [workflow and demo decision memo](workflow-and-demo-design.md) refines the entry experience and two-site presentation.
 
 **Review revision:** specifies the sandbox's atomic approval/commit contract, stable operation keys for duplicate prevention, browser continuity, mandatory completion evidence, persisted receipts, and a deliberately failing Kane validation followed by a green rerun. These are implementation requirements, not results already obtained.
 
+**Two-website scope revision:** the core demo now includes two independently working source websites and different workflows: a merchandise return and an existing home-service appointment change. The second website is essential scope. Earlier research recommending one source is superseded by this decision; arbitrary-site support remains outside scope.
+
 ## 1. The project in one paragraph
 
-Raising Kane turns a supported, complicated web task into a short sequence of understandable decisions. A person describes what they want, and an OpenAI-powered agent uses Kane CLI to inspect and operate the original website. Raising Kane preserves the person's choices as the website introduces new steps and conditions, checks for mismatches before approval, and verifies the resulting record after submission. The person leaves with a completed request, a readable receipt and a clear next step. The first implementation handles a partial merchandise return in one supported merchant flow.
+Raising Kane turns a supported, complicated web task into a short sequence of understandable decisions. A person connects a supported website and chooses from its tested task catalog, or describes what they want within that supported scope. An OpenAI-powered agent uses Kane CLI to inspect and operate the original website. Raising Kane preserves the person's choices as the website introduces new steps and conditions, checks for mismatches before approval, and verifies the resulting record after submission. The person leaves with a completed request, a readable receipt and a clear next step. The hackathon scope has two supported source websites: a partial merchandise return and a constrained home-service appointment change.
 
 ### The 30-second pitch
 
@@ -42,7 +44,9 @@ Raising Kane owns the user's task from request through completion. It provides a
 
 The workflow is how the product delivers that outcome. The source website remains the system where the actual request exists.
 
-## 3. The first supported task
+## 3. Two supported websites and workflows
+
+### Website one: merchandise return
 
 **Partial return of an order containing multiple items.**
 
@@ -66,11 +70,39 @@ The source includes one deliberately configured behavior: changing the return me
 
 A commercial integration would materially strengthen the product evidence, but is not established or included in the baseline completion claim.
 
+### Website two: home-service appointment change
+
+Use a distinct home-service website with an existing washing-machine repair appointment. The user asks:
+
+> Move my Friday afternoon repair to Saturday morning. Keep Maya as the technician, keep the same service and address, and do not add a fee.
+
+Kane opens the actual booking, reads its details, enters the rescheduling flow and inspects the calendar and resulting quotes. The synthetic source offers these Saturday options:
+
+- 9 AM: another technician, no extra fee.
+- 10 AM: Maya, a $25 additional fee.
+- 11 AM: Maya, no extra fee.
+
+The first two options violate different constraints. Raising Kane explains why 11 AM fits, prepares that proposal and asks for approval. The expected result comes from the user's request and the observed source terms; it must not be hardcoded as “always pick 11 AM.”
+
+Until approval and atomic commit, the Friday appointment remains active. After approval, the source atomically updates the existing appointment when its current version and slot availability still match. Kane verifies the resulting appointment, technician, service, address, local date/time, timezone and zero additional charge. The receipt shows the old and new time, booking identifier and an optional calendar download generated from those verified values.
+
+This is a calendar/availability workflow that changes an existing record. The merchandise flow creates a return request and produces return instructions. The two source apps must have distinct interfaces, record models and workflow definitions, with separately isolated data and sessions. A shared underlying technology stack is acceptable; duplicating the same form under two logos is not the proposed demo.
+
+If no slot satisfies all constraints, Raising Kane leaves the existing booking unchanged and asks which constraint the user wants to revise. It must not silently replace the technician, add a charge or cancel the old booking. Slot loss at commit rejects the proposal and returns to source inspection and review.
+
+### Shared product and support boundary
+
+The same Raising Kane interface and controller operate both workflows. Source-specific adapters define the supported entry points, record fields, draft actions, approval boundary and result checks. The user chooses a supported source/task, rather than the product promising arbitrary URLs.
+
+Both source websites are working, labeled sandboxes in the baseline: “Merchant sandbox — simulated order” and “Service sandbox — simulated appointment.” Two commercial-site integrations are not established. Each source should have its own visible origin in the demonstration; use separate local ports or hostnames if running locally.
+
 ## 4. The complete user journey
+
+The detailed journey below uses the return example. The service task follows the same inspect, clarify, prepare, verify, approve, commit and reconcile lifecycle with appointment-specific fields.
 
 ### Start
 
-The user opens Raising Kane and sees the supported task and source. They enter the request or select a plainly labeled example. An example fills the input; it does not fabricate an execution result.
+The user connects or selects a supported website and sees its tested task catalog. They choose a task and its relevant records; they can also enter a request or select a plainly labeled example. An example fills the input; it does not fabricate an execution result.
 
 Raising Kane starts a task and shows honest progress while Kane reads the source. A prepared demo session is identified as prepared.
 
@@ -146,7 +178,7 @@ The headline is **“Return requested; refund pending.”** A claim that lacks e
 
 ### Task start
 
-A concise explanation of the supported task, a request field, and the source/integration status. Keep the primary action obvious. The MVP should not advertise arbitrary website support through an unrestricted URL box.
+A website selector or URL entry identifies a supported integration. Show its small tested task catalog, current sign-in status and integration readiness. A person can choose a task before composing a goal; natural-language input remains optional. Unknown sites can have a read-only discovery preview, but no enabled transactional task until its integration is reviewed and rehearsed. Keep the primary action obvious. See [the complete website-first journey](workflow-and-demo-design.md).
 
 ### Task workspace
 
@@ -179,6 +211,8 @@ Kane is present during the user's actual task. Its observations affect questions
 ### Explore: learn the supported source
 
 Use Explore during integration preparation to identify screens, paths and conditional behavior, and to inform checks. Review the discovered map against the intended task. Mapping is not proof of exhaustive coverage, permission or reversibility. Exploration and execution remain separate activities. [Explore documentation](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/exploration.md).
+
+Rehearse supported branches on resettable fixtures before enabling a task in the catalog. Distinguish integration rehearsal, current-session discovery, exact-draft verification and final-result verification. Never run a mutating scenario suite on a person's account merely because they connected a URL. Runtime validation must explicitly refresh/refetch the review; our rc.3 experiments found that a same-URL saved check could otherwise read stale rendered state. Source version binding remains mandatory at commit.
 
 ### Browser operation: carry out the task
 
@@ -242,7 +276,7 @@ A small persistent store is sufficient. Each task records its source, status, in
 
 ### Source portal
 
-Owns order data, draft state and committed returns. In the sandbox, commit enforcement checks approval for the exact draft revision. The worker cannot create approval merely by clicking an earlier source control. Raising Kane's user approval is recorded by trusted application logic.
+Each source owns its business records, drafts and committed operations: orders and returns for the merchant; appointments and available slots for the service portal. In the sandbox, commit enforcement checks approval for the exact draft revision. The worker cannot create approval merely by clicking an earlier source control. Raising Kane's user approval is recorded by trusted application logic.
 
 External sites do not automatically expose this enforcement. Until the supported external boundary is established, use a human final submit and state that scope explicitly. Kane's `action` mode is not a transaction-approval firewall.
 
@@ -286,7 +320,7 @@ After a timeout, reconcile before resubmitting. Before declaring an exclusion co
 
 ### Contract A: atomic approval and commit in the sandbox
 
-The merchant database is authoritative for drafts, approval grants and committed operations. Each semantic draft edit increments a monotonic `draft_version`. The canonical proposal includes source/account identity, order ID, exact line IDs and quantities, reason, return method, refund destination, currency, refund subtotal, deduction, resulting amount and any material instructions the user approved. Monetary values use integer minor units. Store a deterministic digest of that proposal; an amount-only or timestamp-only approval is insufficient.
+Each source database is authoritative for its drafts, approval grants and committed operations. The following description uses the merchant case; the service portal applies the same grant/version/idempotency mechanism to appointment updates. Each semantic draft edit increments a monotonic `draft_version`. The canonical proposal includes source/account identity, order ID, exact line IDs and quantities, reason, return method, refund destination, currency, refund subtotal, deduction, resulting amount and any material instructions the user approved. Monetary values use integer minor units. Store a deterministic digest of that proposal; an amount-only or timestamp-only approval is insufficient.
 
 After the user approves and the matching Kane validation passes, trusted controller logic registers an approval grant through a protected server-to-server path. It binds the proposal digest, draft version, intent revision, operation ID and validation-run reference. Browser-agent credentials cannot create or modify grants. The source checks the current draft when registering the grant and again when committing it. Changes to material terms invalidate its applicability.
 
@@ -300,7 +334,7 @@ An edit or revocation must be recorded at the source before Raising Kane acknowl
 
 Create and persist an `operation_id` before the first submission attempt. Carry it into the source draft/commit request. Enforce uniqueness by source account and operation ID in the merchant database. Store the request digest and committed request ID with that operation.
 
-A repeat with the same key and same payload returns the original result, including after the approval grant has been consumed. A repeat with the same key but a different payload is rejected. A genuinely revised proposal gets a new operation only after the earlier operation is conclusively uncommitted or otherwise resolved.
+A repeat with the same key and same payload returns the original result, including after the approval grant has been consumed. A repeat with the same key but a different payload is rejected. A genuinely revised proposal gets a new operation only after the earlier operation is conclusively uncommitted or otherwise resolved. For the service portal, the operation result identifies the updated appointment and its new version; retrying must not create a second booking.
 
 After timeout, reconnect and query the authoritative operation status. If committed, read its confirmation. If processing or unavailable, remain unresolved. If absent, a delayed first request could still arrive: any retry therefore uses the same operation ID and payload, never a fresh key. The source's atomic uniqueness contract handles two attempts arriving together.
 
@@ -320,7 +354,7 @@ CDP support is documented, but this multi-job integration remains unexecuted for
 
 ### Contract D: evidence required for completion
 
-Completion requires all of the following for the same task, operation and approved proposal:
+For the return task, completion requires all of the following for the same task, operation and approved proposal:
 
 1. An explicit user approval tied to the proposal digest and revision.
 2. A passing Kane review-validation result for that exact proposal; a failed or stale validation cannot authorize commit.
@@ -334,6 +368,8 @@ Correlate network evidence with the operation/request ID. If confirmation and re
 
 Optional facts such as an estimated bank settlement date may remain unknown. They are distinct from the mandatory submission-result fields. Persist the receipt fields and evidence references; do not depend on a temporary viewer URL as the only record.
 
+For the appointment task, retain the same approval, validation, operation and final-job evidence. Replace return-specific fields with the appointment ID, before/after revision, old and new local date/time, timezone, technician ID, service ID, address and additional charge. Verify that exactly one active appointment remains for the operation and that no independent cancel/new-book side effect was introduced. Slot availability and the old booking version must be checked in the same source transaction that updates the appointment; an earlier browser observation is insufficient to reserve a slot.
+
 ### Contract E: reload persistence is essential
 
 Task status, intent revisions, approval reference, operation ID, receipt and evidence references survive a frontend reload. This is baseline scope. Restoring a lost browser session without intervention and adding rich historical search are separate extensions. The earlier scope entry that deferred reopening after reload is removed below.
@@ -342,7 +378,7 @@ Task status, intent revisions, approval reference, operation ID, receipt and evi
 
 ### Essential: the complete vertical slice
 
-1. One Raising Kane task interface and one working merchant sandbox.
+1. One Raising Kane task interface and two working source websites: a merchant sandbox and a service-appointment sandbox.
 2. OpenAI-backed request interpretation and grounded question wording.
 3. One order with two distinct items and exact item selection.
 4. A required return reason and two supported return methods.
@@ -354,17 +390,20 @@ Task status, intent revisions, approval reference, operation ID, receipt and evi
 10. Honest progress, blocked states and reconciliation of uncertain submission.
 11. Public same-day code, run instructions, OpenAI usage and Kane evidence.
 12. Persisted task and receipt after frontend reload, without duplicate job dispatch.
-13. A documented injected failure that produces a genuinely failed Kane validation, followed by correction and a passing rerun of the same check.
+13. A documented injected return-flow failure that produces a genuinely failed Kane validation, followed by correction and a passing rerun of the same check.
+14. An appointment workflow with calendar/quote discovery, preserved technician/service/address constraints, atomic rescheduling and a verified booking receipt.
+15. Isolation between the two source sessions and data, with shared task orchestration and evidence presentation.
+16. A reviewed capability manifest and executed rehearsal for each enabled task, with separate live-task verification. Explore observations inform the manifests; they are not passing tests by themselves.
 
 The runtime network check should verify fields the sandbox actually exposes. It is a core demonstration goal, not permission to claim commercial-site support.
 
 ### Add after the full task works
 
-A recorded reusable journey; an Explore map that actually informed the integration; a small linked assurance definition; historical task search; and a polished evidence drawer.
+Broader scenario coverage, historical task search, and a polished evidence drawer. Keep the minimum task manifest, rehearsal evidence and live verification in the essential scope.
 
 ### Stretch features
 
-A second independently supported portal, a short task explanation in another language, an on-demand status recheck, or comparison of one additional reversible branch. Each must be labeled according to what runs. A second site is a substantial integration, not a cosmetic extension.
+A third independently supported portal, a short task explanation in another language, an on-demand status recheck, or comparison of one additional reversible branch. Each must be labeled according to what runs. Two source integrations are already essential scope; a third is deferred.
 
 ### Outside the hackathon scope
 
@@ -392,73 +431,68 @@ These are implementation acceptance criteria, not claims of checks already perfo
 - A source draft changed after validation is rejected atomically at commit, without creating a return.
 - A frontend reload recovers the current task and receipt without issuing another job or submission.
 - Source screenshots and worker progress are genuine and correctly labeled.
+- Both source workflows complete end to end, with different workflow definitions and source-derived results.
+- Rescheduling preserves the original appointment until approved commit, checks the current slot atomically and leaves exactly one active booking with the approved technician, service, address and charge.
+- An unavailable matching slot leaves the original appointment unchanged and asks for a user decision.
 - The repo includes a reproducible setup, the supported scope and the relevant evidence.
 
 For independent evaluation of the sandbox, inspect its persisted records and transaction history against the user-approved intent. The runtime agent should not obtain a scripted success answer from that evaluation mechanism.
 
-## 11. The four-minute demo story
+## 11. The two-website demo story
 
-The following is a presentation target. Actual browser duration is unmeasured. Prepare the shortest supported live path and label all prepared state. A full end-to-end recording provides backup, but must never be presented as a live run.
+**Opening line: “When websites raise hell, raise Kane.”**
 
-### Preparation
+The demonstration shows the same product handling two different source workflows. The return story proves detection and correction. The appointment story proves contextual selection and preservation of an existing commitment. Both must be implemented and capable of live end-to-end completion.
 
-Use a synthetic order containing red shoes and a jacket. The refundable subtotal for the shoes is $80 in this fixture; the supported printer-free method has a $5 deduction, producing a $75 expected refund. These are invented demo amounts, not merchant policy claims.
+### What the audience sees
 
-Prepare authentication and, if necessary for timing, an initial draft with the exact order and return reason already resolved. Show **“Prepared draft; no return submitted.”** Start from this state for the stage version; retain the complete journey for the longer recorded walkthrough and table demonstration.
+Raising Kane has two supported task entries: “Return an item” and “Change an appointment.” The central interface presents the current choice and persistent constraints. A source-evidence panel shows the distinct merchant or service website, with timestamps. A verification view explains matches and conflicts; the final task list contains two separate receipts.
 
-The source's deliberate challenge is that changing the return method resets the refund destination to store credit. Do not add several additional failures to the same story.
+Keep source observations genuine. There is no assumed live screenshot feed; show the latest completed observation unless a real feed has been implemented.
 
-### Required failure evidence before presenting the demo
+### Act one: the return that changed its terms
 
-Preserve the fixture configuration, objective, expected preference and actual source value. Run a bounded validator that explicitly asserts original payment on the conflicting draft; retain its real failed result and evidence. Confirm from source state that no return was committed. Let the runtime controller react to that failure, correct only the permitted draft choice and rerun the same validation. Retain the passing result, then perform the separately approved commit and final verification.
+The user asks: “Return the red shoes. Keep the jacket. Refund my original payment method.” They then add: “I don't have a printer.”
 
-This is an intentional fault-injection demonstration. The fixture creates the challenge; Kane must actually detect it. Do not fabricate a red status, alter the expected value, or represent the injected behavior as a spontaneously discovered production defect. If Kane does not detect the conflict, the demo readiness criterion has not been met.
+Kane operates the merchant's return flow. In the labeled fixture, switching to the printer-free method resets the refund destination to store credit. A separate validator explicitly checks the original-payment requirement and fails. Raising Kane withholds submission and shows the conflict. A correction job restores the intended destination, and the same validation passes before approval and commit.
 
-This sequence demonstrates runtime recovery. A separate coding-agent change based on Kane output is still required for the rubric's coding-agent interaction criterion. If that uses an injected development defect, label that provenance too. No actual failure, repair or rerun is claimed by this document.
+The fixture uses an $80 refundable subtotal, a $5 deduction and a $75 expected refund. These are synthetic demonstration amounts. The final source record and receipt show the shoes only, original-payment destination, deduction and return instructions. The jacket remains untouched.
 
-### 0:00–0:25 — show the evidence and the problem
+### Required failure evidence
 
-Open a genuine Kane report from a completed run. If a genuine development failure and repair exist, show that pair; otherwise show the completed journey evidence.
+Retain the fixture configuration, validator objective, expected preference, actual source value and real failed Kane result. Verify through source state that the failed validation did not authorize a return. Preserve the correction and passing rerun of the same assertion, followed by the separately approved submission and final verification.
 
-Say: “Raising Kane helps someone finish a complicated web task while preserving the choices they already made. This is our merchant sandbox. Here is the browser evidence behind the result.”
+Label this as intentional fault injection. Do not fabricate a red status, change the expectation to pass, or describe the seeded behavior as a spontaneously discovered production bug. If Kane does not detect the mismatch, the readiness criterion has not been met. A separate coding-agent response to Kane output remains necessary for that judging criterion.
 
-Move immediately to the working product and source portal.
+### Act two: a new appointment without losing the old one
 
-### 0:25–0:55 — establish the user's intent
+Switch to the distinct service website through the same Raising Kane interface. The user asks to move the existing Friday repair to Saturday morning, keeping Maya, the service and address, with no added fee.
 
-Show: “Return the shoes. Keep the jacket. Refund my original payment method.”
+Kane reads the original appointment and inspects the offered times and quotes. The UI explains why the 9 AM slot changes the technician and the 10 AM slot adds a fee. It proposes the observed 11 AM option, which matches all constraints.
 
-The persistent intent summary makes all three requirements visible. Show the prepared state honestly or resolve the order live if measured timing permits.
+Before approval, show that the original Friday appointment is still active. The user approves the matching proposal. Kane operates the source rescheduling action; the source checks the slot and booking version and updates the appointment atomically. Kane then reads the confirmation and verifies the exact new state. The second receipt shows the updated time, unchanged details and zero additional charge.
 
-### 0:55–1:30 — let the person change the task
+This act does not need another injected failure. Its value is making the agent select a valid option and preserving an existing booking until an approved change succeeds.
 
-Enter: “I don't have a printer.”
+### Close with both outcomes
 
-Kane operates the draft branch. The product reports actual progress. The new method appears with its observed deduction and instructions.
+Show the two completed tasks: the return receipt and the updated appointment. Each opens its source confirmation and evidence. Explain that source-specific workflows share the same intent, verification, approval and recovery mechanisms.
 
-### 1:30–2:20 — reveal the consequential mismatch
+Closing line: **“Two websites. Two different tasks. Your choices carried through, with evidence of the result.”**
 
-The check shows: “Refund destination changed to store credit.” Open the actual failed Kane validation result briefly; show that submission is withheld.
+### Four-minute submission video
 
-Explain: “The new return method is valid, but it conflicts with the earlier choice.”
+Target approximately 15 seconds for the Kane report and pitch, 100 seconds for the return, 100 seconds for the appointment, and 25 seconds for both receipts and the supported-scope statement. Trim waiting periods in the recorded video and label time compression; preserve real execution results and voiceover.
 
-Kane corrects the draft in a separate job. Raising Kane reruns the same validation and displays the restored destination with the passing result. Keep the original failure and correction available in the evidence history.
+This is an editorial plan, not a measured execution budget. Earlier Kane observations took tens of seconds to minutes. Do not promise that both entire workflows will execute within four uninterrupted live minutes.
 
-### 2:20–3:20 — approve and finish
+### Live table and stage demonstration
 
-The user reviews the exact proposal: shoes only, printer-free method, $5 deduction, $75 expected refund to the original payment method. They approve.
+At the table, be ready to complete both workflows live. Prepare authentication, synthetic records and any initial discovery explicitly labeled as prepared; no commit occurs during preparation. Present the full sequence with actual browser progress.
 
-Kane submits, checks the relevant transaction response and opens the resulting record. The product does not show completed until the required evidence is available.
+If the stage time limit cannot accommodate both complete live runs, choose live segments based on measured timings and explicitly label previously recorded or completed portions. Do not silently drop the second website from the product or present a static receipt as a fresh live result. The stage limit and actual timings remain to be established.
 
-### 3:20–4:00 — show the useful result
-
-Open the receipt and source confirmation. Show the request identifier, selected item, preserved refund destination and remaining drop-off action. The jacket remains outside the return.
-
-Close with: **“The website changed. The person's choices carried through. Here is the record of what actually happened.”**
-
-### If execution exceeds the slot
-
-Keep the live status truthful. Explicitly switch to a timestamped recorded completion if necessary, then return to the live task when it finishes. Do not fake instant execution, screenshots or a final result. A video-only demonstration weakens the completion score, so a reliably bounded live segment is important.
+A full recording is backup for service failure or a long run, not evidence that an unimplemented second workflow works. Neither source integration nor the failure/green sequence has been executed for this specification.
 
 ## 12. Evidence and judging strategy
 
@@ -480,7 +514,7 @@ The demo must show why verification changes the outcome. A successful form-fill 
 
 ### Completion — 25 points
 
-One person must complete one real working flow. The source can be a disclosed sandbox, but the browser work, state changes and receipt must actually run. Keep claims aligned with supported behavior. Provide a README, setup instructions, tests/evidence produced during the eventual build, and a public repo.
+One person must be able to complete both supported flows. The sources can be disclosed sandboxes, but both sets of browser work, state changes and receipts must actually run. Keep claims aligned with supported behavior. Provide a README, setup instructions, tests/evidence produced during the eventual build, and a public repo.
 
 ### GTM — 25 points
 
@@ -508,7 +542,7 @@ Next add the changed-method branch, explicit requirement comparison and correcti
 
 Then add correlated network/result verification, evidence links and recovery from ambiguous completion. Preserve real build feedback from the coding agent and Kane.
 
-Afterward add reusable recorded phases and, if practical, the integration map and requirement linkage. Polish the screens around the already functioning sequence.
+Then implement the service portal and its appointment workflow using the shared controller and UI. Add the source-specific calendar/quote observations, atomic booking update and exact-result checks. Both complete flows take priority over richer evidence styling or broad assurance coverage. Afterward add reusable recorded phases and, if practical, the integration maps and requirement linkage. Polish the screens around the functioning sequences.
 
 Reserve a substantial final block before the 6 PM deadline for the public repo, evidence pack, video and submission assets. Scope reduction should remove stretch features before it removes the receipt, correction, approval or live completion. Actual time allocation depends on the remaining day and team capacity.
 
@@ -520,7 +554,7 @@ The proposed product distinction is persistent user intent across a supported op
 
 After the hackathon, validate usefulness with people who currently need help on the supported task. Measure task completion, assistance required, misunderstood choices, unresolved outcomes and total time. Do not claim the product is faster or more reliable without evidence.
 
-A possible distribution path is an assisted-task interface for organizations operating complicated existing portals. That would require a willing partner, a dependable integration and evidence that the experience helps users. Broader consumer support, appointment changes and registration flows remain future integration opportunities, not MVP commitments.
+A possible distribution path is an assisted-task interface for organizations operating complicated existing portals. That would require a willing partner, a dependable integration and evidence that the experience helps users. Broader commercial-site support and registration flows remain future integration opportunities. The demonstrated appointment flow is already part of the two-website MVP.
 
 ## 15. Known limitations and how they affect the promise
 
@@ -540,7 +574,7 @@ A possible distribution path is an assisted-task interface for organizations ope
 
 ## 16. Final project commitment
 
-Build one polished, complete demonstration of a person revising a task while Raising Kane preserves their earlier choices. Use Kane to discover and operate the source, expose a meaningful mismatch, verify the correction and inspect the saved result. Finish with a receipt the person can use and evidence a judge can inspect.
+Build two polished, complete workflows inside one product. The return demonstrates a changed requirement, a real failed Kane validation and a verified correction. The service appointment demonstrates selecting an option that respects earlier constraints and preserving an existing booking until the approved update commits. Finish both with useful receipts and evidence a judge can inspect.
 
 The product should leave the audience remembering one thing: **Raising Kane kept the person's intent intact while the website changed underneath it.**
 
