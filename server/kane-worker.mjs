@@ -16,11 +16,12 @@ const MAX_LINE_BYTES = 1024 * 1024
 const DEFAULT_TIMEOUT_MS = 240_000
 const CHROME_START_TIMEOUT_MS = 15_000
 const STOP_GRACE_MS = 2_000
+const NATIVE_FOCUS_TIMEOUT_MS = 1_500
 
 function controlFor(taskId) {
   let control = taskControls.get(taskId)
   if (!control) {
-    control = { generation: 0, paused: false, pausing: false, disconnected: false, activeChild: null, jobs: new Set(), pausePromise: null, disconnectPromise: null, lifecycle: Promise.resolve() }
+    control = { generation: 0, paused: false, pausing: false, disconnected: false, activeChild: null, activeFocus: null, jobs: new Set(), pausePromise: null, disconnectPromise: null, lifecycle: Promise.resolve() }
     taskControls.set(taskId, control)
   }
   return control
@@ -78,6 +79,7 @@ function stopRunner(child) {
 async function cancelJobs(control) {
   for (const item of control.jobs) item.cancel()
   stopRunner(control.activeChild)
+  stopRunner(control.activeFocus)
   await Promise.allSettled([...control.jobs].map((item) => item.promise))
 }
 
@@ -542,6 +544,47 @@ function validWebUrl(url) {
   return parsed.href
 }
 
+async function focusOwnedBrowser(browser, control, assertCurrent) {
+  const fallback = {
+    focused: false,
+    focusStatus: 'manual',
+    focusMessage: 'The browser is open. Select its Chrome window to continue.',
+  }
+  assertCurrent()
+  if (process.platform !== 'darwin' || !processHasProfile(browser.pid, browser.profileDir)) return fallback
+  assertCurrent()
+  // CDP activates a tab but need not foreground Chrome above another app.
+  // This native operation addresses only the PID verified against our private
+  // profile. It neither inspects windows/page content nor reads other apps.
+  const script = `tell application "System Events"
+set ownedProcess to first application process whose unix id is ${browser.pid}
+set frontmost of ownedProcess to true
+return frontmost of ownedProcess
+end tell`
+  const focused = await new Promise((resolve) => {
+    const child = spawn('/usr/bin/osascript', ['-e', script], {
+      stdio: ['ignore', 'pipe', 'ignore'], shell: false, detached: true,
+    })
+    control.activeFocus = child
+    let answer = ''
+    let failed = false
+    child.stdout.setEncoding('utf8')
+    child.stdout.on('data', (value) => { answer = (answer + value).slice(0, 32) })
+    child.on('error', () => { failed = true })
+    const timer = setTimeout(() => stopRunner(child), NATIVE_FOCUS_TIMEOUT_MS)
+    timer.unref()
+    child.on('close', (code) => {
+      clearTimeout(timer)
+      clearTimeout(child.killTimer)
+      if (child.stopRequested) signalRunner(child, 'SIGKILL')
+      if (control.activeFocus === child) control.activeFocus = null
+      resolve(!failed && !child.stopRequested && code === 0 && answer.trim() === 'true')
+    })
+  })
+  assertCurrent()
+  return focused ? { focused: true, focusStatus: 'focused', focusMessage: null } : fallback
+}
+
 /** Open a visible private Chrome window for the person to operate directly. */
 export function openTaskBrowser({ taskId, url }) {
   validTaskId(taskId)
@@ -568,7 +611,8 @@ export function openTaskBrowser({ taskId, url }) {
         assertCurrent()
         const focused = await fetch(`${browser.endpoint}/json/activate/${target.id}`, { signal: AbortSignal.timeout(5_000) })
         if (!focused.ok) throw new Error('The private browser could not activate its existing page.')
-        return { status: 'ready', browserId: browser.browserId, reused: true }
+        const focus = await focusOwnedBrowser(browser, control, assertCurrent)
+        return { status: 'ready', browserId: browser.browserId, reused: true, ...focus }
       }
     }
     assertCurrent()
@@ -579,7 +623,8 @@ export function openTaskBrowser({ taskId, url }) {
     const target = await response.json()
     if (target?.type !== 'page' && target?.type !== 'tab') throw new Error('Chrome did not create a website tab.')
     assertCurrent()
-    return { status: 'ready', browserId: browser.browserId, url: targetUrl, reused: browser.reused }
+    const focus = await focusOwnedBrowser(browser, control, assertCurrent)
+    return { status: 'ready', browserId: browser.browserId, url: targetUrl, reused: browser.reused, ...focus }
   }, () => { throw new Error('Opening this browser was cancelled.') }, 'browser')
 }
 

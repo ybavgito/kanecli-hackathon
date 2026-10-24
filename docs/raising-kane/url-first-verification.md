@@ -36,3 +36,43 @@ user-completed sign-in and same-browser resume; a checked, persisted read-only
 receipt; generated assurance checks and coverage; failed/unknown result handling.
 Consequential arbitrary-site execution must not be claimed from these checks.
 The human teammate's merchant commit/confirmation work remains separate.
+
+## Follow-up extraction and sign-in checks
+
+- Simplifying extraction into direct named values worked. A [read-only Books
+  extraction](https://test-manager.lambdatest.com/projects/01M5QFXVQKQ0KCCE24PC0BJXYP/test-cases/01M5QZM09HGPRAHC7G63RWGYCV/dashboard/share/US_6EU7UO9I4A89WW5QG80IULODOGE699N06Y2Z0KSQZPRP9E1QA3OQT57H1G8FZ5AD?type=summary&agentView=true&fqdn=summary-page)
+  returned actual catalog links and three book prices in `actions_text` and
+  `records_text`. Four steps, 19.81 credits. The generic parser is being updated
+  to use these observed fields; this probe alone did not update the app's cards.
+- The user signed in directly on the test site while Kane was paused. A
+  [focused resumed-page check](https://test-manager.lambdatest.com/projects/01M5QFXVQKQ0KCCE24PC0BJXYP/test-cases/01M5QZR320NNZ2W5KV5WH5QXSW/dashboard/share/US_CR29JFSKHG86PS1EQKDS296BKYNE9PPBG9AA3H1RF7UJMJBD6JKR1F7EWIU0OAXK?type=summary&agentView=true&fqdn=summary-page)
+  passed with `browserReused:true` and `browserReconnected:true` for the same
+  browser ID `b51ced48c74eb42b`, including after a server-only restart. It extracted
+  heading `Secure Area`, URL `/secure`, and the visible successful sign-in message.
+  Four steps, 16.71 credits. No credentials were entered into Kane or the app.
+- A separate current-page analyzer control returned `[true,false]`: the Secure
+  Area heading was visible, while unauthenticated login controls were not. CLI
+  exit code was zero; the worker correctly returned `failed` and
+  `allConditionsTrue:false`. 5.35 credits. This proves why individual analyzer
+  verdicts must be read. Analyzer-only checks do not create a normal evidence pack.
+- The assurance-generated unsupported-scheme case passed: the form retained
+  `ftp://example.invalid`, displayed the rejection and started no inspection.
+  The finalized local pack was inspected and validated. Shared coverage at that
+  checkpoint was 1 of 34 criteria (2%), not complete stage1 coverage.
+
+The focused sign-in probe proves browser continuity and source state. Generic
+discovery still needs to render its accepted fields in the product before the
+full sign-in/resume UI journey can be called complete.
+
+## Generic controller acceptance after extraction repair
+
+The resumed sign-in discovery now passes through the actual controller and returns
+`ready`, `signed_in`, and the actual `/secure` URL with no error. No useful
+read-only links exist on that page, so no actions were fabricated.
+
+The Books connection now accepts Kane's extracted fields and publishes four
+evidenced actions (Books, Travel, Mystery, Historical Fiction) and four observed
+book/price records. [The runtime run passed](https://test-manager.lambdatest.com/projects/01M5QFXVQKQ0KCCE24PC0BJXYP/test-cases/01M5R0B6W3FE6CTH5F8E35NNTC/dashboard/share/US_WORATC6PO2ZBKA32R12K0L9LFDQKKB1O5UCNQIAVWV3HL0CAHTAZ3RP0AHSNUAQM?type=summary&agentView=true&fqdn=summary-page),
+four steps, 14.95 credits. These values came from the source; no website-specific
+adapter or fabricated cards were added. UI click-through and the persisted
+verified-result journey remain the next checks.

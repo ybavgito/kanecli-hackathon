@@ -99,7 +99,20 @@ protection against a compromised machine.
 Direct CDP usage is limited to browser endpoint readiness, tab creation / focus,
 and lifecycle. DOM reading, page assertions, extraction and clicks belong to
 Kane. Opening an existing connection focuses its existing page, preserving sign-in
-context. Current-page runs omit `--url`; a custom saved Kane default URL is
+context. Live verification found that CDP tab activation alone did not bring
+Chrome above Codex. On macOS, open/focus now also makes a best-effort native
+frontmost request through `osascript` / System Events for the exact Chrome PID
+whose command line was verified against this connection’s private profile. It
+reads no window content, page DOM, credentials, or cookies. The helper allows
+1.5 seconds, then terminates the helper process group (with a 2-second hard-kill
+grace period). Native focus is tracked inside the lifecycle operation; takeover
+and disconnect cancel it and wait for it before returning. A native permission
+error or timeout leaves opening successful and returns `focused:false`,
+`focusStatus:"manual"` and a manual window-selection message. Only a successful
+script response confirming `frontmost` returns `focused:true`; operating-system
+focus can subsequently change.
+
+Current-page runs omit `--url`; a custom saved Kane default URL is
 rejected because that CLI preference otherwise causes navigation on resume.
 
 Disconnect cancels queued work, stops the owned runner group, verifies the Chrome
@@ -123,7 +136,10 @@ check passed: true/false/null/missing verdicts, current-page CLI flags, repeated
 child step identifiers, pause/resume, process-group cancellation of a runner that
 ignores TERM, queued cancellation behind unrelated work, profile removal and
 disconnected-request rejection. A separate queue fixture confirms open lifecycle
-operations execute while unrelated Kane work is still running. These are
+operations execute while unrelated Kane work is still running. Native-focus
+fixtures passed exact-PID selection, confirmed-focus reporting, denied-focus
+fallback and cancellation while focus was pending, without invoking native UI
+automation or touching the person’s signed-in browser. These are
 implementation checks, not proof that the URL-first user journey passed
 Kane. Actual Kane E2E results are recorded separately in `verification.md`; old
 merchant results do not verify this new workflow.

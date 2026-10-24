@@ -14,5 +14,6 @@ data/
 *.ndjson
 *.stderr
 .DS_Store
+.testmuai/variables/
 __pycache__/
 *.pyc
