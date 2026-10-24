@@ -1,5 +1,14 @@
 # Kane-first implementation workflow
 
+## Product identity
+
+- Product name: **Raising Kane**.
+- Exact tagline: **When websites raise hell, raise Kane**.
+- Use this identity in all new product copy, code, documentation and launch assets.
+- Use ClearPath only when explicitly referencing historical documents. The files
+  under `docs/clearpath/` retain their original names and content as historical
+  research; they do not override the current product name.
+
 This app is built for a Kane CLI hackathon. Treat user-visible behavior as unverified until Kane passes it.
 
 1. Keep the intended user journey and acceptance criteria current in `.testmuai/context.md`.

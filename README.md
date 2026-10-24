@@ -1,17 +1,22 @@
-# KaneCLI Hackathon
+# Raising Kane
+
+**When websites raise hell, raise Kane**
 
 A web-app starter wired for Kane CLI verification. The Hack Day uses the release
 candidate; these docs were checked against `0.10.0-rc.3` on October 24, 2026.
 
-## ClearPath project brief
+## Product direction and historical research
 
-The proposed product is [ClearPath: a clearer way through complicated websites](docs/clearpath/clearpath-complete-project-brief.md).
-The supplied brief is preserved unchanged. Read the accompanying
-[gap review and implementation decisions](docs/clearpath/gap-review.md) before
-building; it identifies approval, duplicate prevention, browser continuity and
-verification contracts that still need definition.
+The product is **Raising Kane**: a simpler interface for completing a supported
+web task while preserving the user's choices and verifying the source result.
+Use the name and tagline above for all new product copy and documentation.
 
-Supporting research:
+The [original ClearPath brief](docs/clearpath/clearpath-complete-project-brief.md)
+and its [gap review](docs/clearpath/gap-review.md) are historical documents from
+before the rename, preserved unchanged. The review identifies approval, duplicate
+prevention, browser continuity and verification contracts that need definition.
+
+Historical supporting research (original names retained):
 
 - [Independent Sol product review](docs/clearpath/clearpath-sol-review.md)
 - [Product and demo analysis](docs/clearpath/clearpath-product-and-demo.md)

@@ -2,6 +2,10 @@
 
 ## Application
 
+Product name: **Raising Kane**. Tagline: **When websites raise hell, raise Kane**.
+Use ClearPath only to reference historical documents. The current UI is still the
+starter described below; these naming instructions do not claim the product is built.
+
 This is the KaneCLI Hackathon web app. Its local development URL is `http://127.0.0.1:5173`.
 
 ## Current smoke flow
