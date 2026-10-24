@@ -30,6 +30,10 @@ Raising Kane runs at `http://127.0.0.1:5173`. The separate merchant portal is at
 `http://127.0.0.1:5173/merchant`. Both use synthetic data. Runtime task and
 merchant records are saved in ignored `data/` files.
 
+To enable OpenAI interpretation, copy `.env.example` to `.env` and set
+`OPENAI_API_KEY` locally. Without it, the UI explicitly labels its limited sample
+parser. Keep `.env` out of Git.
+
 ## Verify with Kane
 
 Install the event release candidate and official skill, then authenticate:

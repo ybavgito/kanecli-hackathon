@@ -66,6 +66,10 @@ a grant. It must reject a missing validation-run reference. The product controll
 is responsible for calling it only after explicit user approval and a passing Kane
 validation for that proposal.
 
+On success, return `{status:'active', grantId, operationId, proposalDigest,
+draftVersion}`. On refusal, throw an error without creating a grant. The product
+requires this explicit success response before enabling submission.
+
 Export `canonicalProposal(draft)` and `proposalDigest(draft)` from
 `server/merchant-contract.mjs`. The canonical proposal includes account and order,
 selected line IDs and quantities, reason, method, destination, currency, all money
