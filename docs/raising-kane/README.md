@@ -2,6 +2,8 @@
 
 When websites raise hell, raise Kane.
 
+For current code, see the [builder implementation record](builder-implementation.md).
+
 For the new URL-to-generated-interface direction, start with the [Explore-driven builder plan](explore-driven-builder-plan.md). It is a proposed successor architecture, with explicit Explore, agent/tool, visible-journey, rebuild and accessibility contracts, plus [enforced testing modes](explore-driven-builder-plan.md#prevent-real-changes-during-discovery-and-testing) that separate sandbox mutation tests from live read checks. Fresh [capability experiments](../kane-builder-validation/report.md) establish selected Explore behaviors, not the completed builder. The existing project brief and implementation guide describe the earlier two-sandbox build.
 
 The three direct research attachments are:

@@ -21,6 +21,7 @@ import {
   DownloadSimple,
 } from '@phosphor-icons/react'
 import '@fontsource-variable/dm-sans'
+import Builder from './Builder.jsx'
 
 const EXAMPLE = 'Return the red shoes, keep the jacket, and refund my original payment method.'
 const money = (value, currency = 'USD') =>
@@ -880,7 +881,7 @@ function TaskWorkspace({ task, busy, error, onAction, onBack, onDismiss }) {
     </>
   )
 }
-export default function App() {
+function LegacyApp() {
   const [task, setTask] = useState(null),
     [restoring, setRestoring] = useState(
       Boolean(new URLSearchParams(location.search).get('taskId')),
@@ -1189,4 +1190,9 @@ export default function App() {
 }
 function historyReplace(url) {
   window.history.replaceState(null, '', url)
+}
+
+export default function App() {
+  const params = new URLSearchParams(location.search)
+  return params.has('legacy') || params.has('taskId') ? <LegacyApp /> : <Builder />
 }

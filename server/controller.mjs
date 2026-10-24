@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto'
+import { Readable } from 'node:stream'
 import {
   createReadStream,
   existsSync,
@@ -159,6 +160,7 @@ export function createController({
       taskId: t.id,
       phase,
       url,
+      headless: process.env.KANE_HEADLESS === '1',
       objective: `Go to ${url}. Reload the page and wait for the current source record to load. ${objective}`,
       onEvent(e) {
         if (e.type === 'step' && e.status === 'done') {
@@ -745,5 +747,25 @@ export function createController({
     }
     return send(404, { error: 'Not found.' })
   }
-  return { handle }
+  // Internal callers supply a server-owned identity, never a generated-code grant.
+  async function invoke(clientId, path, body) {
+    const req = Readable.from(body === undefined ? [] : [JSON.stringify(body)])
+    req.method = body === undefined ? 'GET' : 'POST'
+    req.headers = {}
+    req.clientId = clientId
+    let status = 200,
+      payload
+    const res = {
+      writeHead(code) {
+        status = code
+      },
+      end(value) {
+        payload = JSON.parse(value || '{}')
+      },
+    }
+    await handle(req, res, new URL(path, baseUrl))
+    if (status >= 400) throw Error(payload?.error || 'Source task refused.')
+    return payload
+  }
+  return { handle, invoke }
 }

@@ -41,14 +41,27 @@ function chromeExecutable() {
 
 function processHasProfile(pid, profileDir) {
   if (!Number.isInteger(pid) || pid <= 0) return false
-  try { process.kill(pid, 0) } catch { return false }
-  const result = spawnSync('ps', ['-p', String(pid), '-o', 'command='], { encoding: 'utf8', timeout: 2_000 })
+  try {
+    process.kill(pid, 0)
+  } catch {
+    return false
+  }
+  const result = spawnSync('ps', ['-p', String(pid), '-o', 'command='], {
+    encoding: 'utf8',
+    timeout: 2_000,
+  })
   return result.status === 0 && (result.stdout || '').includes(`--user-data-dir=${profileDir}`)
 }
 
 async function chromeEndpoint(profileDir) {
   let portText
-  try { portText = (await readFile(path.join(profileDir, 'DevToolsActivePort'), 'utf8')).split(/\r?\n/)[0] } catch { return null }
+  try {
+    portText = (await readFile(path.join(profileDir, 'DevToolsActivePort'), 'utf8')).split(
+      /\r?\n/,
+    )[0]
+  } catch {
+    return null
+  }
   const port = Number(portText)
   if (!Number.isInteger(port) || port < 1 || port > 65535) return null
   const endpoint = `http://127.0.0.1:${port}`
@@ -56,9 +69,15 @@ async function chromeEndpoint(profileDir) {
     const response = await fetch(`${endpoint}/json/version`, { signal: AbortSignal.timeout(1_000) })
     const details = response.ok ? await response.json() : null
     const debuggerUrl = details?.webSocketDebuggerUrl ? new URL(details.webSocketDebuggerUrl) : null
-    if (debuggerUrl && ['127.0.0.1', 'localhost', '[::1]'].includes(debuggerUrl.hostname)
-      && Number(debuggerUrl.port) === port) return endpoint
-  } catch { /* Browser may still be starting or has exited. */ }
+    if (
+      debuggerUrl &&
+      ['127.0.0.1', 'localhost', '[::1]'].includes(debuggerUrl.hostname) &&
+      Number(debuggerUrl.port) === port
+    )
+      return endpoint
+  } catch {
+    /* Browser may still be starting or has exited. */
+  }
   return null
 }
 
@@ -67,9 +86,12 @@ async function ensureTaskBrowser(taskId, headless) {
   const ownerPath = path.join(profileDir, 'raising-kane-owner.json')
   const live = taskBrowsers.get(taskId)
   if (live) {
-    if (live.headless !== headless) throw new Error('This task browser is already running in a different display mode.')
-    const oursStillRunning = live.child ? live.child.exitCode === null : processHasProfile(live.pid, profileDir)
-    if (oursStillRunning && await chromeEndpoint(profileDir)) return { ...live, reused: true }
+    if (live.headless !== headless)
+      throw new Error('This task browser is already running in a different display mode.')
+    const oursStillRunning = live.child
+      ? live.child.exitCode === null
+      : processHasProfile(live.pid, profileDir)
+    if (oursStillRunning && (await chromeEndpoint(profileDir))) return { ...live, reused: true }
     taskBrowsers.delete(taskId)
     throw new Error('The task browser was lost. Reconcile the source draft before resuming.')
   }
@@ -77,31 +99,52 @@ async function ensureTaskBrowser(taskId, headless) {
   await mkdir(profileDir, { recursive: true, mode: 0o700 })
   let owner = null
   let ownerText = null
-  try { ownerText = await readFile(ownerPath, 'utf8') }
-  catch (error) {
-    if (error?.code !== 'ENOENT') throw new Error('The task browser ownership record cannot be read.')
+  try {
+    ownerText = await readFile(ownerPath, 'utf8')
+  } catch (error) {
+    if (error?.code !== 'ENOENT')
+      throw new Error('The task browser ownership record cannot be read.')
   }
   if (ownerText != null) {
-    try { owner = JSON.parse(ownerText) }
-    catch { throw new Error('The task browser ownership record is damaged; reconcile before resuming.') }
+    try {
+      owner = JSON.parse(ownerText)
+    } catch {
+      throw new Error('The task browser ownership record is damaged; reconcile before resuming.')
+    }
   }
-  if (!owner && await chromeEndpoint(profileDir)) {
-    throw new Error('A task browser is reachable without a valid ownership record; reconcile before resuming.')
+  if (!owner && (await chromeEndpoint(profileDir))) {
+    throw new Error(
+      'A task browser is reachable without a valid ownership record; reconcile before resuming.',
+    )
   }
   if (owner?.pid && processHasProfile(owner.pid, profileDir)) {
     const endpoint = await chromeEndpoint(profileDir)
-    if (!endpoint) throw new Error('The task browser is running but its control endpoint is unavailable.')
-    if (owner.headless !== headless) throw new Error('This task browser is already running in a different display mode.')
-    const reconnected = { taskId, browserId, profileDir, ownerPath, pid: owner.pid, endpoint, headless, child: null }
+    if (!endpoint)
+      throw new Error('The task browser is running but its control endpoint is unavailable.')
+    if (owner.headless !== headless)
+      throw new Error('This task browser is already running in a different display mode.')
+    const reconnected = {
+      taskId,
+      browserId,
+      profileDir,
+      ownerPath,
+      pid: owner.pid,
+      endpoint,
+      headless,
+      child: null,
+    }
     taskBrowsers.set(taskId, reconnected)
     return { ...reconnected, reused: true, reconnected: true }
   }
   if (owner) {
-    throw new Error('The prior task browser is gone. Reconcile the source draft before starting another browser job.')
+    throw new Error(
+      'The prior task browser is gone. Reconcile the source draft before starting another browser job.',
+    )
   }
 
   const executable = chromeExecutable()
-  if (!executable) throw new Error('Google Chrome is not installed or its executable cannot be found.')
+  if (!executable)
+    throw new Error('Google Chrome is not installed or its executable cannot be found.')
   await rm(path.join(profileDir, 'DevToolsActivePort'), { force: true })
   const args = [
     '--remote-debugging-port=0',
@@ -118,7 +161,9 @@ async function ensureTaskBrowser(taskId, headless) {
   // private profile is eligible for later cleanup.
   const child = spawn(executable, args, { stdio: 'ignore', shell: false, detached: true })
   let launchError = null
-  child.once('error', (error) => { launchError = error })
+  child.once('error', (error) => {
+    launchError = error
+  })
   const until = Date.now() + CHROME_START_TIMEOUT_MS
   let endpoint = null
   while (Date.now() < until && !endpoint && !launchError && child.exitCode === null) {
@@ -127,11 +172,28 @@ async function ensureTaskBrowser(taskId, headless) {
   }
   if (!endpoint) {
     if (child.exitCode === null) child.kill('SIGTERM')
-    throw new Error(launchError ? 'Could not launch the dedicated task browser.' : 'The dedicated task browser did not become ready.')
+    throw new Error(
+      launchError
+        ? 'Could not launch the dedicated task browser.'
+        : 'The dedicated task browser did not become ready.',
+    )
   }
-  const browser = { taskId, browserId, profileDir, ownerPath, pid: child.pid, endpoint, headless, child }
+  const browser = {
+    taskId,
+    browserId,
+    profileDir,
+    ownerPath,
+    pid: child.pid,
+    endpoint,
+    headless,
+    child,
+  }
   try {
-    await writeFile(ownerPath, JSON.stringify({ pid: child.pid, browserId, headless, startedAt: new Date().toISOString() }), { mode: 0o600 })
+    await writeFile(
+      ownerPath,
+      JSON.stringify({ pid: child.pid, browserId, headless, startedAt: new Date().toISOString() }),
+      { mode: 0o600 },
+    )
   } catch {
     child.kill('SIGTERM')
     throw new Error('Could not record ownership of the dedicated task browser.')
@@ -142,17 +204,26 @@ async function ensureTaskBrowser(taskId, headless) {
 }
 
 async function evidencePackPath(coveragePack, terminal) {
-  const direct = [coveragePack, terminal?.coverage?.pack, terminal?.evidence_pack_path, terminal?.evidence_path]
+  const direct = [
+    coveragePack,
+    terminal?.coverage?.pack,
+    terminal?.evidence_pack_path,
+    terminal?.evidence_path,
+  ]
   for (const candidate of direct) {
-    if (typeof candidate === 'string' && candidate.endsWith('.evidence') && existsSync(candidate)) return candidate
+    if (typeof candidate === 'string' && candidate.endsWith('.evidence') && existsSync(candidate))
+      return candidate
   }
   if (typeof terminal?.session_dir !== 'string') return null
   const evidenceDir = path.join(terminal.session_dir, 'evidence')
   try {
-    const entries = (await readdir(evidenceDir, { withFileTypes: true }))
-      .filter((entry) => entry.isFile() && entry.name.endsWith('.evidence'))
+    const entries = (await readdir(evidenceDir, { withFileTypes: true })).filter(
+      (entry) => entry.isFile() && entry.name.endsWith('.evidence'),
+    )
     if (entries.length === 1) return path.join(evidenceDir, entries[0].name)
-  } catch { /* A refused run may not have a session or sealed pack. */ }
+  } catch {
+    /* A refused run may not have a session or sealed pack. */
+  }
   return null
 }
 
@@ -167,15 +238,21 @@ function notify(callback, event) {
 
 function clipped(value, max = 500) {
   return typeof value === 'string'
-    ? value.replace(/Bearer\s+\S+|\bsk-[A-Za-z0-9_-]{12,}\b|\bkhk_[A-Za-z0-9_-]+\b/gi, '[redacted]').slice(0, max)
+    ? value
+        .replace(/Bearer\s+\S+|\bsk-[A-Za-z0-9_-]{12,}\b|\bkhk_[A-Za-z0-9_-]+\b/gi, '[redacted]')
+        .slice(0, max)
     : ''
 }
 
 function knownDiagnostic(stderr) {
-  if (/could not resolve credentials|not authenticated|login required/i.test(stderr)) return 'Kane could not use its saved sign-in. Sign in again before retrying.'
-  if (/insufficient credits|no credits|credit balance/i.test(stderr)) return 'Kane could not start because the account has no available credits.'
-  if (/cdp endpoint not reachable|could not connect to.*cdp|ECONNREFUSED/i.test(stderr)) return 'Kane could not connect to the dedicated task browser.'
-  if (/unknown option|invalid option/i.test(stderr)) return 'Kane rejected a worker option; check the installed CLI version.'
+  if (/could not resolve credentials|not authenticated|login required/i.test(stderr))
+    return 'Kane could not use its saved sign-in. Sign in again before retrying.'
+  if (/insufficient credits|no credits|credit balance/i.test(stderr))
+    return 'Kane could not start because the account has no available credits.'
+  if (/cdp endpoint not reachable|could not connect to.*cdp|ECONNREFUSED/i.test(stderr))
+    return 'Kane could not connect to the dedicated task browser.'
+  if (/unknown option|invalid option/i.test(stderr))
+    return 'Kane rejected a worker option; check the installed CLI version.'
   return ''
 }
 
@@ -189,11 +266,24 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
       const summary = clipped(error?.message || 'The dedicated task browser could not start.', 500)
       notify(onEvent, { type: 'complete', phase, status: 'error', summary })
       return {
-        phase, status: 'error', summary, finalState: {}, steps: [], stepCount: 0,
-        evidencePath: null, evidencePackPath: null, runId: null, sessionId: null,
-        testUrl: null, resultCode: null, verdict: null, creditsConsumed: null,
-        durationMs: Date.now() - startedAt, exitCode: null,
-        browserId: profileFor(taskId).browserId, browserReused: false,
+        phase,
+        status: 'error',
+        summary,
+        finalState: {},
+        steps: [],
+        stepCount: 0,
+        evidencePath: null,
+        evidencePackPath: null,
+        runId: null,
+        sessionId: null,
+        testUrl: null,
+        resultCode: null,
+        verdict: null,
+        creditsConsumed: null,
+        durationMs: Date.now() - startedAt,
+        exitCode: null,
+        browserId: profileFor(taskId).browserId,
+        browserReused: false,
       }
     }
   }
@@ -225,9 +315,9 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
     if (browser) args.push('--cdp-endpoint', browser.endpoint)
     else if (headless) args.push('--headless')
 
-    const child = spawn('kane-cli', args, {
+    const child = spawn(process.env.KANE_CLI || 'kane-cli', args, {
       cwd: process.cwd(),
-      env: { ...process.env, KANE_CLI_USER_AGENT: 'codex' },
+      env: kaneEnvironment(),
       stdio: ['ignore', 'pipe', 'pipe'],
       shell: false,
     })
@@ -287,8 +377,12 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
     // Keep only a short private tail for known error classification. Never log
     // or return raw stderr, which may include the user's data or credentials.
     child.stderr.setEncoding('utf8')
-    child.stderr.on('data', (chunk) => { stderrTail = (stderrTail + chunk).slice(-4_096) })
-    child.on('error', (error) => { childError = error })
+    child.stderr.on('data', (chunk) => {
+      stderrTail = (stderrTail + chunk).slice(-4_096)
+    })
+    child.on('error', (error) => {
+      childError = error
+    })
 
     const timer = setTimeout(() => {
       timedOut = true
@@ -304,26 +398,27 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
       consumeLine(lineBuffer)
 
       const steps = [...stepByKey.values()].filter((step) => step.status !== 'running')
-      const status = childError?.code === 'ENOENT'
-        ? 'unavailable'
-        : timedOut || exitCode === 3
-          ? 'timeout'
-          : outputTooLarge
-            ? 'error'
-            : exitCode === 0 && terminal?.status === 'passed'
-              ? 'passed'
-              : exitCode === 1 || terminal?.status === 'failed'
-                ? 'failed'
-                : 'error'
+      const status =
+        childError?.code === 'ENOENT'
+          ? 'unavailable'
+          : timedOut || exitCode === 3
+            ? 'timeout'
+            : outputTooLarge
+              ? 'error'
+              : exitCode === 0 && terminal?.status === 'passed'
+                ? 'passed'
+                : exitCode === 1 || terminal?.status === 'failed'
+                  ? 'failed'
+                  : 'error'
       const summary = outputTooLarge
         ? 'Kane produced more output than this worker can safely process.'
         : childError?.code === 'ENOENT'
           ? 'Kane CLI is not installed.'
           : timedOut
             ? 'Kane did not finish before the time limit.'
-            : clipped(terminal?.summary || terminal?.one_liner, 1000)
-              || knownDiagnostic(stderrTail)
-              || `Kane did not produce a completed result (exit ${exitCode ?? 'unknown'}).`
+            : clipped(terminal?.summary || terminal?.one_liner, 1000) ||
+              knownDiagnostic(stderrTail) ||
+              `Kane did not produce a completed result (exit ${exitCode ?? 'unknown'}).`
       const sealedPack = await evidencePackPath(coveragePack, terminal)
 
       notify(onEvent, { type: 'complete', phase, status, summary: clipped(summary, 500) })
@@ -332,9 +427,7 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
         phase,
         status,
         summary,
-        finalState: terminal?.final_state && typeof terminal.final_state === 'object'
-          ? terminal.final_state
-          : {},
+        finalState: extractedState(terminal),
         steps,
         stepCount: steps.length,
         evidencePath: sealedPack,
@@ -346,13 +439,18 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
         testUrl: terminal?.test_url || null,
         reasonCode: clipped(terminal?.reason_code, 80) || null,
         reason: clipped(terminal?.reason, 500) || null,
-        creditsConsumed: terminal?.credits_consumed != null && Number.isFinite(Number(terminal.credits_consumed))
-          ? Number(terminal.credits_consumed)
-          : null,
+        creditsConsumed:
+          terminal?.credits_consumed != null && Number.isFinite(Number(terminal.credits_consumed))
+            ? Number(terminal.credits_consumed)
+            : null,
         resultCode: terminal?.result_code ?? null,
-        verdict: terminal?.verdict && typeof terminal.verdict === 'object'
-          ? { family: clipped(terminal.verdict.family, 80), category: clipped(terminal.verdict.category, 80) }
-          : null,
+        verdict:
+          terminal?.verdict && typeof terminal.verdict === 'object'
+            ? {
+                family: clipped(terminal.verdict.family, 80),
+                category: clipped(terminal.verdict.category, 80),
+              }
+            : null,
         durationMs: Date.now() - startedAt,
         exitCode,
         browserId: browser?.browserId || null,
@@ -367,15 +465,29 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
  * Execute an actual Kane browser objective. A successful process exit without a
  * passing terminal event is an error, never a pass. Browser jobs are serialized.
  */
-export function runKane({ taskId, phase = 'browser', objective, url, onEvent, timeoutMs = DEFAULT_TIMEOUT_MS, headless = false }) {
+export function runKane({
+  taskId,
+  phase = 'browser',
+  objective,
+  url,
+  onEvent,
+  timeoutMs = DEFAULT_TIMEOUT_MS,
+  headless = false,
+}) {
   if (taskId != null && (typeof taskId !== 'string' || !taskId.trim() || taskId.length > 200)) {
-    return Promise.reject(new TypeError('A task ID must be a non-empty string under 200 characters.'))
+    return Promise.reject(
+      new TypeError('A task ID must be a non-empty string under 200 characters.'),
+    )
   }
   if (typeof objective !== 'string' || !objective.trim()) {
     return Promise.reject(new TypeError('Kane objective is required.'))
   }
   let parsedUrl
-  try { parsedUrl = new URL(url) } catch { /* handled below */ }
+  try {
+    parsedUrl = new URL(url)
+  } catch {
+    /* handled below */
+  }
   if (!parsedUrl || !['http:', 'https:'].includes(parsedUrl.protocol)) {
     return Promise.reject(new TypeError('Kane URL must be an HTTP or HTTPS URL.'))
   }
@@ -383,7 +495,17 @@ export function runKane({ taskId, phase = 'browser', objective, url, onEvent, ti
     return Promise.reject(new RangeError('Kane timeout must be between 10 and 600 seconds.'))
   }
 
-  const job = lastJob.then(() => runJob({ taskId, phase, objective: objective.trim(), url: parsedUrl.href, onEvent, timeoutMs, headless }))
+  const job = lastJob.then(() =>
+    runJob({
+      taskId,
+      phase,
+      objective: objective.trim(),
+      url: parsedUrl.href,
+      onEvent,
+      timeoutMs,
+      headless,
+    }),
+  )
   lastJob = job.catch(() => {})
   return job
 }
@@ -396,17 +518,21 @@ export async function getTaskBrowserState(taskId) {
   const { profileDir, browserId } = profileFor(taskId)
   let owner
   let ownerText
-  try { ownerText = await readFile(path.join(profileDir, 'raising-kane-owner.json'), 'utf8') }
-  catch (error) {
+  try {
+    ownerText = await readFile(path.join(profileDir, 'raising-kane-owner.json'), 'utf8')
+  } catch (error) {
     if (error?.code !== 'ENOENT') return { status: 'lost', browserId }
-    return { status: await chromeEndpoint(profileDir) ? 'lost' : 'new', browserId }
+    return { status: (await chromeEndpoint(profileDir)) ? 'lost' : 'new', browserId }
   }
-  try { owner = JSON.parse(ownerText) }
-  catch { return { status: 'lost', browserId } }
+  try {
+    owner = JSON.parse(ownerText)
+  } catch {
+    return { status: 'lost', browserId }
+  }
   if (owner?.browserId !== browserId || !processHasProfile(owner.pid, profileDir)) {
     return { status: 'lost', browserId }
   }
-  return { status: await chromeEndpoint(profileDir) ? 'ready' : 'lost', browserId }
+  return { status: (await chromeEndpoint(profileDir)) ? 'ready' : 'lost', browserId }
 }
 
 /** Stop only a Chrome process verified to use this task's private profile. */
@@ -417,22 +543,36 @@ export async function shutdownTaskBrowser(taskId) {
   const live = taskBrowsers.get(taskId)
   let pid = live?.pid
   if (!pid) {
-    try { pid = JSON.parse(await readFile(ownerPath, 'utf8')).pid } catch { /* No owned browser. */ }
+    try {
+      pid = JSON.parse(await readFile(ownerPath, 'utf8')).pid
+    } catch {
+      /* No owned browser. */
+    }
   }
   if (!processHasProfile(pid, profileDir)) {
     if (await chromeEndpoint(profileDir)) {
-      throw new Error('A task browser is still reachable, but process ownership cannot be verified.')
+      throw new Error(
+        'A task browser is still reachable, but process ownership cannot be verified.',
+      )
     }
     taskBrowsers.delete(taskId)
     await rm(ownerPath, { force: true })
     return false
   }
-  try { process.kill(pid, 'SIGTERM') } catch { /* It may have just exited. */ }
+  try {
+    process.kill(pid, 'SIGTERM')
+  } catch {
+    /* It may have just exited. */
+  }
   for (let i = 0; i < 30 && processHasProfile(pid, profileDir); i++) {
     await new Promise((resolve) => setTimeout(resolve, 100))
   }
   if (processHasProfile(pid, profileDir)) {
-    try { process.kill(pid, 'SIGKILL') } catch { /* It may have just exited. */ }
+    try {
+      process.kill(pid, 'SIGKILL')
+    } catch {
+      /* It may have just exited. */
+    }
   }
   taskBrowsers.delete(taskId)
   await rm(ownerPath, { force: true })
@@ -445,18 +585,51 @@ export async function shutdownAllTaskBrowsers() {
 
 /** Lightweight, read-only status for the UI. This does not launch a browser. */
 export function getKaneAvailability() {
-  const env = { ...process.env, KANE_CLI_USER_AGENT: 'codex' }
-  const version = spawnSync('kane-cli', ['--version'], { encoding: 'utf8', timeout: 5_000, env })
+  const env = kaneEnvironment()
+  const version = spawnSync(process.env.KANE_CLI || 'kane-cli', ['--version'], {
+    encoding: 'utf8',
+    timeout: 5_000,
+    env,
+  })
   if (version.error?.code === 'ENOENT' || version.status !== 0) {
     return { installed: false, available: false, authenticated: false, version: null }
   }
-  const whoami = spawnSync('kane-cli', ['whoami'], { encoding: 'utf8', timeout: 8_000, env })
-  const authenticated = whoami.status === 0
-    && /✓\s*Authenticated/.test(whoami.stdout || '')
+  const whoami = spawnSync(process.env.KANE_CLI || 'kane-cli', ['whoami'], {
+    encoding: 'utf8',
+    timeout: 8_000,
+    env,
+  })
+  const authenticated = whoami.status === 0 && /✓\s*Authenticated/.test(whoami.stdout || '')
   return {
     installed: true,
     available: authenticated,
     authenticated,
     version: clipped((version.stdout || '').trim(), 80),
   }
+}
+
+// Preview verification owns a different browser and never holds the source queue.
+export function runPreviewKane(options) {
+  if (!options.taskId?.startsWith('preview-')) throw Error('Preview browser identity required.')
+  return runJob({ ...options, headless: true, timeoutMs: options.timeoutMs || 480000 })
+}
+export function kaneEnvironment() {
+  const env = { ...process.env, KANE_CLI_SYSTEM_NODE: '1', KANE_CLI_USER_AGENT: 'codex' }
+  delete env.OPENAI_API_KEY
+  return env
+}
+export function extractedState(terminal) {
+  const state = { ...(terminal?.final_state || {}) }
+  const names =
+    /^(?:account_id|line_ids|quantity|reason|method|destination|subtotal|refund|active_bookings|order_id|booking_id|current_start|draft_revision|refund_destination|return_request_id|returned_line_ids|returned_quantity|return_method|currency|deduction|expected_refund|next_step|jacket_kept|submission_response|source_terms|source_choices|source_transition|source_requirements|source_identity|current_url|slot_id|starts_at|technician|fee|service|address|timezone|request_id|active_booking_count|booking_version)$/
+  for (const [name, item] of Object.entries(terminal?.context?.variables || {})) {
+    if (names.test(name) && item?.type === 'memory' && item.secret === false)
+      state[name] = item.value
+  }
+  return state
+}
+
+export async function preparePreviewBrowser(id) {
+  if (!id.startsWith('preview-')) throw Error('Preview browser identity required.')
+  return ensureTaskBrowser(id, true)
 }

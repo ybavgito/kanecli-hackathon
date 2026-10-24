@@ -4,6 +4,9 @@ import { createServer as createViteServer } from 'vite'
 import { createMerchant } from './merchant.mjs'
 import { createAppointments } from './appointment.mjs'
 import { createController } from './controller.mjs'
+import { createBuilder } from './builder/controller.mjs'
+import { shutdownBuilderWorkers } from './builder/kane.mjs'
+import { previewHandler } from './builder/preview.mjs'
 import { shutdownAllTaskBrowsers } from './kane-worker.mjs'
 try {
   process.loadEnvFile()
@@ -21,8 +24,14 @@ const baseUrl = `http://127.0.0.1:${port}`,
 const merchant = createMerchant(),
   appointments = createAppointments(),
   controller = createController({ merchant, appointments, sourceUrls, baseUrl })
+const builder = createBuilder({ baseUrl, sourceUrls, controller, merchant, appointments })
+const builderPreview = previewHandler(builder)
 const vite = await createViteServer({
-  server: { middlewareMode: true, watch: { ignored: ['**/data/**', '**/.testmuai/**'] } },
+  server: {
+    middlewareMode: true,
+    hmr: { port: port + 10 },
+    watch: { ignored: ['**/data/**', '**/.testmuai/**'] },
+  },
   appType: 'spa',
 })
 const fail = (res, error) => {
@@ -56,6 +65,8 @@ const server = createServer(async (req, res) => {
         JSON.stringify({ error: 'Use the Raising Kane task interface for this action.' }),
       )
     }
+    if (await builder.handle(req, res, url)) return
+    if (await builderPreview(req, res, url)) return
     if (url.pathname.startsWith('/api/')) return await controller.handle(req, res, url)
     // Runtime profiles, data and evidence are never served by Vite's static middleware.
     if (
@@ -94,6 +105,7 @@ let stopping = false
 async function stop() {
   if (stopping) return
   stopping = true
+  shutdownBuilderWorkers()
   await shutdownAllTaskBrowsers()
   await vite.close()
   for (const s of [server, merchantServer, appointmentServer]) s.close()

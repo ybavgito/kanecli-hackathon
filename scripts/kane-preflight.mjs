@@ -1,7 +1,9 @@
 import { execFileSync } from 'node:child_process'
 
 try {
-  const rawConfig = execFileSync('kane-cli', ['config', 'show'], { encoding: 'utf8' })
+  const rawConfig = execFileSync(process.env.KANE_CLI || 'kane-cli', ['config', 'show'], {
+    encoding: 'utf8',
+  })
   const config = JSON.parse(rawConfig)
 
   if (config.auth === 'not configured') {

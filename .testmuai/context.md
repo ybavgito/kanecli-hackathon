@@ -27,3 +27,13 @@ A website-first interface for two supported synthetic tasks: a Northstar Outfitt
 ## Evidence
 
 Keep red and green review attempts, source operation identity, exact approved terms and final confirmation. Never publish credentials or runtime browser profiles. Local acceptance assurance is separate from the team's shared Test Manager project. Do not link a shared project into a folder containing a local `.context/` store.
+
+## Generated-interface builder (new implementation under verification)
+
+Default entry is now the URL-first builder. Existing prebuilt workflows remain at
+`/?legacy=1` and existing task URLs remain valid. The builder accepts an optional
+intent; URL-only builds preserve overview mode. See `requirements/raising-kane-builder.md`.
+Only configured synthetic source entrypoints are accepted. Actual Explore, source
+screenshots, model-generated React, isolated preview checks and bounded repair history
+must be visible. Do not treat a compiled candidate as verified or a verified build as a
+completed user transaction. All source mutations in this release use synthetic records.

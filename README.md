@@ -1,3 +1,9 @@
+> **Current implementation:** the default entry is the Explore-driven interface builder.
+> Start with [builder implementation and run instructions](docs/raising-kane/builder-implementation.md).
+> It uses `gpt-6.1-sol`, actual Kane screenshots and a sandboxed generated React interface.
+> URL-only input stays an overview; intent is optional. Only the two configured synthetic
+> websites are supported. The earlier prebuilt workflows remain at `/?legacy=1`.
+
 # Raising Kane
 
 **When websites raise hell, raise Kane**

@@ -93,9 +93,11 @@ source-connected React builder, code rebuild or preview accessibility repair. Se
 
 ## Product decisions
 
-1. **URL is required; task is optional.** No task means shallow discovery followed by
-   task selection. An explicit task guides discovery immediately. Do not crawl an
-   entire site before asking what matters.
+1. **URL is required; task is optional.** No task means broader bounded discovery and
+   a generated overview of the observed flows. Do not require an intent to begin.
+   The person can choose where to start afterward. An explicit intent focuses both
+   exploration and the generated composition. A run budget limits either path;
+   neither path promises exhaustive coverage of an entire website.
 2. **Generate a bounded interface artifact.** The coding agent emits a task-specific
    React module using an approved component library, plus an action manifest. It can
    choose questions, order, conditional branches and review layout. Reusing components
