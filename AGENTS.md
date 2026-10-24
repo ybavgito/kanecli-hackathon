@@ -9,3 +9,21 @@ This app is built for a Kane CLI hackathon. Treat user-visible behavior as unver
 5. Read the evidence and fix the flow until it passes. For a non-local target, set `KANE_URL`; for a new behavior, set `KANE_OBJECTIVE`.
 
 Do not log credentials or put secret test values in source control.
+
+## Release-candidate and shared-project workflow
+
+- Hack Day uses `npm install -g @testmuai/kane-cli@rc`. Check the installed version
+  before release-specific commands; these docs were checked on 0.10.0-rc.3.
+- Use the official `kane-cli` skill for commands and flags. Generate new
+  requirements-linked tests through assurance from actual requirements.
+- Before assurance work, choose local `.context/` or the team's shared project;
+  do not create both. Use the actual team project ID.
+- Save shared extraction and design sessions explicitly. Review proposed use
+  cases before designing and check each save's returned files and errors.
+- Keep generated tests directly in `.testmuai/tests/`. Run the returned files
+  explicitly, then inspect `kane-cli cover --mode agent`. The legacy suite script
+  only selects `tests/*_test.md`.
+- Exploration designs tests but does not execute them. Agree on scope and policy
+  before starting it; its default permits app mutations.
+- Preserve version labels in the field guide. v0.9.0 observations do not prove
+  RC behavior; do not claim a workflow passed without executing it.

@@ -1,4 +1,71 @@
-# Kane CLI field guide: how to run it, and what it is good and bad at
+# Kane CLI field guide: current workflow and historical measurements
+
+## Current workflow (0.10.0-rc.3)
+
+Reviewed October 24, 2026 using the official Kane CLI skill 0.2.0, public docs
+and installed `0.10.0-rc.3` command help. npm's `rc` tag pointed to that version;
+`latest` still pointed to `0.9.0`. Install the event version with
+`npm install -g @testmuai/kane-cli@rc`. These are documentation and help checks,
+not end-to-end tests of RC features. The public changelog does not yet provide
+a 0.10 RC breakdown, so this is not an exact list of rc.3 changes.
+
+### What changes for this starter
+
+- **Shared projects (0.10+):** assurance work can live in the team's Test Manager
+  project instead of a local store. Link with
+  `kane-cli context ingest requirements.md --project <id> --mode agent`.
+  `.testmuai/assurance.json` records the link, which covers only that folder.
+  Without `--project`, an unconfigured folder in agent mode defaults to local work.
+- **Explicit saves:** extraction and design finish in a session. Save with
+  `kane-cli context sessions save <sid> --yes --mode agent` before expecting the
+  team to see the work. Check the save's file and Test Manager errors too.
+- **Pull shared tests:** installed help confirms `context pull --project`,
+  `--use-case` and `--overwrite`. A teammate can join and download tests with
+  `kane-cli context pull --project <id> --mode agent`; an already linked folder
+  uses `kane-cli context pull --mode agent`. Downloading is not test execution.
+- **Requirement-linked execution:** keep generated files directly in
+  `.testmuai/tests/`, run the files returned by the design save, and inspect
+  `kane-cli cover --mode agent`. Their runs attach to the scenario's Test Manager
+  case and contribute to shared coverage, which can lag by up to five minutes.
+- **Exploration (0.10+):** `kane-cli explore` maps screens, flows and findings,
+  with evidence. Its assurance jobs can design and save tests into the project;
+  they do not execute them. Pull, fill variables and run tests separately. Check
+  `explore context status` before calling designs ready.
+- **Exploration controls:** the default queues on HyperExecute and returns before
+  execution finishes; `--local-orchestration` runs from this machine. The default
+  permits changes; `--policy read_only` restricts exploration writes, while
+  explicitly requested setup steps still run. One project holds one exploration
+  of one URL. Pass the intended policy and limits again on re-runs.
+- **Integration APIs:** the Hack OS docs describe read-only project coverage,
+  requirements, tests and runs, plus exploration maps, findings and live updates.
+  These can feed a companion dashboard. Keep credentials on its server, not in a
+  browser bundle; the event APIs may change after the hackathon.
+
+### Migration boundaries
+
+Generate → execute → prove, mobile execution, evidence packs and requirement
+coverage already existed before 0.10. Shared projects and exploration extend
+that workflow; do not describe everything as newly introduced in rc.3.
+
+Generate new tests from actual requirements through the official skill's assurance
+workflow. Review proposed use cases before using `design tests --allow-unreviewed`
+in a shared project. A local `.context/` and a shared link cannot coexist in one
+folder. Linking does not change the profile project used by quick `kane-cli run`
+uploads. `context review`, `cover gaps` and `testrun --from-context` are not the
+shared-project workflow; follow its own documentation.
+
+The starter's suite script still selects `tests/*_test.md`; its example remains
+a legacy smoke test. Run generated `.testmuai/tests/` files explicitly. This
+documentation update does not link a project or execute RC exploration or
+assurance. The v0.9.0 timings and failure modes below have not been revalidated
+on the RC.
+
+Sources: [official shared-project documentation](https://github.com/LambdaTest/kane-cli/blob/main/docs/user-guide/assurance/shared-projects.md),
+[official overview](https://github.com/LambdaTest/kane-cli#readme), and the installed
+official skill's `shared-projects.md`, `explore.md`, `agent-contract.md` and
+`testrun.md` references, plus Hack OS's `references/kane-apis.md`.
+
+## Historical v0.9.0 field notes
 
 Measured with `@testmuai/kane-cli` v0.9.0 on small test apps, one machine, October 2026. Independent field notes for developers evaluating browser-test workflows; this is not official guidance. Treat timings as indicative, not as benchmarks.
 
@@ -61,7 +128,7 @@ Build integrations around the CLI's NDJSON stdout, exit codes and evidence files
 
 Install, sign in and run one flow before relying on it, so the first real run is not also the first install.
 
-1. **Install:** `npm install -g @testmuai/kane-cli` (Node 18 or newer), or `brew install LambdaTest/kane/kane-cli`. Google Chrome (stable) must be installed. A non-standard path goes in `KANE_CLI_CHROME_PATH`.
+1. **Install for Hack Day:** `npm install -g @testmuai/kane-cli@rc`. The measurements below used v0.9.0. Bare npm or Homebrew installation may select a different channel. Google Chrome (stable) must be installed. A non-standard path goes in `KANE_CLI_CHROME_PATH`.
 2. **Sign in:** `kane-cli login --oauth`. The CLI waits on a `http://127.0.0.1:<port>/callback` address, so the browser that completes the sign-in must run on the same machine. It opens the system default browser, which decides which Google session is used. Headless machines are documented to use `kane-cli login --username <user> --access-key <key>`, with the key from the TestMu dashboard under Settings, Keys; this was not run.
 3. **Check:** `kane-cli whoami`. Confirm `whoami` shows the account you intend after every login.
 4. **Run one flow:** `kane-cli run "Go to https://example.com and assert the page title contains 'Example'" --agent --headless`.
