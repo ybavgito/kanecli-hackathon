@@ -48,12 +48,20 @@ The first supported task is a partial return in a separate, working fictional me
 
 ## Current implementation status
 
-A React interface, Node controller, real Kane worker, bounded request interpreter,
-and persistent merchant sandbox have been scaffolded. Build and merchant contract
-checks have passed. Kane passed the landing-page smoke check on October 24, 2026:
-branding, request textbox and simulated-merchant disclosure. The saved journey is
-`.testmuai/tests/raising-kane-smoke_test.md`. The complete return journey has not
-yet passed Kane.
-The current source approval implementation is a baseline; the source-owned grant,
-payload digest, retrievable confirmation and final-verification contracts in the
-latest brief remain required. See the two-person build plan for ownership.
+A React interface, persistent task controller, OpenAI interpreter with a labeled
+sample fallback, and task-owned Kane browser worker are implemented. Build checks
+pass. Kane has passed the landing-page smoke check, source discovery, draft
+preparation, method change and refund correction. The seeded store-credit case
+produced a real failed review-validation run. The identical review check passed after correction; all stored constraints match source draft revision 6.
+The saved landing journey is `.testmuai/tests/raising-kane-smoke_test.md`.
+
+An attempted approval of the conflicting draft returned HTTP 409 and created no
+source return. Browser restart testing exposed a process-lifetime problem; Chrome
+now detaches from the server and the subsequent method-change run reconnected
+successfully. Evidence references now point to existing sealed packs.
+
+The complete return journey has not passed Kane. Merchant source-owned grants,
+operation lookup, persistent confirmation and synthetic QR are assigned to the
+teammate. The product disables submission until the source grant and operation
+APIs exist. No live OpenAI request has been verified; the current local task used
+the explicitly labeled sample parser. See the two-person build plan for ownership.

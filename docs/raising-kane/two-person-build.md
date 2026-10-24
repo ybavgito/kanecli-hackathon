@@ -37,10 +37,15 @@ complete journey. The teammate can verify the merchant separately.
   adds a 500-cent deduction.
 - The initial source draft selects both items; Kane must explicitly exclude the jacket.
 - The OpenAI interpreter is integrated. A live API call has not been verified; the limited fallback is explicitly labeled.
-- Builds and the Kane landing-page smoke check pass. No complete Raising Kane
-  return journey has passed Kane yet.
-- Approval currently uses a controller callback. Replace that baseline with the
-  source-owned grant contract below before claiming the latest brief is satisfied.
+- Builds, the Kane landing check, source preparation, method change and correction
+  pass. The same review check genuinely failed for store credit, then passed after
+  repair. No complete submission/receipt journey has passed yet.
+- The source scaffold still exposes a legacy approval callback. Replace that
+  baseline with the source-owned grant contract below. The product controller
+  requires the new contract before accepting an approval.
+- The latest product controller deliberately keeps submission unavailable until
+  `registerGrant` and `getOperation` are implemented. Completing the merchant
+  contract below enables the approval and submission integration.
 
 ## Merchant contract to implement
 
