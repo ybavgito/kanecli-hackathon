@@ -394,6 +394,8 @@ Key observations already established:
 
 These are synthetic feature tests. They do not mean Raising Kane's complete two-website product, atomic approvals, idempotency or final receipts have been implemented or validated.
 
+**Additional UX-artifact check:** an unquoted receipt heading containing a semicolon was extracted correctly, but one compiled assertion expected only the prefix. Supplying the complete expected text as a variable produced a passing receipt/conflict navigation check on the static storyboard. Inspect emitted expectations as well as observed values; keep deterministic business-value comparisons in the controller. A preceding Vite run was confounded by an edit during execution. These three checks are recorded separately in [storyboard verification](docs/kane-validation/storyboard-verification.json) and do not add merchant-workflow evidence.
+
 ## 24. What remains unverified for this project
 
 - Both source workflows running end to end through Raising Kane.

@@ -2,6 +2,8 @@
 
 Decision memo, October 24, 2026. This refines the product brief; it does not claim the proposed product is implemented. The repository currently contains the React starter. The separate [rc.3 experiments](../kane-validation/report.md) establish specific CLI behaviors on synthetic fixtures.
 
+The [UX research and demo direction](ux-research-and-demo-direction.md) adds primary-source findings, exact question/feedback timing, evidence presentation, interruption behavior and a timed video outline. The [interactive storyboard](demo-storyboard.html) illustrates those states without executing Kane or submitting anything.
+
 ## Recommendation
 
 **Let people start with a website, then choose from a small set of tested tasks. Keep exact-request verification inside every task.**

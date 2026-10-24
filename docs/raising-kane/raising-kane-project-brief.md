@@ -12,6 +12,8 @@ Complete product, scope, architecture and hackathon demo brief. October 24, 2026
 
 **Two-website scope revision:** the core demo now includes two independently working source websites and different workflows: a merchandise return and an existing home-service appointment change. The second website is essential scope. Earlier research recommending one source is superseded by this decision; arbitrary-site support remains outside scope.
 
+**UX research revision:** [the interaction and demo guidance](ux-research-and-demo-direction.md) specifies question timing, concise evidence views, handling changed intent and a realistic video outline. The linked storyboard is illustrative, not an implemented transaction flow.
+
 ## 1. The project in one paragraph
 
 Raising Kane turns a supported, complicated web task into a short sequence of understandable decisions. A person connects a supported website and chooses from its tested task catalog, or describes what they want within that supported scope. An OpenAI-powered agent uses Kane CLI to inspect and operate the original website. Raising Kane preserves the person's choices as the website introduces new steps and conditions, checks for mismatches before approval, and verifies the resulting record after submission. The person leaves with a completed request, a readable receipt and a clear next step. The hackathon scope has two supported source websites: a partial merchandise return and a constrained home-service appointment change.

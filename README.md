@@ -21,6 +21,8 @@ explicit failed-validation/correction demonstration.
 - [Original review packet ZIP](docs/raising-kane-review-packet.zip)
 - [Document replacement and verification notes](docs/raising-kane/repository-notes.md)
 - [Website-first workflow, preflight checks and two-site demo](docs/raising-kane/workflow-and-demo-design.md)
+- [UX research, interaction rules and demo direction](docs/raising-kane/ux-research-and-demo-direction.md)
+- [Interactive design storyboard — illustrative states](docs/raising-kane/demo-storyboard.html)
 - [50 recorded rc.3 experiment invocations and findings](docs/kane-validation/report.md)
 - [Current review bundle](docs/raising-kane-current-review.zip)
 

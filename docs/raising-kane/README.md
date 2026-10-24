@@ -20,3 +20,8 @@ evidence. These feature experiments do not prove the proposed full application.
 The [current review bundle](../raising-kane-current-review.zip) includes the new
 documents and explicitly metadata-redacted evidence copies. The original packet
 ZIP is retained separately.
+
+The [UX research](ux-research-and-demo-direction.md) refines what to ask and show
+at each checkpoint. Its [interactive storyboard](demo-storyboard.html) is a design
+artifact with illustrative states and separately labeled prior fixture evidence;
+it is not the product implementation or a new live Kane run.
