@@ -7,7 +7,7 @@
     "dev": "node server/index.mjs",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node --test tests/unit/*.test.mjs",
+    "test": "node --test tests/unit/*.test.mjs server/*.test.mjs",
     "check:kane": "node scripts/kane-preflight.mjs",
     "verify:kane": "node scripts/kane-verify.mjs",
     "verify:kane:suite": "node scripts/kane-suite.mjs",
