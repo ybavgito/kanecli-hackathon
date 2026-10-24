@@ -1,5 +1,7 @@
 # Raising Kane: UX research and demo direction
 
+> **Implementation update — October 24, 2026:** The PoC has been merged into `main` and both sandbox workflows now reach verified, persistent confirmations. See [implemented scope and demo](implementation-and-demo.md) and [verification](verification.md) for current behavior and measured results. The analysis/build split below records the earlier checkpoint; statements that submission or the appointment flow are unfinished are historical.
+
 October 24, 2026. Research synthesis and proposed interaction design; no usability study of Raising Kane has been conducted. This extends [the workflow decision memo](workflow-and-demo-design.md). The [interactive storyboard](demo-storyboard.html) uses illustrative states, not a live Kane connection.
 
 ## Applying this research to the actual PoC

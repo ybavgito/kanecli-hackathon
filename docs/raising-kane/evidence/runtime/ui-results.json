@@ -1,0 +1,608 @@
+[
+  {
+    "run": "receipt-return",
+    "events": [
+      {
+        "type": "warning",
+        "code": "unresolved_variables",
+        "message": "1 variable(s) have no value \u2014 typed as written unless a step sets them first",
+        "suggested_file": ".testmuai/variables/assurance.json",
+        "variables": [
+          {
+            "name": "return_receipt_url",
+            "reason": "value_missing",
+            "file": ".testmuai/variables/assurance.json",
+            "used_by": [
+              {
+                "file": "inspect-and-reload-the-completed-synthetic-return-receipt_test.md",
+                "step": 1
+              },
+              {
+                "file": "inspect-and-reload-the-completed-synthetic-return-receipt_test.md",
+                "step": 7
+              }
+            ]
+          }
+        ],
+        "v": 1,
+        "ts": "2026-10-24T22:07:32.276Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 1,
+        "status": "failed",
+        "duration_s": 65.8,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:08:43.716Z"
+      },
+      {
+        "type": "test_md_summary",
+        "overall_status": "failed",
+        "duration_s": 70,
+        "steps": {
+          "total": 7,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 6,
+          "replay_decisions": 0,
+          "author_decisions": 7
+        },
+        "adaptive_heal": {
+          "triggered": false
+        },
+        "commit": {
+          "committed": false,
+          "reason": "run_failed"
+        },
+        "artifacts": {
+          "replaced": true
+        },
+        "upload": {
+          "performed": true,
+          "succeeded": false
+        },
+        "cancelled": false,
+        "v": 1,
+        "ts": "2026-10-24T22:08:46.490Z"
+      },
+      {
+        "type": "test_md_done",
+        "overall_status": "failed",
+        "duration_s": 70,
+        "session_id": "d5553b45-00b9-4c82-ba9f-26a8fbf5584b",
+        "coverage": {
+          "status": "written",
+          "pct": 0
+        },
+        "v": 1,
+        "ts": "2026-10-24T22:08:46.497Z"
+      }
+    ]
+  },
+  {
+    "run": "receipt-return-corrected",
+    "events": [
+      {
+        "type": "test_md_step_end",
+        "step_index": 1,
+        "status": "passed",
+        "duration_s": 23.2,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:11:09.897Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 2,
+        "status": "passed",
+        "duration_s": 43.2,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:11:53.137Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 3,
+        "status": "passed",
+        "duration_s": 26.2,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:12:19.339Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 4,
+        "status": "passed",
+        "duration_s": 31.4,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:12:50.713Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 5,
+        "status": "passed",
+        "duration_s": 26.8,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:13:17.566Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 6,
+        "status": "passed",
+        "duration_s": 35.9,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:13:53.459Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 7,
+        "status": "passed",
+        "duration_s": 56.5,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:14:49.922Z"
+      },
+      {
+        "type": "test_md_summary",
+        "overall_status": "passed",
+        "duration_s": 247,
+        "steps": {
+          "total": 7,
+          "passed": 7,
+          "failed": 0,
+          "skipped": 0,
+          "replay_decisions": 0,
+          "author_decisions": 7
+        },
+        "adaptive_heal": {
+          "triggered": false
+        },
+        "commit": {
+          "committed": true,
+          "reason": "ok",
+          "testcase_id": "01M5QZ8W3JHWN5JGJJ93CZDFYF"
+        },
+        "artifacts": {
+          "replaced": true
+        },
+        "upload": {
+          "performed": true,
+          "succeeded": true
+        },
+        "share_url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZ8W3JHWN5JGJJ93CZDFYF/dashboard/share/US_T2QR6Z65911Z38LINL09B8KLPZMATL3GM7SY915EINXOIF57PIC0TK8ZWLE7K2FF?type=summary&agentView=true&fqdn=summary-page",
+        "cancelled": false,
+        "v": 1,
+        "ts": "2026-10-24T22:14:56.172Z"
+      },
+      {
+        "type": "test_md_done",
+        "overall_status": "passed",
+        "duration_s": 247,
+        "session_id": "06b51d9b-404f-46d7-abbe-523b70aa123d",
+        "share_url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZ8W3JHWN5JGJJ93CZDFYF/dashboard/share/US_T2QR6Z65911Z38LINL09B8KLPZMATL3GM7SY915EINXOIF57PIC0TK8ZWLE7K2FF?type=summary&agentView=true&fqdn=summary-page",
+        "coverage": {
+          "status": "written",
+          "pct": 36
+        },
+        "v": 1,
+        "ts": "2026-10-24T22:14:56.177Z"
+      }
+    ]
+  },
+  {
+    "run": "receipt-appointment",
+    "events": [
+      {
+        "type": "test_md_step_end",
+        "step_index": 1,
+        "status": "passed",
+        "duration_s": 45.5,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:16:06.992Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 2,
+        "status": "passed",
+        "duration_s": 104.3,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:17:51.261Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 3,
+        "status": "passed",
+        "duration_s": 44.1,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:18:35.410Z"
+      },
+      {
+        "type": "test_md_summary",
+        "overall_status": "passed",
+        "duration_s": 198,
+        "steps": {
+          "total": 3,
+          "passed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "replay_decisions": 0,
+          "author_decisions": 3
+        },
+        "adaptive_heal": {
+          "triggered": false
+        },
+        "commit": {
+          "committed": true,
+          "reason": "ok",
+          "testcase_id": "01M5QZQ0EX6HGXZEFF326ZT81W"
+        },
+        "artifacts": {
+          "replaced": true
+        },
+        "upload": {
+          "performed": true,
+          "succeeded": true
+        },
+        "share_url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZQ0EX6HGXZEFF326ZT81W/dashboard/share/US_L6V17LMHJW3HVLLU1UPRY20RXV4NME2W57Y43OW9XWOJ0NOTLBVVZ31ZUQWPTLY6?type=summary&agentView=true&fqdn=summary-page",
+        "cancelled": false,
+        "v": 1,
+        "ts": "2026-10-24T22:18:38.954Z"
+      },
+      {
+        "type": "test_md_done",
+        "overall_status": "passed",
+        "duration_s": 198,
+        "session_id": "0c2a6668-4d1f-4e39-93d3-c324358bd01d",
+        "share_url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZQ0EX6HGXZEFF326ZT81W/dashboard/share/US_L6V17LMHJW3HVLLU1UPRY20RXV4NME2W57Y43OW9XWOJ0NOTLBVVZ31ZUQWPTLY6?type=summary&agentView=true&fqdn=summary-page",
+        "coverage": {
+          "status": "written",
+          "pct": 32
+        },
+        "v": 1,
+        "ts": "2026-10-24T22:18:38.961Z"
+      }
+    ]
+  },
+  {
+    "run": "entry",
+    "events": [
+      {
+        "type": "test_md_step_end",
+        "step_index": 1,
+        "status": "passed",
+        "duration_s": 26.4,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:19:17.332Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 2,
+        "status": "passed",
+        "duration_s": 27.6,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:19:44.992Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 3,
+        "status": "passed",
+        "duration_s": 28.6,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:20:13.555Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 4,
+        "status": "passed",
+        "duration_s": 36.1,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:20:49.673Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 5,
+        "status": "passed",
+        "duration_s": 23.2,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:21:12.883Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 6,
+        "status": "passed",
+        "duration_s": 39.1,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:21:52.022Z"
+      },
+      {
+        "type": "test_md_summary",
+        "overall_status": "passed",
+        "duration_s": 185,
+        "steps": {
+          "total": 6,
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0,
+          "replay_decisions": 0,
+          "author_decisions": 6
+        },
+        "adaptive_heal": {
+          "triggered": false
+        },
+        "commit": {
+          "committed": true,
+          "reason": "ok",
+          "testcase_id": "01M5QZXCZ89Y0G8D4Q9GFSHAZA"
+        },
+        "artifacts": {
+          "replaced": true
+        },
+        "upload": {
+          "performed": true,
+          "succeeded": true
+        },
+        "share_url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZXCZ89Y0G8D4Q9GFSHAZA/dashboard/share/US_5UTWVU0JRUOY040DCVBVVT14U38S5PSAXQNKZXE39STDV3FQW53K42RY2NMVJRRD?type=summary&agentView=true&fqdn=summary-page",
+        "cancelled": false,
+        "v": 1,
+        "ts": "2026-10-24T22:22:03.603Z"
+      },
+      {
+        "type": "test_md_done",
+        "overall_status": "passed",
+        "duration_s": 185,
+        "session_id": "00415953-e3c1-457e-8c43-863f6b8ff7a2",
+        "share_url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZXCZ89Y0G8D4Q9GFSHAZA/dashboard/share/US_5UTWVU0JRUOY040DCVBVVT14U38S5PSAXQNKZXE39STDV3FQW53K42RY2NMVJRRD?type=summary&agentView=true&fqdn=summary-page",
+        "coverage": {
+          "status": "written",
+          "pct": 29
+        },
+        "v": 1,
+        "ts": "2026-10-24T22:22:03.607Z"
+      }
+    ]
+  },
+  {
+    "run": "receipt-return-replay-with-healing",
+    "events": [
+      {
+        "type": "test_md_step_end",
+        "step_index": 1,
+        "status": "passed",
+        "duration_s": 8.94,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:23:45.244Z"
+      },
+      {
+        "type": "test_md_bug_verdict",
+        "step_index": 2,
+        "confirmed": false,
+        "bug_title": "Return receipt assertion no longer matches displayed result",
+        "family": "automation_bug",
+        "category": "config_issue",
+        "category_proposal": null,
+        "severity": "minor",
+        "confidence": 0.93,
+        "one_liner": "The live receipt visibly satisfies the recorded return details, so the failed final assertion is stale or incorrectly configured.",
+        "v": 1,
+        "ts": "2026-10-24T22:23:53.540Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 2,
+        "status": "failed",
+        "duration_s": 8.29,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:23:53.541Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 1,
+        "status": "passed",
+        "duration_s": 8.91,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:24:07.423Z"
+      },
+      {
+        "type": "test_md_adaptive_heal",
+        "shrink_count": 1,
+        "final_author_boundary": 1,
+        "complete_reauthor": false,
+        "v": 1,
+        "ts": "2026-10-24T22:24:07.423Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 2,
+        "status": "passed",
+        "duration_s": 44.8,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:24:52.300Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 3,
+        "status": "passed",
+        "duration_s": 25.3,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:25:17.563Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 4,
+        "status": "passed",
+        "duration_s": 33.2,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:25:50.798Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 5,
+        "status": "passed",
+        "duration_s": 34.3,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:26:25.072Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 6,
+        "status": "passed",
+        "duration_s": 45.2,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:27:10.247Z"
+      },
+      {
+        "type": "test_md_step_end",
+        "step_index": 7,
+        "status": "passed",
+        "duration_s": 44.1,
+        "ref_kind": null,
+        "unit_kind": null,
+        "inlined_count": null,
+        "failed_sub_step_index": null,
+        "v": 1,
+        "ts": "2026-10-24T22:27:54.318Z"
+      },
+      {
+        "type": "test_md_summary",
+        "overall_status": "passed",
+        "duration_s": 262,
+        "steps": {
+          "total": 7,
+          "passed": 7,
+          "failed": 0,
+          "skipped": 0,
+          "replay_decisions": 7,
+          "author_decisions": 0
+        },
+        "adaptive_heal": {
+          "triggered": true
+        },
+        "commit": {
+          "committed": true,
+          "reason": "ok",
+          "testcase_id": "01M5QZ8W3JHWN5JGJJ93CZDFYF"
+        },
+        "artifacts": {
+          "replaced": true
+        },
+        "upload": {
+          "performed": true,
+          "succeeded": true
+        },
+        "share_url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZ8W3JHWN5JGJJ93CZDFYF/dashboard/share/US_ME62QFHCVLH5XXG50SX7ADOGZM5J38SKI0QW39H9D1CQQBE6K9MTB0L9BHSKUNHE?type=summary&agentView=true&fqdn=summary-page",
+        "cancelled": false,
+        "v": 1,
+        "ts": "2026-10-24T22:28:02.987Z"
+      },
+      {
+        "type": "test_md_done",
+        "overall_status": "passed",
+        "duration_s": 262,
+        "session_id": "cc000917-ff96-4278-a845-e4520e804e4b",
+        "share_url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZ8W3JHWN5JGJJ93CZDFYF/dashboard/share/US_ME62QFHCVLH5XXG50SX7ADOGZM5J38SKI0QW39H9D1CQQBE6K9MTB0L9BHSKUNHE?type=summary&agentView=true&fqdn=summary-page",
+        "coverage": {
+          "status": "written",
+          "pct": 36
+        },
+        "v": 1,
+        "ts": "2026-10-24T22:28:02.994Z"
+      }
+    ]
+  }
+]

@@ -2,179 +2,125 @@
 
 **When websites raise hell, raise Kane**
 
-This `main` checkout contains the starter and maintained research. The working
-PoC is on [`codex/raising-kane-poc`](https://github.com/ybavgito/kanecli-hackathon/tree/codex/raising-kane-poc),
-reviewed at `0ad30e5`. It uses Kane during return preparation, conflict detection
-and repair; submission remains disabled pending the merchant contract. Read the
-[implementation review and priorities](docs/raising-kane/poc-review-and-build-priorities.md)
-before treating the full specification as implemented. The checked release is
-`0.10.0-rc.3`, October 24, 2026.
+A calm interface for getting a difficult website task done without losing your choices.
+Kane operates the source website during the user's workflow, checks its review against
+saved preferences, and verifies the resulting confirmation. The app blocks submission
+until that review passes and the user approves the exact proposal.
 
-## Current product specification
+Two working, clearly labeled sandboxes ship together:
 
-The product is **Raising Kane**: a simpler interface for completing a supported
-web task while preserving the user's choices and verifying the source result.
-Use the name and tagline above for all new product copy and documentation.
+- **Northstar Outfitters:** return the red shoes, keep the jacket, choose a return
+  reason and refund destination, and get a persistent return receipt with a demo QR.
+  Changing to printer-free drop-off exposes a source-site trap: it resets the refund
+  to store credit. Kane catches the mismatch; a correction and the same validator
+  must pass before approval.
+- **Linden Home:** move a service visit to Saturday morning while keeping the same
+  technician and avoiding an extra fee. Compare three actual source slots, approve
+  a verified choice, and get a saved appointment confirmation. Losing availability
+  invalidates approval; the existing booking remains until a valid move commits.
 
-Start with the [Raising Kane project brief](docs/raising-kane/raising-kane-project-brief.md).
-It is the current consolidated specification and supersedes the earlier brief
-where requirements differ. It adds atomic approval/commit, idempotent submission,
-browser continuity, mandatory completion evidence, reload persistence and an
-explicit failed-validation/correction demonstration.
+The sites are synthetic. This is a supported-integration demonstration, not arbitrary
+website automation, a real merchant return, or a real appointment service.
 
-- [Review packet index](docs/raising-kane/README.md)
-- [Original review packet ZIP](docs/raising-kane-review-packet.zip)
-- [Document replacement and verification notes](docs/raising-kane/repository-notes.md)
-- [Website-first workflow, preflight checks and two-site demo](docs/raising-kane/workflow-and-demo-design.md)
-- [UX research, interaction rules and demo direction](docs/raising-kane/ux-research-and-demo-direction.md)
-- [Interactive design storyboard — illustrative states](docs/raising-kane/demo-storyboard.html)
-- [50 recorded rc.3 experiment invocations and findings](docs/kane-validation/report.md)
-- [Current review bundle](docs/raising-kane-current-review.zip)
+## Run locally
 
-The PoC implements part of the specification and has its own runtime evidence.
-The atomic source transaction, completed receipt and second source remain open.
-Separate synthetic CLI experiments demonstrate parameterized replay with explicit
-refresh, session/context handling, Explore and local assurance; they do not prove
-those features are integrated into the product. Historical research and the
-original packet ZIP remain available for provenance.
-
-The recommended experience is website-first: connect a supported site, choose
-from its tested task catalog, make plain decisions, and approve an exact verified
-proposal. Rehearse integrations before enabling tasks; recheck the current source
-during each user's workflow. The target demo covers a partial return and an appointment
-change on two labeled sandboxes.
-
-The [original ClearPath brief](docs/clearpath/clearpath-complete-project-brief.md)
-and its [earlier gap review](docs/clearpath/gap-review.md) remain available as history.
-The packet now includes the previously missing background research. Its historical
-technical review still cites three unavailable machine-local paths, listed in the
-repository notes.
-
-## Start building
+Use Node 24 (tested), Chrome, an authenticated Kane account with credits,
+and the checked CLI release:
 
 ```bash
-npm install
+npm ci
+npm install -g @testmuai/kane-cli@0.10.0-rc.3
+npx @testmuai/kane-cli-skill
+kane-cli login --oauth
+npm run check:kane
 npm run dev
 ```
 
-The app runs at `http://127.0.0.1:5173` by default.
+Open **http://127.0.0.1:5173**. The source sites run on ports **5174** and **5175**.
+Set `PORT` to change the app port; sources default to the next two ports. All three
+servers bind to loopback. Use `npm run dev` for the complete application;
+`npm run preview` serves only the built frontend and cannot run workflows.
 
-## Verify with Kane
+Optional: copy `.env.example` to `.env` and set `OPENAI_API_KEY` for bounded natural
+language return interpretation. Without it, the UI explicitly identifies a limited
+sample parser. The recorded verification used that fallback, not a live parser API
+call. Browser operation still uses real Kane jobs. Never commit credentials.
 
-Install the event release candidate and official skill, then authenticate:
+Task records, source records, approval grants and browser profiles persist under
+ignored `data/`. Keep this directory to resume receipts after restart. This is a
+single-process local demo; it is not a hosted multi-tenant service.
+Tasks created by the older PoC without an owner session remain read-only in this
+build. Start a new task to exercise the completed workflow; existing records are
+not deleted or silently adopted by another browser.
+
+## Experience and demo
+
+Choose a supported website → make plain-language choices → watch the current Kane
+step → resolve any mismatch → approve exact terms → send → receive verified proof.
+Previous choices collapse behind **Change preferences**. The source page is optional,
+read-only inspection. The evidence panel keeps failures as well as passing runs.
+Only the browser session that started a task can approve, submit or download its pack.
+
+Start with the [implemented product and demo guide](docs/raising-kane/implementation-and-demo.md).
+The [verification report](docs/raising-kane/verification.md) distinguishes real runtime
+jobs, UI checks, deterministic tests and historical PoC evidence.
+
+## Check the implementation
 
 ```bash
-npm install -g @testmuai/kane-cli@rc
-npx @testmuai/kane-cli-skill
-kane-cli --version
-kane-cli login --oauth
-```
-
-With the app running, use these commands in another terminal:
-
-```bash
-npm run check:kane
+npm test
+npm run build
+# With the app running and Kane authenticated:
 npm run verify:kane
 ```
 
-`verify:kane` emits Kane's NDJSON result. To target another deployment or flow,
-set `KANE_URL` and `KANE_OBJECTIVE`:
+`npm test` covers source-owned approval, stale revisions, duplicate prevention,
+availability changes, mandatory extracted fields and recovery after a commit timeout.
+These are contract tests; some inject a worker double and are not Kane evidence.
 
-```bash
-KANE_URL=https://your-deployment.example KANE_OBJECTIVE='Verify a user can create a project and see it in the list.' npm run verify:kane
+Requirements are in `requirements/raising-kane-completion.md`. Kane assurance generated
+three `_test.md` checks under `.testmuai/tests/`. Their variables are deliberately blank:
+complete real tasks first and supply their actual URLs, using Kane's object format:
+
+```json
+{
+  "return_receipt_url": { "value": "http://127.0.0.1:5173/?taskId=YOUR_RETURN_ID", "secret": false },
+  "appointment_receipt_url": { "value": "http://127.0.0.1:5173/?taskId=YOUR_APPOINTMENT_ID", "secret": false },
+  "start_url": { "value": "http://127.0.0.1:5173", "secret": false }
+}
 ```
 
-Keep the user flow, acceptance criteria, and any test data in `.testmuai/context.md`.
-
-## Saved tests and parallel suites
-
-One-off checks use `verify:kane`. The existing `tests/example_test.md` is a legacy
-smoke test. Generate new requirements-linked tests through the official Kane
-skill's assurance workflow below. First execution records the steps; later runs
-replay the recording.
-
-| Path | Purpose |
-| --- | --- |
-| `tests/*_test.md` | Tests: YAML frontmatter, then one `## Heading` per step |
-| `output-<name>/` | Recordings next to each test (created on first run; commit these) |
-| `scripts/run-suite.sh` | Runs all tests as one parallel suite |
-
 ```bash
-# One test (app must be running)
-kane-cli testmd run tests/example_test.md --agent --headless
-
-# The whole suite in parallel (use this, not several concurrent testmd runs)
-scripts/run-suite.sh 4
-
-# Validate the selection without executing anything
-scripts/run-suite.sh 4 --dry-run
+kane-cli testmd run .testmuai/tests/inspect-and-reload-the-completed-synthetic-return-receipt_test.md --agent --headless --variables-file /path/to/local-variables.json
 ```
 
-Exit codes: `0` passed, `1` failed, `2` error, `3` timeout or cancelled.
-A failed run is not necessarily a product bug: read `failure.yaml` in the evidence pack.
+Do not run multiple standalone `testmd` processes against the default Chrome port.
+The product uses its own task browser profiles and serializes Kane jobs. Local assurance
+was used for this build; derived criteria remain unapproved, so this is not a claim of
+human-approved assurance coverage. See the [field guide](kane-field-guide.md) before
+using shared-project assurance or Explore.
 
-Guidelines:
+## Architecture and boundaries
 
-- Write one clause per assertion, and end each step with a check on the page state.
-- Keep a single objective under about 15 steps; split longer flows.
-- Pass the target through `{{base_url}}`; `--url` did not replace literal recorded navigation in the local reproduction check.
-- Decide numeric invariants in your own code from values extracted with `store X as 'name'`.
-- `.testmuai/evidence/` (sealed run packs) and `.context/` are git-ignored.
+React/Vite interface → Node task controller → Kane CLI → separate source website.
+The controller stores intent, checks typed browser observations against source records,
+and manages recovery. Each source atomically consumes a grant bound to the exact
+proposal, draft revision and operation ID. Repeated delivery of the same operation
+returns its original result. After an uncertain submission the app looks up that
+operation before retrying. A successful click alone never produces a completed receipt.
 
-## Shared projects and generated tests (0.10 RC)
+Approval enforcement depends on these cooperating source adapters. Browser instructions
+alone cannot provide atomic transactions on arbitrary third-party websites. Source
+JSON writes are atomic within this one server process, not a distributed database.
+The demo's records are readable locally; session checks protect actions, not tenant privacy.
 
-Use the team's existing Test Manager project ID. Create `requirements.md` from
-the actual requirements first, then ingest it and save the returned session:
+## Further documentation
 
-```bash
-kane-cli projects list --agent
-kane-cli context ingest requirements.md --project <project-id> --mode agent
-kane-cli context sessions save <session-id> --yes --mode agent
-kane-cli context list --mode agent
-```
-
-Review the proposed use cases before designing. In a shared project, use cases
-saved by an agent remain proposed; after review, design uses `--allow-unreviewed`.
-Save that design too, fill the requested variables, then run the returned files:
-
-```bash
-kane-cli design tests --use-case <use-case-id> --allow-unreviewed --mode agent
-kane-cli context sessions save <design-session-id> --yes --mode agent
-kane-cli testrun run .testmuai/tests/<generated>_test.md --agent < /dev/null
-kane-cli cover --mode agent
-```
-
-Replace placeholder IDs and paths with the returned values. Session completion
-alone does not save work. Keep generated tests directly in `.testmuai/tests/`
-so runs count against the scenario's Test Manager case. Coverage can take up to
-five minutes to reflect a run.
-
-A teammate can join and download the project's tests with:
-
-```bash
-kane-cli context pull --project <project-id> --mode agent
-```
-
-The link is `.testmuai/assurance.json` and applies only to its containing folder.
-A folder cannot have both that link and a local `.context/` store. Ordinary
-`kane-cli run` uploads still use the profile's configured project.
-
-The suite script selects only legacy `tests/*_test.md` files. Run generated
-`.testmuai/tests/` files explicitly as above. This documentation update does not
-link the checkout or migrate the existing test.
-
-## Exploration (0.10 RC)
-
-`kane-cli explore` maps screens, flows and findings, and can design tests into
-the shared project. It does not execute those tests. Cloud exploration queues on
-HyperExecute by default; local orchestration is also available. Exploration
-defaults to allowing app data changes; select `--policy read_only` when that is
-not intended. Cloud access to localhost needs a LambdaTest tunnel.
-
-See the [current RC field guide](kane-field-guide.md) and the
-[measured Explore findings](docs/kane-validation/report.md#explore-scope-and-limits).
-
-## Field guide
-
-See the [Kane CLI field guide](kane-field-guide.md) for current RC workflow notes
-and separately labeled v0.9.0 measurements.
+- [Project specification](docs/raising-kane/raising-kane-project-brief.md)
+- [Implementation and live demo](docs/raising-kane/implementation-and-demo.md)
+- [Evidence and verification](docs/raising-kane/verification.md)
+- [Kane CLI field guide](kane-field-guide.md)
+- [Research packet index](docs/raising-kane/README.md)
+- [Historical PoC audit](docs/raising-kane/poc-review-and-build-priorities.md)
+- [Earlier CLI experiments](docs/kane-validation/report.md)
+- [Current review bundle](docs/raising-kane-current-review.zip)

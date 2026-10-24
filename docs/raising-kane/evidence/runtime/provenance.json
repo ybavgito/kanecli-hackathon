@@ -1,0 +1,54 @@
+[
+  {
+    "file": "return-04-validate-review-failed-metadata-redacted.evidence",
+    "kind": "return",
+    "phase": "validate-review",
+    "status": "failed",
+    "sourceSha256": "4fb5c43d6aaf8503eda1c74081b0f55c1d8b8be3c1abbaaf973c2fff98519951",
+    "publishedSha256": "862a0ae5a2fd9a798373d039b2643d1c6d22c18b4043e80c8c147f81d42199a9",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Browser outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/go-to-http-127-0-0-1-5191-merchant-taski-7789d2fe/result.yaml"
+    ],
+    "testManagerUrl": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QYXK6ZJM14HXVAXGBDBKS8/dashboard/share/US_YGUAO0G6SLF6XI2HI7PPVXXTN8JFWIUNV8U5VT23DMQOY11OJ3E9SZZC6M0Q4BIM?type=summary&agentView=true&fqdn=summary-page"
+  },
+  {
+    "file": "return-06-validate-review-passed-metadata-redacted.evidence",
+    "kind": "return",
+    "phase": "validate-review",
+    "status": "passed",
+    "sourceSha256": "59a16eacaca667adabb38b958fdc1aced41a9053bdeb7481bdecb51c495b009c",
+    "publishedSha256": "c1dd7ff2228948a76266162a85acf7b4788c9993f48255bc32548627e6711ba9",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Browser outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/go-to-http-127-0-0-1-5191-merchant-taski-fe92ba21/result.yaml"
+    ],
+    "testManagerUrl": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZ17AK1TC9ABKH38HYQY2A/dashboard/share/US_NACLGYA37XA8SLM0HSBC2SQ0353GXMNYK2ONKHNCQXM5NI3OW3U82XOYTUOP326N?type=summary&agentView=true&fqdn=summary-page"
+  },
+  {
+    "file": "return-08-verify-confirmation-passed-metadata-redacted.evidence",
+    "kind": "return",
+    "phase": "verify-confirmation",
+    "status": "passed",
+    "sourceSha256": "0cbd52a7f3e171ae2d34be78bbf32c8dfaaa19cbbf00c6a94e186c1dd33a31ea",
+    "publishedSha256": "633dfb36d8fc0de94c7ed454692d0a73e6b5604c5939d63f351110821e1284e4",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Browser outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/go-to-http-127-0-0-1-5191-merchant-retur-20876c0d/result.yaml"
+    ],
+    "testManagerUrl": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZ54PVBJ430HD00G62M5G7/dashboard/share/US_F5IDNE5NKP03RYAW7DPPVDNY0RFIEU0D4FUGLCVX6J30A46Z8DJLCLSWUI1MS07P?type=summary&agentView=true&fqdn=summary-page"
+  },
+  {
+    "file": "appointment-04-verify-confirmation-passed-metadata-redacted.evidence",
+    "kind": "appointment",
+    "phase": "verify-confirmation",
+    "status": "passed",
+    "sourceSha256": "4de3dfbbd3ef3b3e33ccbde047c3b88e682e90ded8091ccf669e9bf0f51a8397",
+    "publishedSha256": "17464322d2e08de5a986eb8b23fda842b4676019acf98350595c5368fdc31d43",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Browser outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/go-to-http-127-0-0-1-5192-appointments-c-be198d33/result.yaml"
+    ],
+    "testManagerUrl": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZF1DSYRTX96PPR2B53389/dashboard/share/US_9QU3PFLH9Q50C5GI66GAXHHT7IBQD9GU26JNRO5DKZC53K94MCKSMP8YQ77S22SF?type=summary&agentView=true&fqdn=summary-page"
+  }
+]

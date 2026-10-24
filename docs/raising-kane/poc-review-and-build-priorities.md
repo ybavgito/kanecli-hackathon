@@ -1,5 +1,7 @@
 # Raising Kane: PoC review and build priorities
 
+> **Implementation update — October 24, 2026:** The PoC has been merged into `main` and both sandbox workflows now reach verified, persistent confirmations. See [implemented scope and demo](implementation-and-demo.md) and [verification](verification.md) for current behavior and measured results. The analysis/build split below records the earlier checkpoint; statements that submission or the appointment flow are unfinished are historical.
+
 Reviewed October 24, 2026. **Implementation baseline:** [`codex/raising-kane-poc` at `0ad30e5`](https://github.com/ybavgito/kanecli-hackathon/tree/0ad30e5fb845a2b724f8ae4fe2a9e8e163371bd5). The review used a separate checkout; it does not merge that implementation into `main`. Read this beside the [product brief](raising-kane-project-brief.md) and [UX research](ux-research-and-demo-direction.md).
 
 ## Verdict
@@ -192,3 +194,26 @@ These links refer to the reviewed commit, not a moving branch:
 - [Product UI](https://github.com/ybavgito/kanecli-hackathon/blob/0ad30e5fb845a2b724f8ae4fe2a9e8e163371bd5/src/App.jsx): polling at 86; hero at 178; method controls at 219; approval controls at 240; editable source iframe at 243.
 - [Merchant implementation](https://github.com/ybavgito/kanecli-hackathon/blob/0ad30e5fb845a2b724f8ae4fe2a9e8e163371bd5/server/merchant.mjs): draft changes at 127; source UI handlers at 224; HTTP routes at 297; exported capabilities at 367.
 - [Combined app server](https://github.com/ybavgito/kanecli-hackathon/blob/0ad30e5fb845a2b724f8ae4fe2a9e8e163371bd5/server/index.mjs) and [package scripts](https://github.com/ybavgito/kanecli-hackathon/blob/0ad30e5fb845a2b724f8ae4fe2a9e8e163371bd5/package.json) establish the local hosting boundary.
+
+## Implemented follow-up in main
+
+The pinned observations above remain intact. This follow-up maps their proposed fixes
+to the actual implementation; see [verification](verification.md) for scope and runs.
+
+| Audit priority | Implemented change | Evidence boundary |
+| --- | --- | --- |
+| Finish the transaction | Source-owned grants, atomic commit, operation lookup, persistent confirmations and QR | Real Kane return and appointment reached complete; contract tests cover retries |
+| Compare every material term | Typed mandatory fields plus independent source comparisons, exact canonical digest | Wrong amount/missing currency rejected in controller tests; real review extracts all fields |
+| Recover discovery | Preparation first restores failed discovery and original baseline | Injected-worker controller test |
+| Separate inspection | Read-only source iframe/link on a distinct source origin | UI inspection and generated receipt tests; no generic editable takeover claim |
+| Change one's mind | Reversible method/destination and technician/fee controls; invalidate approval | Implemented controls, real method-change run; not every combination browser-tested |
+| Accurate evidence/progress | Source/browser provenance, expected/observed values, elapsed phase, retained failed runs and pack downloads | Real red/green trail; generated receipt inspection; owner-download HTTP checks |
+| Current decision first | No active-task marketing hero; completed preferences collapse | Actual desktop/mobile screenshots; generated entry check recorded separately |
+| Ignore runtime artifacts | Vite excludes data and Kane output folders | Runtime/browser profiles no longer cause source HTML reloads during observed runs |
+| Second source | Distinct appointment adapter and source origin, constraint-sensitive options, preserved old booking | Real complete appointment plus deterministic slot-loss contract test |
+| Assertion behavior | Worker explicitly passes stop-on-assertion-failure | Failed refund review stops; no completion from its missing fields |
+| Requirements and packs | Local assurance-generated tests, public metadata-redacted packs and hash provenance | Criteria remain unapproved; no full trusted-coverage claim |
+
+Generic URL discovery and personal-account handoff remain separate from this supported
+transaction implementation. The new PoC branch extension and its unverified edges are
+recorded in the [implementation guide](implementation-and-demo.md#parallel-branch-discovered-during-this-build).

@@ -16,3 +16,6 @@ data/
 .DS_Store
 __pycache__/
 *.pyc
+
+# Local generated recordings; selected reviewed evidence is published under docs.
+.testmuai/tests/output-inspect-*/

@@ -1,249 +1,1192 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowSquareOut,
+  Check,
+  CheckCircle,
+  CircleNotch,
+  Clock,
+  Package,
+  CalendarBlank,
+  CaretDown,
+  ArrowClockwise,
+  WarningCircle,
+  Receipt,
+  Fingerprint,
+  Printer,
+  QrCode,
+  X,
+  MagnifyingGlass,
+  DownloadSimple,
+} from '@phosphor-icons/react'
+import '@fontsource-variable/dm-sans'
 
 const EXAMPLE = 'Return the red shoes, keep the jacket, and refund my original payment method.'
-const TASK_KEY = 'raising-kane-task-id'
-
-function Icon({ name, size = 18 }) {
-  const paths = {
-    arrow: <path d="M4 12h15m-6-6 6 6-6 6" />,
-    check: <path d="m4 12 5 5L20 6" />,
-    eye: <><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z" /><circle cx="12" cy="12" r="2.4" /></>,
-    link: <><path d="M10 14 21 3m-8 0h8v8" /><path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" /></>,
-    refresh: <><path d="M20 11a8 8 0 1 0-2.4 6" /><path d="M20 4v7h-7" /></>,
-    shield: <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" /><path d="m9 12 2 2 4-4" /></>,
-    spark: <><path d="m12 2 1.7 6.3L20 10l-6.3 1.7L12 18l-1.7-6.3L4 10l6.3-1.7L12 2Z" /><path d="m19 17 .7 2.3L22 20l-2.3.7L19 23l-.7-2.3L16 20l2.3-.7L19 17Z" /></>,
-  }
-  return <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>
-}
-
+const money = (value, currency = 'USD') =>
+  value == null
+    ? 'Not confirmed'
+    : new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(value / 100)
+const destination = (value) =>
+  value === 'store_credit' ? 'Store credit' : 'Original payment method'
+const expectedMethodFromTask = (task) => (task.intent.noPrinter ? 'qr_dropoff' : 'print_label')
+const method = (value) =>
+  value === 'qr_dropoff' ? 'Printer-free drop-off' : 'Printed shipping label'
+const timestamp = (value) =>
+  value
+    ? new Date(value).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+    : 'Not checked'
+const pretty = (value) =>
+  String(value || '')
+    .replaceAll('_', ' ')
+    .replaceAll('-', ' ')
+const appointmentTime = (value) =>
+  value
+    ? new Intl.DateTimeFormat('en-US', {
+        weekday: 'long',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        timeZone: 'America/Los_Angeles',
+      }).format(new Date(value))
+    : 'Choose a time'
+const working = (t) =>
+  Boolean(t?.progress) || ['created', 'working', 'submitting'].includes(t?.status)
 async function api(path, body) {
-  const response = await fetch(path, {
+  const r = await fetch(path, {
     method: body === undefined ? 'GET' : 'POST',
-    headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
+    headers: body === undefined ? {} : { 'Content-Type': 'application/json' },
     body: body === undefined ? undefined : JSON.stringify(body),
   })
-  const data = await response.json().catch(() => ({}))
-  if (!response.ok) throw new Error(data.error || data.message || `Request failed (${response.status})`)
+  const data = await r.json()
+  if (!r.ok) throw Error(data.error || 'We could not complete this step.')
   return data
 }
-
-const pretty = value => String(value || '').replaceAll('_', ' ').replace(/\b\w/g, c => c.toUpperCase())
-const money = (cents, currency = 'USD') => cents == null || Number.isNaN(Number(cents))
-  ? 'Not confirmed'
-  : new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(Number(cents) / 100)
-const sourceDraft = task => task?.merchant?.draft || task?.merchant || {}
-const evidenceSummary = item => item.phase === 'validate-review' && item.status !== 'passed'
-  ? 'Kane could not confirm that this draft matched your saved choices. Your request stays unchanged.'
-  : item.summary || item.message || pretty(item.status)
-
-function EventLine({ event }) {
-  const eventText = typeof event === 'string' ? event : event.text || event.summary || event.message
-  const rawTime = typeof event === 'object' && (event.at || event.time)
-  const time = rawTime && !Number.isNaN(new Date(rawTime).getTime())
-    ? new Date(rawTime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
-    : null
-  return <li className="event-line"><span className="event-dot" /><div><p>{eventText}</p>{time && <small>{time}</small>}</div></li>
+function Brand() {
+  return (
+    <span className="wordmark">
+      raising<span>kane</span>
+      <span className="brand-stop">.</span>
+    </span>
+  )
 }
-
+function Elapsed({ since }) {
+  const [now, setNow] = useState(Date.now())
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 1000)
+    return () => clearInterval(timer)
+  }, [])
+  if (!since) return null
+  const seconds = Math.max(0, Math.floor((now - new Date(since)) / 1000))
+  return (
+    <span className="elapsed">
+      {Math.floor(seconds / 60)}:{String(seconds % 60).padStart(2, '0')} elapsed
+    </span>
+  )
+}
+function Pill({ status }) {
+  const labels = {
+    ready: 'Ready for review',
+    conflict: 'A choice changed',
+    needs_attention: 'Needs a check',
+    needs_reason: 'Your choice',
+    needs_slot: 'Choose a time',
+    approved: 'Approved',
+    complete: 'Verified result',
+    working: 'Checking the website',
+    submitting: 'Submitting',
+    reconciling: 'Checking outcome',
+    submitted_unverified: 'Checking confirmation',
+  }
+  return (
+    <span className={`status-pill ${status}`}>
+      <span />
+      {labels[status] || pretty(status)}
+    </span>
+  )
+}
+function Button({ children, icon: Icon = ArrowRight, secondary = false, ...props }) {
+  return (
+    <button className={secondary ? 'button secondary' : 'button'} {...props}>
+      {children}
+      {Icon && <Icon size={18} />}
+    </button>
+  )
+}
+function Row({ label, children }) {
+  return (
+    <div className="summary-row">
+      <dt>{label}</dt>
+      <dd>{children}</dd>
+    </div>
+  )
+}
+function Comparison({ task }) {
+  const [showAll, setShowAll] = useState(false),
+    rows = task.checks || [],
+    important =
+      task.kind === 'appointment'
+        ? ['slot', 'technician', 'fee', 'availability']
+        : ['items', 'jacket', 'destination', 'method', 'deduction', 'refund']
+  const visible = showAll ? rows : rows.filter((r) => important.includes(r.key)),
+    conflicts = rows.filter((r) => r.status === 'conflict')
+  return (
+    <section className="comparison-section" aria-label="Choices compared with source">
+      <div className="section-heading">
+        <h2>Your choices, checked.</h2>
+        <span>
+          {task.validation
+            ? 'Browser + source checked'
+            : conflicts.length
+              ? `${conflicts.length} difference${conflicts.length > 1 ? 's' : ''}`
+              : 'Browser check pending'}
+        </span>
+      </div>
+      <div className="comparison-table">
+        <div className="comparison-header">
+          <span>What matters</span>
+          <span>You chose</span>
+          <span>Website now</span>
+          <span className="sr-only">Result</span>
+        </div>
+        {visible.map((row) => (
+          <div className={`comparison-row ${row.status}`} key={row.key}>
+            <span className="comparison-label">{row.label}</span>
+            <span>{String(row.expected ?? 'Not chosen')}</span>
+            <strong>{String(row.observed ?? 'Not observed')}</strong>
+            <span
+              className="comparison-symbol"
+              title={row.status === 'match' ? 'Source matches' : 'Needs attention'}
+            >
+              {row.status === 'match' ? <Check size={18} /> : <WarningCircle size={19} />}
+              <span className="sr-only">{row.status}</span>
+            </span>
+          </div>
+        ))}
+      </div>
+      <div className="comparison-footer">
+        <button className="text-button" onClick={() => setShowAll((v) => !v)}>
+          {showAll ? 'Show key choices' : `See all ${rows.length} source checks`}
+          <CaretDown className={showAll ? 'rotated' : ''} size={14} />
+        </button>
+        <span>Source snapshot · {timestamp(task.observedAt)}</span>
+      </div>
+      {task.verificationFields?.some((f) => f.status !== 'match') && (
+        <details className="check-details">
+          <summary>Browser evidence still needed</summary>
+          {task.verificationFields
+            .filter((f) => f.status !== 'match')
+            .map((f) => (
+              <p key={f.key}>
+                <strong>{pretty(f.key)}:</strong> expected {String(f.expected)}, observed{' '}
+                {String(f.observed ?? 'missing')}.
+              </p>
+            ))}
+        </details>
+      )}
+    </section>
+  )
+}
+function Evidence({ task }) {
+  const entries = task.evidence || []
+  return (
+    <section className="evidence-section">
+      <div className="section-heading">
+        <h2>The verification trail</h2>
+        <span>{entries.length} runs</span>
+      </div>
+      <p className="small muted">
+        Actual browser runs. Failed checks remain visible after correction.
+      </p>
+      {entries.length ? (
+        <ol className="evidence-list">
+          {entries
+            .slice()
+            .reverse()
+            .map((item, index) => (
+              <li key={`${item.at}-${index}`}>
+                <span className={`evidence-icon ${item.status}`}>
+                  {item.status === 'passed' ? <Check size={15} /> : <WarningCircle size={16} />}
+                </span>
+                <div>
+                  <div className="evidence-title">
+                    <strong>{pretty(item.phase)}</strong>
+                    <span>
+                      {item.status === 'passed'
+                        ? 'Passed'
+                        : item.status === 'failed'
+                          ? 'Failed'
+                          : 'Incomplete'}
+                    </span>
+                  </div>
+                  <p>
+                    Choice revision {item.taskRevision} · {timestamp(item.at)}
+                    {item.durationMs ? ` · ${Math.round(item.durationMs / 1000)}s` : ''}
+                  </p>
+                  <details>
+                    <summary>See observation</summary>
+                    <p>{item.summary || 'The run did not return a completed observation.'}</p>
+                    {Object.keys(item.finalState || {})
+                      .filter((k) => k !== 'url')
+                      .map((key) => (
+                        <div className="observed-field" key={key}>
+                          <span>{pretty(key)}</span>
+                          <strong>
+                            {typeof item.finalState[key] === 'object'
+                              ? JSON.stringify(item.finalState[key])
+                              : String(item.finalState[key])}
+                          </strong>
+                        </div>
+                      ))}
+                  </details>
+                  {task.canControl && item.packAvailable && (
+                    <a href={item.packUrl} download>
+                      Download evidence pack <DownloadSimple size={13} />
+                    </a>
+                  )}
+                  {item.url && (
+                    <a href={item.url} target="_blank" rel="noreferrer">
+                      Open Kane report <ArrowSquareOut size={13} />
+                    </a>
+                  )}
+                </div>
+              </li>
+            ))}
+        </ol>
+      ) : (
+        <div className="evidence-empty">
+          <Fingerprint size={30} />
+          <p>The first source check will appear here.</p>
+        </div>
+      )}
+      <a
+        className="download-link"
+        href={`/api/tasks/${task.id}/evidence`}
+        target="_blank"
+        rel="noreferrer"
+      >
+        <DownloadSimple size={16} /> Open evidence index
+      </a>
+    </section>
+  )
+}
+function SourceView({ task }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <section className="source-section">
+      <div className="section-heading">
+        <h2>The original website</h2>
+        <span className="read-only">Read-only</span>
+      </div>
+      <p className="small muted">
+        Inspect the current source without changing the draft. This is a separate page view, not the
+        agent’s live screen.
+      </p>
+      <button className="source-open" onClick={() => setOpen((v) => !v)}>
+        <span>
+          {task.kind === 'appointment' ? 'Linden Home' : 'Northstar Outfitters'}
+          <small>Simulated {task.kind === 'appointment' ? 'booking' : 'order'}</small>
+        </span>
+        <MagnifyingGlass size={23} />
+      </button>
+      {open && task.sourceViewUrl && (
+        <iframe
+          key={`${task.id}-${task.merchant?.revision}`}
+          title="Read-only source website"
+          src={task.sourceViewUrl}
+          className="source-frame"
+        />
+      )}
+      {task.sourceViewUrl && (
+        <a className="source-external" href={task.sourceViewUrl} target="_blank" rel="noreferrer">
+          Open read-only source <ArrowSquareOut size={14} />
+        </a>
+      )}
+    </section>
+  )
+}
+function ReceiptView({ task }) {
+  const r = task.receipt,
+    isReturn = task.kind === 'return'
+  return (
+    <section className="receipt-sheet" aria-live="polite">
+      <div className="receipt-top">
+        <span className="receipt-check">
+          <Check size={28} />
+        </span>
+        <span>
+          Verified in the source
+          <br />
+          <small>{timestamp(r.verifiedAt)}</small>
+        </span>
+        <Receipt size={30} weight="light" />
+      </div>
+      <h2>
+        {isReturn ? (
+          <>
+            Return requested.
+            <br />
+            <span>Refund pending.</span>
+          </>
+        ) : (
+          <>
+            A new time.
+            <br />
+            <span>The same service.</span>
+          </>
+        )}
+      </h2>
+      <p>
+        {isReturn
+          ? 'Your shoes are included. Your jacket stays with you.'
+          : 'Your old appointment was replaced. Exactly one active booking remains.'}
+      </p>
+      <dl>
+        {isReturn ? (
+          <>
+            <Row label="Return request">{r.requestId}</Row>
+            <Row label="Item">Red running shoes · size 8 · quantity 1</Row>
+            <Row label="Refund to">{destination(r.refundDestination)}</Row>
+            <Row label="Return method">{method(r.method)}</Row>
+            <Row label="Deduction">{money(r.deductionCents)}</Row>
+            <Row label="Expected refund">
+              <span className="receipt-amount">{money(r.expectedRefundCents)}</span>
+            </Row>
+          </>
+        ) : (
+          <>
+            <Row label="Confirmation">{r.requestId}</Row>
+            <Row label="Booking">{r.bookingId}</Row>
+            <Row label="Previous time">{appointmentTime(r.oldStartsAt)}</Row>
+            <Row label="New time">{appointmentTime(r.startsAt)}</Row>
+            <Row label="Technician">{r.technician}</Row>
+            <Row label="Service">{r.service}</Row>
+            <Row label="Address">{r.address}</Row>
+            <Row label="Additional fee">{money(r.feeCents)}</Row>
+            <Row label="Timezone">{r.timezone}</Row>
+          </>
+        )}
+      </dl>
+      <div className="next-step">
+        <span>What to do next</span>
+        <p>{r.nextStep}</p>
+        {r.qrUrl && (
+          <a href={r.qrUrl} target="_blank" rel="noreferrer">
+            Open your demo QR code <QrCode size={18} />
+          </a>
+        )}
+      </div>
+      <a className="receipt-source" href={r.sourceUrl} target="_blank" rel="noreferrer">
+        View saved source confirmation <ArrowSquareOut size={17} />
+      </a>
+      <p className="receipt-footnote">
+        Saved with this task. Reloading this page will not submit it again.
+        <br />
+        Sandbox result. No real refund, shipment or appointment.
+      </p>
+    </section>
+  )
+}
+function ReturnChoices({ task, busy, onAction }) {
+  const [reason, setReason] = useState(task.reason || ''),
+    disabled = busy || !task.canControl || task.submissionStarted
+  useEffect(() => setReason(task.reason || ''), [task.reason])
+  return (
+    <section className="decision-section">
+      <div className="section-heading">
+        <h2>{task.reason ? 'Your return preferences' : 'Why are you returning the shoes?'}</h2>
+        <span>From the merchant</span>
+      </div>
+      <div className="field-group">
+        <label htmlFor="reason">Return reason</label>
+        <div className="input-action">
+          <select
+            id="reason"
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            disabled={disabled || !task.baseline}
+          >
+            <option value="">Choose a reason</option>
+            {task.merchant?.reasons?.map((r) => (
+              <option key={r.value} value={r.value}>
+                {r.label}
+              </option>
+            ))}
+          </select>
+          <Button
+            secondary
+            disabled={disabled || !reason || reason === task.reason || !task.baseline}
+            onClick={() => onAction('choice', { reason })}
+          >
+            Save reason
+          </Button>
+        </div>
+      </div>
+      {task.reason && (
+        <>
+          <fieldset disabled={disabled}>
+            <legend>How would you like to send it back?</legend>
+            <div className="method-choices">
+              {[
+                {
+                  value: false,
+                  icon: Printer,
+                  title: 'Printed label',
+                  detail: 'Use a printer · no deduction',
+                },
+                {
+                  value: true,
+                  icon: QrCode,
+                  title: 'Printer-free drop-off',
+                  detail: 'Show a QR code · $5 deduction',
+                },
+              ].map(({ value, icon: Icon, title, detail }) => (
+                <button
+                  key={String(value)}
+                  className={`choice-option ${task.intent.noPrinter === value ? 'selected' : ''}`}
+                  aria-pressed={task.intent.noPrinter === value}
+                  onClick={() => onAction('choice', { noPrinter: value })}
+                  disabled={disabled || task.intent.noPrinter === value}
+                >
+                  <Icon size={25} weight="light" />
+                  <span>
+                    <strong>{title}</strong>
+                    <small>{detail}</small>
+                  </span>
+                  <span className="radio-mark">
+                    {task.intent.noPrinter === value && <Check size={12} />}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </fieldset>
+          <div className="field-group refund-choice">
+            <label htmlFor="destination">Where should the refund go?</label>
+            <select
+              id="destination"
+              disabled={disabled}
+              value={task.intent.refundDestination}
+              onChange={(e) => onAction('choice', { refundDestination: e.target.value })}
+            >
+              {task.merchant?.destinations?.map((d) => (
+                <option key={d.value} value={d.value}>
+                  {d.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </>
+      )}
+    </section>
+  )
+}
+function AppointmentChoices({ task, busy, onAction }) {
+  const disabled = busy || !task.canControl || task.submissionStarted,
+    options = task.candidates || []
+  return (
+    <section className="decision-section">
+      <div className="section-heading">
+        <h2>A Saturday that works for you</h2>
+        <span>Oct 31 · Pacific time</span>
+      </div>
+      <div className="appointment-preferences">
+        <label>
+          <input
+            type="checkbox"
+            checked={task.intent.keepTechnician}
+            disabled={disabled}
+            onChange={(e) => onAction('choice', { keepTechnician: e.target.checked })}
+          />
+          <span>
+            Keep Maya Chen<small>Your current technician</small>
+          </span>
+        </label>
+        <label className="fee-limit">
+          Additional fee limit
+          <select
+            aria-label="Additional fee limit"
+            value={task.intent.maxFeeCents}
+            disabled={disabled}
+            onChange={(e) => onAction('choice', { maxFeeCents: Number(e.target.value) })}
+          >
+            <option value={0}>No extra fee</option>
+            <option value={2500}>Up to $25</option>
+          </select>
+        </label>
+      </div>
+      {options.length > 0 && !options.some((s) => s.issues.length === 0) && (
+        <div className="notice warning">
+          <WarningCircle size={22} />
+          <div>
+            <strong>No time matches every choice.</strong>
+            <p>
+              Your existing booking is unchanged. Adjust the fee limit or technician preference to
+              see other options.
+            </p>
+          </div>
+        </div>
+      )}
+      <div className="slot-list">
+        {options.map((slot) => (
+          <button
+            className={`slot-option ${task.intent.slotId === slot.id ? 'selected' : ''}`}
+            key={slot.id}
+            disabled={
+              disabled || !task.baseline || slot.issues.length > 0 || task.intent.slotId === slot.id
+            }
+            onClick={() => onAction('choice', { slotId: slot.id })}
+          >
+            <span className="slot-time">
+              {new Intl.DateTimeFormat('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                timeZone: 'America/Los_Angeles',
+              }).format(new Date(slot.startsAt))}
+            </span>
+            <span>
+              <strong>{slot.technician}</strong>
+              <small>
+                {slot.issues.length ? slot.issues.join(' · ') : 'Matches all your choices'}
+              </small>
+            </span>
+            <span className="slot-fee">
+              {slot.feeCents ? `+${money(slot.feeCents)}` : 'No extra fee'}
+            </span>
+            {task.intent.slotId === slot.id ? (
+              <CheckCircle size={23} weight="fill" />
+            ) : (
+              <ArrowRight size={20} />
+            )}
+          </button>
+        ))}
+      </div>
+      <p className="small muted">
+        Your Friday appointment stays booked until you confirm this change.
+      </p>
+    </section>
+  )
+}
+function TaskWorkspace({ task, busy, error, onAction, onBack, onDismiss }) {
+  const isWorking = busy || working(task),
+    pending = task.submissionStarted && !task.receipt,
+    ready = task.status === 'ready',
+    conflict = task.status === 'conflict',
+    approved = task.status === 'approved',
+    complete = task.status === 'complete' && task.receipt
+  const canEdit = task.canControl && !isWorking && !task.submissionStarted,
+    d = task.merchant || {}
+  const title =
+    task.kind === 'return'
+      ? 'Your return, on your terms.'
+      : 'A different time. Everything else intact.'
+  return (
+    <>
+      <div className="task-top">
+        <button className="back-link" onClick={onBack}>
+          <ArrowLeft size={16} /> All tasks
+        </button>
+        <span>
+          {task.kind === 'return'
+            ? 'Northstar Outfitters / Return an item'
+            : 'Linden Home / Move a service visit'}
+        </span>
+        <Pill status={task.status} />
+      </div>
+      <div className="task-heading">
+        <div>
+          <h1>{title}</h1>
+          <p>
+            {task.kind === 'return'
+              ? 'Return the red shoes. Keep the jacket. Preserve your refund choice.'
+              : 'Keep the service and address. Choose the time and terms that suit you.'}
+          </p>
+        </div>
+        <span className="revision-label">Choices · revision {task.revision}</span>
+      </div>
+      {!task.canControl && (
+        <div className="notice">
+          <Fingerprint size={23} />
+          <div>
+            <strong>You’re viewing a saved task.</strong>
+            <p>Only the browser session that started it can change or approve it.</p>
+          </div>
+        </div>
+      )}
+      {error && (
+        <div className="notice error" role="alert">
+          <WarningCircle size={23} />
+          <div>
+            <strong>That step needs attention.</strong>
+            <p>{error}</p>
+          </div>
+          <button aria-label="Dismiss error" onClick={onDismiss}>
+            <X size={19} />
+          </button>
+        </div>
+      )}
+      <div className="workspace-grid">
+        <div className="task-main">
+          {isWorking && (
+            <div className="progress-notice" role="status" aria-live="polite">
+              <CircleNotch className="spin" size={24} />
+              <div>
+                <strong>{task.progress?.text || 'Starting the next step'}</strong>
+                <p>Your choices are saved. We’ll show what the website actually does.</p>
+              </div>
+              <Elapsed since={task.progress?.startedAt} />
+            </div>
+          )}
+          {complete ? (
+            <ReceiptView task={task} />
+          ) : (
+            <>
+              {!task.baseline && !isWorking && (
+                <div className="notice warning">
+                  <WarningCircle size={24} />
+                  <div>
+                    <strong>First, we need to confirm the source record.</strong>
+                    <p>
+                      {task.error || 'The initial check hasn’t finished. Your request is saved.'}
+                    </p>
+                    <Button
+                      secondary
+                      disabled={!task.canControl}
+                      onClick={() => onAction('check', {})}
+                      icon={ArrowClockwise}
+                    >
+                      Retry reading the source
+                    </Button>
+                  </div>
+                </div>
+              )}
+              {pending && (
+                <section className="pending-result">
+                  <Clock size={34} />
+                  <h2>
+                    {approved
+                      ? 'The same approved request is ready to retry.'
+                      : 'Checking whether it went through.'}
+                  </h2>
+                  <p>
+                    {task.error ||
+                      'We will look up the original operation and verify its saved result. We will not create a second request.'}
+                  </p>
+                  <Button
+                    disabled={isWorking || !task.canControl}
+                    onClick={() => onAction(approved ? 'submit' : 'check', {})}
+                    icon={ArrowClockwise}
+                  >
+                    {approved ? 'Retry the same request' : 'Check the saved result'}
+                  </Button>
+                </section>
+              )}
+              {!pending && (
+                <>
+                  {conflict && !isWorking && (
+                    <div className="conflict-banner" role="status">
+                      <WarningCircle size={28} />
+                      <div>
+                        <span>Submission blocked</span>
+                        <h2>A later choice changed the website’s terms.</h2>
+                        <p>
+                          {task.checks
+                            .filter((c) => c.status === 'conflict')
+                            .map(
+                              (c) =>
+                                `${c.label}: you chose ${c.expected}; the website has ${c.observed}.`,
+                            )
+                            .join(' ')}
+                        </p>
+                        <Button
+                          disabled={!canEdit}
+                          onClick={() => onAction('check', { repair: true })}
+                          icon={ArrowClockwise}
+                        >
+                          Restore my choices & check again
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  {task.baseline &&
+                    ((task.kind === 'return' && !task.reason) ||
+                      (task.kind === 'appointment' && !task.intent.slotId)) &&
+                    (task.kind === 'return' ? (
+                      <ReturnChoices task={task} busy={isWorking} onAction={onAction} />
+                    ) : (
+                      <AppointmentChoices task={task} busy={isWorking} onAction={onAction} />
+                    ))}
+                  {task.baseline &&
+                    ((task.kind === 'return' && task.reason) ||
+                      (task.kind === 'appointment' && task.intent.slotId)) && (
+                      <details
+                        className="preferences-disclosure"
+                        key={
+                          conflict
+                            ? 'conflict'
+                            : ready
+                              ? 'ready'
+                              : approved
+                                ? 'approved'
+                                : 'editing'
+                        }
+                      >
+                        <summary>
+                          <span>
+                            Change{' '}
+                            {task.kind === 'return'
+                              ? 'return preferences'
+                              : 'appointment preferences'}
+                          </span>
+                          <span>
+                            {task.kind === 'return'
+                              ? `${method(expectedMethodFromTask(task))} · ${destination(task.intent.refundDestination)}`
+                              : 'Time, technician and fee limit'}
+                          </span>
+                        </summary>
+                        {task.kind === 'return' ? (
+                          <ReturnChoices task={task} busy={isWorking} onAction={onAction} />
+                        ) : (
+                          <AppointmentChoices task={task} busy={isWorking} onAction={onAction} />
+                        )}
+                      </details>
+                    )}
+                  {task.baseline &&
+                    ((task.kind === 'return' && task.reason) ||
+                      (task.kind === 'appointment' && task.intent.slotId)) && (
+                      <Comparison task={task} />
+                    )}
+                  {task.status === 'needs_attention' && task.baseline && !isWorking && (
+                    <div className="notice warning">
+                      <WarningCircle size={23} />
+                      <div>
+                        <strong>The browser check needs another look.</strong>
+                        <p>{task.error}</p>
+                        <Button
+                          secondary
+                          disabled={!canEdit}
+                          onClick={() => onAction('check', {})}
+                          icon={ArrowClockwise}
+                        >
+                          Check the current proposal
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  {(ready || approved) && (
+                    <section className="approval-section">
+                      <div>
+                        <span className="section-label">
+                          {approved ? 'Your exact terms are approved' : 'Your proposal is ready'}
+                        </span>
+                        <h2>
+                          {task.kind === 'return'
+                            ? `${money(d.expectedRefundCents)} to ${destination(d.refundDestination).toLowerCase()}`
+                            : appointmentTime(d.startsAt)}
+                        </h2>
+                        <p>
+                          {task.kind === 'return'
+                            ? `${method(d.method)} · ${money(d.deductionCents)} deduction · jacket kept`
+                            : `${d.technician} · ${money(d.feeCents)} additional fee · same address`}
+                        </p>
+                      </div>
+                      <Button
+                        disabled={!task.canControl || isWorking}
+                        onClick={() => onAction(approved ? 'submit' : 'approve', {})}
+                      >
+                        {approved
+                          ? task.kind === 'return'
+                            ? 'Send approved return'
+                            : 'Confirm approved change'
+                          : 'Approve these exact terms'}
+                      </Button>
+                      <p className="approval-explanation">
+                        {approved
+                          ? 'The next step sends this approved version to the sandbox. Changed terms cannot use this approval.'
+                          : 'Nothing is submitted yet. Approval is tied to these terms and this source revision.'}
+                      </p>
+                    </section>
+                  )}
+                  {task.baseline &&
+                    task.reason &&
+                    !isWorking &&
+                    !approved &&
+                    task.status !== 'needs_attention' && (
+                      <button
+                        className="text-button recheck"
+                        disabled={!canEdit}
+                        onClick={() => onAction('check', {})}
+                      >
+                        <ArrowClockwise size={16} /> Check my choices again
+                      </button>
+                    )}
+                </>
+              )}
+            </>
+          )}
+        </div>
+        <aside className="task-aside">
+          <section className="intent-summary">
+            <span className="section-label">Always preserved</span>
+            <h2>{task.kind === 'return' ? 'Your original intention' : 'What stays the same'}</h2>
+            <dl>
+              {task.kind === 'return' ? (
+                <>
+                  <Row label="Return">Red shoes · size 8</Row>
+                  <Row label="Keep">Black jacket</Row>
+                  <Row label="Refund to">{destination(task.intent.refundDestination)}</Row>
+                  <Row label="Printer">
+                    {task.intent.noPrinter ? 'Not needed' : 'Printed label'}
+                  </Row>
+                </>
+              ) : (
+                <>
+                  <Row label="Service">Washer repair</Row>
+                  <Row label="Technician">
+                    {task.intent.keepTechnician ? 'Maya Chen' : 'Any available technician'}
+                  </Row>
+                  <Row label="Fee limit">{money(task.intent.maxFeeCents)}</Row>
+                  <Row label="Address">42 Linden Street, San Francisco</Row>
+                </>
+              )}
+            </dl>
+            <p>
+              <Fingerprint size={16} /> Checked against choice revision {task.revision}
+            </p>
+          </section>
+          <SourceView task={task} />
+          <Evidence task={task} />
+          <details className="activity-details">
+            <summary>Task activity</summary>
+            <ol>
+              {task.events
+                .slice()
+                .reverse()
+                .map((event, i) => (
+                  <li key={i}>
+                    <time>{timestamp(event.at)}</time>
+                    <span>{event.text}</span>
+                  </li>
+                ))}
+            </ol>
+          </details>
+          {task.interpretation?.source === 'sample-parser' && (
+            <p className="parser-note">
+              Example request parser used. OpenAI interpretation was not connected for this task.
+            </p>
+          )}
+        </aside>
+      </div>
+    </>
+  )
+}
 export default function App() {
-  const [request, setRequest] = useState(EXAMPLE)
-  const [task, setTask] = useState(null)
-  const [busy, setBusy] = useState('')
-  const [error, setError] = useState('')
-  const [status, setStatus] = useState(null)
-  const [reason, setReason] = useState('')
-  const [viewSource, setViewSource] = useState(false)
+  const [task, setTask] = useState(null),
+    [restoring, setRestoring] = useState(
+      Boolean(new URLSearchParams(location.search).get('taskId')),
+    ),
+    [status, setStatus] = useState(null),
+    [history, setHistory] = useState([]),
+    [busy, setBusy] = useState(false),
+    [error, setError] = useState(''),
+    [site, setSite] = useState(null),
+    [request, setRequest] = useState(EXAMPLE),
+    [connectionError, setConnectionError] = useState(false)
   const taskRef = useRef(null)
-
-  const updateTask = useCallback(next => {
-    if (!next) return
-    taskRef.current = next
-    setTask(next)
-    if (next.id) {
-      localStorage.setItem(TASK_KEY, next.id)
-      const url = new URL(window.location.href)
-      if (url.searchParams.get('taskId') !== next.id) {
-        url.searchParams.set('taskId', next.id)
-        window.history.replaceState(null, '', url.toString())
-      }
+  const update = useCallback((t) => {
+    const previous = taskRef.current
+    if (
+      previous?.id === t?.id &&
+      (previous.revision > t.revision || previous.updatedAt > t.updatedAt)
+    )
+      return
+    taskRef.current = t
+    setTask(t)
+    if (t) {
+      const u = new URL(location.href)
+      u.searchParams.set('taskId', t.id)
+      window.history.replaceState(null, '', u)
     }
   }, [])
-
+  const load = useCallback(
+    async (id) => {
+      setError('')
+      try {
+        const data = await api('/api/tasks/' + encodeURIComponent(id))
+        update(data.task)
+      } catch (e) {
+        setError(e.message)
+      } finally {
+        setRestoring(false)
+      }
+    },
+    [update],
+  )
   useEffect(() => {
-    api('/api/status').then(setStatus).catch(() => setStatus({ kaneAvailable: false }))
-    const sharedTask = new URLSearchParams(window.location.search).get('taskId')
-    const previous = sharedTask || localStorage.getItem(TASK_KEY)
-    if (previous) api(`/api/tasks/${encodeURIComponent(previous)}`)
-      .then(data => updateTask(data.task || data))
-      .catch(error => {
-        if (sharedTask) setError(`Could not open the shared task: ${error.message}`)
-        else localStorage.removeItem(TASK_KEY)
-      })
-  }, [updateTask])
-
+    api('/api/status')
+      .then(setStatus)
+      .catch(() => setStatus({ kane: { available: false } }))
+    api('/api/tasks')
+      .then((d) => setHistory(d.tasks))
+      .catch(() => {})
+    const id = new URLSearchParams(location.search).get('taskId')
+    if (id) load(id)
+  }, [load])
   useEffect(() => {
-    if (!task?.id) return undefined
+    if (!task?.id) return
+    const id = task.id
     const timer = setInterval(() => {
-      api(`/api/tasks/${encodeURIComponent(task.id)}`)
-        .then(data => {
-          const next = data.task || data
-          if (next.id === taskRef.current?.id) updateTask(next)
+      api('/api/tasks/' + id)
+        .then((d) => {
+          setConnectionError(false)
+          if (taskRef.current?.id === id) update(d.task)
         })
-        .catch(() => {})
-    }, 2200)
+        .catch(() => setConnectionError(true))
+    }, 2000)
     return () => clearInterval(timer)
-  }, [task?.id, updateTask])
-
-  useEffect(() => {
-    const observed = sourceDraft(task)
-    setReason(task?.reason || observed.reason || observed.reasons?.[0]?.value || '')
-  }, [task?.reason, task?.merchant?.draft?.reason, task?.merchant?.reason, task?.merchant?.reasons?.length])
-
-  const action = async (name, path, body) => {
+  }, [task?.id, update])
+  const action = async (path, body) => {
+    setBusy(true)
     setError('')
-    setBusy(name)
     try {
-      const data = await api(path, body)
-      updateTask(data.task || data)
-    } catch (failure) {
-      setError(failure.message)
-      if (taskRef.current?.id) api(`/api/tasks/${encodeURIComponent(taskRef.current.id)}`)
-        .then(data => updateTask(data.task || data)).catch(() => {})
+      const d = await api('/api/tasks/' + task.id + '/' + path, body)
+      update(d.task)
+    } catch (e) {
+      setError(e.message)
+      const d = await api('/api/tasks/' + task.id).catch(() => null)
+      if (d) update(d.task)
     } finally {
-      setBusy('')
+      setBusy(false)
     }
   }
-  const start = event => {
+  const start = async (event) => {
     event.preventDefault()
-    if (request.trim()) action('start', '/api/tasks', { request: request.trim() })
-  }
-  const startAnother = () => {
-    taskRef.current = null
-    localStorage.removeItem(TASK_KEY)
-    const url = new URL(window.location.href)
-    url.searchParams.delete('taskId')
-    window.history.replaceState(null, '', url.toString())
-    setTask(null)
-    setRequest(EXAMPLE)
-    setReason('')
+    setBusy(true)
     setError('')
-    setViewSource(false)
+    try {
+      const d = await api('/api/tasks', {
+        kind: site,
+        request: site === 'return' ? request : undefined,
+      })
+      update(d.task)
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setBusy(false)
+    }
   }
-
-  const taskId = task?.id
-  const draft = sourceDraft(task)
-  const intent = task?.intent || {}
-  const checks = Array.isArray(task?.checks) ? task.checks : []
-  const events = Array.isArray(task?.events) ? task.events : []
-  const evidence = Array.isArray(task?.evidence) ? task.evidence : []
-  const receipt = task?.status === 'complete' ? task.receipt : null
-  const sourceReturn = task?.sourceReturn
-  const approval = task?.approval
-  const hasConflict = checks.some(check => ['conflict', 'mismatch', 'failed'].includes(check.status))
-  const hasUnknown = checks.some(check => ['unknown', 'pending', 'unverified'].includes(check.status))
-  const allMatch = checks.length > 0 && !hasConflict && !hasUnknown
-  const proposalReady = Boolean(task?.reason) && ['ready', 'conflict', 'approved'].includes(task?.status)
-  const method = draft.method || draft.returnMethod
-  const destination = draft.destination || draft.refundDestination
-  const reasonOptions = Array.isArray(draft.reasons) ? draft.reasons : []
-  const methodOptions = Array.isArray(draft.methods) ? draft.methods : []
-  const reasonLabel = reasonOptions.find(option => option.value === draft.reason)?.label || (draft.reason ? pretty(draft.reason) : '')
-  const sourceUrl = taskId ? `/merchant?taskId=${encodeURIComponent(taskId)}` : '/merchant'
-  const isWorking = Boolean(busy) || ['created', 'running', 'working', 'checking', 'submitting'].includes(task?.status)
-  const canEdit = !isWorking && !task?.submissionStarted && !sourceReturn && !['submitted_unverified', 'reconciling', 'complete'].includes(task?.status)
-  const needsRecheck = ['submitted_unverified', 'reconciling'].includes(task?.status) || (task?.status === 'complete' && !receipt)
-  const step = !task ? null : receipt
-    ? { number: 4, title: 'Return confirmed', detail: 'Kane checked the merchant record. Your refund is pending.' }
-    : needsRecheck
-      ? { number: 4, title: 'Check the submitted return', detail: 'The source may have saved this request. Verify its result before claiming completion.' }
-      : task.status === 'submitting'
-        ? { number: 4, title: 'Submitting your approved return', detail: 'Kane is checking the source confirmation.' }
-        : task.status === 'approved'
-          ? { number: 3, title: 'Your proposal is approved', detail: task.retryReady ? 'A retry uses the same operation and approved terms.' : 'Submit this exact version to the merchant sandbox.' }
-          : task.status === 'conflict'
-            ? { number: 2, title: 'The website changed a choice', detail: checks.find(check => check.status === 'conflict')?.detail || 'The source differs from your request. Repair and check it.' }
-            : task.status === 'ready'
-              ? { number: 3, title: 'Review the exact proposal', detail: 'Your choices match the merchant draft. Approve what is shown below.' }
-              : task.status === 'needs_reason'
-                ? { number: 2, title: 'Choose a return reason', detail: 'Pick one of the reasons the merchant offers, then Kane can prepare the draft.' }
-                : { number: task.reason ? 2 : 1, title: isWorking ? 'Kane is working on the source' : 'Check the merchant source', detail: 'The current merchant state is still being established.' }
-
-  return <div className="app-shell">
-    <header className="topbar">
-      <a className="brand" href="/" aria-label="Raising Kane home"><span className="brand-mark"><Icon name="spark" size={21} /></span><span>raising<span className="brand-accent">kane</span><span className="brand-period">.</span></span></a>
-      <div className="topbar-right"><span className="header-label">When websites raise hell, raise Kane</span><span className={`connection-pill ${status?.kane?.available ? 'connected' : ''}`}><span className="connection-dot" />{status === null ? 'Checking Kane' : status.kane?.available ? 'Kane ready' : 'Kane unavailable'}</span></div>
-    </header>
-
-    <main>
-      <section className="intro">
-        <div className="intro-copy"><div className="section-kicker"><span className="kicker-line" /> YOUR INTENT, INTACT</div><h1>Websites are complicated.<br /><em>Getting things done</em> shouldn’t be.</h1><p>Tell Raising Kane what you want. It works through the real website, remembers your choices, and shows you exactly what happened.</p></div>
-        <div className="intro-art" aria-hidden="true"><div className="art-orbit orbit-one" /><div className="art-orbit orbit-two" /><div className="art-center"><Icon name="shield" size={36} /></div><span className="art-tag tag-intent">Your request</span><span className="art-tag tag-source">The website</span><span className="art-tag tag-result">A checked result</span></div>
-      </section>
-
-      {!task ? <section className="start-layout" aria-label="Start a return task">
-        <div className="start-card"><div className="card-index">01 / START HERE</div><h2>What do you need to do?</h2><p className="muted">Start with a return. Say it in your own words.</p><form onSubmit={start}><label className="field-label" htmlFor="request">Your request</label><textarea id="request" value={request} onChange={event => setRequest(event.target.value)} rows={4} placeholder="For example: Return the red shoes, keep the jacket…" /><div className="form-footer"><button className="text-button" type="button" onClick={() => setRequest(EXAMPLE)}>Use example</button><button className="primary-button" type="submit" disabled={Boolean(busy) || !request.trim()}>{busy === 'start' ? 'Starting…' : 'Start with Raising Kane'} <Icon name="arrow" /></button></div></form></div>
-        <aside className="start-side"><div className="mini-step"><span>1</span><div><strong>Say what matters</strong><p>Return the shoes. Keep the jacket. Refund the card.</p></div></div><div className="mini-step"><span>2</span><div><strong>See the real choices</strong><p>Kane works through the merchant’s actual forms.</p></div></div><div className="mini-step"><span>3</span><div><strong>Approve the exact result</strong><p>See changes, costs, and source confirmation.</p></div></div><div className="sandbox-note"><span className="sandbox-icon">i</span><p><strong>Demo environment</strong><br />This flow uses a fictional merchant and a simulated order.</p></div></aside>
-      </section> : <section className="workspace" aria-label="Return task workspace">
-        <div className="workspace-heading"><div><div className="section-kicker"><span className="kicker-line" /> ACTIVE TASK <span className="task-id">{task.id}</span></div><h2>Your return, without the maze.</h2><p>We’ll keep your choices in view as the website changes.</p></div><div className="workspace-links"><a className="source-link" href={sourceUrl} target="_blank" rel="noreferrer">Open merchant sandbox <Icon name="link" size={15} /></a><button className="new-demo-button" type="button" disabled={isWorking} onClick={startAnother}>Start another demo</button></div></div>
-        <section className="current-step" aria-live="polite" aria-label="Current progress"><span className="current-step-number">{step.number} / 4</span><div><span className="panel-label">CURRENT STEP</span><h3>{step.title}</h3><p>{step.detail}</p></div>{needsRecheck && <button className="primary-button" type="button" disabled={Boolean(busy)} onClick={() => action('check', `/api/tasks/${taskId}/check`, { repair: task.status === 'conflict' })}>Check the submitted return <Icon name="arrow" /></button>}<div className="step-track" aria-hidden="true"><span style={{ width: `${step.number * 25}%` }} /></div></section>
-        <div className="workspace-grid"><div className="main-column">
-          {task.error && <div className="task-alert" role="status">{task.error}</div>}
-          {task.interpretation?.source === 'sample-parser' && <p className="parser-note">Sample request parser is active. OpenAI interpretation is not connected for this task.</p>}
-          <article className="panel intent-panel"><div className="panel-topline"><span className="panel-label">WHAT YOU WANT</span><span className="revision-pill">Revision {task.revision || 1}</span></div><p className="request-quote">“{task.request || request}”</p><div className="intent-list"><div><span className="intent-symbol return">↗</span><span><small>RETURN</small><strong>{intent.item || 'Red shoes · size 8'}</strong></span></div><div><span className="intent-symbol keep">✓</span><span><small>KEEP</small><strong>{intent.exclude || 'Jacket'}</strong></span></div><div><span className="intent-symbol refund">$</span><span><small>REFUND TO</small><strong>{pretty(intent.refundDestination || 'Original payment method')}</strong></span></div>{intent.noPrinter && <div><span className="intent-symbol no-printer">◒</span><span><small>RETURN METHOD</small><strong>No printer needed</strong></span></div>}</div>{!intent.noPrinter && !receipt && !sourceReturn && <button className="intent-revise" type="button" disabled={!canEdit || !task.reason} onClick={() => action('choice', `/api/tasks/${taskId}/choice`, { method: 'qr', noPrinter: true })}>I don’t have a printer <Icon name="arrow" size={16} /></button>}</article>
-
-          {receipt ? <article className="panel receipt-panel" aria-live="polite">
-            <div className="receipt-icon"><Icon name="check" size={25} /></div>
-            <span className="panel-label">RETURN CONFIRMED IN SOURCE</span>
-            <h3>Return requested.<br /><em>Refund pending.</em></h3>
-            <p>The merchant sandbox recorded this return request and Kane verified its result.</p>
-            <div className="receipt-grid">
-              <div><small>REQUEST ID</small><strong>{receipt.requestId || receipt.id || receipt.returnId}</strong></div>
-              <div><small>REFUND DESTINATION</small><strong>{pretty(receipt.refundDestination || receipt.destination)}</strong></div>
-              <div><small>EXPECTED REFUND</small><strong>{money(receipt.expectedRefundCents ?? receipt.refundCents, receipt.currency)}</strong></div>
-              <div><small>NEXT STEP</small><strong>{receipt.nextStep}</strong></div>
+  const home = () => {
+    taskRef.current = null
+    setTask(null)
+    setRestoring(false)
+    setSite(null)
+    setError('')
+    const u = new URL(location.href)
+    u.searchParams.delete('taskId')
+    historyReplace(u)
+    api('/api/tasks')
+      .then((d) => setHistory(d.tasks))
+      .catch(() => {})
+  }
+  return (
+    <div className="app">
+      <a className="skip-link" href="#main">
+        Skip to task
+      </a>
+      <header className="app-header">
+        <button className="brand-button" onClick={home} aria-label="Raising Kane home">
+          <Brand />
+        </button>
+        <span className="tagline">When websites raise hell, raise Kane</span>
+        <div className="header-status">
+          <span className={status?.kane?.available ? 'online-dot' : 'offline-dot'} />
+          {!status
+            ? 'Checking connection'
+            : status.kane?.available
+              ? 'Kane connected'
+              : 'Kane unavailable'}
+        </div>
+      </header>
+      <main id="main" className={task ? 'main workspace' : 'main'}>
+        {connectionError && (
+          <div className="notice warning" role="status">
+            Connection interrupted. Showing saved information; it may be out of date.
+          </div>
+        )}
+        {restoring ? (
+          <section className="notice" role="status">
+            <CircleNotch className="spin" size={22} /> Restoring your saved task…
+          </section>
+        ) : task ? (
+          <TaskWorkspace
+            task={task}
+            busy={busy}
+            error={error}
+            onAction={action}
+            onBack={home}
+            onDismiss={() => setError('')}
+          />
+        ) : (
+          <>
+            <section className="home-intro">
+              <span className="section-label">Your intention. Carried through.</span>
+              <h1>
+                The website can be complicated.
+                <br />
+                <span>Your next step shouldn’t be.</span>
+              </h1>
+              <p>
+                Choose a task. Make the decisions that matter. Kane checks the website before you
+                approve—and verifies what it saves.
+              </p>
+            </section>
+            <section className="site-picker" aria-label="Choose a supported website">
+              <div className="section-heading">
+                <h2>What would you like to get done?</h2>
+                <span>Two supported sandbox websites</span>
+              </div>
+              <div className="site-options">
+                {[
+                  {
+                    kind: 'return',
+                    name: 'Northstar Outfitters',
+                    title: 'Return an item',
+                    detail: 'Return the shoes, keep the jacket, and preserve your refund choice.',
+                    icon: Package,
+                    example: 'Partial return · sample order ORD-1042',
+                  },
+                  {
+                    kind: 'appointment',
+                    name: 'Linden Home',
+                    title: 'Move a service visit',
+                    detail:
+                      'Find a new time without changing your technician or paying an unexpected fee.',
+                    icon: CalendarBlank,
+                    example: 'Washer repair · sample booking BOOK-2048',
+                  },
+                ].map(({ kind, name, title, detail, icon: Icon, example }) => (
+                  <button
+                    key={kind}
+                    className={`site-option ${site === kind ? 'selected' : ''}`}
+                    onClick={() => {
+                      setSite(kind)
+                      setError('')
+                    }}
+                    aria-pressed={site === kind}
+                  >
+                    <div className="site-option-top">
+                      <span className="site-monogram">
+                        <Icon size={30} weight="light" />
+                      </span>
+                      <span>{name}</span>
+                      <ArrowRight size={22} />
+                    </div>
+                    <h3>{title}</h3>
+                    <p>{detail}</p>
+                    <small>{example}</small>
+                  </button>
+                ))}
+              </div>
+            </section>
+            {site && (
+              <form className="start-form" onSubmit={start}>
+                <div>
+                  <h2>
+                    {site === 'return'
+                      ? 'Let’s keep your choices intact.'
+                      : 'Keep the repair. Change the time.'}
+                  </h2>
+                  <p>
+                    {site === 'return'
+                      ? 'We’ll confirm the order first, then ask for the return reason.'
+                      : 'We’ll look for Saturday morning with Maya and no extra fee. You can change these preferences after we read the booking.'}
+                  </p>
+                  {site === 'return' && (
+                    <details>
+                      <summary>Describe the return in your own words</summary>
+                      <label className="sr-only" htmlFor="request">
+                        Your request
+                      </label>
+                      <textarea
+                        id="request"
+                        value={request}
+                        onChange={(e) => setRequest(e.target.value)}
+                        rows={3}
+                      />
+                    </details>
+                  )}
+                </div>
+                <Button
+                  disabled={
+                    busy || !status?.kane?.available || (site === 'return' && !request.trim())
+                  }
+                >
+                  {busy
+                    ? 'Starting your task'
+                    : site === 'return'
+                      ? 'Start my return'
+                      : 'Find a better time'}
+                </Button>
+              </form>
+            )}
+            {error && (
+              <div className="notice error" role="alert">
+                {error}
+              </div>
+            )}
+            {status && !status.kane?.available && (
+              <div className="notice warning">
+                <WarningCircle size={22} />
+                <div>
+                  <strong>The browser worker is not ready.</strong>
+                  <p>
+                    Connect Kane on this host before starting a task. Your saved tasks are still
+                    available below.
+                  </p>
+                </div>
+              </div>
+            )}
+            {history.length > 0 && (
+              <section className="recent-tasks">
+                <div className="section-heading">
+                  <h2>Pick up where you left off</h2>
+                  <span>Saved on this demo host</span>
+                </div>
+                {history.map((t) => (
+                  <button key={t.id} className="recent-task" onClick={() => load(t.id)}>
+                    {t.kind === 'appointment' ? <CalendarBlank size={22} /> : <Package size={22} />}
+                    <span>
+                      <strong>
+                        {t.kind === 'appointment' ? 'Move a service visit' : 'Return the red shoes'}
+                      </strong>
+                      <small>
+                        {new Date(t.createdAt).toLocaleDateString()} · {t.id.slice(0, 8)}
+                      </small>
+                    </span>
+                    <Pill status={t.status} />
+                    <ArrowRight size={18} />
+                  </button>
+                ))}
+              </section>
+            )}
+            <div className="home-principle">
+              <Fingerprint size={25} weight="light" />
+              <p>
+                <strong>Your choices are the reference.</strong> When a website changes a detail,
+                Raising Kane checks it against what you asked for. You approve the exact result.
+              </p>
             </div>
-          </article> : needsRecheck ? <article className="panel pending-panel" aria-live="polite">
-            <span className="panel-label">SUBMISSION NEEDS VERIFICATION</span>
-            <h3>We’re checking whether it went through.</h3>
-            <p>{sourceReturn ? 'A merchant return record exists. Kane still needs to confirm its final details.' : 'The submission result is uncertain. Raising Kane will check the source before any retry.'}</p>
-            {sourceReturn?.requestId && <p className="pending-reference">Source record: {sourceReturn.requestId}</p>}
-          </article> : <article className="panel decision-panel">
-            <div className="panel-topline"><span className="panel-label">THE DECISIONS</span><span className={`status-chip ${isWorking ? 'working' : ''}`}>{isWorking ? 'Kane is working' : pretty(task.status || 'Ready')}</span></div>
-            <h3>Make the choices that matter.</h3>
-            <p className="muted">The available options come from the merchant sandbox.</p>
-            <div className="choice-block">
-              <label htmlFor="reason">Why are you returning the shoes?</label>
-              {reasonOptions.length ? <div className="choice-row"><select id="reason" value={reason} onChange={event => setReason(event.target.value)} disabled={!canEdit}>{reasonOptions.map(option => <option value={option.value} key={option.value}>{option.label}</option>)}</select><button type="button" className="secondary-button" disabled={!canEdit || !reason || task.reason === reason} onClick={() => action('choice', `/api/tasks/${taskId}/choice`, { reason })}>Save reason</button></div> : <p className="choice-waiting">Waiting for Kane to read the merchant’s reasons.</p>}
-            </div>
-            <div className="choice-block method-block"><span className="choice-label">How would you like to return it?</span>
-              {methodOptions.length ? <div className="method-options">{methodOptions.map(option => option.value === 'qr_dropoff'
-                ? <button type="button" key={option.value} className={`method-option ${method === option.value ? 'selected' : ''}`} disabled={!canEdit || !task.reason || intent.noPrinter} onClick={() => action('choice', `/api/tasks/${taskId}/choice`, { method: 'qr', noPrinter: true })}><strong>{option.label}</strong><small>{option.detail}</small></button>
-                : <div key={option.value} className={`method-option ${method === option.value ? 'selected' : ''}`}><strong>{option.label}</strong><small>{option.detail}</small></div>)}</div> : <p className="choice-waiting">Return methods will appear after Kane observes them.</p>}
-            </div>
-            {task.reason && <button className="check-button" type="button" disabled={!canEdit} onClick={() => action('check', `/api/tasks/${taskId}/check`, { repair: task.status === 'conflict' })}><Icon name="refresh" size={17} /> {busy === 'check' ? 'Checking…' : task.status === 'conflict' ? 'Repair the mismatch' : 'Check my choices'}</button>}
-          </article>}
-
-          {!receipt && proposalReady && checks.length > 0 && <article className={`panel checks-panel ${hasConflict ? 'has-conflict' : ''}`}><div className="panel-topline"><span className="panel-label">CHECKED AGAINST YOUR REQUEST</span><span>{hasConflict ? 'Needs attention' : allMatch ? 'All matched' : 'Some checks pending'}</span></div>{checks.map((check, index) => <div className={`check-row check-${check.status || 'unknown'}`} key={`${check.label}-${index}`}><span className="check-symbol">{['match', 'passed', 'ok'].includes(check.status) ? '✓' : ['conflict', 'mismatch', 'failed'].includes(check.status) ? '!' : '·'}</span><div><strong>{check.label || check.name}</strong><p>{check.detail || check.message}</p></div></div>)}{hasConflict && <p className="conflict-explainer">The merchant changed a choice that matters. Raising Kane will show the difference before you approve anything.</p>}</article>}
-
-          {!receipt && !needsRecheck && proposalReady && <article className="panel review-panel">
-            <div className="panel-topline"><span className="panel-label">REVIEW &amp; APPROVE</span><Icon name="shield" /></div>
-            <h3>The exact proposal</h3>
-            <div className="review-summary">
-              <div><span>Return</span><strong>{draft.selectedLines ? (draft.selectedLines.length ? draft.selectedLines.map(line => `${line.name} (${line.variant})`).join(', ') : 'No item selected') : 'Not yet observed'}</strong></div>
-              <div><span>Reason</span><strong>{reasonLabel || 'Not selected'}</strong></div>
-              <div><span>Method</span><strong>{methodOptions.find(option => option.value === method)?.label || (method ? pretty(method) : 'Not selected')}</strong></div>
-              <div><span>Refund to</span><strong>{draft.destinations?.find(option => option.value === destination)?.label || (destination ? pretty(destination) : 'Not confirmed')}</strong></div>
-              <div><span>Deduction</span><strong>{money(draft.deductionCents, draft.currency)}</strong></div>
-              <div className="review-total"><span>Expected refund</span><strong>{money(draft.expectedRefundCents, draft.currency)}</strong></div>
-              <div><span>Next step</span><strong>{draft.nextStep || 'Not yet observed'}</strong></div>
-            </div>
-            <div className="review-actions"><button className="secondary-button" type="button" disabled={!canEdit || !allMatch || task.status !== 'ready' || status?.sourceSubmissionReady !== true} onClick={() => action('approve', `/api/tasks/${taskId}/approve`, {})}>{task.status === 'approved' ? 'Approved for this revision' : 'Approve this proposal'}</button><button className="primary-button" type="button" disabled={isWorking || task.status !== 'approved' || !approval || !allMatch || status?.sourceSubmissionReady !== true} onClick={() => action('submit', `/api/tasks/${taskId}/submit`, {})}>{busy === 'submit' ? 'Submitting…' : task.retryReady ? 'Retry the same approved request' : 'Submit return request'} <Icon name="arrow" /></button></div>
-            <p className="approval-note">{status?.sourceSubmissionReady ? 'Submission requires your approval of this exact version. If the merchant changes it, we’ll ask again.' : 'This demo currently supports preview and verification. Submission is unavailable.'}</p>
-          </article>}
-        </div><aside className="side-column"><article className="panel source-panel"><div className="panel-topline"><span className="panel-label">THE ACTUAL WEBSITE</span><Icon name="eye" size={17} /></div><h3>Source, not guesswork.</h3><p>Raising Kane uses Kane CLI to operate the merchant’s live form. You can inspect the same source.</p><div className="source-frame-header"><span className="source-dot" /><span>Merchant sandbox — simulated order</span></div>{viewSource ? <iframe key={`${taskId}-${draft.revision || 0}`} title="Merchant sandbox — simulated order" src={sourceUrl} className="source-frame" /> : <div className="source-preview">{draft.orderId ? <><div className="preview-order">Order <strong>{draft.orderId}</strong></div>{draft.lines?.map(line => <div className="preview-line" key={line.id}><span>{line.name}</span><strong>{draft.selectedLineIds?.includes(line.id) ? 'Selected for return' : 'Keep'}</strong></div>)}<div className="preview-divider" /><span className="preview-caption">Current merchant draft. Open the source for its latest state.</span></> : <p>Waiting for Kane’s first source observation.</p>}</div>}<button type="button" className="source-toggle" onClick={() => setViewSource(current => !current)}>{viewSource ? 'Hide source website' : 'Show source website'} <Icon name="arrow" size={15} /></button></article><article className="panel evidence-panel"><div className="panel-topline"><span className="panel-label">KANE EVIDENCE</span><span className="evidence-count">{evidence.length} checks</span></div>{evidence.length ? <ul>{evidence.map((item, index) => <li key={`${item.phase}-${index}`}><span className={`evidence-state ${item.status || ''}`} /> <div><strong>{pretty(item.phase || 'Browser check')}</strong><p>{evidenceSummary(item)}</p>{item.url && <a href={item.url} target="_blank" rel="noreferrer">Open evidence ↗</a>}</div></li>)}</ul> : <p className="empty-evidence">Kane browser checks will appear here as they complete.</p>}</article><article className="panel activity-panel"><div className="panel-topline"><span className="panel-label">ACTIVITY</span><span className="live-pulse" /></div>{events.length ? <ol>{events.slice().reverse().slice(0, 7).map((event, index) => <EventLine event={event} key={`${index}-${typeof event === 'object' ? event.at : event}`} />)}</ol> : <p className="empty-evidence">Your task activity will appear here.</p>}</article></aside></div>
-      </section>}
-      {error && <div className="error-toast" role="alert"><strong>Couldn’t finish that step.</strong><span>{error}</span><button type="button" onClick={() => setError('')} aria-label="Dismiss error">×</button></div>}
-    </main>
-    <footer className="footer"><span>raising<span className="brand-accent">kane</span>.</span><p>One supported return flow · Merchant sandbox with simulated data · Powered by Kane CLI</p></footer>
-  </div>
+          </>
+        )}
+      </main>
+      <footer className="app-footer">
+        <Brand />
+        <span>Two sandbox websites. Synthetic orders and bookings. No real transactions.</span>
+        <span>Built with OpenAI · Verified with Kane</span>
+      </footer>
+    </div>
+  )
+}
+function historyReplace(url) {
+  window.history.replaceState(null, '', url)
 }

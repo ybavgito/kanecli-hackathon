@@ -1,5 +1,7 @@
 # Raising Kane: tested tasks, a simpler interface, verified outcomes
 
+> **Implementation update — October 24, 2026:** The PoC has been merged into `main` and both sandbox workflows now reach verified, persistent confirmations. See [implemented scope and demo](implementation-and-demo.md) and [verification](verification.md) for current behavior and measured results. The analysis/build split below records the earlier checkpoint; statements that submission or the appointment flow are unfinished are historical.
+
 Decision memo, October 24, 2026. This refines the product brief; it does not claim the full proposed product is implemented. The shared POC branch now contains a partial return implementation; see its [verification status](verification.md). The separate [rc.3 experiments](../kane-validation/report.md) establish specific CLI behaviors on synthetic fixtures.
 
 The [UX research and demo direction](ux-research-and-demo-direction.md) adds primary-source findings, exact question/feedback timing, evidence presentation, interruption behavior and a timed video outline. The [interactive storyboard](demo-storyboard.html) illustrates those states without executing Kane or submitting anything.

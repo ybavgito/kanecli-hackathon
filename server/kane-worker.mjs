@@ -17,7 +17,7 @@ const CHROME_START_TIMEOUT_MS = 15_000
 function profileFor(taskId) {
   const hash = createHash('sha256').update(taskId).digest('hex')
   return {
-    profileDir: path.join(process.cwd(), 'data', 'chrome-tasks', hash),
+    profileDir: path.resolve(process.env.RAISING_KANE_DATA_DIR || 'data', 'chrome-tasks', hash),
     browserId: hash.slice(0, 16),
   }
 }
@@ -217,6 +217,8 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
       '--agent',
       '--final-validation',
       'on',
+      '--assertion-failure-mode',
+      'stop',
       '--timeout',
       String(Math.ceil(timeoutMs / 1000)),
     ]

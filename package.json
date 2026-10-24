@@ -8,13 +8,19 @@
     "build": "vite build",
     "preview": "vite preview",
     "check:kane": "node scripts/kane-preflight.mjs",
-    "verify:kane": "node scripts/kane-verify.mjs"
+    "verify:kane": "node scripts/kane-verify.mjs",
+    "test": "node --test tests/unit/*.test.mjs",
+    "format": "prettier --write src server tests/unit"
   },
   "dependencies": {
+    "@fontsource-variable/dm-sans": "^5.3.0",
+    "@phosphor-icons/react": "^2.1.10",
+    "qrcode": "^1.5.4",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "prettier": "^3.9.10",
     "vite": "^8.3.5"
   }
 }

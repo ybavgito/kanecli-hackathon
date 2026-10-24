@@ -33,4 +33,6 @@ inspects the separate PoC branch at `0ad30e5`, records strengths, verifies concr
 gaps and prioritizes the completed transaction over additional feature breadth.
 [Fresh audit observations](../kane-validation/poc-review-checks.json) are separate
 from previous synthetic experiments and the PoC author's historical run reports.
-This documentation update does not merge the PoC source into `main`.
+The PoC is now merged into `main`; the audit remains pinned to its original commit.
+See the [implemented product and demo](implementation-and-demo.md) and
+[current verification results](verification.md) before using old gap statements as current status.

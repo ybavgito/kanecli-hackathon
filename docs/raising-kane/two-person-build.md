@@ -1,5 +1,7 @@
 # Raising Kane: two-person POC build
 
+> **Implementation update — October 24, 2026:** The PoC has been merged into `main` and both sandbox workflows now reach verified, persistent confirmations. See [implemented scope and demo](implementation-and-demo.md) and [verification](verification.md) for current behavior and measured results. The analysis/build split below records the earlier checkpoint; statements that submission or the appointment flow are unfinished are historical.
+
 **When websites raise hell, raise Kane**
 
 Current specification: [project brief](raising-kane-project-brief.md).

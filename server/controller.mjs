@@ -1,528 +1,749 @@
-import { createHash, randomUUID } from 'node:crypto'
-import { mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
+import { randomUUID } from 'node:crypto'
+import {
+  createReadStream,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  renameSync,
+  writeFileSync,
+} from 'node:fs'
+import { resolve, dirname } from 'node:path'
 import { interpretRequest } from './intent.mjs'
-import { runKane, getKaneAvailability, getTaskBrowserState, shutdownTaskBrowser } from './kane-worker.mjs'
-
-const tasksFile = new URL('../data/tasks.json', import.meta.url)
-const tasksTemp = new URL('../data/tasks.json.tmp', import.meta.url)
-const reasons = { too_small: 'Size or fit issue', changed_mind: 'Changed my mind', damaged: 'Arrived damaged' }
-const active = new Set()
-
-function proposal(draft) {
-  if (!draft) return null
-  return {
-    accountId: draft.accountId, orderId: draft.orderId,
-    revision: draft.revision,
-    selectedLines: (draft.selectedLines || draft.lines || []).filter(line => draft.selectedLineIds.includes(line.id))
-      .map(line => ({ id: line.id, quantity: line.quantity })).sort((a, b) => a.id.localeCompare(b.id)),
-    reason: draft.reason, method: draft.method, refundDestination: draft.refundDestination,
-    currency: draft.currency, subtotalCents: draft.subtotalCents,
-    deductionCents: draft.deductionCents, expectedRefundCents: draft.expectedRefundCents,
-    nextStep: draft.nextStep,
-  }
-}
+import {
+  runKane,
+  getKaneAvailability,
+  getTaskBrowserState,
+  shutdownTaskBrowser,
+} from './kane-worker.mjs'
+import { canonicalProposal, proposalDigest } from './merchant-contract.mjs'
+import {
+  reasons,
+  comparisons,
+  candidates,
+  expectedTerms,
+  observedTerms,
+  extractObjective,
+  validationObjective,
+  expectedMethod,
+  methodLabel,
+  destinationLabel,
+} from './workflows.mjs'
 
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b)
-const evidenceRef = result => result.sessionId || result.evidencePath || result.testUrl || null
-const money = cents => `$${(cents / 100).toFixed(2)}`
-const destinationLabel = value => value === 'store_credit' ? 'Store credit' : 'Original payment method'
-const methodLabel = value => value === 'qr_dropoff' ? 'Printer-free QR drop-off' : 'Print a shipping label'
-const expectedMethod = task => task.intent.noPrinter ? 'qr_dropoff' : 'print_label'
-const normalizedText = value => String(value ?? '').trim().toLowerCase().replace(/[_\s-]+/g, ' ')
-const observedDestination = value => ({ 'original payment': 'original_payment', 'original payment method': 'original_payment', 'store credit': 'store_credit' })[normalizedText(value)] || null
-const observedMethod = value => ({ 'qr dropoff': 'qr_dropoff', 'qr drop off': 'qr_dropoff', 'printer free qr drop off': 'qr_dropoff', 'print label': 'print_label', 'print a shipping label': 'print_label' })[normalizedText(value)] || null
-const observedMoney = value => {
-  const text = String(value ?? '').replace(/USD|\$|,/g, '').replace(/\s/g, '').replace('−', '-')
-  return /^-?\d+(?:\.\d{1,2})?$/.test(text) ? Math.round(Number(text) * 100) : null
-}
-const observedLines = value => {
-  let lines = value
-  if (typeof lines === 'string') {
-    try { lines = JSON.parse(lines) } catch { lines = lines.split(',').map(id => id.trim()) }
-  }
-  return Array.isArray(lines) ? [...lines].sort() : []
-}
-const extractRevision = value => {
-  if (typeof value === 'number') return value
-  const match = String(value ?? '').match(/^(?:draft\s+revision\s*)?(\d+)$/i)
-  return match ? Number(match[1]) : null
+const evidenceRef = (r) => r.sessionId || r.evidencePath || r.testUrl || null
+const phases = {
+  discover: 'Reading your source record',
+  prepare: 'Preparing your choices on the website',
+  'change-method': 'Changing the return method',
+  'validate-review': 'Checking every detail against your choices',
+  correct: 'Restoring your saved choices',
+  submit: 'Sending your approved request',
+  'verify-confirmation': 'Checking the saved confirmation',
 }
 
-export function createController({ merchant, baseUrl }) {
-  const tasks = new Map()
+export function createController({
+  merchant,
+  appointments,
+  sourceUrls,
+  baseUrl,
+  worker = runKane,
+  browserState = getTaskBrowserState,
+}) {
+  const file = resolve(process.env.RAISING_KANE_DATA_DIR || 'data', 'tasks.json'),
+    tasks = new Map(),
+    active = new Set()
   try {
-    for (const task of JSON.parse(readFileSync(tasksFile, 'utf8'))) tasks.set(task.id, task)
-  } catch (error) { if (error.code !== 'ENOENT') throw error }
-
-  function save() {
-    mkdirSync(new URL('../data/', import.meta.url), { recursive: true })
-    writeFileSync(tasksTemp, JSON.stringify([...tasks.values()], null, 2), { mode: 0o600 })
-    renameSync(tasksTemp, tasksFile)
-  }
-
-  function event(task, text, kind = 'info') {
-    task.events.push({ at: new Date().toISOString(), text, kind })
-    task.updatedAt = new Date().toISOString()
-    save()
-  }
-
-  function refresh(task) {
-    const draft = merchant.getDraft(task.id)
-    task.merchant = draft
-    task.observedAt = new Date().toISOString()
-    const selected = draft.selectedLineIds
-    const row = (label, matches, detail) => ({ label, status: matches ? 'match' : 'conflict', detail })
-    task.checks = [
-      row('The right order', draft.orderId === 'ORD-1042' && draft.accountId === 'DEMO-ACCOUNT-1', `Source order ${draft.orderId}.`),
-      row('Return one pair of red shoes', selected.length === 1 && selected[0] === 'SHOE-RED-8', 'Only the red shoes, size 8, should be selected.'),
-      row('Keep the jacket', !selected.includes('JACKET-BLACK-M'), selected.includes('JACKET-BLACK-M') ? 'The merchant has selected the jacket for return.' : 'The jacket is excluded.'),
-      row('Use your chosen reason', Boolean(task.reason) && draft.reason === task.reason, reasons[draft.reason] || 'A reason is still needed.'),
-      row(`Refund to ${destinationLabel(task.intent.refundDestination).toLowerCase()}`, draft.refundDestination === task.intent.refundDestination,
-        `The merchant has ${destinationLabel(draft.refundDestination).toLowerCase()} selected.`),
-      row(task.intent.noPrinter ? 'No printer needed' : 'Use a shipping label', draft.method === expectedMethod(task), methodLabel(draft.method)),
-    ]
-    save()
-    return draft
-  }
-
-  function record(task, phase, result, startedRevision) {
-    const entry = {
-      phase, status: result.status, summary: result.summary,
-      path: result.evidencePath || undefined, runId: result.runId || undefined,
-      sessionId: result.sessionId || undefined, url: result.testUrl || undefined,
-      finalState: result.finalState || {}, durationMs: result.durationMs,
-      creditsConsumed: result.creditsConsumed,
-      browserId: result.browserId, browserReused: result.browserReused, browserReconnected: result.browserReconnected,
-      taskRevision: startedRevision, at: new Date().toISOString(),
+    for (const t of JSON.parse(readFileSync(file, 'utf8'))) {
+      t.kind ??= 'return'
+      tasks.set(t.id, t)
     }
-    task.evidence.push(entry)
-    if (result.browserId) task.browser = { id: result.browserId, reused: result.browserReused, observedAt: entry.at }
-    save()
-    return entry
+  } catch (e) {
+    if (e.code !== 'ENOENT') throw e
   }
-
-  function sourceUrl(task, approved = false) {
-    const url = new URL('/merchant', baseUrl)
-    url.searchParams.set('taskId', task.id)
-    if (approved && task.approval) {
-      url.searchParams.set('operationId', task.approval.operationId)
-      url.searchParams.set('attemptId', task.approval.operationId)
-      url.searchParams.set('proposalDigest', task.approval.proposalDigest)
+  const source = (t) => (t.kind === 'appointment' ? appointments : merchant)
+  const sourceBase = (t) => sourceUrls?.[t.kind] || baseUrl
+  const sourcePath = (t) => (t.kind === 'appointment' ? '/appointments' : '/merchant')
+  function save() {
+    mkdirSync(dirname(file), { recursive: true })
+    writeFileSync(file + '.tmp', JSON.stringify([...tasks.values()], null, 2), { mode: 0o600 })
+    renameSync(file + '.tmp', file)
+  }
+  function event(t, text, kind = 'info') {
+    t.events.push({ at: new Date().toISOString(), text, kind })
+    t.updatedAt = new Date().toISOString()
+    save()
+  }
+  function clearApproval(t) {
+    if (t.approval?.operationId) source(t).revokeGrant?.(t.approval.operationId)
+    t.approval = null
+    t.operationId = null
+  }
+  function invalidate(t) {
+    clearApproval(t)
+    t.validation = null
+    t.verificationFields = []
+    t.revision++
+    t.error = null
+  }
+  function refresh(t) {
+    const d = source(t).getDraft(t.id)
+    t.merchant = d
+    t.observedAt = new Date().toISOString()
+    t.checks = comparisons(t, d)
+    t.sourceViewUrl =
+      sourceBase(t) + sourcePath(t) + '?taskId=' + encodeURIComponent(t.id) + '&view=readonly'
+    if (t.kind === 'appointment') t.candidates = candidates(t, d)
+    if (
+      t.validation &&
+      !t.submissionStarted &&
+      !active.has(t.id) &&
+      (t.validation.sourceRevision !== d.revision || t.validation.digest !== proposalDigest(d))
+    ) {
+      clearApproval(t)
+      t.validation = null
+      t.status = t.checks.some((c) => c.status === 'conflict') ? 'conflict' : 'needs_attention'
+      t.error = 'The source changed since the last browser check. Check the current proposal again.'
+    }
+    save()
+    return d
+  }
+  function readOperation(t) {
+    return t.operationId ? source(t).getOperation(t.operationId) : { status: 'absent' }
+  }
+  function reconcile(t) {
+    const op = readOperation(t)
+    t.operationObservation = { status: op.status, observedAt: new Date().toISOString() }
+    if (op.status === 'committed') {
+      if (
+        !t.approval ||
+        op.proposalDigest !== t.approval.proposalDigest ||
+        !same(canonicalProposal(op.return), t.approval.proposal)
+      )
+        throw Error(
+          'The source operation has different terms. It needs review; no new request was sent.',
+        )
+      t.sourceReturn = op.return
+      t.status = 'submitted_unverified'
+      save()
+      return true
+    }
+    t.status = 'reconciling'
+    t.error =
+      op.status === 'absent'
+        ? 'No saved result is visible yet. A retry keeps the same approved operation.'
+        : 'The source is still resolving this request.'
+    save()
+    return false
+  }
+  function sourceUrl(t, approved = false) {
+    const url = new URL(sourcePath(t), sourceBase(t))
+    url.searchParams.set('taskId', t.id)
+    if (approved) {
+      url.searchParams.set('operationId', t.approval.operationId)
+      url.searchParams.set('proposalDigest', t.approval.proposalDigest)
     }
     return url.href
   }
-
-  async function browser(task, phase, objective, url = sourceUrl(task)) {
-    const browserState = await getTaskBrowserState(task.id)
-    if (browserState.status === 'lost') {
-      const previous = task.merchant
-      const source = refresh(task)
-      if (source.orderId !== 'ORD-1042' || source.accountId !== 'DEMO-ACCOUNT-1'
-        || (previous && source.revision < previous.revision)) {
-        throw new Error('The saved source draft could not be reconciled after the browser was lost.')
-      }
-      if (task.submissionStarted) {
-        const operation = readOperation(task)
-        if (!['absent', 'committed'].includes(operation.status)) throw new Error('Submission is still unresolved. Browser recovery cannot retry it yet.')
-      }
-      await shutdownTaskBrowser(task.id)
-      task.browserRecovery = { at: new Date().toISOString(), sourceRevision: source.revision }
-      event(task, 'The source draft was checked after the browser stopped. Resuming in a new task browser.', 'warning')
+  async function browser(t, phase, objective, url = sourceUrl(t)) {
+    const state = await browserState(t.id)
+    if (state.status === 'lost') {
+      const d = refresh(t)
+      if (t.submissionStarted) reconcile(t)
+      await shutdownTaskBrowser(t.id)
+      event(t, `Restored the source connection at draft revision ${d.revision}.`, 'warning')
     }
-    task.progress = { phase, text: phase.replaceAll('-', ' '), startedAt: new Date().toISOString() }
-    const revision = task.revision
+    const revision = t.revision
+    t.progress = { phase, text: phases[phase] || phase, startedAt: new Date().toISOString() }
     save()
-    const result = await runKane({ taskId: task.id, phase, url, objective: `Go to ${url}. Reload the page to fetch the current source state before continuing. ${objective}`,
-      onEvent(update) {
-        if (update.type === 'step' && update.status === 'done') {
-          task.progress.lastStep = update.remark
+    const r = await worker({
+      taskId: t.id,
+      phase,
+      url,
+      objective: `Go to ${url}. Reload the page and wait for the current source record to load. ${objective}`,
+      onEvent(e) {
+        if (e.type === 'step' && e.status === 'done') {
+          t.progress.lastStep = e.remark
           save()
         }
       },
     })
-    record(task, phase, result, revision)
-    if (task.revision !== revision) throw new Error('An old browser result was retained as history. Check the current task again.')
-    refresh(task)
-    return result
+    t.evidence.push({
+      phase,
+      status: r.status,
+      summary: r.summary,
+      path: r.evidencePath || undefined,
+      url: r.testUrl || undefined,
+      sessionId: r.sessionId || undefined,
+      runId: r.runId || undefined,
+      finalState: r.finalState || {},
+      durationMs: r.durationMs,
+      creditsConsumed: r.creditsConsumed,
+      taskRevision: revision,
+      at: new Date().toISOString(),
+    })
+    save()
+    refresh(t)
+    if (t.revision !== revision)
+      throw Error('This result belongs to an earlier choice. Check the latest task again.')
+    return r
   }
-
-  function ensurePass(result) {
-    if (result.status !== 'passed') throw new Error(result.summary || 'Kane did not verify this step.')
+  function ensurePass(r) {
+    if (r.status !== 'passed')
+      throw Error(r.summary || 'The browser check did not finish. Your choices are saved.')
   }
-
-  function dispatch(task, label, job) {
-    if (active.has(task.id)) throw new Error('Kane is still working on this task.')
-    active.add(task.id)
-    task.status = label === 'submit' ? 'submitting' : 'working'
-    task.error = null
-    event(task, `Kane is ${label}.`, 'progress')
+  function dispatch(t, label, job) {
+    if (active.has(t.id)) throw Error('A browser job is already running for this task.')
+    if (t.takeover) throw Error('Finish source inspection before resuming the agent.')
+    active.add(t.id)
+    t.status = label === 'submit' ? 'submitting' : 'working'
+    t.error = null
+    event(t, phases[label] || label, 'progress')
     void (async () => {
-      try { await job() }
-      catch (error) {
-        task.error = error.message
-        task.status = error.code === 'SOURCE_MISMATCH' ? 'needs_attention' : task.sourceReturn ? 'submitted_unverified' : task.submissionStarted ? 'reconciling' : 'needs_attention'
-        event(task, error.message, 'error')
+      try {
+        await job()
+      } catch (e) {
+        t.status = t.sourceReturn
+          ? 'submitted_unverified'
+          : t.submissionStarted
+            ? 'reconciling'
+            : 'needs_attention'
+        t.error = e.message
+        event(t, e.message, 'error')
       } finally {
-        task.progress = null
-        active.delete(task.id)
+        t.progress = null
+        active.delete(t.id)
         save()
       }
     })()
   }
-
-  function validationObjective(task) {
-    return `Do not change or submit the form. Assert the order number displayed below Start a return is "ORD-1042". `
-      + `Verify only Red running shoes, Size 8, quantity 1 is selected and Black jacket is not selected. `
-      + `Verify Reason for return is "${reasons[task.reason]}". `
-      + `Verify Return method is "${methodLabel(expectedMethod(task))}". `
-      + `Verify Refund destination is "${destinationLabel(task.intent.refundDestination)}". `
-      + `Verify the deduction is ${task.intent.noPrinter ? '$5.00' : '$0.00'} and the expected refund is ${task.intent.noPrinter ? '$75.00' : '$80.00'}. `
-      + `Store the order ID as "order_id". Store just the numeric draft revision shown on the page as "draft_revision". `
-      + `Store the selected refund destination as "refund_destination".`
+  function fieldChecks(t, r, d, confirmation = false) {
+    const actual = observedTerms(t.kind, r.finalState || {}, confirmation),
+      expected = expectedTerms(t.kind, d, confirmation)
+    return Object.keys(expected).map((key) => ({
+      key,
+      expected: expected[key],
+      observed: actual[key] ?? null,
+      status: same(expected[key], actual[key])
+        ? 'match'
+        : actual[key] == null || actual[key] === ''
+          ? 'unknown'
+          : 'conflict',
+    }))
   }
-
-  function acceptValidation(task, result) {
-    const draft = refresh(task)
-    const extracted = result.finalState || {}
-    const observedRevision = extractRevision(extracted.draft_revision)
-    const orderMatches = String(extracted.order_id || '').trim() === draft.orderId
-    const destinationMatches = observedDestination(extracted.refund_destination) === task.intent.refundDestination
-      && observedDestination(extracted.refund_destination) === draft.refundDestination
-    const checksMatch = task.checks.every(check => check.status === 'match')
-    if (result.status === 'passed' && checksMatch && orderMatches && destinationMatches
-      && observedRevision === draft.revision && evidenceRef(result)) {
-      task.validation = { taskRevision: task.revision, sourceRevision: draft.revision,
-        proposal: proposal(draft), reference: evidenceRef(result), at: new Date().toISOString() }
-      const approvalStillMatches = task.approval?.taskRevision === task.revision && same(task.approval.proposal, proposal(draft))
-      if (!approvalStillMatches) clearApproval(task)
-      task.status = approvalStillMatches ? 'approved' : 'ready'
-      task.error = null
-      event(task, 'Kane verified the current merchant draft against your choices.', 'success')
-      return true
-    }
-    task.validation = null
-    clearApproval(task)
-    task.status = checksMatch ? 'needs_attention' : 'conflict'
-    task.error = checksMatch
-      ? 'The choices match, but Kane has not returned complete evidence for this draft revision.'
-      : 'The merchant draft conflicts with your choices. Nothing has been submitted.'
-    event(task, task.error, 'warning')
-    return false
-  }
-
-  async function validate(task) {
-    const result = await browser(task, 'validate-review', validationObjective(task))
-    acceptValidation(task, result)
-    return result
-  }
-
-  async function prepare(task) {
-    const objective = `Assert the order number displayed below Start a return is "ORD-1042" and the page lists red shoes and a jacket. `
-      + `Select only Red running shoes, Size 8. Choose Reason for return "${reasons[task.reason]}". `
-      + `Choose Return method "${methodLabel(expectedMethod(task))}", then choose Refund destination "${destinationLabel(task.intent.refundDestination)}". `
-      + `Each change saves automatically; wait for the draft-saved message. Do not submit. `
-      + validationObjective(task)
-    const result = await browser(task, 'prepare', objective)
-    acceptValidation(task, result)
-  }
-
-  async function repair(task) {
-    const result = await browser(task, 'correct',
-      `Assert the order number displayed below Start a return is "ORD-1042". Set Refund destination to "${destinationLabel(task.intent.refundDestination)}". `
-      + 'Wait for the draft-saved message. Keep all other choices unchanged. Do not submit.')
-    ensurePass(result)
-    event(task, 'Kane changed the conflicting refund choice. Running the same review check again.', 'info')
-    await validate(task)
-  }
-
-  function readOperation(task) {
-    const id = task.operationId || task.approval?.operationId || task.approval?.attemptId
-    if (!id) return { status: 'absent' }
-    if (merchant.getOperation) return merchant.getOperation(id)
-    const found = merchant.getReturnByAttempt(id)
-    return found ? { status: 'committed', operationId: id, requestId: found.requestId, return: found } : { status: 'absent' }
-  }
-
-  function reconcile(task) {
-    const operation = readOperation(task)
-    task.operationObservation = { ...operation, observedAt: new Date().toISOString() }
-    if (operation.status === 'committed') {
-      const found = operation.return
-      if (!task.approval || !same(proposal(found), task.approval.proposal)) {
-        task.status = 'needs_attention'
-        task.error = 'A source return exists with different or incomplete terms. It needs review.'
-        save()
-        const error = new Error(task.error)
-        error.code = 'SOURCE_MISMATCH'
-        throw error
+  function accept(t, r) {
+    const d = refresh(t)
+    t.verificationFields = fieldChecks(t, r, d)
+    const matches = t.checks.every((c) => c.status === 'match'),
+      observed = t.verificationFields.every((c) => c.status === 'match')
+    if (r.status === 'passed' && matches && observed && evidenceRef(r) && t.baseline) {
+      t.validation = {
+        taskRevision: t.revision,
+        sourceRevision: d.revision,
+        digest: proposalDigest(d),
+        proposal: canonicalProposal(d),
+        reference: evidenceRef(r),
+        at: new Date().toISOString(),
       }
-      task.sourceReturn = found
-      task.status = 'submitted_unverified'
-      event(task, `The source saved ${found.requestId}. Kane will verify its confirmation.`, 'info')
+      t.status = t.approval?.proposalDigest === t.validation.digest ? 'approved' : 'ready'
+      t.error = null
+      event(
+        t,
+        'The current source proposal matches your choices. All required browser observations were compared.',
+        'success',
+      )
       return true
     }
-    task.status = 'reconciling'
-    task.error = operation.status === 'absent'
-      ? 'No committed source result is visible yet. A retry must keep the same operation ID.'
-      : 'The source has not resolved this submission yet.'
-    save()
+    t.validation = null
+    clearApproval(t)
+    t.status = matches ? 'needs_attention' : 'conflict'
+    t.error = matches
+      ? 'The source choices match, but the browser evidence is incomplete. Check again before approval.'
+      : 'The website changed a choice that matters. Submission is blocked.'
+    event(t, t.error, 'warning')
     return false
   }
-
-  async function verifyConfirmation(task) {
-    if (!task.sourceReturn && !reconcile(task)) return
-    const record = task.sourceReturn
-    const url = new URL(`/merchant/returns/${encodeURIComponent(record.requestId)}`, baseUrl).href
-    const result = await browser(task, 'verify-confirmation',
-      `Verify this is return request ${record.requestId} for order ORD-1042. `
-      + `Verify it returns only Red running shoes, size 8, quantity 1, and the jacket was kept. `
-      + `Verify the return method is "${methodLabel(record.method)}", refund destination is "${destinationLabel(record.refundDestination)}", `
-      + `currency is USD, deduction is ${money(record.deductionCents)}, and expected refund is ${money(record.expectedRefundCents)}. `
-      + `Verify the status says return requested and refund pending. Verify the next-step instructions are present${record.method === 'qr_dropoff' ? ' and a clearly labeled synthetic QR artifact can be opened' : ''}. `
-      + 'Store the return request ID as "return_request_id", order ID as "order_id", returned line IDs as "returned_line_ids", returned quantity as "returned_quantity", '
-      + 'return method as "return_method", refund destination as "refund_destination", currency as "currency", displayed deduction amount in dollars as "deduction", '
-      + 'displayed expected refund in dollars as "expected_refund", and exact next-step instructions as "next_step". Store whether the jacket was kept as "jacket_kept". Do not submit another request.', url)
-    ensurePass(result)
-    const idMatches = String(result.finalState?.return_request_id || '').trim() === record.requestId
-    const orderMatches = String(result.finalState?.order_id || '').trim() === 'ORD-1042'
-    const latest = readOperation(task)
-    const observed = result.finalState || {}
-    const expectedLines = [...record.selectedLineIds].sort()
-    const termsMatch = same(observedLines(observed.returned_line_ids), expectedLines)
-      && Number(observed.returned_quantity) === 1
-      && observedMethod(observed.return_method) === record.method
-      && observedDestination(observed.refund_destination) === record.refundDestination
-      && String(observed.currency).trim().toUpperCase() === record.currency
-      && Math.abs(observedMoney(observed.deduction) ?? NaN) === record.deductionCents
-      && observedMoney(observed.expected_refund) === record.expectedRefundCents
-      && normalizedText(observed.next_step) === normalizedText(record.nextStep)
-      && ['true', 'yes'].includes(normalizedText(observed.jacket_kept))
-    const jacket = task.merchant.lines.find(line => line.id === 'JACKET-BLACK-M')
-    const jacketUnchanged = task.baseline?.jacket && same(jacket, task.baseline.jacket)
-    if (!idMatches || !orderMatches || !evidenceRef(result)
-      || !termsMatch || !jacketUnchanged || latest.status !== 'committed' || !same(proposal(latest.return), task.approval.proposal)) {
-      throw new Error('The return was submitted, but the final confirmation evidence is incomplete or changed.')
+  async function discover(t) {
+    const objective =
+      t.kind === 'appointment'
+        ? 'Do not edit or confirm. Verify booking BOOK-2048 currently has Washer repair at 42 Linden Street, San Francisco with Maya Chen. Store the booking ID as "booking_id" and exact current ISO start time as "current_start".'
+        : 'Do not edit or submit. Verify order ORD-1042 shows Red running shoes Size 8 and Black jacket. Store the order ID as "order_id".'
+    const r = await browser(t, 'discover', objective)
+    ensurePass(r)
+    if (t.kind === 'appointment') {
+      if (
+        r.finalState?.booking_id !== 'BOOK-2048' ||
+        r.finalState?.current_start !== t.merchant.currentBooking.startsAt
+      )
+        throw Error('The browser did not establish the current booking identity and time.')
+      t.baseline = { booking: structuredClone(t.merchant.currentBooking) }
+    } else {
+      if (r.finalState?.order_id !== 'ORD-1042')
+        throw Error('The browser did not establish the order identity.')
+      t.baseline = {
+        jacket: structuredClone(t.merchant.lines.find((l) => l.id === 'JACKET-BLACK-M')),
+      }
     }
-    task.receipt = { ...latest.return, sourceUrl: url, verifiedAt: new Date().toISOString(), evidenceReference: evidenceRef(result) }
-    task.status = 'complete'
-    task.error = null
-    event(task, `Kane verified ${record.requestId} in the source. Return requested; refund pending.`, 'success')
+    t.status = t.kind === 'appointment' ? 'needs_slot' : 'needs_reason'
+    event(
+      t,
+      t.kind === 'appointment'
+        ? 'Your current appointment is confirmed. Choose a replacement time.'
+        : 'The order is confirmed. Choose the reason for your return.',
+      'success',
+    )
   }
-
-  function clearApproval(task) {
-    if (task.approval?.operationId && merchant.revokeGrant) merchant.revokeGrant(task.approval.operationId)
-    task.approval = null
-    task.operationId = null
+  async function prepare(t) {
+    if (!t.baseline) await discover(t)
+    const instruction =
+      t.kind === 'appointment'
+        ? `Select the radio option with slot ID ${t.intent.slotId}. Wait for Draft saved. Do not confirm the booking.`
+        : `Select only Red running shoes Size 8, unselect Black jacket. Set reason ${reasons[t.reason]}. Set method ${methodLabel(expectedMethod(t))}, wait for the save, then set refund destination ${destinationLabel(t.intent.refundDestination)}. Wait for the save. Do not submit.`
+    const r = await browser(
+      t,
+      'prepare',
+      instruction + ' After these edits, ' + validationObjective(t),
+    )
+    accept(t, r)
   }
-
-  function invalidate(task) {
-    clearApproval(task)
-    task.validation = null
-    task.revision++
-  }
-
-  function verifyLegacyApproval({ taskId, draft, attemptId }) {
-    const task = tasks.get(taskId)
-    return Boolean(task?.approval?.validated && task.approval.operationId === attemptId
-      && task.approval.taskRevision === task.revision
-      && same(task.approval.proposal, proposal(draft)))
-  }
-
-  for (const task of tasks.values()) {
-    if (['working', 'submitting', 'reconciling'].includes(task.status)) {
-      task.progress = null
-      if (task.submissionStarted || task.operationId) {
-        try { reconcile(task) } catch (error) { task.status = error.code === 'SOURCE_MISMATCH' ? 'needs_attention' : 'reconciling'; task.error = error.code === 'SOURCE_MISMATCH' ? error.message : 'The source is unavailable. Submission has not been retried.' }
-      } else { task.status = 'needs_attention'; task.error = 'The worker restarted. Check the task to resume from its saved source draft.' }
+  async function validate(t) {
+    if (!t.baseline) {
+      await discover(t)
+      if ((t.kind === 'return' && !t.reason) || (t.kind === 'appointment' && !t.intent.slotId))
+        return
     }
+    const r = await browser(t, 'validate-review', validationObjective(t))
+    accept(t, r)
   }
-
+  async function repair(t) {
+    if (!t.baseline) await discover(t)
+    if (t.kind === 'appointment') return prepare(t)
+    const r = await browser(
+      t,
+      'correct',
+      `Restore only the requested source draft choices: select only red shoes Size 8, keep jacket excluded, reason ${reasons[t.reason]}, method ${methodLabel(expectedMethod(t))}, and then refund destination ${destinationLabel(t.intent.refundDestination)}. Wait for the saves. Do not submit.`,
+    )
+    ensurePass(r)
+    event(t, 'The draft was corrected. Running the same review check again.')
+    await validate(t)
+  }
+  async function verifyConfirmation(t) {
+    if (!t.sourceReturn && !reconcile(t)) return
+    const record = t.sourceReturn,
+      url =
+        sourceBase(t) +
+        (t.kind === 'appointment' ? '/appointments/confirmations/' : '/merchant/returns/') +
+        encodeURIComponent(record.requestId)
+    const r = await browser(
+      t,
+      'verify-confirmation',
+      `Do not submit or create another request. Verify this is saved confirmation ${record.requestId}. ` +
+        (t.kind === 'appointment'
+          ? 'Verify the appointment changed and exactly one active booking remains.'
+          : 'Verify return requested and refund pending, and the jacket was kept. ') +
+        (t.kind === 'return' && record.method === 'qr_dropoff'
+          ? 'Verify the synthetic QR artifact link can be opened, then return to the confirmation. '
+          : '') +
+        extractObjective(t.kind, true),
+      url,
+    )
+    ensurePass(r)
+    t.confirmationFields = fieldChecks(t, r, record, true)
+    const latest = readOperation(t),
+      d = refresh(t)
+    const baselineKept =
+      t.kind === 'appointment'
+        ? d.currentBooking.startsAt === record.startsAt &&
+          d.currentBooking.version === t.baseline.booking.version + 1
+        : same(
+            t.baseline?.jacket,
+            d.lines.find((l) => l.id === 'JACKET-BLACK-M'),
+          )
+    if (
+      !t.confirmationFields.every((c) => c.status === 'match') ||
+      !baselineKept ||
+      !evidenceRef(r) ||
+      latest.status !== 'committed' ||
+      latest.proposalDigest !== t.approval.proposalDigest ||
+      !same(canonicalProposal(latest.return), t.approval.proposal)
+    )
+      throw Error(
+        'The source saved the request, but confirmation evidence is incomplete. Recheck it without resubmitting.',
+      )
+    t.receipt = {
+      ...latest.return,
+      sourceUrl: url,
+      verifiedAt: new Date().toISOString(),
+      evidenceReference: evidenceRef(r),
+      qrUrl: t.kind === 'return' && record.method === 'qr_dropoff' ? url + '/qr' : null,
+    }
+    t.status = 'complete'
+    t.error = null
+    event(
+      t,
+      t.kind === 'appointment'
+        ? 'The changed appointment is verified. Your old time has been replaced.'
+        : 'Return requested; refund pending. Kane verified the saved source record.',
+      'success',
+    )
+  }
+  for (const t of tasks.values())
+    if (t.progress || ['working', 'submitting'].includes(t.status)) {
+      t.progress = null
+      t.status = t.submissionStarted ? 'reconciling' : 'needs_attention'
+      t.error = 'The worker restarted. Your choices are saved. Check the source to resume.'
+    }
+  let availability = null,
+    availabilityAt = 0
+  function publicTask(t, clientId) {
+    const copy = structuredClone(t)
+    copy.canControl = Boolean(clientId && t.ownerId === clientId)
+    delete copy.ownerId
+    for (const [index, e] of copy.evidence.entries()) {
+      e.packAvailable = Boolean(e.path && existsSync(e.path))
+      e.packUrl = e.packAvailable ? `/api/tasks/${t.id}/evidence/${index}` : null
+      delete e.path
+    }
+    return copy
+  }
   async function handle(req, res, url) {
     const send = (code, body) => {
-      res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' })
+      res.writeHead(code, {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'no-store',
+      })
       res.end(JSON.stringify(body))
     }
     const json = async () => {
       let text = ''
       for await (const chunk of req) {
         text += chunk
-        if (text.length > 32_000) throw new Error('Request is too large.')
+        if (text.length > 32000) throw Error('Request too large')
       }
       return text ? JSON.parse(text) : {}
     }
     if (url.pathname === '/api/status' && req.method === 'GET') {
-      return send(200, { product: 'Raising Kane', kane: getKaneAvailability(), openaiConfigured: Boolean(process.env.OPENAI_API_KEY),
-        sourceSubmissionReady: typeof merchant.registerGrant === 'function' && typeof merchant.getOperation === 'function' })
-    }
-    if (url.pathname === '/api/tasks' && req.method === 'POST') {
-      if (active.size) return send(409, { error: 'This demo runs one browser task at a time. Let the current task finish its step.' })
-      const { request } = await json()
-      if (typeof request !== 'string' || !request.trim()) return send(400, { error: 'Describe what you want to return.' })
-      const interpreted = await interpretRequest(request)
-      if (interpreted.unsupported || interpreted.ambiguous || !interpreted.item || !interpreted.refundDestination) {
-        return send(400, { error: interpreted.issues.join(' ') || 'Clarify the item and refund destination.' })
+      if (!availability || Date.now() - availabilityAt > 60000) {
+        availability = getKaneAvailability()
+        availabilityAt = Date.now()
       }
-      const task = {
-        id: randomUUID(), status: 'created', request: request.trim().slice(0, 1000), revision: 1,
-        intent: { item: 'Red shoes, size 8', exclude: 'Jacket', refundDestination: interpreted.refundDestination, noPrinter: interpreted.noPrinter },
-        interpretation: { source: interpreted.source, fallbackReason: interpreted.fallbackReason },
-        reason: null, merchant: null, checks: [], events: [], evidence: [], approval: null,
-        validation: null, receipt: null, sourceReturn: null, operationId: null, submissionStarted: false, error: null,
-        createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
-      }
-      tasks.set(task.id, task)
-      event(task, 'Your request is saved. Kane will inspect the source order.')
-      dispatch(task, 'reading the merchant order', async () => {
-        const result = await browser(task, 'discover',
-          'Verify order ORD-1042 shows Red running shoes size 8 and Black jacket. Store the order ID as "order_id". Do not change or submit the order.')
-        ensurePass(result)
-        if (String(result.finalState?.order_id || '').trim() !== 'ORD-1042') throw new Error('Kane did not extract the expected order ID.')
-        task.baseline = { orderId: task.merchant.orderId, accountId: task.merchant.accountId,
-          jacket: structuredClone(task.merchant.lines.find(line => line.id === 'JACKET-BLACK-M')) }
-        task.status = 'needs_reason'
-        event(task, 'Kane found the order. Choose your return reason.', 'success')
+      return send(200, {
+        product: 'Raising Kane',
+        kane: availability,
+        openaiConfigured: Boolean(process.env.OPENAI_API_KEY),
+        sourceSubmissionReady: true,
+        sites: [
+          {
+            kind: 'return',
+            name: 'Northstar Outfitters',
+            task: 'Return an item',
+            description: 'Keep the right items. Get the right refund.',
+            url: sourceUrls?.return,
+          },
+          {
+            kind: 'appointment',
+            name: 'Linden Home',
+            task: 'Move a service visit',
+            description: 'A new time, with your original choices intact.',
+            url: sourceUrls?.appointment,
+          },
+        ],
       })
-      return send(201, { task })
     }
-    const match = url.pathname.match(/^\/api\/tasks\/([^/]+)(?:\/(choice|check|approve|submit))?$/)
-    if (!match) return send(404, { error: 'Not found.' })
-    const task = tasks.get(match[1])
-    if (!task) return send(404, { error: 'Task not found.' })
-    if (!match[2] && req.method === 'GET') return send(200, { task })
-    if (req.method !== 'POST') return send(405, { error: 'Method not allowed.' })
-    if (active.has(task.id)) return send(409, { error: 'Kane is still working on this step.' })
-
-    if (match[2] === 'choice') {
-      if (task.submissionStarted || task.sourceReturn) return send(409, { error: 'The submission outcome must be resolved before changing this task.' })
-      const choice = await json()
-      if (choice.reason) {
-        if (!reasons[choice.reason]) return send(400, { error: 'Choose one of the merchant reasons.' })
-        invalidate(task)
-        task.reason = choice.reason
-        dispatch(task, 'preparing your return', () => prepare(task))
-      } else if (choice.noPrinter || ['qr', 'qr_dropoff'].includes(choice.method)) {
-        if (!task.reason) return send(409, { error: 'Choose a return reason first.' })
-        invalidate(task)
-        task.intent.noPrinter = true
-        dispatch(task, 'changing the return method', async () => {
-          const result = await browser(task, 'change-method',
-            'Assert the order number displayed below Start a return is "ORD-1042". Choose Printer-free QR drop-off under Return method. Wait for the draft-saved message. Store the order ID as "order_id". Do not change the refund destination and do not submit.')
-          ensurePass(result)
-          event(task, 'The method changed. Kane is checking whether your other choices survived.', 'info')
-          await validate(task)
-        })
-      } else return send(400, { error: 'Choose a reason or request printer-free drop-off.' })
-      return send(202, { task })
-    }
-
-    if (match[2] === 'check') {
-      const options = await json()
-      if (task.submissionStarted || task.sourceReturn) {
-        dispatch(task, 'checking the submitted return', async () => {
-          if (reconcile(task)) await verifyConfirmation(task)
-          else if (task.operationObservation?.status === 'absent' && task.approval
-            && same(proposal(refresh(task)), task.approval.proposal)) {
-            task.status = 'approved'
-            task.retryReady = true
-            task.error = 'No committed result is visible. A retry will use the same approved operation to prevent a duplicate.'
-          }
-        })
-      } else if (!task.reason) {
-        dispatch(task, 'reading the merchant order', async () => {
-          const result = await browser(task, 'discover', 'Verify order ORD-1042 contains red shoes and a jacket. Store the order ID as "order_id". Do not edit or submit.')
-          ensurePass(result)
-          if (String(result.finalState?.order_id || '').trim() !== 'ORD-1042') throw new Error('Kane did not extract the expected order ID.')
-          task.baseline ??= { orderId: task.merchant.orderId, accountId: task.merchant.accountId,
-            jacket: structuredClone(task.merchant.lines.find(line => line.id === 'JACKET-BLACK-M')) }
-          task.status = 'needs_reason'
-        })
+    if (url.pathname === '/api/tasks' && req.method === 'GET')
+      return send(200, {
+        tasks: [...tasks.values()]
+          .slice(-12)
+          .reverse()
+          .map((t) => ({
+            id: t.id,
+            kind: t.kind,
+            status: t.status,
+            createdAt: t.createdAt,
+            request: t.request,
+          })),
+      })
+    if (url.pathname === '/api/tasks' && req.method === 'POST') {
+      const input = await json(),
+        kind = input.kind || 'return'
+      if (!['return', 'appointment'].includes(kind))
+        return send(400, { error: 'Choose a supported website task.' })
+      let intent, interpretation, request
+      if (kind === 'return') {
+        request =
+          input.request ||
+          'Return the red shoes, keep the jacket, refund my original payment method.'
+        const parsed = await interpretRequest(request)
+        if (parsed.unsupported || parsed.ambiguous || !parsed.item || !parsed.refundDestination)
+          return send(400, {
+            error: parsed.issues.join(' ') || 'Choose a supported item and refund destination.',
+          })
+        intent = {
+          item: 'Red shoes, size 8',
+          exclude: 'Jacket',
+          refundDestination: parsed.refundDestination,
+          noPrinter: parsed.noPrinter,
+        }
+        interpretation = { source: parsed.source, fallbackReason: parsed.fallbackReason }
       } else {
-        refresh(task)
-        dispatch(task, 'checking your choices', async () => {
-          if (options.repair === true) {
-            if (task.merchant.reason !== task.reason || task.merchant.method !== expectedMethod(task)
-              || !same(task.merchant.selectedLineIds, ['SHOE-RED-8'])) await prepare(task)
-            else await repair(task)
-          } else await validate(task)
-        })
+        request = 'Move my washer repair to Saturday morning. Keep Maya and avoid an extra fee.'
+        intent = { keepTechnician: true, maxFeeCents: 0, date: '2026-10-31', slotId: null }
+        interpretation = { source: 'supported-task' }
       }
-      return send(202, { task })
+      const t = {
+        id: randomUUID(),
+        ownerId: req.clientId,
+        kind,
+        status: 'created',
+        request,
+        revision: 1,
+        intent,
+        interpretation,
+        reason: null,
+        baseline: null,
+        merchant: null,
+        checks: [],
+        verificationFields: [],
+        events: [],
+        evidence: [],
+        approval: null,
+        validation: null,
+        receipt: null,
+        sourceReturn: null,
+        operationId: null,
+        submissionStarted: false,
+        error: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }
+      tasks.set(t.id, t)
+      event(t, 'Your choices are saved. Reading the source record.')
+      dispatch(t, 'discover', () => discover(t))
+      return send(201, { task: publicTask(t, req.clientId) })
     }
-
+    const packMatch = url.pathname.match(/^\/api\/tasks\/([^/]+)\/evidence\/(\d+)$/)
+    if (packMatch && req.method === 'GET') {
+      const task = tasks.get(packMatch[1])
+      if (!task || !req.clientId || task.ownerId !== req.clientId)
+        return send(403, { error: 'Download evidence from the browser that started this task.' })
+      const entry = task.evidence[Number(packMatch[2])]
+      if (!entry?.path || !entry.path.endsWith('.evidence') || !existsSync(entry.path))
+        return send(404, { error: 'This local evidence pack is unavailable.' })
+      res.writeHead(200, {
+        'Content-Type': 'application/octet-stream',
+        'Content-Disposition': `attachment; filename="${task.id}-${entry.phase}.evidence"`,
+        'Cache-Control': 'no-store',
+      })
+      const stream = createReadStream(entry.path)
+      stream.on('error', () => res.destroy())
+      stream.pipe(res)
+      return
+    }
+    const match = url.pathname.match(
+      /^\/api\/tasks\/([^/]+)(?:\/(choice|check|approve|submit|evidence))?$/,
+    )
+    if (!match || !tasks.has(match[1])) return send(404, { error: 'Task not found.' })
+    const t = tasks.get(match[1])
+    if (!match[2] && req.method === 'GET') {
+      refresh(t)
+      return send(200, { task: publicTask(t, req.clientId) })
+    }
+    if (match[2] === 'evidence' && req.method === 'GET')
+      return send(200, {
+        taskId: t.id,
+        kind: t.kind,
+        revision: t.revision,
+        validation: t.validation,
+        receipt: t.receipt,
+        attempts: publicTask(t, req.clientId).evidence,
+      })
+    if (req.method !== 'POST') return send(405, { error: 'Method not allowed.' })
+    if (!req.clientId || t.ownerId !== req.clientId)
+      return send(403, {
+        error:
+          'This task belongs to another browser session. Open it in the browser where you started it.',
+      })
+    const body = await json()
+    // Check after reading the body: two overlapping requests cannot both pass admission.
+    if (active.has(t.id))
+      return send(409, {
+        error: 'A browser check is running. Your choices are saved; wait for it to finish.',
+      })
+    if (match[2] === 'choice') {
+      if (t.submissionStarted || t.sourceReturn)
+        return send(409, { error: 'Resolve the existing submission before changing its terms.' })
+      if (t.kind === 'appointment') {
+        if (body.maxFeeCents != null && ![0, 2500].includes(body.maxFeeCents))
+          return send(400, { error: 'Choose one of the supported fee limits.' })
+        if (body.keepTechnician != null && typeof body.keepTechnician !== 'boolean')
+          return send(400, { error: 'Choose whether to keep your technician.' })
+        const d = refresh(t),
+          next = {
+            ...t.intent,
+            ...(body.maxFeeCents != null ? { maxFeeCents: body.maxFeeCents } : {}),
+            ...(body.keepTechnician != null ? { keepTechnician: body.keepTechnician } : {}),
+          }
+        const options = candidates({ ...t, intent: next }, d)
+        if (body.slotId && !options.some((s) => s.id === body.slotId && s.issues.length === 0))
+          return send(409, {
+            error: 'That time does not meet your current choices or is no longer available.',
+          })
+        invalidate(t)
+        t.intent = { ...next, slotId: body.slotId || null }
+        if (body.slotId) {
+          dispatch(t, 'prepare', () => prepare(t))
+        } else {
+          t.status = t.baseline ? 'needs_slot' : 'needs_attention'
+          refresh(t)
+          event(t, 'Your appointment preferences changed. Choose an available matching time.')
+        }
+      } else {
+        if (body.reason && !reasons[body.reason])
+          return send(400, { error: 'Choose a reason offered by the merchant.' })
+        if (
+          body.refundDestination &&
+          !['original_payment', 'store_credit'].includes(body.refundDestination)
+        )
+          return send(400, { error: 'Choose a supported refund destination.' })
+        const hasMethod = Object.hasOwn(body, 'noPrinter') || body.method != null
+        if (hasMethod && body.noPrinter != null && typeof body.noPrinter !== 'boolean')
+          return send(400, { error: 'Printer preference must be true or false.' })
+        if (body.method != null && !['qr', 'qr_dropoff', 'print_label'].includes(body.method))
+          return send(400, { error: 'Unknown return method.' })
+        if (!body.reason && !body.refundDestination && !hasMethod)
+          return send(400, { error: 'Choose a reason, return method or refund destination.' })
+        invalidate(t)
+        if (body.reason) t.reason = body.reason
+        if (body.refundDestination) t.intent.refundDestination = body.refundDestination
+        if (hasMethod) t.intent.noPrinter = body.noPrinter ?? body.method !== 'print_label'
+        if (!t.reason) {
+          t.status = t.baseline ? 'needs_reason' : 'needs_attention'
+          save()
+        } else
+          dispatch(t, hasMethod ? 'change-method' : 'prepare', async () => {
+            if (!t.baseline) await discover(t)
+            if (hasMethod) {
+              const r = await browser(
+                t,
+                'change-method',
+                `Choose ${methodLabel(expectedMethod(t))} under Return method. Wait for the saved message. Do not change the refund destination. Do not submit.`,
+              )
+              ensurePass(r)
+              await validate(t)
+            } else await prepare(t)
+          })
+      }
+      return send(202, { task: publicTask(t, req.clientId) })
+    }
+    if (match[2] === 'check') {
+      dispatch(t, 'validate-review', async () => {
+        if (t.submissionStarted) {
+          if (reconcile(t)) await verifyConfirmation(t)
+          else if (
+            t.operationObservation.status === 'absent' &&
+            t.approval &&
+            proposalDigest(refresh(t)) === t.approval.proposalDigest
+          ) {
+            t.status = 'approved'
+            t.retryReady = true
+            save()
+          }
+        } else if (!t.baseline) await discover(t)
+        else if (t.kind === 'return' && !t.reason) {
+          t.status = 'needs_reason'
+          save()
+        } else if (t.kind === 'appointment' && !t.intent.slotId) {
+          t.status = 'needs_slot'
+          save()
+        } else if (body.repair === true) await repair(t)
+        else await validate(t)
+      })
+      return send(202, { task: publicTask(t, req.clientId) })
+    }
     if (match[2] === 'approve') {
-      const draft = refresh(task)
-      if (task.status !== 'ready' || !task.validation
-        || task.validation.taskRevision !== task.revision
-        || !same(task.validation.proposal, proposal(draft))
-        || task.checks.some(check => check.status !== 'match')) {
-        clearApproval(task)
-        task.validation = null
-        task.status = task.checks.some(check => check.status === 'conflict') ? 'conflict' : 'needs_attention'
-        task.error = 'The source draft needs another Kane check before approval.'
-        save()
-        return send(409, { error: 'Kane must verify this exact current draft before approval.' })
+      const d = refresh(t)
+      if (
+        t.status !== 'ready' ||
+        !t.baseline ||
+        !t.validation ||
+        t.validation.taskRevision !== t.revision ||
+        t.validation.sourceRevision !== d.revision ||
+        t.validation.digest !== proposalDigest(d) ||
+        !t.checks.every((c) => c.status === 'match')
+      )
+        return send(409, { error: 'Kane must verify this exact current proposal before approval.' })
+      const operationId = randomUUID(),
+        digest = proposalDigest(d)
+      const grant = source(t).registerGrant({
+        taskId: t.id,
+        operationId,
+        intentRevision: t.revision,
+        proposalDigest: digest,
+        draftVersion: d.revision,
+        validationRunId: t.validation.reference,
+      })
+      if (
+        grant.status !== 'active' ||
+        grant.operationId !== operationId ||
+        grant.proposalDigest !== digest ||
+        grant.draftVersion !== d.revision
+      )
+        throw Error('The source did not confirm the exact approval grant.')
+      t.approval = {
+        operationId,
+        proposalDigest: digest,
+        proposal: canonicalProposal(d),
+        taskRevision: t.revision,
+        sourceRevision: d.revision,
+        validationRunId: t.validation.reference,
+        at: new Date().toISOString(),
       }
-      if (typeof merchant.registerGrant !== 'function' || typeof merchant.getOperation !== 'function') {
-        return send(503, { error: 'This demo supports preview and verification. Merchant submission is not available yet.' })
-      }
-      const operationId = randomUUID()
-      const digest = draft.proposalDigest || createHash('sha256').update(JSON.stringify(proposal(draft))).digest('hex')
-      const approval = { taskRevision: task.revision, proposal: proposal(draft), proposalDigest: digest,
-        operationId, attemptId: operationId, validationRunId: task.validation.reference, validated: true, at: new Date().toISOString() }
-      {
-        const grant = merchant.registerGrant({ taskId: task.id, operationId,
-          intentRevision: task.revision, proposalDigest: digest, draftVersion: draft.revision, validationRunId: task.validation.reference })
-        if (!grant || grant.status !== 'active' || !grant.grantId || grant.operationId !== operationId
-          || grant.proposalDigest !== digest || grant.draftVersion !== draft.revision) {
-          throw new Error('The merchant did not confirm a matching approval grant.')
-        }
-        approval.sourceGrant = grant
-      }
-      task.approval = approval
-      task.operationId = operationId
-      task.status = 'approved'
-      event(task, 'You approved the exact merchant draft that Kane verified.', 'success')
-      return send(200, { task })
+      t.operationId = operationId
+      t.status = 'approved'
+      event(
+        t,
+        'You approved this exact proposal. The source grant is bound to these terms.',
+        'success',
+      )
+      return send(200, { task: publicTask(t, req.clientId) })
     }
-
     if (match[2] === 'submit') {
-      const draft = refresh(task)
-      if (!task.approval || !['approved', 'reconciling'].includes(task.status)
-        || task.approval.taskRevision !== task.revision || !same(task.approval.proposal, proposal(draft))) {
-        if (!task.submissionStarted) clearApproval(task)
-        task.validation = null
-        task.status = 'needs_attention'
-        task.error = 'The source draft changed or lacks current approval. Check it again before submitting.'
-        save()
-        return send(409, { error: 'Review and approve the current verified draft before submission.' })
-      }
-      task.submissionStarted = true
+      const d = refresh(t)
+      if (
+        !t.approval ||
+        !['approved', 'reconciling'].includes(t.status) ||
+        t.approval.taskRevision !== t.revision ||
+        t.approval.proposalDigest !== proposalDigest(d) ||
+        t.approval.sourceRevision !== d.revision
+      )
+        return send(409, { error: 'Review and approve the current verified proposal first.' })
+      t.submissionStarted = true
       save()
-      dispatch(task, 'submit', async () => {
-        const existing = readOperation(task)
-        if (existing.status === 'committed') {
-          reconcile(task)
-          return verifyConfirmation(task)
+      dispatch(t, 'submit', async () => {
+        const op = readOperation(t)
+        if (op.status === 'committed') {
+          reconcile(t)
+          return verifyConfirmation(t)
         }
-        if (existing.status !== 'absent') {
-          task.status = 'reconciling'
-          task.error = 'The source is still resolving this operation. No new submission was sent.'
+        if (op.status !== 'absent') {
+          t.status = 'reconciling'
+          save()
           return
         }
-        task.status = 'submitting'
-        task.error = null
-        task.retryReady = false
-        const result = await browser(task, 'submit',
-          'Assert the order number displayed below Start a return is "ORD-1042". Click Submit return request once. Verify the source displays the return request confirmation. '
-          + 'Store the return request ID as "return_request_id". Capture the response body for the matching POST /merchant/api/submit as "submission_response". Do not start another return.', sourceUrl(task, true))
-        if (result.finalState?.submission_response) task.submissionResponse = result.finalState.submission_response
-        if (reconcile(task)) await verifyConfirmation(task)
-        else if (result.status !== 'passed') task.error = result.summary || 'Submission is unresolved. Check the source before retrying.'
+        const r = await browser(
+          t,
+          'submit',
+          `Click ${t.kind === 'appointment' ? 'Confirm appointment change' : 'Submit return request'} once. Wait for the saved confirmation. Do not start another request. Store the ${t.kind === 'appointment' ? 'change' : 'return'} request ID as "request_id".`,
+          sourceUrl(t, true),
+        )
+        if (reconcile(t)) await verifyConfirmation(t)
+        else if (r.status !== 'passed') {
+          t.error = r.summary
+          save()
+        }
       })
-      return send(202, { task })
+      return send(202, { task: publicTask(t, req.clientId) })
     }
     return send(404, { error: 'Not found.' })
   }
-
-  return { handle, verifyLegacyApproval }
+  return { handle }
 }

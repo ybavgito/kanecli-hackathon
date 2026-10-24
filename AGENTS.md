@@ -33,8 +33,8 @@ Do not log credentials or put secret test values in source control.
 - Save shared extraction and design sessions explicitly. Review proposed use
   cases before designing and check each save's returned files and errors.
 - Keep generated tests directly in `.testmuai/tests/`. Run the returned files
-  explicitly, then inspect `kane-cli cover --mode agent`. The legacy suite script
-  only selects `tests/*_test.md`.
+  explicitly, then inspect `kane-cli cover --mode agent`. The suite script
+  selects generated `.testmuai/tests/*_test.md`, excluding the historical smoke test.
 - Exploration designs tests but does not execute them. Agree on scope and policy
   before starting it; its default permits app mutations.
 - Preserve version labels in the field guide. v0.9.0 observations do not prove
