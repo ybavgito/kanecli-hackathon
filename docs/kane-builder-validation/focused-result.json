@@ -1,0 +1,71 @@
+{
+  "exit_code": 0,
+  "elapsed_seconds": 64.64,
+  "request_paths": [
+    "/return",
+    "/favicon.ico",
+    "/return",
+    "/favicon.ico",
+    "/review?method=label",
+    "/favicon.ico",
+    "/return",
+    "/favicon.ico",
+    "/review?method=qr",
+    "/favicon.ico"
+  ],
+  "run_end": {
+    "status": "passed",
+    "summary": "Reviewed the Printed label return option without submitting it: the refund would go to Original payment, with a $0.00 deduction and an $80.00 USD refund.\nConfirmed that the review covered Blue shoes only and kept the Green jacket.\nUsed Change method, then reviewed the QR drop-off (no printer) option without submitting it: the refund would go to Store credit, with a $5.00 deduction and a $75.00 USD refund.\nConfirmed that the QR drop-off review also covered Blue shoes only and kept the Green jacket.\nFinished on the QR drop-off review page; no return was submitted.",
+    "final_state": {
+      "url": "http://127.0.0.1:38383/review?method=qr",
+      "label_destination": "Original payment",
+      "label_deduction": "$0.00",
+      "label_refund": "$80.00 USD",
+      "qr_destination": "Store credit",
+      "qr_deduction": "$5.00",
+      "qr_refund": "$75.00 USD"
+    },
+    "duration": 56.2,
+    "credits_consumed": 27.2322325,
+    "reason_code": "success.complete",
+    "result_code": 100,
+    "coverage": {
+      "status": "skipped"
+    },
+    "ts": "2026-10-24T22:44:14.827Z"
+  },
+  "assertions": [
+    {
+      "condition": "This review is for Blue shoes only.",
+      "extracted_value": "Blue shoes only",
+      "expected_value": "Blue shoes only",
+      "operator": "equals",
+      "analyzer_type": "textual_visual",
+      "step": 3
+    },
+    {
+      "condition": "This review keeps Green jacket.",
+      "extracted_value": "true",
+      "expected_value": "true",
+      "operator": "equals",
+      "analyzer_type": "textual_visual",
+      "step": 3
+    },
+    {
+      "condition": "This review is for Blue shoes only.",
+      "extracted_value": "Blue shoes only",
+      "expected_value": "Blue shoes only",
+      "operator": "equals",
+      "analyzer_type": "textual_visual",
+      "step": 7
+    },
+    {
+      "condition": "This review keeps Green jacket.",
+      "extracted_value": "true",
+      "expected_value": "true",
+      "operator": "equals",
+      "analyzer_type": "textual_visual",
+      "step": 7
+    }
+  ]
+}

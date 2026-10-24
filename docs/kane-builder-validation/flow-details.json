@@ -1,0 +1,183 @@
+[
+  {
+    "current": {
+      "credits": {
+        "by_node": {
+          "page_observer": 0.055330000000000004,
+          "reasoning/v2": 4.1875
+        },
+        "by_phase": {
+          "walk": 4.24283
+        },
+        "calls": 2,
+        "total": 4.24283
+      },
+      "diverged_at": null,
+      "flow_id": "01M5R156ECE11AH886MRFMSMK6",
+      "id": "13cc9e5c141a0635b31830031eb43a295d48fc63c78044418c021472474082a2",
+      "lease_id": "01M5R14VSQX8ZJGAJY9RFM3WRB",
+      "load_blocked": [],
+      "outcome": "verified",
+      "reached": "01M5R1538TSEVEX5G9K4EBH49J",
+      "reached_via": "jump",
+      "reason": null,
+      "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+      "steps": [
+        {
+          "in_place": false,
+          "ordinal": 1,
+          "record": {
+            "action_instruction": "Clicking Return blue shoes link",
+            "action_type": "click",
+            "output_variable": null,
+            "step": 3
+          },
+          "url_after": "http://127.0.0.1:38383/return"
+        }
+      ],
+      "version": "be5bdbdb50273e58cc8ae0843ff369d69b24d81a17ca53cb1c8052d5133d277c"
+    },
+    "flow": {
+      "annotations": {},
+      "changes": [],
+      "current_observation": "13cc9e5c141a0635b31830031eb43a295d48fc63c78044418c021472474082a2",
+      "description": "",
+      "entry": "01M5R14NFDE688BQJB2N9A9FJ5",
+      "exit": "01M5R1538TSEVEX5G9K4EBH49J",
+      "feedback": [],
+      "finding_ids": [
+        "47eda11f3dfc31ee9869ffa9614ac77642ae31865e9ec343d38192f942ef3fbe",
+        "7f636f9daf8e21240cbd61cea7672e0a06508769befa213bb28da58ab78e5fd8",
+        "a737bd45985b14b9c3ba8313218d102e53e70321686f8ee177e418a273235f8e"
+      ],
+      "id": "01M5R156ECE11AH886MRFMSMK6",
+      "name": "Return blue shoes",
+      "origin": "agent",
+      "parent_id": null,
+      "plan": null,
+      "priority": 0,
+      "stateful": null,
+      "status": "verified",
+      "superseded_by": null,
+      "supersedes": null
+    }
+  },
+  {
+    "current": {
+      "credits": {
+        "by_node": {
+          "page_observer": 0.055880000000000006,
+          "reasoning/v2": 0.67504
+        },
+        "by_phase": {
+          "walk": 0.73092
+        },
+        "calls": 2,
+        "total": 0.73092
+      },
+      "diverged_at": null,
+      "flow_id": "2f7acb2cbcb7d09902f5ee36bdcedcd806fb8bb0122e57ac7538c152aaf322fe",
+      "id": "3c61becb8999c0f413a3d33c4aeea43771b36722adab824a2a5ac898eab7aa85",
+      "lease_id": "01M5R15D39J2NYXXCS66GS300C",
+      "load_blocked": [],
+      "outcome": "verified",
+      "reached": "01M5R1538TSEVEX5G9K4EBH49J",
+      "reached_via": "jump",
+      "reason": null,
+      "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+      "steps": [
+        {
+          "in_place": false,
+          "ordinal": 1,
+          "record": {
+            "action_instruction": "Clicking return link",
+            "action_type": "click",
+            "output_variable": null,
+            "step": 7
+          },
+          "url_after": "http://127.0.0.1:38383/return"
+        }
+      ],
+      "version": "be5bdbdb50273e58cc8ae0843ff369d69b24d81a17ca53cb1c8052d5133d277c"
+    },
+    "flow": {
+      "annotations": {},
+      "changes": [],
+      "current_observation": "3c61becb8999c0f413a3d33c4aeea43771b36722adab824a2a5ac898eab7aa85",
+      "description": "From this screen: Review QR drop-off return outcome. Steps: Open the return link \u2192 choose QR drop-off \u2192 review deductions and refund destination. Stop as soon as that is done.",
+      "entry": "01M5R14NFDE688BQJB2N9A9FJ5",
+      "exit": "01M5R1538TSEVEX5G9K4EBH49J",
+      "feedback": [],
+      "finding_ids": [],
+      "id": "2f7acb2cbcb7d09902f5ee36bdcedcd806fb8bb0122e57ac7538c152aaf322fe",
+      "name": "Review QR drop-off return outcome",
+      "origin": "skill",
+      "parent_id": null,
+      "plan": null,
+      "priority": 3,
+      "stateful": null,
+      "status": "verified",
+      "superseded_by": null,
+      "supersedes": null
+    }
+  },
+  {
+    "current": {
+      "credits": {
+        "by_node": {
+          "page_observer": 0.0557675,
+          "reasoning/v2": 0.6567900000000001
+        },
+        "by_phase": {
+          "walk": 0.7125575000000001
+        },
+        "calls": 2,
+        "total": 0.7125575000000001
+      },
+      "diverged_at": null,
+      "flow_id": "9c2ba473c9241f3a99b4e5d75615c04c3bbfb5978a234a94760d25bcd884cec0",
+      "id": "d164d374d0273888e3e2be1d358aa9b2f4772cdf25c1aa78d6bfea5b22c04a27",
+      "lease_id": "01M5R157BY4GY81ZPTHE4XD67G",
+      "load_blocked": [],
+      "outcome": "verified",
+      "reached": "01M5R1538TSEVEX5G9K4EBH49J",
+      "reached_via": "jump",
+      "reason": null,
+      "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+      "steps": [
+        {
+          "in_place": false,
+          "ordinal": 1,
+          "record": {
+            "action_instruction": "Clicking return request link",
+            "action_type": "click",
+            "output_variable": null,
+            "step": 5
+          },
+          "url_after": "http://127.0.0.1:38383/return"
+        }
+      ],
+      "version": "be5bdbdb50273e58cc8ae0843ff369d69b24d81a17ca53cb1c8052d5133d277c"
+    },
+    "flow": {
+      "annotations": {},
+      "changes": [],
+      "current_observation": "d164d374d0273888e3e2be1d358aa9b2f4772cdf25c1aa78d6bfea5b22c04a27",
+      "description": "From this screen: Review printed-label return outcome. Steps: Open the return link \u2192 choose a printed label \u2192 review deductions and refund destination. Stop as soon as that is done.",
+      "entry": "01M5R14NFDE688BQJB2N9A9FJ5",
+      "exit": "01M5R1538TSEVEX5G9K4EBH49J",
+      "feedback": [],
+      "finding_ids": [],
+      "id": "9c2ba473c9241f3a99b4e5d75615c04c3bbfb5978a234a94760d25bcd884cec0",
+      "name": "Review printed-label return outcome",
+      "origin": "skill",
+      "parent_id": null,
+      "plan": null,
+      "priority": 3,
+      "stateful": null,
+      "status": "verified",
+      "superseded_by": null,
+      "supersedes": null
+    }
+  }
+]

@@ -2,14 +2,14 @@
 
 When websites raise hell, raise Kane.
 
-For the new URL-to-generated-interface direction, start with the [Explore-driven builder plan](explore-driven-builder-plan.md). It is a proposed successor architecture, with explicit Explore and accessibility boundaries. The existing project brief and implementation guide describe the earlier two-sandbox build.
+For the new URL-to-generated-interface direction, start with the [Explore-driven builder plan](explore-driven-builder-plan.md). It is a proposed successor architecture, with explicit Explore, agent/tool, visible-journey, rebuild and accessibility contracts. Fresh [capability experiments](../kane-builder-validation/report.md) establish selected Explore behaviors, not the completed builder. The existing project brief and implementation guide describe the earlier two-sandbox build.
 
 The three direct research attachments are:
 - clearpath-kane-feature-audit.md
 - clearpath-sol-review.md
 - clearpath-product-and-demo.md
 
-Their filenames preserve the former ClearPath working title. Linked background Markdown notes are also included so local research references remain usable. Those older notes are historical research, not current implementation commitments. The consolidated brief governs where scope differs.
+Their filenames preserve the former ClearPath working title. Linked background Markdown notes are also included so local research references remain usable. Those older notes are historical research, not current implementation commitments. The Explore-driven builder plan governs the new requested scope; the older brief records the prebuilt implementation direction.
 
 The original imported ZIP is a historical snapshot. The repository now adds a
 [workflow/demo decision memo](workflow-and-demo-design.md), the maintained

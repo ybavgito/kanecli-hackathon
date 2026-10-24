@@ -1,0 +1,282 @@
+{
+  "next": null,
+  "rows": [
+    {
+      "candidate_id": null,
+      "category": "accessibility",
+      "confirmed": false,
+      "description": "On 127.0.0.1:38383/return, 1 element breaks the rule html-has-lang.",
+      "feedback": [],
+      "id": "47eda11f3dfc31ee9869ffa9614ac77642ae31865e9ec343d38192f942ef3fbe",
+      "kind": "accessibility",
+      "occ": {
+        "count": 1,
+        "latest_shot": {
+          "annotations": [],
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "screenshot": true,
+          "screenshot_size": {
+            "h": 1080,
+            "w": 1920
+          }
+        },
+        "runs": [
+          "01a17012-20fb-7e86-8a47-baf3499378bf"
+        ]
+      },
+      "severity": "medium",
+      "similar": [
+        {
+          "by": "subject",
+          "closeness": 1,
+          "finding_id": "e66b87b4a0e5a756b8dbe100183d85b96dc144d3d7e9ad73f0bf749ab20cfc63"
+        }
+      ],
+      "status": "open",
+      "status_change": {
+        "at": "2026-10-24T22:40:30.709272Z",
+        "by": {
+          "display_name": "KaneAI explorer",
+          "kind": "agent",
+          "run_id": null
+        },
+        "record_id": null,
+        "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+        "transition": "opened"
+      },
+      "status_history": [
+        {
+          "at": "2026-10-24T22:40:30.709272Z",
+          "by": {
+            "display_name": "KaneAI explorer",
+            "kind": "agent",
+            "run_id": null
+          },
+          "record_id": null,
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "transition": "opened"
+        }
+      ],
+      "title": "<html> element must have a lang attribute (1 element on 127.0.0.1:38383/return)",
+      "unblock": ""
+    },
+    {
+      "candidate_id": null,
+      "category": "accessibility",
+      "confirmed": false,
+      "description": "On 127.0.0.1:38383/return, 1 element breaks the rule color-contrast.",
+      "feedback": [],
+      "id": "7f636f9daf8e21240cbd61cea7672e0a06508769befa213bb28da58ab78e5fd8",
+      "kind": "accessibility",
+      "occ": {
+        "count": 1,
+        "latest_shot": {
+          "annotations": [],
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "screenshot": true,
+          "screenshot_size": {
+            "h": 1080,
+            "w": 1920
+          }
+        },
+        "runs": [
+          "01a17012-20fb-7e86-8a47-baf3499378bf"
+        ]
+      },
+      "severity": "medium",
+      "similar": [],
+      "status": "open",
+      "status_change": {
+        "at": "2026-10-24T22:40:30.709272Z",
+        "by": {
+          "display_name": "KaneAI explorer",
+          "kind": "agent",
+          "run_id": null
+        },
+        "record_id": null,
+        "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+        "transition": "opened"
+      },
+      "status_history": [
+        {
+          "at": "2026-10-24T22:40:30.709272Z",
+          "by": {
+            "display_name": "KaneAI explorer",
+            "kind": "agent",
+            "run_id": null
+          },
+          "record_id": null,
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "transition": "opened"
+        }
+      ],
+      "title": "Elements must meet minimum color contrast ratio thresholds (1 element on 127.0.0.1:38383/return)",
+      "unblock": ""
+    },
+    {
+      "candidate_id": null,
+      "category": "accessibility",
+      "confirmed": false,
+      "description": "On 127.0.0.1:38383/return, 1 element breaks the rule label.",
+      "feedback": [],
+      "id": "a737bd45985b14b9c3ba8313218d102e53e70321686f8ee177e418a273235f8e",
+      "kind": "accessibility",
+      "occ": {
+        "count": 1,
+        "latest_shot": {
+          "annotations": [],
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "screenshot": true,
+          "screenshot_size": {
+            "h": 1080,
+            "w": 1920
+          }
+        },
+        "runs": [
+          "01a17012-20fb-7e86-8a47-baf3499378bf"
+        ]
+      },
+      "severity": "high",
+      "similar": [],
+      "status": "open",
+      "status_change": {
+        "at": "2026-10-24T22:40:30.709272Z",
+        "by": {
+          "display_name": "KaneAI explorer",
+          "kind": "agent",
+          "run_id": null
+        },
+        "record_id": null,
+        "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+        "transition": "opened"
+      },
+      "status_history": [
+        {
+          "at": "2026-10-24T22:40:30.709272Z",
+          "by": {
+            "display_name": "KaneAI explorer",
+            "kind": "agent",
+            "run_id": null
+          },
+          "record_id": null,
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "transition": "opened"
+        }
+      ],
+      "title": "Form elements must have labels (1 element on 127.0.0.1:38383/return)",
+      "unblock": ""
+    },
+    {
+      "candidate_id": null,
+      "category": "accessibility",
+      "confirmed": false,
+      "description": "On 127.0.0.1:38383/, 1 element breaks the rule image-alt.",
+      "feedback": [],
+      "id": "d312070d777c8977de0112ce21a1dad0136e55df80a359c65eea0665ace679d9",
+      "kind": "accessibility",
+      "occ": {
+        "count": 1,
+        "latest_shot": {
+          "annotations": [],
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "screenshot": true,
+          "screenshot_size": {
+            "h": 1080,
+            "w": 1920
+          }
+        },
+        "runs": [
+          "01a17012-20fb-7e86-8a47-baf3499378bf"
+        ]
+      },
+      "severity": "high",
+      "similar": [],
+      "status": "open",
+      "status_change": {
+        "at": "2026-10-24T22:40:13.188913Z",
+        "by": {
+          "display_name": "KaneAI explorer",
+          "kind": "agent",
+          "run_id": null
+        },
+        "record_id": null,
+        "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+        "transition": "opened"
+      },
+      "status_history": [
+        {
+          "at": "2026-10-24T22:40:13.188913Z",
+          "by": {
+            "display_name": "KaneAI explorer",
+            "kind": "agent",
+            "run_id": null
+          },
+          "record_id": null,
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "transition": "opened"
+        }
+      ],
+      "title": "Images must have alternative text (1 element on 127.0.0.1:38383/)",
+      "unblock": ""
+    },
+    {
+      "candidate_id": null,
+      "category": "accessibility",
+      "confirmed": false,
+      "description": "On 127.0.0.1:38383/, 1 element breaks the rule html-has-lang.",
+      "feedback": [],
+      "id": "e66b87b4a0e5a756b8dbe100183d85b96dc144d3d7e9ad73f0bf749ab20cfc63",
+      "kind": "accessibility",
+      "occ": {
+        "count": 1,
+        "latest_shot": {
+          "annotations": [],
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "screenshot": true,
+          "screenshot_size": {
+            "h": 1080,
+            "w": 1920
+          }
+        },
+        "runs": [
+          "01a17012-20fb-7e86-8a47-baf3499378bf"
+        ]
+      },
+      "severity": "medium",
+      "similar": [
+        {
+          "by": "subject",
+          "closeness": 1,
+          "finding_id": "47eda11f3dfc31ee9869ffa9614ac77642ae31865e9ec343d38192f942ef3fbe"
+        }
+      ],
+      "status": "open",
+      "status_change": {
+        "at": "2026-10-24T22:40:13.188913Z",
+        "by": {
+          "display_name": "KaneAI explorer",
+          "kind": "agent",
+          "run_id": null
+        },
+        "record_id": null,
+        "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+        "transition": "opened"
+      },
+      "status_history": [
+        {
+          "at": "2026-10-24T22:40:13.188913Z",
+          "by": {
+            "display_name": "KaneAI explorer",
+            "kind": "agent",
+            "run_id": null
+          },
+          "record_id": null,
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "transition": "opened"
+        }
+      ],
+      "title": "<html> element must have a lang attribute (1 element on 127.0.0.1:38383/)",
+      "unblock": ""
+    }
+  ]
+}

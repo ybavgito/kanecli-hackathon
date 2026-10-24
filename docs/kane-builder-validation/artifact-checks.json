@@ -1,0 +1,8 @@
+{
+  "map_counts_match": true,
+  "references_resolve": true,
+  "all_findings_keep_unconfirmed_status": true,
+  "explore_flow_labels_exceed_observed_path": true,
+  "focused_extraction_matches_fixture_oracle": true,
+  "focused_both_review_requests_observed": true
+}

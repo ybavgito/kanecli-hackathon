@@ -8,6 +8,36 @@ Updated October 24, 2026. Practical reference for the event release and the two-
 
 The original field guide is preserved in [the historical experiment archive](docs/raising-kane/kane-cli-field-guide-0.9-historical.md). Its 0.9.0 timings, credit figures, concurrency behavior and old product rankings are historical. This guide governs current usage; the [Raising Kane project brief](docs/raising-kane/raising-kane-project-brief.md) governs product scope.
 
+## New builder direction and fresh Explore measurements
+
+The [complete builder plan](docs/raising-kane/explore-driven-builder-plan.md) supersedes
+fixed-interface scope for the next implementation. The code described below remains the
+prebuilt version; the full agentic generation and repair loop is not implemented.
+
+The new [capability experiment](docs/kane-builder-validation/report.md) used a synthetic
+read-only fixture and a four-lease rc.3 Explore run. It established:
+
+- Actual machine-readable map/finding reads through the local `explore view` server:
+  `/api/view/summary`, `/api/view/junctions`, `/api/view/flows`, `/api/view/findings`
+  and detail routes. This is an observed version-specific integration, not a public
+  `explore export` command or a promised stable API. Handle `next` pagination.
+- Five accessibility findings across two screens, covering `html-has-lang`, `image-alt`,
+  `label` and `color-contrast`. Detail records contain rule, impact, WCAG reference and
+  evidence metadata. All five returned `confirmed: false`; preserve this distinction.
+- Three flows marked `verified`, but two multi-step flow names exceeded the actual
+  recorded path. Independent requests showed no review page visited in that short run.
+  Inspect reached screens and step evidence; do not authorize a business outcome from
+  a flow name or status alone. Use focused `run` checks for missing business facts.
+- Budget stop returned exit zero with `complete: false`. The 52.54-second runtime is one
+  measurement, not a generated-interface delivery promise. The full `credits.total`
+  and top-level `credits_consumed` differed; retain both instead of inventing a cost.
+
+For the next product, use Explore on both source and generated preview, feed observed
+journeys into an actual coding-agent build, test outcome correspondence with Kane and
+rebuild on generated-code defects. The preview verifier and source operator require
+separate queues/browsers to avoid a nested-job deadlock. Automatic accessibility scans
+remain partial evidence; an accessibility tree is not a full audit.
+
 ## Implemented Raising Kane runtime — October 24 follow-up
 
 The integrated `main` implementation now completes both source workflows. Read

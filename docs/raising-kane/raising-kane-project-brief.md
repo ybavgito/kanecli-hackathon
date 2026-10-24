@@ -1,6 +1,6 @@
 # Raising Kane
 
-> **New planning direction:** [Explore-driven interface builder](explore-driven-builder-plan.md). This is the proposed URL → discovery → generated interface → verification architecture. It is not implemented by the two-sandbox code described below.
+> **Superseding build plan:** [Explore-driven interface builder](explore-driven-builder-plan.md). This is the proposed URL → discovery → generated interface → verification architecture. It supersedes the fixed-interface/no-runtime-builder scope below and prioritizes one complete generated workflow before the second site. It is not implemented by the two-sandbox code described below.
 
 
 > **Implementation update — October 24, 2026:** The PoC has been merged into `main` and both sandbox workflows now reach verified, persistent confirmations. See [implemented scope and demo](implementation-and-demo.md) and [verification](verification.md) for current behavior and measured results. The analysis/build split below records the earlier checkpoint; statements that submission or the appointment flow are unfinished are historical.

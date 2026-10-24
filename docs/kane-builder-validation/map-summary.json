@@ -1,0 +1,12 @@
+{
+  "exploration_id": "01a17012-2034-795b-a4f1-5834c01bd536",
+  "counts": {
+    "aliases": 2,
+    "findings": 5,
+    "flows": 3,
+    "junctions": 2,
+    "observations": 3
+  },
+  "entry": "01M5R14NFDE688BQJB2N9A9FJ5",
+  "as_of_run": null
+}

@@ -1,0 +1,77 @@
+{
+  "elapsed_seconds": 52.54,
+  "exit_code": 0,
+  "terminal": [
+    {
+      "type": "explore_run_started",
+      "exploration_id": "01a17012-2034-795b-a4f1-5834c01bd536",
+      "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+      "version": 1,
+      "next_seq": 1,
+      "run_dir": "/home/harish/.testmuai/kaneai/explorations/01a17012-2034-795b-a4f1-5834c01bd536/runs/01a17012-20fb-7e86-8a47-baf3499378bf",
+      "policy": "read_only",
+      "v": 1,
+      "ts": "2026-10-24T22:39:59.107Z"
+    },
+    {
+      "type": "done",
+      "state": "stopped",
+      "remark": {
+        "code": "budget",
+        "message": "the run's budget ran out (budget_leases)"
+      },
+      "exit_code": 0,
+      "exploration_id": "01a17012-2034-795b-a4f1-5834c01bd536",
+      "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+      "committed": 4,
+      "pending": 0,
+      "last_seq": 4,
+      "stop_reason": "budget_leases",
+      "complete": false,
+      "run_dir": "/home/harish/.testmuai/kaneai/explorations/01a17012-2034-795b-a4f1-5834c01bd536/runs/01a17012-20fb-7e86-8a47-baf3499378bf",
+      "teardown": {
+        "pid": null,
+        "contexts": 1,
+        "pages": [
+          "127.0.0.1:38383/return"
+        ]
+      },
+      "credits": {
+        "total": 8.0411775,
+        "calls": 9,
+        "by_node": {
+          "popup_prefs/read": 0.5458500000000001,
+          "exploration_judge/skill": 1.8090199999999999,
+          "page_observer": 0.1669775,
+          "reasoning/v2": 5.51933
+        },
+        "by_phase": {
+          "popup_prefs": 0.5458500000000001,
+          "judge": 1.8090199999999999,
+          "walk": 5.6863075
+        },
+        "request_ids": [
+          "67ae91ca-152f-49be-a675-257f2f435c3d",
+          "a6c3827c-ecaf-449e-902a-df60613215c5",
+          "d60148e0-3e56-4208-aca6-a30a6d5235ac",
+          "5455e026-1e8c-44d7-b8cb-17cf43306c79",
+          "3e94a125-2903-4b7b-b822-e661e667d6e1",
+          "09292766-3aeb-4789-9ddb-a19680a6da96",
+          "6bd819c1-ff68-4ef4-970c-521cec077fc6",
+          "221ffc19-0447-4887-8e08-a29598cf94f4",
+          "47a6cd32-c8ce-49d2-81ba-60ca7a693d04"
+        ]
+      },
+      "credits_consumed": 5.6863075,
+      "parallelism": {
+        "max_parallel": 1,
+        "peak": 1,
+        "average": 0.669,
+        "opened": 1
+      },
+      "v": 1,
+      "ts": "2026-10-24T22:40:49.881Z"
+    }
+  ],
+  "request_count": 11
+}

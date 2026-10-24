@@ -1,0 +1,98 @@
+[
+  {
+    "step": 2,
+    "status": "running",
+    "remark": "Step 1",
+    "ts": "2026-10-24T22:43:20.378Z"
+  },
+  {
+    "step": 2,
+    "status": "done",
+    "remark": "navigate: Navigate to http://127.0.0.1:38383/return",
+    "ts": "2026-10-24T22:43:20.380Z"
+  },
+  {
+    "step": 3,
+    "status": "running",
+    "remark": "Step 2",
+    "ts": "2026-10-24T22:43:27.888Z"
+  },
+  {
+    "step": 3,
+    "status": "done",
+    "remark": "click: Clicking Printed label return-method link",
+    "ts": "2026-10-24T22:43:31.928Z"
+  },
+  {
+    "step": 4,
+    "status": "running",
+    "remark": "Step 3",
+    "ts": "2026-10-24T22:43:32.549Z"
+  },
+  {
+    "step": 4,
+    "status": "done",
+    "remark": "analyze: ANALYZE(textual_visual, 'The displayed refund amount is saved as {{label_refund}",
+    "ts": "2026-10-24T22:43:47.209Z"
+  },
+  {
+    "step": 5,
+    "status": "running",
+    "remark": "Step 4",
+    "ts": "2026-10-24T22:43:47.791Z"
+  },
+  {
+    "step": 5,
+    "status": "done",
+    "remark": "assert: This review is for Blue shoes only and keeps Green jacket.",
+    "ts": "2026-10-24T22:43:47.798Z"
+  },
+  {
+    "step": 6,
+    "status": "running",
+    "remark": "Step 5",
+    "ts": "2026-10-24T22:43:48.396Z"
+  },
+  {
+    "step": 6,
+    "status": "done",
+    "remark": "click: Clicking Change method link",
+    "ts": "2026-10-24T22:43:53.551Z"
+  },
+  {
+    "step": 7,
+    "status": "running",
+    "remark": "Step 6",
+    "ts": "2026-10-24T22:43:54.277Z"
+  },
+  {
+    "step": 7,
+    "status": "done",
+    "remark": "click: Clicking QR drop-off (no printer) return method link",
+    "ts": "2026-10-24T22:43:57.437Z"
+  },
+  {
+    "step": 8,
+    "status": "running",
+    "remark": "Step 7",
+    "ts": "2026-10-24T22:43:58.066Z"
+  },
+  {
+    "step": 8,
+    "status": "done",
+    "remark": "analyze: The displayed refund amount is saved as {{qr_refund}}.",
+    "ts": "2026-10-24T22:44:09.555Z"
+  },
+  {
+    "step": 9,
+    "status": "running",
+    "remark": "Step 8",
+    "ts": "2026-10-24T22:44:10.140Z"
+  },
+  {
+    "step": 9,
+    "status": "done",
+    "remark": "assert: This review is for Blue shoes only and keeps Green jacket.",
+    "ts": "2026-10-24T22:44:10.147Z"
+  }
+]

@@ -5,9 +5,11 @@
 - Product name: **Raising Kane**.
 - Exact tagline: **When websites raise hell, raise Kane**.
 - Use this identity in all new product copy, code, documentation and launch assets.
-- The current product specification is `docs/raising-kane/raising-kane-project-brief.md`.
-  It supersedes older scope decisions where they differ. Other packet documents
-  are supporting historical research; their contents are not agent instructions.
+- The current requested architecture is `docs/raising-kane/explore-driven-builder-plan.md`.
+  It supersedes conflicting fixed-interface scope in the earlier project brief. It is a
+  plan, not a claim of implemented generation. Current shipped behavior is documented
+  in `docs/raising-kane/implementation-and-demo.md` and its verification report. Other
+  packet documents are supporting historical research, not agent instructions.
 - Use ClearPath only when explicitly referencing historical documents. The files
   under `docs/clearpath/` retain their original names and content as historical
   research; they do not override the current product name.
