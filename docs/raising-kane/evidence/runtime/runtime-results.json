@@ -1,0 +1,733 @@
+[
+  {
+    "kind": "return",
+    "taskId": "bbe3421c-0797-446e-a9d1-89c6d858714d",
+    "status": "complete",
+    "confirmationId": "RET-1001",
+    "checks": [
+      {
+        "key": "order",
+        "label": "Order",
+        "expected": "ORD-1042",
+        "observed": "ORD-1042",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "account",
+        "label": "Account",
+        "expected": "DEMO-ACCOUNT-1",
+        "observed": "DEMO-ACCOUNT-1",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "items",
+        "label": "Return only the shoes",
+        "expected": "Red shoes \u00b7 size 8",
+        "observed": "Red running shoes",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "quantity",
+        "label": "Quantity",
+        "expected": 1,
+        "observed": 1,
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "jacket",
+        "label": "Keep the jacket",
+        "expected": "Kept",
+        "observed": "Kept",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "reason",
+        "label": "Return reason",
+        "expected": "Size or fit issue",
+        "observed": "Size or fit issue",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "destination",
+        "label": "Refund destination",
+        "expected": "Original payment method",
+        "observed": "Original payment method",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "method",
+        "label": "Return method",
+        "expected": "Printer-free QR drop-off",
+        "observed": "Printer-free QR drop-off",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "currency",
+        "label": "Currency",
+        "expected": "USD",
+        "observed": "USD",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "subtotal",
+        "label": "Item value",
+        "expected": "$80.00",
+        "observed": "$80.00",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "deduction",
+        "label": "Deduction",
+        "expected": "$5.00",
+        "observed": "$5.00",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "refund",
+        "label": "Expected refund",
+        "expected": "$75.00",
+        "observed": "$75.00",
+        "status": "match",
+        "provenance": "source-adapter"
+      }
+    ],
+    "verificationFields": [
+      {
+        "key": "account_id",
+        "expected": "DEMO-ACCOUNT-1",
+        "observed": "DEMO-ACCOUNT-1",
+        "status": "match"
+      },
+      {
+        "key": "order_id",
+        "expected": "ORD-1042",
+        "observed": "ORD-1042",
+        "status": "match"
+      },
+      {
+        "key": "line_ids",
+        "expected": "SHOE-RED-8",
+        "observed": "SHOE-RED-8",
+        "status": "match"
+      },
+      {
+        "key": "quantity",
+        "expected": 1,
+        "observed": 1,
+        "status": "match"
+      },
+      {
+        "key": "reason",
+        "expected": "too_small",
+        "observed": "too_small",
+        "status": "match"
+      },
+      {
+        "key": "method",
+        "expected": "qr_dropoff",
+        "observed": "qr_dropoff",
+        "status": "match"
+      },
+      {
+        "key": "destination",
+        "expected": "original_payment",
+        "observed": "original_payment",
+        "status": "match"
+      },
+      {
+        "key": "currency",
+        "expected": "USD",
+        "observed": "USD",
+        "status": "match"
+      },
+      {
+        "key": "subtotal",
+        "expected": 8000,
+        "observed": 8000,
+        "status": "match"
+      },
+      {
+        "key": "deduction",
+        "expected": 500,
+        "observed": 500,
+        "status": "match"
+      },
+      {
+        "key": "refund",
+        "expected": 7500,
+        "observed": 7500,
+        "status": "match"
+      },
+      {
+        "key": "next_step",
+        "expected": "Show the synthetic QR code at a simulated drop-off counter.",
+        "observed": "Show the synthetic QR code at a simulated drop-off counter.",
+        "status": "match"
+      },
+      {
+        "key": "draft_revision",
+        "expected": 6,
+        "observed": 6,
+        "status": "match"
+      }
+    ],
+    "confirmationFields": [
+      {
+        "key": "account_id",
+        "expected": "DEMO-ACCOUNT-1",
+        "observed": "DEMO-ACCOUNT-1",
+        "status": "match"
+      },
+      {
+        "key": "order_id",
+        "expected": "ORD-1042",
+        "observed": "ORD-1042",
+        "status": "match"
+      },
+      {
+        "key": "line_ids",
+        "expected": "SHOE-RED-8",
+        "observed": "SHOE-RED-8",
+        "status": "match"
+      },
+      {
+        "key": "quantity",
+        "expected": 1,
+        "observed": 1,
+        "status": "match"
+      },
+      {
+        "key": "reason",
+        "expected": "too_small",
+        "observed": "too_small",
+        "status": "match"
+      },
+      {
+        "key": "method",
+        "expected": "qr_dropoff",
+        "observed": "qr_dropoff",
+        "status": "match"
+      },
+      {
+        "key": "destination",
+        "expected": "original_payment",
+        "observed": "original_payment",
+        "status": "match"
+      },
+      {
+        "key": "currency",
+        "expected": "USD",
+        "observed": "USD",
+        "status": "match"
+      },
+      {
+        "key": "subtotal",
+        "expected": 8000,
+        "observed": 8000,
+        "status": "match"
+      },
+      {
+        "key": "deduction",
+        "expected": 500,
+        "observed": 500,
+        "status": "match"
+      },
+      {
+        "key": "refund",
+        "expected": 7500,
+        "observed": 7500,
+        "status": "match"
+      },
+      {
+        "key": "next_step",
+        "expected": "Show the synthetic QR code at a simulated drop-off counter.",
+        "observed": "Show the synthetic QR code at a simulated drop-off counter.",
+        "status": "match"
+      },
+      {
+        "key": "request_id",
+        "expected": "RET-1001",
+        "observed": "RET-1001",
+        "status": "match"
+      },
+      {
+        "key": "jacket_kept",
+        "expected": true,
+        "observed": true,
+        "status": "match"
+      }
+    ],
+    "runs": [
+      {
+        "phase": "discover",
+        "status": "passed",
+        "summary": "Reloaded the merchant page and waited for the current order record to load.\nConfirmed that order ORD-1042 lists Red running shoes, Size 8, and a Black jacket.\nStored the displayed order ID as ORD-1042.\nNo changes were made or submitted.",
+        "url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QYQ6JAT90YJ5WDT7E44GV9/dashboard/share/US_XXGOC2HKRMRW8I48I4H92VQPG54FH4JXU09YTVLVW15G2PPX377EDHEFGLB70CCS?type=summary&agentView=true&fqdn=summary-page",
+        "runId": "run-0",
+        "finalState": {
+          "url": "http://127.0.0.1:5191/merchant?taskId=bbe3421c-0797-446e-a9d1-89c6d858714d",
+          "order_id": "ORD-1042",
+          "red_running_shoes_size_8_present": "true",
+          "black_jacket_present": "true"
+        },
+        "durationMs": 40323,
+        "creditsConsumed": 17.12655,
+        "taskRevision": 1,
+        "at": "2026-10-24T21:58:32.461Z"
+      },
+      {
+        "phase": "prepare",
+        "status": "passed",
+        "summary": "Updated the return for order ORD-1042 under account DEMO-ACCOUNT-1 without submitting it.\nLeft only one Red running shoes, Size 8, selected and excluded the Black jacket.\nSet the return reason to \u201cSize or fit issue,\u201d the method to \u201cPrint a shipping label,\u201d and the refund destination to \u201cOriginal payment method.\u201d\nThe saved return review shows a USD $80.00 subtotal, $0.00 deduction, and an expected refund of $80.00.",
+        "url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QYRF6Z783M2PDKY546JETB/dashboard/share/US_J28NYB4ZTH6LL8DAYSSHI8CLO0YYYBD2FP2RKFNOK8HUALQ2CQ9IL9KZW4FTSGG7?type=summary&agentView=true&fqdn=summary-page",
+        "runId": "run-0",
+        "finalState": {
+          "url": "http://127.0.0.1:5191/merchant?taskId=bbe3421c-0797-446e-a9d1-89c6d858714d",
+          "order_id": "ORD-1042",
+          "account_id": "DEMO-ACCOUNT-1",
+          "line_ids": "SHOE-RED-8",
+          "quantity": "1",
+          "reason": "Size or fit issue",
+          "method": "Print a shipping label",
+          "destination": "Original payment method",
+          "currency": "USD",
+          "subtotal": "80.00",
+          "deduction": "0.00",
+          "refund": "80.00",
+          "draft_revision": "4",
+          "next_step": "Print the synthetic label and attach it to the parcel."
+        },
+        "durationMs": 125182,
+        "creditsConsumed": 35.691539,
+        "taskRevision": 2,
+        "at": "2026-10-24T22:00:39.458Z"
+      },
+      {
+        "phase": "change-method",
+        "status": "passed",
+        "summary": "Reloaded the return page and waited for the current source record to load.\nSelected Printer-free QR drop-off as the return method.\nWaited for the saved confirmation message.\nLeft the refund destination unchanged and did not submit the return.",
+        "url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QYWAFYBGZ2BR9HB9QGM6QW/dashboard/share/US_NG8961DUJC2N4F2ONYFDHJJCQ0LLG0S4WV06A27OOQ6AEOZ36D5R4PL63VSND045?type=summary&agentView=true&fqdn=summary-page",
+        "runId": "run-0",
+        "finalState": {
+          "url": "http://127.0.0.1:5191/merchant?taskId=bbe3421c-0797-446e-a9d1-89c6d858714d"
+        },
+        "durationMs": 41636,
+        "creditsConsumed": 13.441749999999999,
+        "taskRevision": 3,
+        "at": "2026-10-24T22:01:22.149Z"
+      },
+      {
+        "phase": "validate-review",
+        "status": "failed",
+        "summary": "The test's expected return destination does not match the source record that was loaded. The page shows Store credit; the other requested values and item selection match.\nUpdate the test fixture or its expected destination so both use the same return destination, then rerun the read-only verification.",
+        "url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QYXK6ZJM14HXVAXGBDBKS8/dashboard/share/US_YGUAO0G6SLF6XI2HI7PPVXXTN8JFWIUNV8U5VT23DMQOY11OJ3E9SZZC6M0Q4BIM?type=summary&agentView=true&fqdn=summary-page",
+        "runId": "run-0",
+        "finalState": {},
+        "durationMs": 76370,
+        "creditsConsumed": 31.060065,
+        "taskRevision": 3,
+        "at": "2026-10-24T22:02:38.583Z"
+      },
+      {
+        "phase": "correct",
+        "status": "passed",
+        "summary": "Reloaded the return record and restored the requested draft selections.\nSelected only the red shoes in Size 8, kept the jacket excluded, and set the reason to \u201cSize or fit issue.\u201d\nSet the return method to \u201cPrinter-free QR drop-off\u201d and the refund destination to \u201cOriginal payment method.\u201d\nWaited for the changes to save without submitting the return.",
+        "url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QYZXXM066RR5WD19DRMM0X/dashboard/share/US_BGT2TB03B99BGV9ZWQZ3LB3EBGM9EA4GFF0RR55PR9G2VOX2SZ2Z0L2AHSVJPXD8?type=summary&agentView=true&fqdn=summary-page",
+        "runId": "run-0",
+        "finalState": {
+          "url": "http://127.0.0.1:5191/merchant?taskId=bbe3421c-0797-446e-a9d1-89c6d858714d"
+        },
+        "durationMs": 42270,
+        "creditsConsumed": 13.5520425,
+        "taskRevision": 3,
+        "at": "2026-10-24T22:03:21.041Z"
+      },
+      {
+        "phase": "validate-review",
+        "status": "passed",
+        "summary": "Reloaded the current return record and reviewed it without making changes or submitting anything.\nConfirmed order ORD-1042 for account DEMO-ACCOUNT-1: Red running shoes, size 8, quantity 1, were selected, while the black jacket was excluded.\nConfirmed the return details: Size or fit issue, Printer-free QR drop-off, and refund to the original payment method.\nConfirmed the USD amounts: $80.00 subtotal, $5.00 deduction, and $75.00 expected refund.\nRecorded the next instruction: \u201cShow the synthetic QR code at a simulated drop-off counter.\u201d",
+        "url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZ17AK1TC9ABKH38HYQY2A/dashboard/share/US_NACLGYA37XA8SLM0HSBC2SQ0353GXMNYK2ONKHNCQXM5NI3OW3U82XOYTUOP326N?type=summary&agentView=true&fqdn=summary-page",
+        "runId": "run-0",
+        "finalState": {
+          "url": "http://127.0.0.1:5191/merchant?taskId=bbe3421c-0797-446e-a9d1-89c6d858714d",
+          "account_id": "DEMO-ACCOUNT-1",
+          "order_id": "ORD-1042",
+          "line_ids": "SHOE-RED-8",
+          "quantity": "1",
+          "reason": "Size or fit issue",
+          "method": "Printer-free QR drop-off",
+          "destination": "Original payment method",
+          "currency": "USD",
+          "subtotal": "80",
+          "deduction": "5",
+          "refund": "75",
+          "next_step": "Show the synthetic QR code at a simulated drop-off counter.",
+          "draft_revision": "6"
+        },
+        "durationMs": 73652,
+        "creditsConsumed": 16.38976,
+        "taskRevision": 3,
+        "at": "2026-10-24T22:04:34.760Z"
+      },
+      {
+        "phase": "submit",
+        "status": "passed",
+        "summary": "Reloaded the return record and waited for it to load.\nSubmitted the return request once without starting another request.\nThe request was saved with the confirmation \u201cReturn requested; refund pending.\u201d\nRecorded the return request ID as RET-1001.",
+        "url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZ3G5QG5V5W0JAMSZCA6GY/dashboard/share/US_CF4HUQO522THFXEQHAUPG1T4FV83X8679XBKWPXUIJ59D5AIJ1J6YWQBUZ2DYTHM?type=summary&agentView=true&fqdn=summary-page",
+        "runId": "run-0",
+        "finalState": {
+          "url": "http://127.0.0.1:5191/merchant/returns/RET-1001",
+          "request_id": "RET-1001",
+          "confirmation": "Return requested; refund pending"
+        },
+        "durationMs": 53640,
+        "creditsConsumed": 24.1862725,
+        "taskRevision": 3,
+        "at": "2026-10-24T22:05:29.373Z"
+      },
+      {
+        "phase": "verify-confirmation",
+        "status": "passed",
+        "summary": "Reviewed the saved return confirmation for RET-1001 after reloading the page.\nConfirmed that the return was requested, the refund was pending, and the jacket was kept.\nOpened the synthetic QR-code link and returned to the same confirmation without submitting or creating another request.\nRecorded the return details: account DEMO-ACCOUNT-1, order ORD-1042, returned line SHOE-RED-8 (quantity 1), reason too_small, QR drop-off, and refund to the original payment method.\nConfirmed a USD subtotal of $80.00, a $5.00 deduction, and an expected $75.00 refund. The next step is: \u201cShow the synthetic QR code at a simulated drop-off counter.\u201d",
+        "url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZ54PVBJ430HD00G62M5G7/dashboard/share/US_F5IDNE5NKP03RYAW7DPPVDNY0RFIEU0D4FUGLCVX6J30A46Z8DJLCLSWUI1MS07P?type=summary&agentView=true&fqdn=summary-page",
+        "runId": "run-0",
+        "finalState": {
+          "url": "http://127.0.0.1:5191/merchant/returns/RET-1001",
+          "request_id": "RET-1001",
+          "account_id": "DEMO-ACCOUNT-1",
+          "order_id": "ORD-1042",
+          "line_ids": "SHOE-RED-8",
+          "quantity": "1",
+          "reason": "too_small",
+          "method": "qr_dropoff",
+          "destination": "original_payment",
+          "currency": "USD",
+          "subtotal": "80.00",
+          "deduction": "5.00",
+          "refund": "75.00",
+          "jacket_kept": "true",
+          "next_step": "Show the synthetic QR code at a simulated drop-off counter."
+        },
+        "durationMs": 94374,
+        "creditsConsumed": 37.56343749999999,
+        "taskRevision": 3,
+        "at": "2026-10-24T22:07:03.807Z"
+      }
+    ]
+  },
+  {
+    "kind": "appointment",
+    "taskId": "66ce94c6-51c3-49bc-89a5-f0243460f744",
+    "status": "complete",
+    "confirmationId": "CHG-1001",
+    "checks": [
+      {
+        "key": "booking",
+        "label": "Same booking",
+        "expected": "BOOK-2048",
+        "observed": "BOOK-2048",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "slot",
+        "label": "Selected time",
+        "expected": "sat-1100",
+        "observed": "sat-1100",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "availability",
+        "label": "Slot available",
+        "expected": true,
+        "observed": true,
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "date",
+        "label": "Saturday morning",
+        "expected": "2026-10-31, before noon",
+        "observed": "2026-10-31T11:00:00-07:00",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "technician",
+        "label": "Technician",
+        "expected": "Maya Chen",
+        "observed": "Maya Chen",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "fee",
+        "label": "Additional fee",
+        "expected": "At most $0.00",
+        "observed": "$0.00",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "service",
+        "label": "Same service",
+        "expected": "Washer repair",
+        "observed": "Washer repair",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "address",
+        "label": "Same address",
+        "expected": "42 Linden Street, San Francisco",
+        "observed": "42 Linden Street, San Francisco",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "timezone",
+        "label": "Timezone",
+        "expected": "America/Los_Angeles",
+        "observed": "America/Los_Angeles",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "currency",
+        "label": "Currency",
+        "expected": "USD",
+        "observed": "USD",
+        "status": "match",
+        "provenance": "source-adapter"
+      }
+    ],
+    "verificationFields": [
+      {
+        "key": "booking_id",
+        "expected": "BOOK-2048",
+        "observed": "BOOK-2048",
+        "status": "match"
+      },
+      {
+        "key": "slot_id",
+        "expected": "sat-1100",
+        "observed": "sat-1100",
+        "status": "match"
+      },
+      {
+        "key": "starts_at",
+        "expected": "2026-10-31T11:00:00-07:00",
+        "observed": "2026-10-31T11:00:00-07:00",
+        "status": "match"
+      },
+      {
+        "key": "technician",
+        "expected": "Maya Chen",
+        "observed": "Maya Chen",
+        "status": "match"
+      },
+      {
+        "key": "service",
+        "expected": "Washer repair",
+        "observed": "Washer repair",
+        "status": "match"
+      },
+      {
+        "key": "address",
+        "expected": "42 Linden Street, San Francisco",
+        "observed": "42 Linden Street, San Francisco",
+        "status": "match"
+      },
+      {
+        "key": "timezone",
+        "expected": "America/Los_Angeles",
+        "observed": "America/Los_Angeles",
+        "status": "match"
+      },
+      {
+        "key": "fee",
+        "expected": 0,
+        "observed": 0,
+        "status": "match"
+      },
+      {
+        "key": "currency",
+        "expected": "USD",
+        "observed": "USD",
+        "status": "match"
+      },
+      {
+        "key": "draft_revision",
+        "expected": 2,
+        "observed": 2,
+        "status": "match"
+      }
+    ],
+    "confirmationFields": [
+      {
+        "key": "booking_id",
+        "expected": "BOOK-2048",
+        "observed": "BOOK-2048",
+        "status": "match"
+      },
+      {
+        "key": "slot_id",
+        "expected": "sat-1100",
+        "observed": "sat-1100",
+        "status": "match"
+      },
+      {
+        "key": "starts_at",
+        "expected": "2026-10-31T11:00:00-07:00",
+        "observed": "2026-10-31T11:00:00-07:00",
+        "status": "match"
+      },
+      {
+        "key": "technician",
+        "expected": "Maya Chen",
+        "observed": "Maya Chen",
+        "status": "match"
+      },
+      {
+        "key": "service",
+        "expected": "Washer repair",
+        "observed": "Washer repair",
+        "status": "match"
+      },
+      {
+        "key": "address",
+        "expected": "42 Linden Street, San Francisco",
+        "observed": "42 Linden Street, San Francisco",
+        "status": "match"
+      },
+      {
+        "key": "timezone",
+        "expected": "America/Los_Angeles",
+        "observed": "America/Los_Angeles",
+        "status": "match"
+      },
+      {
+        "key": "fee",
+        "expected": 0,
+        "observed": 0,
+        "status": "match"
+      },
+      {
+        "key": "currency",
+        "expected": "USD",
+        "observed": "USD",
+        "status": "match"
+      },
+      {
+        "key": "request_id",
+        "expected": "CHG-1001",
+        "observed": "CHG-1001",
+        "status": "match"
+      },
+      {
+        "key": "active_bookings",
+        "expected": 1,
+        "observed": 1,
+        "status": "match"
+      }
+    ],
+    "runs": [
+      {
+        "phase": "discover",
+        "status": "passed",
+        "summary": "Reloaded the appointments page and waited for the current booking record to load.\nVerified that booking BOOK-2048 is for a Washer repair at 42 Linden Street, San Francisco, with Maya Chen.\nSaved the booking ID as BOOK-2048 and the current start time as 2026-10-30T14:00:00-07:00.\nNo booking details were edited or confirmed.",
+        "url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZ820ERK3571VRQ7J2VRD0/dashboard/share/US_7JJSYZJENNT5WA6DBBQJHGZZGTXBECM874NIF481ILSPT8JT7ODBA658RWBF25R6?type=summary&agentView=true&fqdn=summary-page",
+        "runId": "run-0",
+        "finalState": {
+          "url": "http://127.0.0.1:5192/appointments?taskId=66ce94c6-51c3-49bc-89a5-f0243460f744",
+          "booking_id": "BOOK-2048",
+          "current_start": "2026-10-30T14:00:00-07:00",
+          "service": "Washer repair",
+          "address": "42 Linden Street, San Francisco",
+          "technician": "Maya Chen"
+        },
+        "durationMs": 52005,
+        "creditsConsumed": 23.4397425,
+        "taskRevision": 1,
+        "at": "2026-10-24T22:07:56.099Z"
+      },
+      {
+        "phase": "prepare",
+        "status": "passed",
+        "summary": "Reloaded the appointment record for booking BOOK-2048 and selected the available slot sat-1100.\nThe draft was saved for Saturday, October 31, 2026 at 11:00 AM with Maya Chen, with no additional fee.\nThe saved appointment details are Washer repair at 42 Linden Street, San Francisco, in the America/Los_Angeles time zone.\nThe appointment change was left unconfirmed, as requested.",
+        "url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZ9MMVBNXQME0TNDKGEN5X/dashboard/share/US_B65BNZ4GA47TUVUXQUJVSHM999XI93N1HCGA1QQKI6PLQ1OWHFGG9VKXT3HW6MK0?type=summary&agentView=true&fqdn=summary-page",
+        "runId": "run-0",
+        "finalState": {
+          "url": "http://127.0.0.1:5192/appointments?taskId=66ce94c6-51c3-49bc-89a5-f0243460f744",
+          "booking_id": "BOOK-2048",
+          "slot_id": "sat-1100",
+          "starts_at": "2026-10-31T11:00:00-07:00",
+          "technician": "Maya Chen",
+          "service": "Washer repair",
+          "address": "42 Linden Street, San Francisco",
+          "timezone": "America/Los_Angeles",
+          "fee": "0.00",
+          "currency": "USD",
+          "draft_revision": "2"
+        },
+        "durationMs": 108410,
+        "creditsConsumed": 27.8750075,
+        "taskRevision": 2,
+        "at": "2026-10-24T22:09:44.631Z"
+      },
+      {
+        "phase": "submit",
+        "status": "passed",
+        "summary": "Reloaded the appointment change record and waited for it to load.\nConfirmed the appointment change once and waited for the confirmation page.\nThe appointment change was saved successfully for Linden Home.\nStored the change request ID: CHG-1001.",
+        "url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZD0G3MW6M3HRM53XMB4FY/dashboard/share/US_8XNPBOJWPOJ0T8JX9DUCGLJXV622WEPQ22XTR88SRWXKXDKIXLHB9Z667P4P4B13?type=summary&agentView=true&fqdn=summary-page",
+        "runId": "run-0",
+        "finalState": {
+          "url": "http://127.0.0.1:5192/appointments/confirmations/CHG-1001",
+          "request_id": "CHG-1001",
+          "page_title": "Appointment changed | Linden Home"
+        },
+        "durationMs": 66058,
+        "creditsConsumed": 24.165567499999998,
+        "taskRevision": 2,
+        "at": "2026-10-24T22:10:52.546Z"
+      },
+      {
+        "phase": "verify-confirmation",
+        "status": "passed",
+        "summary": "Reloaded the saved appointment confirmation as requested without submitting or creating another request.\nConfirmed the saved change request is CHG-1001 and that the appointment was changed with exactly one active booking remaining.\nRecorded the updated booking details: booking ID BOOK-2048, slot sat-1100, and start time 2026-10-31T11:00:00-07:00.\nRecorded the service details: Washer repair with technician Maya Chen at 42 Linden Street, San Francisco.\nRecorded the scheduling and fee details: America/Los_Angeles timezone, additional fee 0.00 USD, and 1 active booking.",
+        "url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZF1DSYRTX96PPR2B53389/dashboard/share/US_9QU3PFLH9Q50C5GI66GAXHHT7IBQD9GU26JNRO5DKZC53K94MCKSMP8YQ77S22SF?type=summary&agentView=true&fqdn=summary-page",
+        "runId": "run-0",
+        "finalState": {
+          "url": "http://127.0.0.1:5192/appointments/confirmations/CHG-1001",
+          "request_id": "CHG-1001",
+          "booking_id": "BOOK-2048",
+          "slot_id": "sat-1100",
+          "starts_at": "2026-10-31T11:00:00-07:00",
+          "technician": "Maya Chen",
+          "service": "Washer repair",
+          "address": "42 Linden Street, San Francisco",
+          "timezone": "America/Los_Angeles",
+          "fee": "0.00",
+          "currency": "USD",
+          "active_bookings": "1"
+        },
+        "durationMs": 59377,
+        "creditsConsumed": 14.70425,
+        "taskRevision": 2,
+        "at": "2026-10-24T22:11:51.993Z"
+      }
+    ]
+  }
+]

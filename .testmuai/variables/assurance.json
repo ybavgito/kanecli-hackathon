@@ -1,0 +1,17 @@
+{
+  "return_receipt_url": {
+    "value": "",
+    "secret": false,
+    "description": "URL of the real already-completed Northstar Outfitters printer-free red-shoes return task in the Raising Kane web app; do not provide a draft or fictional receipt."
+  },
+  "appointment_receipt_url": {
+    "value": "",
+    "secret": false,
+    "description": "URL of a real already-completed Linden Home appointment task receipt for BOOK-2048; not the return task URL."
+  },
+  "start_url": {
+    "value": "",
+    "secret": false,
+    "description": "Raising Kane sandbox website entry URL used to inspect and start supported tasks."
+  }
+}

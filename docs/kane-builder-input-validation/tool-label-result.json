@@ -1,0 +1,80 @@
+{
+  "status": "passed",
+  "summary": "Opened the supplied return page and selected the Printed label option.\nStopped at the review page without submitting anything, as requested.\nThe review showed a refund to Original payment, with a $0.00 deduction and a $80.00 USD refund.\nThe review listed Blue shoes only as the selected item and Green jacket as the item to keep.",
+  "final_state": {
+    "url": "http://127.0.0.1:38491/source",
+    "review_heading": "Printed label",
+    "label_destination": "Original payment",
+    "label_deduction": "$0.00",
+    "label_refund": "$80.00 USD",
+    "selected_item": "Blue shoes only",
+    "keep_item": "Green jacket"
+  },
+  "duration": 31.5,
+  "credits_consumed": 17.8062275,
+  "exit_code": 0,
+  "wall_seconds": 40.17,
+  "screenshot_member": "tests/open-the-supplied-source-url-click-print-420234c1/steps/5-0-5/screenshot.jpg",
+  "steps": [
+    {
+      "step": 2,
+      "status": "running",
+      "remark": "Step 1",
+      "ts": "2026-10-24T22:55:52.897Z"
+    },
+    {
+      "step": 2,
+      "status": "done",
+      "remark": "navigate: Navigate to http://127.0.0.1:38491/source",
+      "ts": "2026-10-24T22:55:52.900Z"
+    },
+    {
+      "step": 3,
+      "status": "running",
+      "remark": "Step 2",
+      "ts": "2026-10-24T22:55:57.822Z"
+    },
+    {
+      "step": 3,
+      "status": "done",
+      "remark": "click: Clicking Printed label return method option",
+      "ts": "2026-10-24T22:56:03.012Z"
+    },
+    {
+      "step": 4,
+      "status": "running",
+      "remark": "Step 3",
+      "ts": "2026-10-24T22:56:03.606Z"
+    },
+    {
+      "step": 4,
+      "status": "done",
+      "remark": "analyze: ANALYZE(textual_visual, 'the displayed refund amount is stored as {{label_refund",
+      "ts": "2026-10-24T22:56:16.924Z"
+    },
+    {
+      "step": 5,
+      "status": "running",
+      "remark": "Step 4",
+      "ts": "2026-10-24T22:56:17.519Z"
+    },
+    {
+      "step": 5,
+      "status": "done",
+      "remark": "assert: the Review heading shows Printed label",
+      "ts": "2026-10-24T22:56:17.525Z"
+    },
+    {
+      "step": 6,
+      "status": "running",
+      "remark": "Step 5",
+      "ts": "2026-10-24T22:56:18.120Z"
+    },
+    {
+      "step": 6,
+      "status": "done",
+      "remark": "assert: Blue shoes only and Green jacket are displayed in their corresponding Selected i",
+      "ts": "2026-10-24T22:56:18.126Z"
+    }
+  ]
+}

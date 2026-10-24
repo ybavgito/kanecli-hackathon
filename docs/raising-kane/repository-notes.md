@@ -79,3 +79,13 @@ gaps and prioritizes the completed transaction over additional feature breadth.
 [Fresh audit observations](../kane-validation/poc-review-checks.json) are separate
 from previous synthetic experiments and the PoC author's historical run reports.
 This documentation update does not merge the PoC source into `main`.
+
+## Integrated implementation follow-up
+
+`main` now contains the reviewed PoC plus two completed source adapters, revised UX,
+contract tests, generated acceptance tests, and real runtime evidence. The current
+bundle includes the [implemented scope/demo](implementation-and-demo.md), actual
+interface screenshots, and four metadata-redacted runtime packs with provenance.
+The prior audit and original ZIP remain historical. The later generic URL-discovery
+extension at PoC commit `bc68ffe` remains on its branch; it is not included in these
+completed-transaction claims.

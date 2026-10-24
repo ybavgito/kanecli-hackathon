@@ -84,3 +84,116 @@ original payment, a $5 deduction and a $75 expected refund. The controller
 accepted the extracted fields and restored `ready`, without approval or a source
 return. Build passed. This tests the refreshed review path; full submission and
 the appointment flow remain unverified.
+
+## Integrated two-source implementation — October 24, 2026
+
+This section supersedes the earlier checkpoint's unfinished-submission statements.
+Both sources now reach real, persistent synthetic confirmations through product-dispatched
+Kane CLI **0.10.0-rc.3** jobs. The QA driver made product API requests; Kane performed
+source-browser operations. This is not a claim that the driver clicked every frontend control.
+
+### Product runtime results
+
+| Workflow | Jobs | Outcome |
+| --- | --- | --- |
+| Partial return | discover, prepare, change-method, failed review, correct, passing review, submit, verify-confirmation | `RET-1001`, shoes only, jacket kept, printer-free, original payment, $5 deduction, $75 expected refund; status complete |
+| Appointment | discover, prepare, submit, verify-confirmation | `CHG-1001`, booking `BOOK-2048`, Saturday Oct 31 at 11 AM Pacific, Maya Chen, $0 additional fee; one active booking; status complete |
+
+The expected return failure was genuine: changing the source method reset its refund
+destination to store credit. Kane's review assertion failed, the application blocked
+approval, Kane restored original payment, and the same review validator passed. We did
+not change the expected refund destination to make the test green. Missing extractions
+on the stopped failed run are unknown, not fabricated successful observations.
+
+Actual Kane durations: return discovery 40s, preparation 125s, method change 42s,
+failed review 76s, correction 42s, passing review 74s, submission 54s, confirmation 94s.
+Appointment: discovery 52s, preparation 108s, submission 66s, confirmation 59s. These
+exclude human thinking time and are measurements, not latency guarantees.
+
+- [All runtime observations and hosted run links](evidence/runtime/runtime-results.json)
+- [Original/published pack hashes and exact metadata redactions](evidence/runtime/provenance.json)
+- [Failed refund check](evidence/runtime/return-04-validate-review-failed-metadata-redacted.evidence)
+- [Corrected passing check](evidence/runtime/return-06-validate-review-passed-metadata-redacted.evidence)
+- [Return confirmation check](evidence/runtime/return-08-verify-confirmation-passed-metadata-redacted.evidence)
+- [Appointment confirmation check](evidence/runtime/appointment-04-verify-confirmation-passed-metadata-redacted.evidence)
+
+Published packs replace only account name/email metadata; the original local packs
+remain untouched. Source data and screenshots are synthetic. The public manifest
+records both hashes because redaction changes the archive bytes.
+
+### Deterministic checks
+
+Seven unit/contract tests passed. They cover unapproved and stale source commits,
+revision conflicts, duplicate operation delivery, changed appointment availability,
+persistent source records, wrong/missing typed observations, session-bound approval,
+and reconciliation after a worker commits then throws a timeout. Controller tests
+inject a worker double; these establish code contracts, not additional Kane runs.
+
+The timeout case uses a real source commit under the injected worker and verifies that
+recovery finds that same operation and leaves one record. The availability case revokes
+a stale appointment grant and leaves the original booking until another valid commit.
+
+### UI and local execution notes
+
+Generated receipt and entry tests come from local assurance requirements. Criteria
+remain derived/unapproved. The first return receipt check used a flat-string variables
+file, emitted `unresolved_variables`, and opened Kane's playground. It is a harness
+configuration failure, excluded from product pass/fail claims. The corrected run uses
+`{"name":{"value":"actual URL","secret":false}}` and an explicit starting URL.
+
+The initial runtime QA waiter also stopped on the intermediate `submitted_unverified`
+state while its confirmation job was active. The app continued to complete correctly;
+the waiter was corrected to require no active progress before treating a state as final.
+
+Desktop (1366px) and narrow (390px) pages were inspected in an owned local Chrome
+through CDP, with no horizontal document overflow. T3's preview returned an AppArmor
+sandbox-unavailable error; the host security configuration was not changed. This
+visual inspection is separate from Kane execution evidence.
+
+The corrected generated return receipt test passed **7/7 steps in 247 seconds**,
+including source inspection and reload with no new return submission.
+[Hosted UI run](https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZ8W3JHWN5JGJJ93CZDFYF/dashboard/share/US_T2QR6Z65911Z38LINL09B8KLPZMATL3GM7SY915EINXOIF57PIC0TK8ZWLE7K2FF?type=summary&agentView=true&fqdn=summary-page).
+
+Afterward the app was restarted with the final evidence-download route and interrupted-job
+recovery logic. Both receipts retained their original IDs and completed status. Owner
+sessions downloaded valid ZIP packs (HTTP 200); a different browser session received
+HTTP 403. The final UI also opens the site picker at the root URL, restores explicit
+task URLs with a loading state, and displays the appointment confirmation ID.
+
+The generated appointment receipt check passed **3/3 steps in 198 seconds** after
+server restart. It inspected the saved BOOK-2048 terms, followed its source confirmation,
+checked one active booking, and reloaded the same completed receipt.
+[Hosted appointment UI run](https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZQ0EX6HGXZEFF326ZT81W/dashboard/share/US_L6V17LMHJW3HVLLU1UPRY20RXV4NME2W57Y43OW9XWOJ0NOTLBVVZ31ZUQWPTLY6?type=summary&agentView=true&fqdn=summary-page).
+
+Narrow-screen inspection found the home heading's sentences touching when its desktop
+line break was hidden. The second sentence now becomes a block at that breakpoint.
+This was a visual inspection fix, not a claimed Kane-discovered bug.
+
+The generated website-entry check passed **6/6 steps in 185 seconds**. It inspected both sites and their task-specific controls, verified the synthetic scope, then started a real return task and checked that its active workspace removed the marketing introduction.
+[Hosted entry UI run](https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZXCZ89Y0G8D4Q9GFSHAZA/dashboard/share/US_5UTWVU0JRUOY040DCVBVVT14U38S5PSAXQNKZXE39STDV3FQW53K42RY2NMVJRRD?type=summary&agentView=true&fqdn=summary-page).
+
+[Structured UI results](evidence/runtime/ui-results.json) retain the earlier variable-configuration failure alongside the corrected runs.
+
+Local assurance after these tests reported **33 of 34 derived criteria** covered
+(96.43% under its risk-weighted rule). [Raw coverage report](evidence/runtime/coverage.json).
+This is not trusted or human-approved coverage. The remaining `ac-20` gap is the
+negative appointment approval path with missing mandatory browser evidence; the
+one-test design budget omitted that scenario. Shared controller field rejection is
+unit-tested on the return adapter, but no extra appointment browser run is invented
+for this gap.
+
+The repository-required `npm run verify:kane` also passed on the final interface. It checked branding, both supported task choices, sandbox disclosure and revealing the return start action. It did not submit a task. [Structured smoke result](evidence/runtime/smoke-result.json).
+
+### Saved-test replay limitation
+
+A subsequent replay passed the first receipt step but failed the compound assertion
+in step 2. The [recorded failed assertion](evidence/runtime/return-replay-failed-assertion.json)
+contains eight empty visual sub-results, with null expected/actual values; its aggregate
+is false. The [captured page](evidence/screens/return-replay-failure.png) still shows the
+expected receipt. Kane classified it as an automation/configuration issue and started
+adaptive re-authoring. This supports a replay-recording limitation; it does not justify
+weakening the business expectations or claiming a clean replay. Runtime source jobs
+use explicit bounded `run` objectives and their separate deterministic checks, not this
+receipt-test recording. The product's actual red/green refund conflict is separate.
+
+The replay attempt ultimately passed 7/7 after adaptive re-authoring in 262 seconds. [Healed run](https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5QZ8W3JHWN5JGJJ93CZDFYF/dashboard/share/US_ME62QFHCVLH5XXG50SX7ADOGZM5J38SKI0QW39H9D1CQQBE6K9MTB0L9BHSKUNHE?type=summary&agentView=true&fqdn=summary-page). Its summary says seven replay decisions and zero author decisions, but the event sequence explicitly records a failed step and `test_md_adaptive_heal` with boundary 1 followed by re-authored steps. We therefore classify this as **passed after healing**, not seven clean cached replays. The original generated test source and business expectations were not edited.

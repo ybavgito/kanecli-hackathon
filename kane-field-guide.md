@@ -8,6 +8,108 @@ Updated October 24, 2026. Practical reference for the event release and the two-
 
 The original field guide is preserved in [the historical experiment archive](docs/raising-kane/kane-cli-field-guide-0.9-historical.md). Its 0.9.0 timings, credit figures, concurrency behavior and old product rankings are historical. This guide governs current usage; the [Raising Kane project brief](docs/raising-kane/raising-kane-project-brief.md) governs product scope.
 
+## New builder direction and fresh Explore measurements
+
+The [complete builder plan](docs/raising-kane/explore-driven-builder-plan.md) supersedes
+fixed-interface scope for the next implementation. The code described below remains the
+prebuilt version; the full agentic generation and repair loop is not implemented.
+
+The new [capability experiment](docs/kane-builder-validation/report.md) used a synthetic
+read-only fixture and a four-lease rc.3 Explore run. It established:
+
+- Actual machine-readable map/finding reads through the local `explore view` server:
+  `/api/view/summary`, `/api/view/junctions`, `/api/view/flows`, `/api/view/findings`
+  and detail routes. This is an observed version-specific integration, not a public
+  `explore export` command or a promised stable API. Handle `next` pagination.
+- Five accessibility findings across two screens, covering `html-has-lang`, `image-alt`,
+  `label` and `color-contrast`. Detail records contain rule, impact, WCAG reference and
+  evidence metadata. All five returned `confirmed: false`; preserve this distinction.
+- Three flows marked `verified`, but two multi-step flow names exceeded the actual
+  recorded path. Independent requests showed no review page visited in that short run.
+  Inspect reached screens and step evidence; do not authorize a business outcome from
+  a flow name or status alone. Use focused `run` checks for missing business facts.
+- Budget stop returned exit zero with `complete: false`. The 52.54-second runtime is one
+  measurement, not a generated-interface delivery promise. The full `credits.total`
+  and top-level `credits_consumed` differed; retain both instead of inventing a cost.
+
+For the next product, use Explore on both source and generated preview, feed observed
+journeys into an actual coding-agent build, test outcome correspondence with Kane and
+rebuild on generated-code defects. The preview verifier and source operator require
+separate queues/browsers to avoid a nested-job deadlock. Automatic accessibility scans
+remain partial evidence; an accessibility tree is not a full audit.
+
+## Kane screenshots as builder input
+
+The [input experiment](docs/kane-builder-input-validation/report.md) supplies actual Kane
+execution-pack screenshots to `gpt-6.1-sol` as image inputs. Initial screenshots reveal
+image-only instructions; distinct branch screenshots and structured observations reveal
+the consequences of actions. The model can request bounded Kane missions for missing
+states. This does not require an unrestricted browser for the builder.
+
+Preserve the run/step, source record, time, viewport where known, and image hash. Match
+screenshots to actual reached states, not inferred flow names or a generic "latest" image.
+The experimental helper's final-image selection is not a production metadata importer.
+Do not forward login screens, raw account context, or assume secret-variable masking
+redacts screenshot pixels. See the [complete input contract](docs/raising-kane/builder-inputs-and-kane-vision.md).
+
+## Guardrails for the planned interface-builder tests
+
+The [testing guardrail contract](docs/raising-kane/explore-driven-builder-plan.md#prevent-real-changes-during-discovery-and-testing)
+requires server-owned `inspect`, `test` and `live` contexts. Test workers reach only
+isolated sandbox records; external inspect work permits only explicitly supported read
+operations. Production actions require a separate live job and scoped authorization.
+
+Kane Explore's `--policy read_only` and `--deny` supplement this boundary; they do not
+control generated code, one-shot `run`, direct APIs or the backend source job triggered
+by a preview click. Repeat the explicit Explore policy on reruns. `--allow-post` is for
+reviewed read semantics only; setup dependencies can still have effects. An HTTP method,
+a confirmation dialog or a prompt is not sufficient proof that an operation is harmless.
+
+These are planned enforcement requirements, not newly tested capabilities. Earlier
+experiments do not establish a universal no-mutation guarantee. Label sandbox execution
+and live observation separately; never let a repair relax policy to obtain a pass.
+
+## Implemented Raising Kane runtime — October 24 follow-up
+
+The integrated `main` implementation now completes both source workflows. Read
+[implementation and demo](docs/raising-kane/implementation-and-demo.md) and
+[verification](docs/raising-kane/verification.md) for current evidence; old PoC-gap
+statements later in this guide describe their recorded checkpoint.
+
+- A product job passes a bounded objective, an explicit source URL and
+  `--assertion-failure-mode stop`. Each job explicitly navigates and reloads;
+  persistent browser context is not assumed fresh.
+- Per-task Chrome profiles and owned CDP endpoints preserve source browser state.
+  Kane jobs are serialized. Human approval uses a different app session.
+- Review jobs extract every required business field. A passing status with a
+  missing currency, wrong amount or changed source revision cannot authorize a
+  proposal. Deterministic comparisons supplement, rather than replace, browser
+  evidence. The source adapter and Kane observations are labeled separately.
+- Kane performs the approved source click. Atomic enforcement and duplicate
+  prevention live in the source adapter, not in `--agent` or a natural-language
+  instruction. After a timeout, reconcile the operation before retrying.
+- A final independent browser job reads the saved source confirmation. Only a
+  matching committed record plus all required observed terms creates a receipt.
+- User-visible evidence preserves the failed check, correction and green check.
+  Sealed pack downloads are available to the task-owning app session. Review packs
+  for private metadata before publishing; local availability is not a public URL.
+- This build used **local `.context/`**, not a shared assurance link. Generated
+  receipt/entry tests remain in `.testmuai/tests/`. Derived criteria are unapproved;
+  `--allow-unreviewed` does not make them trusted.
+- Variable values must use Kane's object shape:
+  `{"return_receipt_url":{"value":"http://127.0.0.1:5173/?taskId=...","secret":false}}`.
+  A flat string mapping was not loaded in our first generated test; it emitted
+  `unresolved_variables` and opened the playground. That was a harness error, not
+  a product regression. Always inspect variable warnings before trusting a run.
+- A fresh multi-clause receipt assertion passed, but its saved replay later produced
+  empty visual sub-results and failed despite the expected receipt remaining visible.
+  Kane automatically re-authored that portion. Preserve both outcomes; a healed pass
+  is not a clean replay. See the implementation verification report for the recorded
+  assertion. Do not promise replay reliability from an authored pass.
+- Explore is integration research, not a prerequisite before every hyperlink.
+  This product ships two known adapters; it does not claim arbitrary-site discovery.
+
+
 ## 1. What Kane does, and what our app supplies
 
 Kane executes natural-language objectives in a browser, evaluates explicit checks, extracts values and records evidence. It also supports native mobile execution, recorded journeys, exploration, requirement-driven test design and coverage. The main documented lifecycle is generate, execute and prove. [Guide index](https://github.com/LambdaTest/kane-cli/blob/0.10.0-rc.3/docs/user-guide/README.md).

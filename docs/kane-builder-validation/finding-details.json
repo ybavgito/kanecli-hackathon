@@ -1,0 +1,454 @@
+[
+  {
+    "finding": {
+      "candidate_id": null,
+      "category": "accessibility",
+      "confirmed": false,
+      "description": "On 127.0.0.1:38383/return, 1 element breaks the rule html-has-lang.",
+      "feedback": [],
+      "id": "47eda11f3dfc31ee9869ffa9614ac77642ae31865e9ec343d38192f942ef3fbe",
+      "kind": "accessibility",
+      "occurrences": [
+        {
+          "annotations": [],
+          "detail": {
+            "elements": 1,
+            "help": "<html> element must have a lang attribute",
+            "impact": "serious",
+            "rule": "html-has-lang",
+            "wcag": [
+              "2.0 \u00b7 3.1.1 Language of Page (A)"
+            ]
+          },
+          "flow_id": "01M5R156ECE11AH886MRFMSMK6",
+          "junction_id": "01M5R1538TSEVEX5G9K4EBH49J",
+          "lease_id": "01M5R14VSQX8ZJGAJY9RFM3WRB",
+          "observation_id": "13cc9e5c141a0635b31830031eb43a295d48fc63c78044418c021472474082a2",
+          "pack": {
+            "bytes": 66756,
+            "files": [
+              "clip",
+              "timeline",
+              "network",
+              "console",
+              "element"
+            ],
+            "fps": 0.6,
+            "frames": 7,
+            "height": 540,
+            "width": 960,
+            "window_ms": [
+              -8000,
+              3000
+            ]
+          },
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "screenshot": true,
+          "screenshot_size": {
+            "h": 1080,
+            "w": 1920
+          },
+          "step_ordinal": null,
+          "what_happened": {
+            "actual": "1 element does not.",
+            "expected": "<html> element must have a lang attribute.",
+            "text": "On 127.0.0.1:38383/return, 1 element breaks the rule html-has-lang (2.0 \u00b7 3.1.1 Language of Page (A))."
+          }
+        }
+      ],
+      "severity": "medium",
+      "similar": [
+        {
+          "by": "subject",
+          "closeness": 1,
+          "finding_id": "e66b87b4a0e5a756b8dbe100183d85b96dc144d3d7e9ad73f0bf749ab20cfc63"
+        }
+      ],
+      "status": "open",
+      "status_change": {
+        "at": "2026-10-24T22:40:30.709272Z",
+        "by": {
+          "display_name": "KaneAI explorer",
+          "kind": "agent",
+          "run_id": null
+        },
+        "record_id": null,
+        "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+        "transition": "opened"
+      },
+      "status_history": [
+        {
+          "at": "2026-10-24T22:40:30.709272Z",
+          "by": {
+            "display_name": "KaneAI explorer",
+            "kind": "agent",
+            "run_id": null
+          },
+          "record_id": null,
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "transition": "opened"
+        }
+      ],
+      "title": "<html> element must have a lang attribute (1 element on 127.0.0.1:38383/return)",
+      "unblock": ""
+    }
+  },
+  {
+    "finding": {
+      "candidate_id": null,
+      "category": "accessibility",
+      "confirmed": false,
+      "description": "On 127.0.0.1:38383/return, 1 element breaks the rule color-contrast.",
+      "feedback": [],
+      "id": "7f636f9daf8e21240cbd61cea7672e0a06508769befa213bb28da58ab78e5fd8",
+      "kind": "accessibility",
+      "occurrences": [
+        {
+          "annotations": [],
+          "detail": {
+            "elements": 1,
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "impact": "serious",
+            "rule": "color-contrast",
+            "wcag": [
+              "2.0 \u00b7 1.4.3 Contrast (Minimum) (AA)"
+            ]
+          },
+          "flow_id": "01M5R156ECE11AH886MRFMSMK6",
+          "junction_id": "01M5R1538TSEVEX5G9K4EBH49J",
+          "lease_id": "01M5R14VSQX8ZJGAJY9RFM3WRB",
+          "observation_id": "13cc9e5c141a0635b31830031eb43a295d48fc63c78044418c021472474082a2",
+          "pack": {
+            "bytes": 66839,
+            "files": [
+              "clip",
+              "timeline",
+              "network",
+              "console",
+              "element"
+            ],
+            "fps": 0.6,
+            "frames": 7,
+            "height": 540,
+            "width": 960,
+            "window_ms": [
+              -8000,
+              3000
+            ]
+          },
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "screenshot": true,
+          "screenshot_size": {
+            "h": 1080,
+            "w": 1920
+          },
+          "step_ordinal": null,
+          "what_happened": {
+            "actual": "1 element does not.",
+            "expected": "Elements must meet minimum color contrast ratio thresholds.",
+            "text": "On 127.0.0.1:38383/return, 1 element breaks the rule color-contrast (2.0 \u00b7 1.4.3 Contrast (Minimum) (AA))."
+          }
+        }
+      ],
+      "severity": "medium",
+      "similar": [],
+      "status": "open",
+      "status_change": {
+        "at": "2026-10-24T22:40:30.709272Z",
+        "by": {
+          "display_name": "KaneAI explorer",
+          "kind": "agent",
+          "run_id": null
+        },
+        "record_id": null,
+        "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+        "transition": "opened"
+      },
+      "status_history": [
+        {
+          "at": "2026-10-24T22:40:30.709272Z",
+          "by": {
+            "display_name": "KaneAI explorer",
+            "kind": "agent",
+            "run_id": null
+          },
+          "record_id": null,
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "transition": "opened"
+        }
+      ],
+      "title": "Elements must meet minimum color contrast ratio thresholds (1 element on 127.0.0.1:38383/return)",
+      "unblock": ""
+    }
+  },
+  {
+    "finding": {
+      "candidate_id": null,
+      "category": "accessibility",
+      "confirmed": false,
+      "description": "On 127.0.0.1:38383/return, 1 element breaks the rule label.",
+      "feedback": [],
+      "id": "a737bd45985b14b9c3ba8313218d102e53e70321686f8ee177e418a273235f8e",
+      "kind": "accessibility",
+      "occurrences": [
+        {
+          "annotations": [],
+          "detail": {
+            "elements": 1,
+            "help": "Form elements must have labels",
+            "impact": "critical",
+            "rule": "label",
+            "wcag": [
+              "2.0 \u00b7 4.1.2 Name, Role, Value (A)"
+            ]
+          },
+          "flow_id": "01M5R156ECE11AH886MRFMSMK6",
+          "junction_id": "01M5R1538TSEVEX5G9K4EBH49J",
+          "lease_id": "01M5R14VSQX8ZJGAJY9RFM3WRB",
+          "observation_id": "13cc9e5c141a0635b31830031eb43a295d48fc63c78044418c021472474082a2",
+          "pack": {
+            "bytes": 66793,
+            "files": [
+              "clip",
+              "timeline",
+              "network",
+              "console",
+              "element"
+            ],
+            "fps": 0.6,
+            "frames": 7,
+            "height": 540,
+            "width": 960,
+            "window_ms": [
+              -8000,
+              3000
+            ]
+          },
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "screenshot": true,
+          "screenshot_size": {
+            "h": 1080,
+            "w": 1920
+          },
+          "step_ordinal": null,
+          "what_happened": {
+            "actual": "1 element does not.",
+            "expected": "Form elements must have labels.",
+            "text": "On 127.0.0.1:38383/return, 1 element breaks the rule label (2.0 \u00b7 4.1.2 Name, Role, Value (A))."
+          }
+        }
+      ],
+      "severity": "high",
+      "similar": [],
+      "status": "open",
+      "status_change": {
+        "at": "2026-10-24T22:40:30.709272Z",
+        "by": {
+          "display_name": "KaneAI explorer",
+          "kind": "agent",
+          "run_id": null
+        },
+        "record_id": null,
+        "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+        "transition": "opened"
+      },
+      "status_history": [
+        {
+          "at": "2026-10-24T22:40:30.709272Z",
+          "by": {
+            "display_name": "KaneAI explorer",
+            "kind": "agent",
+            "run_id": null
+          },
+          "record_id": null,
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "transition": "opened"
+        }
+      ],
+      "title": "Form elements must have labels (1 element on 127.0.0.1:38383/return)",
+      "unblock": ""
+    }
+  },
+  {
+    "finding": {
+      "candidate_id": null,
+      "category": "accessibility",
+      "confirmed": false,
+      "description": "On 127.0.0.1:38383/, 1 element breaks the rule image-alt.",
+      "feedback": [],
+      "id": "d312070d777c8977de0112ce21a1dad0136e55df80a359c65eea0665ace679d9",
+      "kind": "accessibility",
+      "occurrences": [
+        {
+          "annotations": [],
+          "detail": {
+            "elements": 1,
+            "help": "Images must have alternative text",
+            "impact": "critical",
+            "rule": "image-alt",
+            "wcag": [
+              "2.0 \u00b7 1.1.1 Non-text Content (A)"
+            ]
+          },
+          "flow_id": null,
+          "junction_id": "01M5R14NFDE688BQJB2N9A9FJ5",
+          "lease_id": "01M5R14EYQTC1HCJH1KZ0ZRGVZ",
+          "observation_id": null,
+          "pack": {
+            "bytes": 26117,
+            "files": [
+              "clip",
+              "timeline",
+              "network",
+              "console",
+              "element"
+            ],
+            "fps": 0.3,
+            "frames": 3,
+            "height": 540,
+            "width": 960,
+            "window_ms": [
+              -8000,
+              3000
+            ]
+          },
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "screenshot": true,
+          "screenshot_size": {
+            "h": 1080,
+            "w": 1920
+          },
+          "step_ordinal": null,
+          "what_happened": {
+            "actual": "1 element does not.",
+            "expected": "Images must have alternative text.",
+            "text": "On 127.0.0.1:38383/, 1 element breaks the rule image-alt (2.0 \u00b7 1.1.1 Non-text Content (A))."
+          }
+        }
+      ],
+      "severity": "high",
+      "similar": [],
+      "status": "open",
+      "status_change": {
+        "at": "2026-10-24T22:40:13.188913Z",
+        "by": {
+          "display_name": "KaneAI explorer",
+          "kind": "agent",
+          "run_id": null
+        },
+        "record_id": null,
+        "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+        "transition": "opened"
+      },
+      "status_history": [
+        {
+          "at": "2026-10-24T22:40:13.188913Z",
+          "by": {
+            "display_name": "KaneAI explorer",
+            "kind": "agent",
+            "run_id": null
+          },
+          "record_id": null,
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "transition": "opened"
+        }
+      ],
+      "title": "Images must have alternative text (1 element on 127.0.0.1:38383/)",
+      "unblock": ""
+    }
+  },
+  {
+    "finding": {
+      "candidate_id": null,
+      "category": "accessibility",
+      "confirmed": false,
+      "description": "On 127.0.0.1:38383/, 1 element breaks the rule html-has-lang.",
+      "feedback": [],
+      "id": "e66b87b4a0e5a756b8dbe100183d85b96dc144d3d7e9ad73f0bf749ab20cfc63",
+      "kind": "accessibility",
+      "occurrences": [
+        {
+          "annotations": [],
+          "detail": {
+            "elements": 1,
+            "help": "<html> element must have a lang attribute",
+            "impact": "serious",
+            "rule": "html-has-lang",
+            "wcag": [
+              "2.0 \u00b7 3.1.1 Language of Page (A)"
+            ]
+          },
+          "flow_id": null,
+          "junction_id": "01M5R14NFDE688BQJB2N9A9FJ5",
+          "lease_id": "01M5R14EYQTC1HCJH1KZ0ZRGVZ",
+          "observation_id": null,
+          "pack": {
+            "bytes": 26100,
+            "files": [
+              "clip",
+              "timeline",
+              "network",
+              "console",
+              "element"
+            ],
+            "fps": 0.3,
+            "frames": 3,
+            "height": 540,
+            "width": 960,
+            "window_ms": [
+              -8000,
+              3000
+            ]
+          },
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "screenshot": true,
+          "screenshot_size": {
+            "h": 1080,
+            "w": 1920
+          },
+          "step_ordinal": null,
+          "what_happened": {
+            "actual": "1 element does not.",
+            "expected": "<html> element must have a lang attribute.",
+            "text": "On 127.0.0.1:38383/, 1 element breaks the rule html-has-lang (2.0 \u00b7 3.1.1 Language of Page (A))."
+          }
+        }
+      ],
+      "severity": "medium",
+      "similar": [
+        {
+          "by": "subject",
+          "closeness": 1,
+          "finding_id": "47eda11f3dfc31ee9869ffa9614ac77642ae31865e9ec343d38192f942ef3fbe"
+        }
+      ],
+      "status": "open",
+      "status_change": {
+        "at": "2026-10-24T22:40:13.188913Z",
+        "by": {
+          "display_name": "KaneAI explorer",
+          "kind": "agent",
+          "run_id": null
+        },
+        "record_id": null,
+        "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+        "transition": "opened"
+      },
+      "status_history": [
+        {
+          "at": "2026-10-24T22:40:13.188913Z",
+          "by": {
+            "display_name": "KaneAI explorer",
+            "kind": "agent",
+            "run_id": null
+          },
+          "record_id": null,
+          "run_id": "01a17012-20fb-7e86-8a47-baf3499378bf",
+          "transition": "opened"
+        }
+      ],
+      "title": "<html> element must have a lang attribute (1 element on 127.0.0.1:38383/)",
+      "unblock": ""
+    }
+  }
+]

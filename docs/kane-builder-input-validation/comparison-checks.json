@@ -1,0 +1,47 @@
+{
+  "model": "gpt-6.1-sol",
+  "reasoning": "medium",
+  "sample_size": "one fixture, one sample per condition",
+  "checks": [
+    {
+      "arm": "html-only",
+      "observed_target_facts": 0,
+      "unknown_target_facts": 8,
+      "incorrect_claimed_target_facts": {},
+      "artifact_sha256": "774b1082cb925acea8f72b3e635789ea777d0fff3f05a2c8c8e27094657dfac4",
+      "code_characters": 3306,
+      "tool_calls": 0,
+      "wall_seconds": 19.7
+    },
+    {
+      "arm": "screenshot",
+      "observed_target_facts": 2,
+      "unknown_target_facts": 6,
+      "incorrect_claimed_target_facts": {},
+      "artifact_sha256": "395f37ccb72f8d193ad3e23f371cb914e8307775edb0f8ed29c4db309d46c893",
+      "code_characters": 3126,
+      "tool_calls": 0,
+      "wall_seconds": 18.16
+    },
+    {
+      "arm": "agentic",
+      "observed_target_facts": 8,
+      "unknown_target_facts": 0,
+      "incorrect_claimed_target_facts": {},
+      "artifact_sha256": "27a88f3f80361ba8898533b8446db44cedf987319cb5625d8d95618e77887056",
+      "code_characters": 3974,
+      "tool_calls": 2,
+      "wall_seconds": 102.42
+    },
+    {
+      "arm": "flow-bundle",
+      "observed_target_facts": 8,
+      "unknown_target_facts": 0,
+      "incorrect_claimed_target_facts": {},
+      "artifact_sha256": "4f9434f96234877e3b75a2c67d9dbd473b7e8cc434a117e22cab1249a949f00c",
+      "code_characters": 4128,
+      "tool_calls": 0,
+      "wall_seconds": 21.45
+    }
+  ]
+}

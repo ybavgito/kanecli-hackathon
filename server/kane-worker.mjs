@@ -8,7 +8,7 @@ import { createJourneyStore, savedJourneyExecution } from './kane-journeys.mjs'
 
 // Browser jobs are serialized even across tasks: Kane's local Chrome/CDP ports
 // are not safe to treat as independent without an explicit external browser.
-let lastJob = Promise.resolve()
+const jobLanes = new Map()
 const taskBrowsers = new Map()
 const taskControls = new Map()
 const journeyStore = createJourneyStore()
@@ -40,6 +40,9 @@ const OBSERVATION_KEYS = new Set([
   'order_id', 'draft_revision', 'refund_destination', 'return_request_id',
   'returned_line_ids', 'returned_quantity', 'return_method', 'currency',
   'deduction', 'expected_refund', 'next_step', 'jacket_kept', 'submission_response',
+  'account_id', 'line_ids', 'quantity', 'reason', 'method', 'destination',
+  'subtotal', 'refund', 'request_id', 'booking_id', 'current_start', 'slot_id',
+  'starts_at', 'technician', 'service', 'address', 'timezone', 'fee', 'active_bookings',
 ])
 
 /** Preserve terminal summaries, preferring exact explicitly nonsecret observations. */
@@ -68,7 +71,7 @@ function controlFor(taskId) {
 
 // Pending jobs settle immediately when cancelled; the global queue retains their
 // no-op slot, so takeover does not wait behind another connection's long run.
-function enqueue(control, work, cancelled, kind = 'kane') {
+function enqueue(control, work, cancelled, kind = 'kane', lane = 'source') {
   let resolve, reject
   const promise = new Promise((ok, fail) => { resolve = ok; reject = fail })
   const item = {
@@ -84,7 +87,7 @@ function enqueue(control, work, cancelled, kind = 'kane') {
   // Human browser access is connection-local and must not wait for unrelated
   // Kane work. Kane itself stays globally serialized and waits for any opening
   // operation already in progress on its own connection.
-  const predecessor = kind === 'browser' ? control.lifecycle : Promise.all([lastJob, control?.lifecycle])
+  const predecessor = kind === 'browser' ? control.lifecycle : Promise.all([jobLanes.get(lane), control?.lifecycle])
   const slot = predecessor.then(async () => {
     if (item.settled) return
     item.started = true
@@ -92,7 +95,7 @@ function enqueue(control, work, cancelled, kind = 'kane') {
     finally { item.settled = true; control?.jobs.delete(item) }
   })
   if (kind === 'browser') control.lifecycle = slot.catch(() => {})
-  else lastJob = slot.catch(() => {})
+  else jobLanes.set(lane, slot.catch(() => {}))
   return promise
 }
 
@@ -558,7 +561,12 @@ async function runJob({ taskId, phase, objective, url, onEvent, timeoutMs, headl
  * Execute an actual Kane browser objective. A successful process exit without a
  * passing terminal event is an error, never a pass. Browser jobs are serialized.
  */
-export function runKane({ taskId, phase = 'browser', objective, url, onEvent, timeoutMs = DEFAULT_TIMEOUT_MS, headless = false, mode = 'testing', analyzerOnly = false, conditions = [], currentPage = false, journey = null } = {}) {
+export function runKane({ taskId, phase = 'browser', objective, url, onEvent, timeoutMs = DEFAULT_TIMEOUT_MS, headless = false, mode = 'testing', analyzerOnly = false, conditions = [], currentPage = false, journey = null, lane = 'source' } = {}) {
+  // Preview jobs have their own owned Chrome/CDP session. They must be able to
+  // await source work triggered through the trusted bridge without deadlocking.
+  if (!['source', 'preview'].includes(lane) || (lane === 'preview' && !taskId)) {
+    return Promise.reject(new TypeError('A preview lane requires an owned task browser.'))
+  }
   if (taskId != null && (typeof taskId !== 'string' || !taskId.trim() || taskId.length > 200)) {
     return Promise.reject(new TypeError('A task ID must be a non-empty string under 200 characters.'))
   }
@@ -612,7 +620,7 @@ export function runKane({ taskId, phase = 'browser', objective, url, onEvent, ti
     }
     return fresh
   },
-  () => cancelledResult(phase, taskId))
+  () => cancelledResult(phase, taskId), 'kane', lane)
 }
 
 /** Promote a recorded recipe only after this worker's fresh independent check. */

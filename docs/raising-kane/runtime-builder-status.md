@@ -1,0 +1,11 @@
+# Raising Kane runtime builder status
+
+The active product path is a generated interface for a supported synthetic task. The user chooses the Northstar return or Linden appointment website and states the task. Kane Explore maps public navigation in read-only mode. A focused Kane run observes the source and supplies a real screenshot. The OpenAI coding model generates task-specific React and CSS plus a manifest of allowed actions. The app compiles that code into an immutable sandboxed artifact. Kane tests that revision through a trusted source bridge against an independent acceptance contract. A failed interface check can drive at most two code revisions; a passing revision alone is promoted for use.
+
+The current code includes the builder UI, screenshot and map ingestion, bounded inspection tool, generated artifact isolation, separate preview and source Kane queues, synthetic source broker, exact trusted approval, verification reports and source outcome checks. It also preserves URL-based read-only discovery for other websites and the previous fixed sandbox demos.
+
+The scope is the two reviewed local synthetic sources. A supplied unrelated website is rejected for generated transactions; the discovery view remains available for reading arbitrary public sites. Test runs use separate synthetic records and cannot obtain live mutation grants. This is a local process boundary, not an operating-system network sandbox.
+
+At this checkpoint, `npm test` and `npm run build` pass. The generated builder itself has **not** yet been validated end to end with a live OpenAI call and Kane replay on this branch because `OPENAI_API_KEY` was not configured in this checkout. Teammate experiments in `docs/kane-builder-input-validation/` demonstrate the model and Kane screenshot inputs separately; they are not evidence that this new runtime loop passes. Do not label a revision ready unless its own Kane report and independent synthetic source receipt pass.
+
+For a full proof, add `OPENAI_API_KEY` to the ignored `.env` file, run `npm run dev`, then create the Northstar build from the product UI. Watch its exact Explore run, screenshot, generated source, Kane verification and source receipt. Repeat with Linden after Northstar passes. Preserve failed and passing report links and actual generated artifact digests in this document.

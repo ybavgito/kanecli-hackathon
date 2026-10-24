@@ -1,0 +1,146 @@
+{
+  "next": null,
+  "rows": [
+    {
+      "arrive": {
+        "author": {
+          "partial": false,
+          "unknown": 0,
+          "value": null
+        },
+        "other": {
+          "partial": false,
+          "unknown": 0,
+          "value": null
+        },
+        "replay": {
+          "partial": false,
+          "unknown": 0,
+          "value": null
+        },
+        "total": {
+          "partial": false,
+          "unknown": 0,
+          "value": null
+        }
+      },
+      "bound_to": null,
+      "cand": {
+        "count": 1,
+        "frontier": 0
+      },
+      "control_groups": [
+        {
+          "group": "body",
+          "more": 0,
+          "names": [
+            "Return blue shoes"
+          ]
+        }
+      ],
+      "current_version": "d0593da61554ec82ff318c2e6ab6b6a4e0b1158fa448ed0e7208d9810e7cede3",
+      "feedback": [],
+      "finding_ids": [
+        "d312070d777c8977de0112ce21a1dad0136e55df80a359c65eea0665ace679d9",
+        "e66b87b4a0e5a756b8dbe100183d85b96dc144d3d7e9ad73f0bf749ab20cfc63"
+      ],
+      "first_seen_run": "01a17012-20fb-7e86-8a47-baf3499378bf",
+      "heading": "Sample Outfitters",
+      "held_by": null,
+      "id": "01M5R14NFDE688BQJB2N9A9FJ5",
+      "instance_count": 0,
+      "kind": "normal",
+      "last_verified_run": null,
+      "load_blocked": [],
+      "name": "Sample Outfitters return \u2014 Sample Outfitters",
+      "notes": [],
+      "origin": "observed",
+      "reach": {
+        "after": null,
+        "kind": "direct",
+        "run": "01a17012-20fb-7e86-8a47-baf3499378bf",
+        "sightings": 3
+      },
+      "screenshot": true,
+      "sighting_runs": [
+        "01a17012-20fb-7e86-8a47-baf3499378bf"
+      ],
+      "url": "http://127.0.0.1:38383/",
+      "url_pattern": "127.0.0.1:38383/",
+      "variants": [
+        "outline:h1 paragraph link image paragraph"
+      ],
+      "version_count": 1
+    },
+    {
+      "arrive": {
+        "author": {
+          "partial": false,
+          "unknown": 0,
+          "value": 5.6863075
+        },
+        "other": {
+          "partial": false,
+          "unknown": 0,
+          "value": null
+        },
+        "replay": {
+          "partial": false,
+          "unknown": 0,
+          "value": null
+        },
+        "total": {
+          "partial": false,
+          "unknown": 0,
+          "value": 5.6863075
+        }
+      },
+      "bound_to": null,
+      "cand": {
+        "count": 3,
+        "frontier": 3
+      },
+      "control_groups": [
+        {
+          "group": "body",
+          "more": 0,
+          "names": [
+            "Printed label",
+            "QR drop-off (no printer)",
+            "textbox"
+          ]
+        }
+      ],
+      "current_version": "be5bdbdb50273e58cc8ae0843ff369d69b24d81a17ca53cb1c8052d5133d277c",
+      "feedback": [],
+      "finding_ids": [
+        "47eda11f3dfc31ee9869ffa9614ac77642ae31865e9ec343d38192f942ef3fbe",
+        "7f636f9daf8e21240cbd61cea7672e0a06508769befa213bb28da58ab78e5fd8",
+        "a737bd45985b14b9c3ba8313218d102e53e70321686f8ee177e418a273235f8e"
+      ],
+      "first_seen_run": "01a17012-20fb-7e86-8a47-baf3499378bf",
+      "heading": "Return blue shoes",
+      "held_by": null,
+      "id": "01M5R1538TSEVEX5G9K4EBH49J",
+      "instance_count": 0,
+      "kind": "normal",
+      "last_verified_run": "01a17012-20fb-7e86-8a47-baf3499378bf",
+      "load_blocked": [],
+      "name": "Sample Outfitters return \u2014 Return blue shoes",
+      "notes": [],
+      "origin": "observed",
+      "reach": null,
+      "screenshot": true,
+      "sighting_runs": [
+        "01a17012-20fb-7e86-8a47-baf3499378bf"
+      ],
+      "url": "http://127.0.0.1:38383/return",
+      "url_pattern": "127.0.0.1:38383/return",
+      "variants": [
+        "outline:h1 paragraph link paragraph textbox paragraph",
+        "run:linkx2"
+      ],
+      "version_count": 1
+    }
+  ]
+}

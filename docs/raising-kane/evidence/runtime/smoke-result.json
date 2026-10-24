@@ -1,0 +1,18 @@
+{
+  "type": "run_end",
+  "status": "passed",
+  "summary": "Opened Raising Kane, where the Northstar Outfitters return option and the Linden Home service-visit option were available.\nConfirmed that both available sites were identified as sandbox or synthetic tasks.\nSelected \u201cReturn an item\u201d for Northstar Outfitters.\nThe return page opened and showed the \u201cStart my return\u201d button, completing the requested navigation.",
+  "one_liner": "opened the Northstar Outfitters return flow on Raising Kane",
+  "final_state": {
+    "url": "http://127.0.0.1:5190/",
+    "start_my_return_visible": "true"
+  },
+  "reason": "Objective completed",
+  "duration": 52.3,
+  "credits_consumed": 18.790905,
+  "result_code": 100,
+  "reason_code": "success.complete",
+  "run_id": "run-0",
+  "test_url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5R03ZMDPNTVC1PC4A5PSB1M/dashboard/share/US_7RGB7W7EAU0AQXMI40X47WUDS6WIY47QEHHWW2BB51N1XVFYHYJLPFA8HKQW2GVY?type=summary&agentView=true&fqdn=summary-page",
+  "ts": "2026-10-24T22:23:20.350Z"
+}

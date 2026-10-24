@@ -1,0 +1,129 @@
+{
+  "next": null,
+  "rows": [
+    {
+      "annotations": {},
+      "changes": [],
+      "current_observation": "13cc9e5c141a0635b31830031eb43a295d48fc63c78044418c021472474082a2",
+      "entry": "01M5R14NFDE688BQJB2N9A9FJ5",
+      "exit": "01M5R1538TSEVEX5G9K4EBH49J",
+      "feedback": [],
+      "finding_ids": [
+        "47eda11f3dfc31ee9869ffa9614ac77642ae31865e9ec343d38192f942ef3fbe",
+        "7f636f9daf8e21240cbd61cea7672e0a06508769befa213bb28da58ab78e5fd8",
+        "a737bd45985b14b9c3ba8313218d102e53e70321686f8ee177e418a273235f8e"
+      ],
+      "id": "01M5R156ECE11AH886MRFMSMK6",
+      "name": "Return blue shoes",
+      "obs": {
+        "cost": {
+          "author": {
+            "partial": false,
+            "unknown": 0,
+            "value": 4.24283
+          },
+          "replay": {
+            "partial": false,
+            "unknown": 1,
+            "value": null
+          },
+          "spent": {
+            "partial": false,
+            "unknown": 0,
+            "value": 4.24283
+          }
+        },
+        "count": 1,
+        "last_outcome": "verified",
+        "load_blocked": []
+      },
+      "origin": "agent",
+      "parent_id": null,
+      "priority": 0,
+      "stateful": null,
+      "status": "verified",
+      "superseded_by": null,
+      "supersedes": null
+    },
+    {
+      "annotations": {},
+      "changes": [],
+      "current_observation": "3c61becb8999c0f413a3d33c4aeea43771b36722adab824a2a5ac898eab7aa85",
+      "entry": "01M5R14NFDE688BQJB2N9A9FJ5",
+      "exit": "01M5R1538TSEVEX5G9K4EBH49J",
+      "feedback": [],
+      "finding_ids": [],
+      "id": "2f7acb2cbcb7d09902f5ee36bdcedcd806fb8bb0122e57ac7538c152aaf322fe",
+      "name": "Review QR drop-off return outcome",
+      "obs": {
+        "cost": {
+          "author": {
+            "partial": false,
+            "unknown": 0,
+            "value": 0.73092
+          },
+          "replay": {
+            "partial": false,
+            "unknown": 1,
+            "value": null
+          },
+          "spent": {
+            "partial": false,
+            "unknown": 0,
+            "value": 0.73092
+          }
+        },
+        "count": 1,
+        "last_outcome": "verified",
+        "load_blocked": []
+      },
+      "origin": "skill",
+      "parent_id": null,
+      "priority": 3,
+      "stateful": null,
+      "status": "verified",
+      "superseded_by": null,
+      "supersedes": null
+    },
+    {
+      "annotations": {},
+      "changes": [],
+      "current_observation": "d164d374d0273888e3e2be1d358aa9b2f4772cdf25c1aa78d6bfea5b22c04a27",
+      "entry": "01M5R14NFDE688BQJB2N9A9FJ5",
+      "exit": "01M5R1538TSEVEX5G9K4EBH49J",
+      "feedback": [],
+      "finding_ids": [],
+      "id": "9c2ba473c9241f3a99b4e5d75615c04c3bbfb5978a234a94760d25bcd884cec0",
+      "name": "Review printed-label return outcome",
+      "obs": {
+        "cost": {
+          "author": {
+            "partial": false,
+            "unknown": 0,
+            "value": 0.7125575000000001
+          },
+          "replay": {
+            "partial": false,
+            "unknown": 1,
+            "value": null
+          },
+          "spent": {
+            "partial": false,
+            "unknown": 0,
+            "value": 0.7125575000000001
+          }
+        },
+        "count": 1,
+        "last_outcome": "verified",
+        "load_blocked": []
+      },
+      "origin": "skill",
+      "parent_id": null,
+      "priority": 3,
+      "stateful": null,
+      "status": "verified",
+      "superseded_by": null,
+      "supersedes": null
+    }
+  ]
+}

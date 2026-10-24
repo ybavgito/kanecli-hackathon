@@ -1,0 +1,409 @@
+[
+  {
+    "arm": "html-only",
+    "model": "gpt-6.1-sol",
+    "wall_seconds": 19.7,
+    "calls": [
+      {
+        "model": "gpt-6.1-sol",
+        "usage": {
+          "input_tokens": 894,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 1383,
+          "output_tokens_details": {
+            "reasoning_tokens": 81
+          },
+          "total_tokens": 2277
+        },
+        "seconds": 19.7,
+        "status": "completed"
+      }
+    ],
+    "tools": [],
+    "facts": {
+      "photo_id_required": null,
+      "max_parcel_kg": null,
+      "label_destination": null,
+      "label_deduction": null,
+      "label_refund": null,
+      "qr_destination": null,
+      "qr_deduction": null,
+      "qr_refund": null
+    },
+    "unknowns": [
+      "Photo ID requirements and maximum parcel weight: instruction image contents were not supplied.",
+      "Printed label: refund destination, deduction, refund amount and method-specific requirements were not supplied.",
+      "QR drop-off: refund destination, deduction, refund amount and method-specific requirements were not supplied.",
+      "Whether either method supports or conflicts with the original-payment refund preference cannot be verified."
+    ],
+    "ui_decisions": [
+      "Clearly label the interface as a synthetic, offline evidence preview without live integration.",
+      "Preserve Blue shoes as the only return item and Green jacket as the item to keep.",
+      "Use labeled radio controls to switch methods, initially leaving both unselected as in the observed source.",
+      "Show unknown values explicitly; do not derive a refund or fee from the $80.00 USD item price.",
+      "Prominently distinguish the original-payment preference from an observed refund destination; no destination conflict is established by the supplied evidence.",
+      "Provide no submission control or network requests."
+    ],
+    "source_references": [
+      "Supplied initial HTML: order DEMO-2, blue shoes priced at $80.00 USD; return blue shoes only and keep green jacket.",
+      "Supplied initial HTML: Printed label and QR drop-off are the available method controls.",
+      "Supplied initial HTML: initial review says no method is selected and refund terms have not been loaded.",
+      "Supplied initial HTML: quote-rendering code names destination, deduction and refund fields, but no quote responses were supplied.",
+      "Supplied initial HTML: an instruction image is referenced, but its contents were not supplied.",
+      "Customer brief: original-payment refund is preferred."
+    ]
+  },
+  {
+    "arm": "screenshot",
+    "model": "gpt-6.1-sol",
+    "wall_seconds": 18.16,
+    "calls": [
+      {
+        "model": "gpt-6.1-sol",
+        "usage": {
+          "input_tokens": 3360,
+          "input_tokens_details": {
+            "cache_write_tokens": 3357,
+            "cached_tokens": 0
+          },
+          "output_tokens": 1268,
+          "output_tokens_details": {
+            "reasoning_tokens": 49
+          },
+          "total_tokens": 4628
+        },
+        "seconds": 18.16,
+        "status": "completed"
+      }
+    ],
+    "tools": [],
+    "facts": {
+      "photo_id_required": "yes",
+      "max_parcel_kg": "4",
+      "label_destination": null,
+      "label_deduction": null,
+      "label_refund": null,
+      "qr_destination": null,
+      "qr_deduction": null,
+      "qr_refund": null
+    },
+    "unknowns": [
+      "Printed label requirements were not observed.",
+      "Refund destination, deduction and refund amount were not observed for either method; no quote responses were supplied.",
+      "Whether either method meets the original-payment preference is unknown."
+    ],
+    "ui_decisions": [
+      "Scope the observed photo-ID requirement and 4 kg parcel limit to QR drop-off only.",
+      "Use labeled radio controls to switch locally between methods, initially showing Printed label.",
+      "Keep Blue shoes as the only return item and Green jacket as the item to keep.",
+      "Show all unobserved terms as Unknown; do not calculate a refund from the $80.00 item price.",
+      "Prominently state that the original-payment preference cannot be verified. No destination conflict was observed.",
+      "Clearly label the interface as a synthetic offline evidence preview, with no submission control or network activity."
+    ],
+    "source_references": [
+      "Evidence initial \u2014 rendered screenshot: QR DROP-OFF instructions state \u201cBring photo ID\u201d and \u201cMaximum parcel: 4 kg\u201d.",
+      "Supplied initial source HTML \u2014 order DEMO-2, blue shoes priced $80.00 USD; return blue shoes only and keep green jacket.",
+      "Supplied initial source HTML and evidence initial \u2014 no method selected and refund terms not loaded. Quote response values were not supplied."
+    ]
+  },
+  {
+    "arm": "agentic",
+    "model": "gpt-6.1-sol",
+    "wall_seconds": 102.42,
+    "calls": [
+      {
+        "model": "gpt-6.1-sol",
+        "usage": {
+          "input_tokens": 3517,
+          "input_tokens_details": {
+            "cache_write_tokens": 3514,
+            "cached_tokens": 0
+          },
+          "output_tokens": 19,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 3536
+        },
+        "seconds": 2.52,
+        "status": "completed"
+      },
+      {
+        "model": "gpt-6.1-sol",
+        "usage": {
+          "input_tokens": 6549,
+          "input_tokens_details": {
+            "cache_write_tokens": 3032,
+            "cached_tokens": 3514
+          },
+          "output_tokens": 19,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 6568
+        },
+        "seconds": 2.25,
+        "status": "completed"
+      },
+      {
+        "model": "gpt-6.1-sol",
+        "usage": {
+          "input_tokens": 9579,
+          "input_tokens_details": {
+            "cache_write_tokens": 3030,
+            "cached_tokens": 6546
+          },
+          "output_tokens": 1441,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 11020
+        },
+        "seconds": 18.4,
+        "status": "completed"
+      }
+    ],
+    "tools": [
+      {
+        "name": "inspect_return_method",
+        "arguments": {
+          "method": "label"
+        },
+        "result": {
+          "status": "observed",
+          "source": "Kane actual browser mission",
+          "evidence_id": "tool-label",
+          "url": "http://127.0.0.1:38491/source",
+          "facts": {
+            "label_destination": "Original payment",
+            "label_deduction": "$0.00",
+            "label_refund": "$80.00 USD"
+          },
+          "steps": [
+            {
+              "step": 2,
+              "status": "running",
+              "remark": "Step 1",
+              "ts": "2026-10-24T22:55:52.897Z"
+            },
+            {
+              "step": 2,
+              "status": "done",
+              "remark": "navigate: Navigate to http://127.0.0.1:38491/source",
+              "ts": "2026-10-24T22:55:52.900Z"
+            },
+            {
+              "step": 3,
+              "status": "running",
+              "remark": "Step 2",
+              "ts": "2026-10-24T22:55:57.822Z"
+            },
+            {
+              "step": 3,
+              "status": "done",
+              "remark": "click: Clicking Printed label return method option",
+              "ts": "2026-10-24T22:56:03.012Z"
+            },
+            {
+              "step": 4,
+              "status": "running",
+              "remark": "Step 3",
+              "ts": "2026-10-24T22:56:03.606Z"
+            },
+            {
+              "step": 4,
+              "status": "done",
+              "remark": "analyze: ANALYZE(textual_visual, 'the displayed refund amount is stored as {{label_refund",
+              "ts": "2026-10-24T22:56:16.924Z"
+            },
+            {
+              "step": 5,
+              "status": "running",
+              "remark": "Step 4",
+              "ts": "2026-10-24T22:56:17.519Z"
+            },
+            {
+              "step": 5,
+              "status": "done",
+              "remark": "assert: the Review heading shows Printed label",
+              "ts": "2026-10-24T22:56:17.525Z"
+            },
+            {
+              "step": 6,
+              "status": "running",
+              "remark": "Step 5",
+              "ts": "2026-10-24T22:56:18.120Z"
+            },
+            {
+              "step": 6,
+              "status": "done",
+              "remark": "assert: Blue shoes only and Green jacket are displayed in their corresponding Selected i",
+              "ts": "2026-10-24T22:56:18.126Z"
+            }
+          ]
+        },
+        "screenshot_returned": true
+      },
+      {
+        "name": "inspect_return_method",
+        "arguments": {
+          "method": "qr"
+        },
+        "result": {
+          "status": "observed",
+          "source": "Kane actual browser mission",
+          "evidence_id": "tool-qr",
+          "url": "http://127.0.0.1:38491/source",
+          "facts": {
+            "qr_destination": "Store credit",
+            "qr_deduction": "$5.00",
+            "qr_refund": "$75.00 USD"
+          },
+          "steps": [
+            {
+              "step": 2,
+              "status": "running",
+              "remark": "Step 1",
+              "ts": "2026-10-24T22:56:35.962Z"
+            },
+            {
+              "step": 2,
+              "status": "done",
+              "remark": "navigate: Navigate to http://127.0.0.1:38491/source",
+              "ts": "2026-10-24T22:56:35.964Z"
+            },
+            {
+              "step": 3,
+              "status": "running",
+              "remark": "Step 2",
+              "ts": "2026-10-24T22:56:40.539Z"
+            },
+            {
+              "step": 3,
+              "status": "done",
+              "remark": "click: Clicking the QR drop-off return method button",
+              "ts": "2026-10-24T22:56:45.096Z"
+            },
+            {
+              "step": 4,
+              "status": "running",
+              "remark": "Step 3",
+              "ts": "2026-10-24T22:56:45.690Z"
+            },
+            {
+              "step": 4,
+              "status": "done",
+              "remark": "analyze: the displayed refund amount is stored as {{qr_refund}}",
+              "ts": "2026-10-24T22:56:58.450Z"
+            },
+            {
+              "step": 5,
+              "status": "running",
+              "remark": "Step 4",
+              "ts": "2026-10-24T22:56:59.055Z"
+            },
+            {
+              "step": 5,
+              "status": "done",
+              "remark": "assert: the Review heading shows QR drop-off",
+              "ts": "2026-10-24T22:56:59.061Z"
+            },
+            {
+              "step": 6,
+              "status": "running",
+              "remark": "Step 5",
+              "ts": "2026-10-24T22:56:59.650Z"
+            },
+            {
+              "step": 6,
+              "status": "done",
+              "remark": "assert: Blue shoes only and Green jacket are displayed in their corresponding Selected i",
+              "ts": "2026-10-24T22:56:59.656Z"
+            }
+          ]
+        },
+        "screenshot_returned": true
+      }
+    ],
+    "facts": {
+      "photo_id_required": "yes",
+      "max_parcel_kg": "4",
+      "label_destination": "Original payment",
+      "label_deduction": "$0.00",
+      "label_refund": "$80.00 USD",
+      "qr_destination": "Store credit",
+      "qr_deduction": "$5.00",
+      "qr_refund": "$75.00 USD"
+    },
+    "unknowns": [
+      "Printed-label requirements, including photo ID and maximum parcel weight, were not observed. The visible requirements apply to QR drop-off."
+    ],
+    "ui_decisions": [
+      "Use a labeled method selector with Printed label initially selected because its observed destination matches the customer's preference.",
+      "Keep Blue shoes as the only return item and Green jacket as the item to keep.",
+      "Prominently warn that QR drop-off refunds to store credit rather than original payment.",
+      "Show QR photo ID and 4 kg requirements as text; mark printed-label requirements unknown.",
+      "Use only embedded evidence and local interaction, with no submission control or live integration."
+    ],
+    "source_references": [
+      "initial: supplied HTML and screenshot establish order DEMO-2, Blue shoes priced at $80.00 USD, return scope, and QR instructions to bring photo ID with a maximum parcel weight of 4 kg.",
+      "tool-label: read-only inspection and screenshot show Original payment, $0.00 deduction, and $80.00 USD refund.",
+      "tool-qr: read-only inspection and screenshot show Store credit, $5.00 deduction, and $75.00 USD refund."
+    ]
+  },
+  {
+    "arm": "flow-bundle",
+    "model": "gpt-6.1-sol",
+    "wall_seconds": 21.45,
+    "calls": [
+      {
+        "model": "gpt-6.1-sol",
+        "usage": {
+          "input_tokens": 8313,
+          "input_tokens_details": {
+            "cache_write_tokens": 8310,
+            "cached_tokens": 0
+          },
+          "output_tokens": 1580,
+          "output_tokens_details": {
+            "reasoning_tokens": 62
+          },
+          "total_tokens": 9893
+        },
+        "seconds": 21.45,
+        "status": "completed"
+      }
+    ],
+    "tools": [],
+    "facts": {
+      "photo_id_required": "yes",
+      "max_parcel_kg": "4",
+      "label_destination": "Original payment",
+      "label_deduction": "$0.00",
+      "label_refund": "$80.00 USD",
+      "qr_destination": "Store credit",
+      "qr_deduction": "$5.00",
+      "qr_refund": "$75.00 USD"
+    },
+    "unknowns": [
+      "Printed label requirements, including whether photo ID is required and its maximum parcel weight, were not observed.",
+      "Any additional requirements beyond the displayed QR drop-off instructions are unknown."
+    ],
+    "ui_decisions": [
+      "Use a native radio group to switch between locally stored observed method details; initially preview Printed label because it matches the preferred refund destination.",
+      "Keep Blue shoes as the only returned item and Green jacket as kept.",
+      "Prominently warn that QR drop-off refunds to store credit, conflicting with the original-payment preference.",
+      "Scope the observed photo ID requirement and 4 kg parcel limit to QR drop-off only.",
+      "Clearly label the interface synthetic, offline and read-only, with no submission control or live integration."
+    ],
+    "source_references": [
+      "Observed initial source HTML: order DEMO-2, Blue shoes priced at $80.00 USD, return shoes only and keep Green jacket; initial review not loaded.",
+      "Screenshot evidence initial: QR DROP-OFF instructions say 'Bring photo ID' and 'Maximum parcel: 4 kg'.",
+      "Screenshot evidence tool-label: Printed label review shows Original payment, $0.00 deduction and $80.00 USD refund.",
+      "Screenshot evidence tool-qr: QR drop-off review shows Store credit, $5.00 deduction and $75.00 USD refund."
+    ]
+  }
+]

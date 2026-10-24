@@ -1,7 +1,10 @@
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
+import { randomUUID } from 'node:crypto'
+import QRCode from 'qrcode'
+import { proposalDigest } from './merchant-contract.mjs'
 
-const STORE_PATH = resolve(process.cwd(), 'data/merchant.json')
+const STORE_PATH = resolve(process.env.RAISING_KANE_DATA_DIR || 'data', 'merchant.json')
 const SHOE = 'SHOE-RED-8'
 const JACKET = 'JACKET-BLACK-M'
 
@@ -15,8 +18,16 @@ const reasons = [
   { value: 'damaged', label: 'Arrived damaged' },
 ]
 const methods = [
-  { value: 'print_label', label: 'Print a shipping label', detail: 'Print and attach the label, then drop off the parcel.' },
-  { value: 'qr_dropoff', label: 'Printer-free QR drop-off', detail: 'Show a QR code at the drop-off counter. A $5 fee applies.' },
+  {
+    value: 'print_label',
+    label: 'Print a shipping label',
+    detail: 'Print and attach the label, then drop off the parcel.',
+  },
+  {
+    value: 'qr_dropoff',
+    label: 'Printer-free QR drop-off',
+    detail: 'Show a QR code at the drop-off counter. A $5 fee applies.',
+  },
 ]
 const destinations = [
   { value: 'store_credit', label: 'Store credit' },
@@ -26,11 +37,12 @@ const destinations = [
 function loadStore() {
   try {
     const store = JSON.parse(readFileSync(STORE_PATH, 'utf8'))
-    if (store && typeof store === 'object' && store.tasks && store.returns) return store
+    if (store && typeof store === 'object' && store.tasks && store.returns)
+      return { ...store, grants: store.grants || {} }
   } catch (error) {
     if (error.code !== 'ENOENT') throw error
   }
-  return { nextReturnNumber: 1001, tasks: {}, returns: {} }
+  return { nextReturnNumber: 1001, tasks: {}, returns: {}, grants: {} }
 }
 
 function saveStore(store) {
@@ -63,10 +75,14 @@ function newDraft(taskId) {
 
 function publicDraft(draft) {
   const selectedLines = catalog.filter((line) => draft.selectedLineIds.includes(line.id))
-  const subtotalCents = selectedLines.reduce((sum, line) => sum + line.priceCents * line.quantity, 0)
+  const subtotalCents = selectedLines.reduce(
+    (sum, line) => sum + line.priceCents * line.quantity,
+    0,
+  )
   const deductionCents = draft.method === 'qr_dropoff' && selectedLines.length ? 500 : 0
   return {
     ...draft,
+    kind: 'return',
     source: 'Merchant sandbox — simulated order',
     currency: 'USD',
     lines: catalog,
@@ -77,9 +93,10 @@ function publicDraft(draft) {
     subtotalCents,
     deductionCents,
     expectedRefundCents: Math.max(0, subtotalCents - deductionCents),
-    nextStep: draft.method === 'qr_dropoff'
-      ? 'Show the synthetic QR code at a simulated drop-off counter.'
-      : 'Print the synthetic label and attach it to the parcel.',
+    nextStep:
+      draft.method === 'qr_dropoff'
+        ? 'Show the synthetic QR code at a simulated drop-off counter.'
+        : 'Print the synthetic label and attach it to the parcel.',
   }
 }
 
@@ -94,15 +111,21 @@ function readJson(req, maxBytes = 16_384) {
       }
     })
     req.on('end', () => {
-      try { resolveBody(JSON.parse(body || '{}')) }
-      catch { reject(new Error('Invalid JSON body')) }
+      try {
+        resolveBody(JSON.parse(body || '{}'))
+      } catch {
+        reject(new Error('Invalid JSON body'))
+      }
     })
     req.on('error', reject)
   })
 }
 
 function json(res, status, value) {
-  res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' })
+  res.writeHead(status, {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Cache-Control': 'no-store',
+  })
   res.end(JSON.stringify(value))
   return true
 }
@@ -111,7 +134,8 @@ function html(res, value) {
   res.writeHead(200, {
     'Content-Type': 'text/html; charset=utf-8',
     'Cache-Control': 'no-store',
-    'Content-Security-Policy': "default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'",
+    'Content-Security-Policy':
+      "default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'",
   })
   res.end(value)
   return true
@@ -122,28 +146,38 @@ function bad(res, message, status = 400) {
 }
 
 function applyPatch(draft, patch) {
-  if (!patch || typeof patch !== 'object' || Array.isArray(patch)) throw new Error('Patch must be an object')
+  if (!patch || typeof patch !== 'object' || Array.isArray(patch))
+    throw new Error('Patch must be an object')
   const keys = Object.keys(patch)
   const allowed = ['selectedLineIds', 'reason', 'method', 'refundDestination']
-  if (!keys.length || keys.some((key) => !allowed.includes(key))) throw new Error('Unsupported draft field')
+  if (!keys.length || keys.some((key) => !allowed.includes(key)))
+    throw new Error('Unsupported draft field')
   const next = { ...draft, selectedLineIds: [...draft.selectedLineIds] }
   if (Object.hasOwn(patch, 'selectedLineIds')) {
     const ids = patch.selectedLineIds
-    if (!Array.isArray(ids) || ids.length > catalog.length || new Set(ids).size !== ids.length || ids.some((id) => !catalog.some((line) => line.id === id))) {
+    if (
+      !Array.isArray(ids) ||
+      ids.length > catalog.length ||
+      new Set(ids).size !== ids.length ||
+      ids.some((id) => !catalog.some((line) => line.id === id))
+    ) {
       throw new Error('Invalid order line selection')
     }
     next.selectedLineIds = ids
   }
   if (Object.hasOwn(patch, 'reason')) {
-    if (patch.reason !== null && !reasons.some((reason) => reason.value === patch.reason)) throw new Error('Invalid return reason')
+    if (patch.reason !== null && !reasons.some((reason) => reason.value === patch.reason))
+      throw new Error('Invalid return reason')
     next.reason = patch.reason
   }
   if (Object.hasOwn(patch, 'method')) {
-    if (!methods.some((method) => method.value === patch.method)) throw new Error('Invalid return method')
+    if (!methods.some((method) => method.value === patch.method))
+      throw new Error('Invalid return method')
     next.method = patch.method
   }
   if (Object.hasOwn(patch, 'refundDestination')) {
-    if (!destinations.some((destination) => destination.value === patch.refundDestination)) throw new Error('Invalid refund destination')
+    if (!destinations.some((destination) => destination.value === patch.refundDestination))
+      throw new Error('Invalid refund destination')
     next.refundDestination = patch.refundDestination
   }
   // This deliberate source behavior is the core demo conflict. It happens even if
@@ -186,7 +220,7 @@ function merchantPage() {
           <div class="row"><span>Items</span><strong id="subtotal">$0.00</strong></div>
           <div class="row"><span>Drop-off deduction</span><strong id="deduction">$0.00</strong></div>
           <div class="row total"><span>Expected refund</span><span id="total">$0.00</span></div>
-          <p id="next-step" class="alert"></p><div id="message" role="status" aria-live="polite"></div>
+          <p id="next-step" class="alert"></p><p class="hint">Account ID: DEMO-ACCOUNT-1 · Currency: USD</p><p class="hint" id="line-identity"></p><p class="hint" id="quantity"></p><div id="message" role="status" aria-live="polite"></div>
           <button id="submit" class="primary" type="button">Submit return request</button>
         </section>
         <section id="receipt" class="card"><span class="pill">Request created</span><h2>Return requested; refund pending</h2><p id="receipt-content"></p></section>
@@ -197,7 +231,9 @@ function merchantPage() {
   <script>
     const params = new URLSearchParams(location.search);
     const taskId = params.get('taskId') || 'demo';
-    const attemptId = params.get('attemptId') || '';
+    const attemptId = params.get('operationId') || params.get('attemptId') || '';
+    const digest = params.get('proposalDigest') || '';
+    const readOnly = params.get('view') === 'readonly';
     let state;
     const $ = id => document.getElementById(id);
     const money = cents => '$' + (cents / 100).toFixed(2);
@@ -226,12 +262,16 @@ function merchantPage() {
       $('deduction').textContent='−'+money(draft.deductionCents);
       $('total').textContent=money(draft.expectedRefundCents);
       $('next-step').textContent=draft.nextStep;
+      $('line-identity').textContent='Selected line IDs: '+draft.selectedLineIds.join(', ');
+      $('quantity').textContent='Selected quantity: '+draft.selectedLines.reduce((n,l)=>n+l.quantity,0);
+      if(readOnly) { document.querySelectorAll('input,select,button').forEach(el=>el.disabled=true); $('submit').hidden=true; }
     }
     async function update(patch) {
+      if (readOnly) return;
       $('submit').disabled = true;
       setMessage('Saving your draft…','success');
       try {
-        const data = await request('/merchant/api/draft',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({taskId,patch})});
+        const data = await request('/merchant/api/draft',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({taskId,patch,expectedRevision:state.revision})});
         render(data.draft);
         setMessage('Draft saved. Review all choices before submitting.','success');
       } catch(error) { setMessage(error.message); }
@@ -241,11 +281,13 @@ function merchantPage() {
     $('method').addEventListener('change',event=>update({method:event.target.value}));
     $('destination').addEventListener('change',event=>update({refundDestination:event.target.value}));
     $('submit').addEventListener('click',async()=>{
+      if(readOnly) return;
       if (!attemptId) return setMessage('Return to Raising Kane to approve this exact draft first.');
       $('submit').disabled=true;
       setMessage('Submitting the approved return…','success');
       try {
-        const data=await request('/merchant/api/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({taskId,attemptId})});
+        const data=await request('/merchant/api/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({taskId,operationId:attemptId,proposalDigest:digest})});
+        location.href='/merchant/returns/'+encodeURIComponent(data.return.requestId);
         $('receipt').classList.add('show');
         $('receipt-content').textContent='Request '+data.return.requestId+' for '+data.return.lines.map(line=>line.name).join(', ')+'. Expected refund '+money(data.return.expectedRefundCents)+' to '+(data.return.refundDestination==='original_payment'?'original payment method':'store credit')+'. '+data.return.nextStep;
         setMessage('Return request saved by the merchant.','success');
@@ -272,7 +314,8 @@ export function createMerchant({ verifyApproval = () => false } = {}) {
 
   function getDraft(taskId) {
     const store = loadStore()
-    return publicDraft(ensureDraft(store, taskId))
+    const draft = publicDraft(ensureDraft(store, taskId))
+    return { ...draft, proposalDigest: proposalDigest(draft) }
   }
 
   function getReturnByAttempt(attemptId) {
@@ -296,47 +339,132 @@ export function createMerchant({ verifyApproval = () => false } = {}) {
     return getDraft(taskId)
   }
 
+  function registerGrant(input) {
+    const store = loadStore()
+    const draft = publicDraft(ensureDraft(store, input.taskId))
+    if (
+      !validAttemptId(input.operationId) ||
+      !Number.isInteger(input.intentRevision) ||
+      !input.validationRunId ||
+      input.draftVersion !== draft.revision ||
+      input.proposalDigest !== proposalDigest(draft)
+    )
+      throw new Error('Approval no longer matches the current draft.')
+    if (store.returns[input.operationId] || store.grants[input.operationId])
+      throw new Error('Operation already exists.')
+    const grant = { ...input, grantId: randomUUID(), status: 'active' }
+    store.grants[input.operationId] = grant
+    saveStore(store)
+    return { ...grant }
+  }
+  function revokeGrant(id) {
+    const store = loadStore()
+    if (store.grants[id]?.status === 'active') {
+      store.grants[id].status = 'revoked'
+      saveStore(store)
+    }
+  }
+  function getOperation(id) {
+    const record = getReturnByAttempt(id)
+    return record
+      ? {
+          status: 'committed',
+          operationId: id,
+          proposalDigest: record.proposalDigest,
+          requestId: record.requestId,
+          return: record,
+        }
+      : { status: 'absent' }
+  }
+
   async function handle(req, res, url) {
+    const confirmation = url.pathname.match(/^\/merchant\/returns\/([^/]+)(\/qr)?$/)
+    if (req.method === 'GET' && confirmation) {
+      const record = Object.values(loadStore().returns).find(
+        (item) => item.requestId === confirmation[1],
+      )
+      if (!record) return bad(res, 'Return not found', 404)
+      if (confirmation[2]) {
+        if (record.method !== 'qr_dropoff') return bad(res, 'This return uses a printed label', 404)
+        const svg = await QRCode.toString('DEMO ONLY: ' + record.requestId, {
+          type: 'svg',
+          width: 220,
+          margin: 2,
+        })
+        return html(res, confirmationPage(record, true, svg))
+      }
+      return html(res, confirmationPage(record))
+    }
+    const operation = url.pathname.match(/^\/merchant\/api\/operations\/([^/]+)$/)
+    if (req.method === 'GET' && operation) return json(res, 200, getOperation(operation[1]))
     if (req.method === 'GET' && url.pathname === '/merchant') return html(res, merchantPage())
     if (req.method === 'GET' && url.pathname === '/merchant/api/state') {
       const taskId = url.searchParams.get('taskId') || 'demo'
-      try { return json(res, 200, { draft: getDraft(taskId), returns: listReturns(taskId) }) }
-      catch (error) { return bad(res, error.message) }
+      try {
+        return json(res, 200, { draft: getDraft(taskId), returns: listReturns(taskId) })
+      } catch (error) {
+        return bad(res, error.message)
+      }
     }
     if (req.method === 'POST' && url.pathname === '/merchant/api/draft') {
       try {
-        const { taskId, patch } = await readJson(req)
+        const { taskId, patch, expectedRevision } = await readJson(req)
         if (!validTaskId(taskId)) return bad(res, 'Invalid task ID')
         const store = loadStore()
         const draft = ensureDraft(store, taskId)
-        if (Object.values(store.returns).some((record) => record.taskId === taskId)) return bad(res, 'This return has already been submitted', 409)
+        if (Object.values(store.returns).some((record) => record.taskId === taskId))
+          return bad(res, 'This return has already been submitted', 409)
+        if (expectedRevision !== draft.revision)
+          return bad(res, 'The draft changed. Reload before editing.', 409)
         const next = applyPatch(draft, patch)
+        if (next.revision !== draft.revision)
+          for (const grant of Object.values(store.grants)) {
+            if (grant.taskId === taskId && grant.status === 'active') grant.status = 'revoked'
+          }
         store.tasks[taskId] = next
         saveStore(store)
         return json(res, 200, { draft: publicDraft(next) })
-      } catch (error) { return bad(res, error.message) }
+      } catch (error) {
+        return bad(res, error.message)
+      }
     }
     if (req.method === 'POST' && url.pathname === '/merchant/api/submit') {
       try {
-        const { taskId, attemptId } = await readJson(req)
-        if (!validTaskId(taskId) || !validAttemptId(attemptId)) return bad(res, 'Invalid submission identity')
+        const input = await readJson(req)
+        const { taskId } = input
+        const attemptId = input.operationId || input.attemptId
+        const digest = input.proposalDigest
+        if (!validTaskId(taskId) || !validAttemptId(attemptId))
+          return bad(res, 'Invalid submission identity')
         const store = loadStore()
         const existing = store.returns[attemptId]
-        if (existing) return existing.taskId === taskId
-          ? json(res, 200, { return: existing, idempotentReplay: true })
-          : bad(res, 'Attempt ID belongs to another task', 409)
-        if (Object.values(store.returns).some((record) => record.taskId === taskId)) return bad(res, 'This return has already been submitted', 409)
+        if (existing)
+          return existing.taskId === taskId && existing.proposalDigest === digest
+            ? json(res, 200, { return: existing, idempotentReplay: true })
+            : bad(res, 'Operation identity or approved terms do not match', 409)
+        if (Object.values(store.returns).some((record) => record.taskId === taskId))
+          return bad(res, 'This return has already been submitted', 409)
         const draft = publicDraft(ensureDraft(store, taskId))
-        if (!draft.selectedLines.length || !draft.reason) return bad(res, 'Select an item and a return reason', 422)
-        // verifyApproval is intentionally synchronous. There is no await between
-        // checking the current persisted revision and creating the return record.
-        if (verifyApproval({ taskId, draft, attemptId }) !== true) return bad(res, 'The current draft has not been approved in Raising Kane', 409)
+        if (!draft.selectedLines.length || !draft.reason)
+          return bad(res, 'Select an item and a return reason', 422)
+        const grant = store.grants[attemptId]
+        if (
+          !grant ||
+          grant.status !== 'active' ||
+          grant.taskId !== taskId ||
+          grant.draftVersion !== draft.revision ||
+          grant.proposalDigest !== digest ||
+          proposalDigest(draft) !== digest
+        )
+          return bad(res, 'This exact current draft has no active approval.', 409)
         const requestId = `RET-${store.nextReturnNumber++}`
         const record = {
           id: requestId,
           returnId: requestId,
           requestId,
           attemptId,
+          operationId: attemptId,
+          proposalDigest: digest,
           taskId,
           accountId: draft.accountId,
           orderId: draft.orderId,
@@ -356,13 +484,41 @@ export function createMerchant({ verifyApproval = () => false } = {}) {
           status: 'return_requested_refund_pending',
           createdAt: new Date().toISOString(),
         }
+        grant.status = 'consumed'
         store.returns[attemptId] = record
         saveStore(store)
         return json(res, 201, { return: record, idempotentReplay: false })
-      } catch (error) { return bad(res, error.message) }
+      } catch (error) {
+        return bad(res, error.message)
+      }
     }
     return false
   }
 
-  return { handle, getDraft, getReturnByAttempt, listReturns, resetTask }
+  return {
+    handle,
+    getDraft,
+    getReturnByAttempt,
+    listReturns,
+    resetTask,
+    registerGrant,
+    revokeGrant,
+    getOperation,
+  }
+}
+
+function confirmationPage(record, qr = false, qrSvg = '') {
+  const escape = (value) =>
+    String(value ?? '').replace(
+      /[&<>"']/g,
+      (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch],
+    )
+  const field = (label, value) =>
+    `<div class="field"><dt>${escape(label)}</dt><dd>${escape(value)}</dd></div>`
+  return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Return ${escape(record.requestId)} | Northstar</title>
+  <style>body{font:17px/1.6 system-ui;background:#f2f5fa;color:#18314f;margin:0}header{background:#12304f;color:white;padding:22px 8%}main{max-width:760px;margin:42px auto;background:white;padding:36px;border-radius:14px}h1{line-height:1.15}.field{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #dce4ee;padding:12px 0}dd{margin:0;font-weight:600}.artifact{padding:32px;background:#edf3f7;font:24px monospace}a{color:#096689}@media(max-width:600px){main{margin:16px;padding:20px}.field{grid-template-columns:1fr}}</style>
+  <header>Northstar Outfitters · Merchant sandbox</header><main><p>Persistent source confirmation</p><h1>${qr ? 'Synthetic QR drop-off artifact' : 'Return requested; refund pending'}</h1><p>This is a simulated return. No shipment or refund is created.</p>
+  ${qr ? `<div class="artifact">${qrSvg}<br>DEMO ONLY · ${escape(record.requestId)}</div><p>This QR encodes a demo reference only. It is not a shipping entitlement.</p><a href="/merchant/returns/${escape(record.requestId)}">Back to confirmation</a>` : ''}
+  <dl>${field('Return request ID', record.requestId)}${field('Order ID', record.orderId)}${field('Account ID', record.accountId)}${field('Returned line IDs', record.selectedLineIds.join(', '))}${field('Returned item', 'Red running shoes, Size 8')}${field('Returned quantity', 1)}${field('Jacket kept', 'Yes')}${field('Reason', record.reason)}${field('Subtotal', (record.subtotalCents / 100).toFixed(2))}${field('Return method', record.method)}${field('Refund destination', record.refundDestination)}${field('Currency', record.currency)}${field('Deduction', (record.deductionCents / 100).toFixed(2))}${field('Expected refund', (record.expectedRefundCents / 100).toFixed(2))}${field('Status', 'return_requested_refund_pending')}${field('Next step', record.nextStep)}</dl>
+  ${record.method === 'qr_dropoff' && !qr ? `<a href="/merchant/returns/${escape(record.requestId)}/qr">Open synthetic QR artifact</a>` : ''}</main></html>`
 }

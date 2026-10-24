@@ -1,0 +1,65 @@
+{
+  "status": "passed",
+  "summary": "Opened the supplied return page and stopped at the initial return-method selection screen, as requested.\nConfirmed that the \u201cChoose how to return your shoes\u201d heading, the \u201cPrinted label\u201d and \u201cQR drop-off\u201d options, and the drop-off instructions image were visible.\nDid not select either return method.",
+  "final_state": {
+    "url": "http://127.0.0.1:38491/source",
+    "return_method_heading": "Choose how to return your shoes",
+    "return_method_options": "Printed label; QR drop-off",
+    "drop_off_instructions_image": "loaded"
+  },
+  "duration": 38,
+  "credits_consumed": 16.473080000000003,
+  "exit_code": 0,
+  "wall_seconds": 47.68,
+  "screenshot_member": "tests/open-the-supplied-source-url-verify-the--e14c3596/steps/4-0-4/screenshot.jpg",
+  "steps": [
+    {
+      "step": 2,
+      "status": "running",
+      "remark": "Step 1",
+      "ts": "2026-10-24T22:54:01.834Z"
+    },
+    {
+      "step": 2,
+      "status": "done",
+      "remark": "navigate: Navigate to http://127.0.0.1:38491/source",
+      "ts": "2026-10-24T22:54:01.836Z"
+    },
+    {
+      "step": 3,
+      "status": "running",
+      "remark": "Step 2",
+      "ts": "2026-10-24T22:54:05.062Z"
+    },
+    {
+      "step": 3,
+      "status": "done",
+      "remark": "wait: PRIMARY: confirm the supplied source URL initial page remains loaded",
+      "ts": "2026-10-24T22:54:10.894Z"
+    },
+    {
+      "step": 4,
+      "status": "running",
+      "remark": "Step 3",
+      "ts": "2026-10-24T22:54:11.486Z"
+    },
+    {
+      "step": 4,
+      "status": "done",
+      "remark": "analyze: the Drop-off instructions image has loaded",
+      "ts": "2026-10-24T22:54:34.332Z"
+    },
+    {
+      "step": 5,
+      "status": "running",
+      "remark": "Step 4",
+      "ts": "2026-10-24T22:54:34.916Z"
+    },
+    {
+      "step": 5,
+      "status": "done",
+      "remark": "assert: the heading Choose how to return your shoes is visible and both return method bu",
+      "ts": "2026-10-24T22:54:34.922Z"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "url": "http://127.0.0.1:38383/",
+  "project": "01M5R13G3F6P8E6Y2P2NDPN60Y",
+  "synthetic": true,
+  "known_defects": [
+    "missing html lang",
+    "image missing alt",
+    "input missing accessible label",
+    "low contrast text"
+  ],
+  "read_only_quote_branches": true
+}

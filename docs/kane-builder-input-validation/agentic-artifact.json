@@ -1,0 +1,28 @@
+{
+  "facts": {
+    "photo_id_required": "yes",
+    "max_parcel_kg": "4",
+    "label_destination": "Original payment",
+    "label_deduction": "$0.00",
+    "label_refund": "$80.00 USD",
+    "qr_destination": "Store credit",
+    "qr_deduction": "$5.00",
+    "qr_refund": "$75.00 USD"
+  },
+  "unknowns": [
+    "Printed-label requirements, including photo ID and maximum parcel weight, were not observed. The visible requirements apply to QR drop-off."
+  ],
+  "ui_decisions": [
+    "Use a labeled method selector with Printed label initially selected because its observed destination matches the customer's preference.",
+    "Keep Blue shoes as the only return item and Green jacket as the item to keep.",
+    "Prominently warn that QR drop-off refunds to store credit rather than original payment.",
+    "Show QR photo ID and 4 kg requirements as text; mark printed-label requirements unknown.",
+    "Use only embedded evidence and local interaction, with no submission control or live integration."
+  ],
+  "source_references": [
+    "initial: supplied HTML and screenshot establish order DEMO-2, Blue shoes priced at $80.00 USD, return scope, and QR instructions to bring photo ID with a maximum parcel weight of 4 kg.",
+    "tool-label: read-only inspection and screenshot show Original payment, $0.00 deduction, and $80.00 USD refund.",
+    "tool-qr: read-only inspection and screenshot show Store credit, $5.00 deduction, and $75.00 USD refund."
+  ],
+  "ui_html": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Synthetic return evidence preview</title><style>*{box-sizing:border-box}body{margin:0;background:#faf8f2;color:#182b2b;font:17px/1.5 system-ui,sans-serif}main{max-width:850px;margin:40px auto;padding:24px}.badge{font-size:13px;font-weight:700;letter-spacing:.08em}h1{font-size:32px;line-height:1.2}section{background:white;border:1px solid #c5ceca;border-radius:10px;padding:22px;margin:20px 0}.items{display:flex;gap:32px;flex-wrap:wrap}.items p{margin:4px 0}label{display:block;font-weight:700;margin-bottom:8px}select{font:inherit;padding:12px;width:100%;max-width:360px;border:1px solid #546a63;border-radius:5px;background:white;color:inherit}select:focus-visible{outline:3px solid #167b69;outline-offset:3px}h2{font-size:23px;margin-top:0}h3{font-size:18px}dl{display:grid;grid-template-columns:1fr 1fr;gap:10px 24px}dt{font-weight:600}dd{margin:0}.notice{padding:16px;border-left:5px solid #28705c;background:#eef5ef}.warning{background:#fff0d8;border-color:#a95100;color:#613000}.muted{color:#52615d;font-size:14px}footer{font-size:14px}@media(max-width:520px){main{margin:8px auto;padding:16px}dl{grid-template-columns:1fr;gap:4px}dd{margin-bottom:12px}}</style></head><body><main><div class=\"badge\">SYNTHETIC \u00b7 OFFLINE EVIDENCE PREVIEW</div><h1>Return your blue shoes</h1><p>Explore recorded return options. This preview is not connected to a live return service.</p><section aria-label=\"Return scope\"><div class=\"items\"><p><strong>Return:</strong> Blue shoes only</p><p><strong>Keep:</strong> Green jacket</p></div><p>Order DEMO-2 \u00b7 Blue shoes price: $80.00 USD</p><p><strong>Refund preference:</strong> Original payment</p></section><label for=\"method\">Return method</label><select id=\"method\"><option value=\"label\">Printed label</option><option value=\"qr\">QR drop-off</option></select><section id=\"review\" aria-live=\"polite\" aria-atomic=\"true\"><h2 id=\"heading\">Review: Printed label</h2><p id=\"notice\" class=\"notice\">Matches your preference: the observed refund destination is original payment.</p><dl><dt>Refund destination</dt><dd id=\"destination\">Original payment</dd><dt>Deduction</dt><dd id=\"deduction\">$0.00</dd><dt>Refund amount</dt><dd id=\"refund\">$80.00 USD</dd></dl><h3>Method requirements</h3><p id=\"requirements\">Unknown \u2014 printed-label requirements were not observed. Photo ID requirement and maximum parcel weight are unknown for this method.</p><p class=\"muted\" id=\"source\">Evidence: tool-label. Requirements not observed.</p></section><footer>Recorded evidence only; switching methods changes this local preview. No return has been submitted. This interface cannot submit a return.</footer></main><script>const data={label:{name:'Printed label',destination:'Original payment',deduction:'$0.00',refund:'$80.00 USD',notice:'Matches your preference: the observed refund destination is original payment.',requirements:'Unknown \u2014 printed-label requirements were not observed. Photo ID requirement and maximum parcel weight are unknown for this method.',source:'Evidence: tool-label. Requirements not observed.'},qr:{name:'QR drop-off',destination:'Store credit',deduction:'$5.00',refund:'$75.00 USD',notice:'Refund preference conflict: QR drop-off refunds to store credit, NOT your original payment. Printed label is the observed option that matches your preference.',requirements:'Bring photo ID. Maximum parcel weight: 4 kg.',source:'Evidence: tool-qr (refund terms); initial screenshot (QR requirements).'}};document.getElementById('method').addEventListener('change',function(){const d=data[this.value];document.getElementById('heading').textContent='Review: '+d.name;for(const id of ['destination','deduction','refund','notice','requirements','source'])document.getElementById(id).textContent=d[id];document.getElementById('notice').className='notice'+(this.value==='qr'?' warning':'');});</script></body></html>"
+}
