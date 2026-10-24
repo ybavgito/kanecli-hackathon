@@ -2,10 +2,17 @@
 
 **When websites raise hell, raise Kane**
 
-Raising Kane helps a person finish a complicated website task while preserving
-their choices. The first proof of concept handles a partial return in a fictional
-merchant portal. Kane CLI operates the portal; the application tracks intent,
-checks the draft, requires approval, and records the source outcome.
+Paste a website URL. Describing a task is optional. Raising Kane uses Kane CLI to
+discover actions on the current page, show actual options and consequences, and
+check a chosen outcome. A dedicated visible browser supports direct human sign-in.
+The generic connection/workflow engine replaces the fixed return entry; the
+merchant remains a labeled regression demo at `?demo=merchant`.
+
+The current URL-first contract is [here](docs/raising-kane/url-first-contract.md).
+Read the [browser processing audit](docs/raising-kane/browser-privacy-audit.md)
+before using personal accounts. Kane processes page content and screenshots
+externally; local Chrome is not a local-only guarantee. Sign in only while Kane
+is paused, then acknowledge the notice to continue in the same browser.
 
 ## Build together
 
@@ -35,13 +42,12 @@ local assurance. Our return POC has its own [runtime and UI evidence](docs/raisi
 Neither establishes a completed two-site product. Historical research and the
 original packet ZIP remain available for provenance.
 
-The recommended experience is website-first: connect a supported site, choose
-from its tested task catalog, make plain decisions, and approve an exact verified
-proposal. Rehearse integrations before enabling tasks; recheck the current source
-during each user's workflow. The target demo covers a partial return and an
-appointment change on two labeled sandboxes. The current implementation supports
-return preparation, conflict detection and correction; submission and the
-appointment integration remain unfinished.
+The current direction is URL-first discovery on unfamiliar websites, with no
+per-site workflow code in the generic engine. Reusable action, question, comparison,
+review and receipt components use actual observations. Unsupported or inaccessible
+flows stay explicit. The older fixed return/appointment plan is historical.
+See [verification notes](docs/raising-kane/verification.md) for executed results;
+the presence of an API or a discovered link does not establish a completed flow.
 
 The [original ClearPath brief](docs/clearpath/clearpath-complete-project-brief.md)
 and its [earlier gap review](docs/clearpath/gap-review.md) remain available as history.

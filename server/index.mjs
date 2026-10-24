@@ -2,6 +2,7 @@ import { createServer } from 'node:http'
 import { createServer as createViteServer } from 'vite'
 import { createMerchant } from './merchant.mjs'
 import { createController } from './controller.mjs'
+import { createExplorerController } from './explorer-controller.mjs'
 import { shutdownAllTaskBrowsers } from './kane-worker.mjs'
 
 try { process.loadEnvFile() } catch (error) {
@@ -15,6 +16,7 @@ const merchant = createMerchant({
   verifyApproval: input => controller?.verifyLegacyApproval(input) ?? false,
 })
 controller = createController({ merchant, baseUrl })
+const explorer = createExplorerController({ baseUrl })
 const vite = await createViteServer({ server: { middlewareMode: true }, appType: 'spa' })
 const server = createServer(async (req, res) => {
   try {
@@ -24,7 +26,10 @@ const server = createServer(async (req, res) => {
       res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' })
       return res.end('Merchant page not found.')
     }
-    if (url.pathname.startsWith('/api/')) return await controller.handle(req, res, url)
+    if (url.pathname.startsWith('/api/')) {
+      if (await explorer.handle(req, res, url)) return
+      return await controller.handle(req, res, url)
+    }
     return vite.middlewares(req, res)
   } catch (error) {
     if (!res.headersSent) {

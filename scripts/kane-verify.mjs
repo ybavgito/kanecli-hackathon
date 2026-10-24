@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process'
 
 const targetUrl = process.env.KANE_URL ?? 'http://127.0.0.1:5173'
 const objective = process.env.KANE_OBJECTIVE
-  ?? 'Open Raising Kane, verify the Raising Kane branding and Your request textbox are visible, and verify the page clearly says the merchant and order are simulated. Do not start a task.'
+  ?? 'Open Raising Kane. Verify the exact tagline When websites raise hell, raise Kane. Verify Website URL is required and What would you like to do is optional. Verify the page discloses TestMu AI processing and offers a labeled merchant sandbox entry. Do not start a connection or enter credentials.'
 
 const preflight = spawnSync(process.execPath, ['scripts/kane-preflight.mjs'], { stdio: 'inherit' })
 if (preflight.status !== 0) process.exit(preflight.status ?? 1)

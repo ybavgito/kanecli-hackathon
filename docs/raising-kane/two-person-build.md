@@ -3,6 +3,14 @@
 **When websites raise hell, raise Kane**
 
 Current specification: [project brief](raising-kane-project-brief.md).
+
+**Latest direction:** the user now requires generic URL-first discovery and
+execution on unrelated websites without per-site workflow code. The contract is
+[url-first-contract.md](url-first-contract.md). This chat owns the generic UI,
+connection/workflow controller and worker. The human teammate retains the merchant
+source files and compatibility contract below; do not overwrite that ongoing work.
+The old dedicated appointment-adapter plan below is historical and superseded.
+Merchant work remains valuable as controlled regression coverage.
 Shared baseline: branch `codex/raising-kane-poc`, including `main` at `b99a39f`.
 Pull this branch for the latest implementation and verification notes.
 

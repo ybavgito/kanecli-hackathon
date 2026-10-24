@@ -1,5 +1,9 @@
 # Raising Kane verification
 
+The current URL-first implementation has a separate
+[verification ledger](url-first-verification.md). The return-specific checks below
+remain historical regression evidence.
+
 ## October 24, 2026: initial shared checkpoint
 
 - `npm run build`: passed.
