@@ -62,6 +62,7 @@ v1 return artifact remains available alongside the new modes for reproducibility
   It is labeled interrupted, not failed or passed. Candidate 3 reused captured source
   evidence and used a new synthetic verification task.
 - The first recorded-demo inspection moved off the build page prematurely, then started a source task despite the read-only instruction. Its failure is retained. The shared assurance wrapper also added an irrelevant receipt expectation to read-only checks; that wording was removed. Transaction objectives still explicitly require reload persistence.
+- The first new focused-store run exposed a source-worker misstep: while changing the return method, Kane also restored the destination despite being told not to. The combined objective had asked it to assert the desired final destination. That job now extracts actual terms without an instruction to make them pass; the independent controller compares them and leaves correction as an explicit user action. The interrupted candidate and original action trace are retained. This is not claimed as a successful negative case.
 - Earlier setup attempts exposed screenshot decoding, AST filtering and React development
   runtime resolution problems. Those were repaired and covered by targeted checks. They
   are implementation problems, not fabricated Kane browser failures.

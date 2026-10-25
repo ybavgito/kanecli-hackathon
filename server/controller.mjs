@@ -625,7 +625,7 @@ export function createController({
               const r = await browser(
                 t,
                 'change-method',
-                `Choose ${methodLabel(expectedMethod(t))} under Return method. Wait for the saved message. Do not change the refund destination. Do not submit. After this change, ${validationObjective(t)}`,
+                `Choose ${methodLabel(expectedMethod(t))} under Return method. Wait for the saved message, then STOP editing. The site may reset the refund destination; preserve that actual result. Do not change or restore the refund destination or any other field, even if it disagrees with the user's request. Do not submit. Read and store the actual resulting terms, including any unexpected destination; do not try to make the values match an expected outcome. ${extractObjective(t.kind)}`,
               )
               accept(t, r)
             } else await prepare(t)
