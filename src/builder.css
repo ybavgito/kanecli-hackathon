@@ -1190,3 +1190,22 @@
     grid-template-columns: 1fr;
   }
 }
+
+.rk-preview.rk-preview-full {
+  max-height: 430px;
+  overflow-y: auto;
+}
+.rk-preview.rk-preview-full img {
+  max-height: none;
+  object-fit: fill;
+}
+.rk-compare-frame {
+  max-height: 520px;
+  overflow-y: auto;
+  border: 1px solid #e3e6d9;
+  border-radius: 10px;
+}
+.rk-compare-frame img {
+  border: 0;
+  border-radius: 0;
+}

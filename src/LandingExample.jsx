@@ -69,18 +69,25 @@ export default function LandingExample({ catalog, pending, onUse, onOpen }) {
               : 'No task yet. Show me what I can do here.'}
           </p>
         </div>
-        <figure className="rk-preview" key={focused ? 'focused' : 'overview'}>
+        <figure
+          className="rk-preview rk-preview-full"
+          key={focused ? 'focused' : 'overview'}
+          tabIndex={0}
+          aria-label="Full generated interface, scrollable"
+        >
           <img
-            src={'/examples/' + (focused ? 'focused' : 'overview') + '.webp'}
-            width="938"
-            height="750"
+            src={'/examples/' + (focused ? 'focused' : 'overview') + '-full.webp'}
+            width="1000"
+            height={focused ? 1762 : 1569}
             alt={
               focused
                 ? 'Captured generated interface headed Return the red shoes. Keep the jacket., with printer-free return requirements.'
                 : 'Captured generated site guide with Overview, Shop, My orders and Help centre navigation.'
             }
           />
-          <figcaption>Actual generated preview · synthetic Northstar website</figcaption>
+          <figcaption>
+            Full generated interface · scroll to see all · synthetic Northstar website
+          </figcaption>
         </figure>
         <div className="rk-example-result" aria-live="polite">
           <div>
