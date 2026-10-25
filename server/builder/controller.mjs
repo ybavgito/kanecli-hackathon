@@ -131,6 +131,14 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
         b.status = 'blocked'
         b.error =
           'Build interrupted. Start a new build; existing evidence and candidates are retained.'
+        const pending = b.candidates?.at(-1)
+        if (pending && ['checking', 'building'].includes(pending.status)) {
+          pending.status = 'interrupted'
+          pending.failure = {
+            kind: 'interrupted',
+            message: 'Verification was interrupted; no pass or failure inferred.',
+          }
+        }
       }
       builds.set(b.id, b)
     }
@@ -231,26 +239,30 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
     )
     return e
   }
-  async function executeBuild(b) {
+  async function executeBuild(b, reuseEvidence = false) {
     try {
       const directory = join(root, b.id)
       await mkdir(directory, { recursive: true })
-      b.status = 'exploring_source'
+      b.status = reuseEvidence ? 'building' : 'exploring_source'
       event(
         b,
-        'explore.started',
-        b.goal
-          ? 'Exploring paths relevant to your task.'
-          : 'Exploring the website broadly; intent is optional.',
+        reuseEvidence ? 'build.resumed' : 'explore.started',
+        reuseEvidence
+          ? 'Rebuilding from retained source evidence; verification uses fresh synthetic records.'
+          : b.goal
+            ? 'Exploring paths relevant to your task.'
+            : 'Exploring the website broadly; intent is optional.',
       )
-      const map = await explore({
-        directory: join(directory, 'source-map'),
-        url: sourceUrl(b, b.sourceTaskId),
-        label: `source ${b.id.slice(0, 8)}`,
-        leases: b.goal ? 6 : 12,
-        goal: b.goal,
-        onProgress: (s) => event(b, 'explore.progress', s),
-      })
+      const map = reuseEvidence
+        ? b.sourceMap
+        : await explore({
+            directory: join(directory, 'source-map'),
+            url: sourceUrl(b, b.sourceTaskId),
+            label: `source ${b.id.slice(0, 8)}`,
+            leases: b.goal ? 6 : 12,
+            goal: b.goal,
+            onProgress: (s) => event(b, 'explore.progress', s),
+          })
       b.sourceMap = map
       event(
         b,
@@ -259,44 +271,62 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
       )
       if (!map.screens.length)
         throw Error('No source screens were observed. No supported interface can be generated.')
-      for (const screen of map.screens)
+      if (!reuseEvidence) {
+        for (const screen of map.screens)
+          b.evidence.push({
+            id: screen.id,
+            branch: 'explore',
+            facts: {
+              name: screen.name,
+              controls: screen.controls,
+              affordances: screen.affordances,
+              description: screen.description,
+            },
+            shots: [],
+            imagePath: screen.image ? join(directory, 'source-map', screen.image) : null,
+            imageUrl: screen.image ? `/api/builder/${b.id}/image/source-map/${screen.image}` : null,
+            at: map.capturedAt,
+          })
+        for (const record of [...map.flows, ...map.findings])
+          b.evidence.push({
+            id: record.id,
+            branch: 'explore-record',
+            facts: record,
+            shots: [],
+            at: map.capturedAt,
+          })
         b.evidence.push({
-          id: screen.id,
-          branch: 'explore',
-          facts: {
-            name: screen.name,
-            controls: screen.controls,
-            affordances: screen.affordances,
-            description: screen.description,
-          },
+          id: 'user-contract',
+          branch: 'contract',
+          facts: b.contract,
           shots: [],
-          imagePath: screen.image ? join(directory, 'source-map', screen.image) : null,
-          imageUrl: screen.image ? `/api/builder/${b.id}/image/source-map/${screen.image}` : null,
-          at: map.capturedAt,
+          at: b.createdAt,
         })
-      for (const record of [...map.flows, ...map.findings])
-        b.evidence.push({
-          id: record.id,
-          branch: 'explore-record',
-          facts: record,
-          shots: [],
-          at: map.capturedAt,
-        })
-      b.evidence.push({
-        id: 'user-contract',
-        branch: 'contract',
-        facts: b.contract,
-        shots: [],
-        at: b.createdAt,
-      })
+      }
       let previous = null,
         failure = null
-      for (let revision = 1; revision <= 3; revision++) {
-        b.status = revision === 1 ? 'building' : 'repairing'
+      if (reuseEvidence && b.candidates.length) {
+        const last = b.candidates.at(-1)
+        try {
+          previous = JSON.parse(
+            await readFile(
+              join(directory, 'candidates', String(last.revision), 'artifact.json'),
+              'utf8',
+            ),
+          )
+        } catch {}
+        failure = last.failure || {
+          kind: 'resumed',
+          message: 'Recheck retained code against the unchanged contract and current verifier.',
+        }
+      }
+      const firstRevision = b.candidates.length + 1
+      for (let revision = firstRevision; revision < firstRevision + 3; revision++) {
+        b.status = revision === firstRevision ? 'building' : 'repairing'
         event(
           b,
-          revision === 1 ? 'agent.started' : 'repair.started',
-          revision === 1
+          revision === firstRevision ? 'agent.started' : 'repair.started',
+          revision === firstRevision
             ? 'Building your interface from Kane’s observations.'
             : 'Rebuilding the interface against the same requirements.',
         )
@@ -396,7 +426,7 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
           const checkUrl = candidate.previewUrl + '?session=' + test.id
           const objective =
             b.kind === 'return'
-              ? 'Click Start this task if visible. Wait for the source order to load. In the generated interface choose Size or fit issue under Return reason. Wait until source work finishes. Verify the review shows only red shoes, jacket kept, original payment and $80 refund for the printed label. Change Return method to Printer-free QR drop-off. Wait for the source check. Verify a conflict is visible, $5 deduction and $75 refund are shown, and requested Original payment differs from observed Store credit. Click Restore my choices and wait until the source review is verified. Verify Original payment and $75 refund are displayed. Use the trusted approval panel: click Approve exact terms, then Submit approved request. Wait for the saved confirmation. Verify Return requested; refund pending, a request identifier, $75 refund, original payment and jacket kept. Reload and verify the same saved receipt remains.'
+              ? 'Click Start this task if visible. Wait for the source order to load. In the generated interface choose Size or fit issue under Return reason. Wait until source work finishes. Verify the review shows only red shoes, jacket kept, Original payment method and $80 refund for the printed label. Change Return method to Printer-free QR drop-off. Wait for the source check. Verify a conflict is visible, $5 deduction and $75 refund are shown, and requested Original payment method differs from observed Store credit. Click Restore my choices and wait until the source review is verified. Verify Original payment method and $75 refund are displayed. Use the trusted approval panel: click Approve exact terms, then Submit approved request. Wait for the saved confirmation. Verify Return requested; refund pending, a request identifier, $75 refund, Original payment method and jacket kept. Reload and verify the same saved receipt remains.'
               : 'Click Start this task if visible. Wait for the source booking to load. Choose the available Saturday October 31 11:00 slot with Maya Chen and no added fee in the generated interface. Wait for the source review to be verified. Verify Maya, Saturday morning and $0 added fee. Use the trusted approval panel: click Approve exact terms, then Submit approved request. Wait for the saved confirmation. Verify Appointment change confirmed, the new time, Maya and no added fee. Reload and verify the same saved receipt remains.'
           const result = await assureAndVerify({
             directory: join(candidateDir, 'verification'),
@@ -663,6 +693,29 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
         return true
       }
       if (b.ownerId !== req.clientId) throw Error('Open this build in its original browser.')
+      if (parts[3] === 'rebuild' && req.method === 'POST') {
+        if (
+          b.status !== 'blocked' ||
+          [...builds.values()].some((other) => busyStates.has(other.status))
+        )
+          throw Error('Wait for running work to finish before rebuilding a blocked interface.')
+        if (
+          !b.sourceMap?.screens?.length ||
+          !['primary', 'alternative'].every((branch) => b.evidence.some((e) => e.branch === branch))
+        )
+          throw Error('Source evidence is incomplete. Start a new build with fresh discovery.')
+        if (!process.env.OPENAI_API_KEY) throw Error('Set OPENAI_API_KEY to rebuild.')
+        b.status = 'building'
+        b.error = null
+        event(
+          b,
+          'rebuild.requested',
+          'A new bounded build attempt was requested. Earlier candidates are retained.',
+        )
+        void executeBuild(b, true)
+        send(res, 202, { build: publicBuild(b) })
+        return true
+      }
       if (parts[3] === 'verification' && req.method === 'GET') {
         const candidate = b.candidates.find((c) => c.revision === Number(parts[4]))
         const filename = candidate?.verification?.testFile

@@ -137,6 +137,18 @@ export default function Builder() {
       setError(e.message)
     }
   }
+  async function rebuild() {
+    setPending(true)
+    try {
+      const result = await api(`/api/builder/${build.id}/rebuild`, {})
+      setBuild(result.build)
+      setError('')
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setPending(false)
+    }
+  }
   const current = build?.candidates.at(-1),
     running = build && !['ready', 'blocked'].includes(build.status),
     evidence = build?.evidence.filter((e) => ['primary', 'alternative'].includes(e.branch)) || []
@@ -306,6 +318,11 @@ export default function Builder() {
                 <div>
                   <strong>No unverified interface was published.</strong>
                   <p>{build.error}</p>
+                  {build.sourceMap && evidence.length === 2 && (
+                    <button disabled={pending} onClick={rebuild}>
+                      Rebuild from captured evidence
+                    </button>
+                  )}
                   <a href="/?builder=1">Start another build</a>
                 </div>
               </div>

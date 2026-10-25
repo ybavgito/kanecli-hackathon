@@ -25,7 +25,7 @@ const worker = async ({ taskId, phase, url }) => {
           finalState: { order_id: 'ORD-1042' },
           testUrl: 'https://example.test/discovery',
         }
-  if (phase === 'prepare') {
+  if (phase === 'prepare' || phase === 'correct') {
     const d = merchant.getDraft(taskId)
     await fetch(base + '/merchant/api/draft', {
       method: 'POST',
@@ -39,6 +39,14 @@ const worker = async ({ taskId, phase, url }) => {
           refundDestination: 'original_payment',
         },
       }),
+    })
+  }
+  if (phase === 'change-method') {
+    const d = merchant.getDraft(taskId)
+    await api('/merchant/api/draft', {
+      taskId,
+      expectedRevision: d.revision,
+      patch: { method: 'qr_dropoff' },
     })
   }
   if (phase === 'submit') {
@@ -171,6 +179,28 @@ test('a timeout after commit reconciles the original operation without a second 
   assert.equal(t.receipt.requestId, merchant.listReturns(id)[0].requestId)
   assert.equal(phases.filter((p) => p === 'submit').length, 1)
   assert.equal((await api('/api/tasks/' + id + '/submit', {})).status, 409)
+})
+test('one browser job changes and checks a method; one restores and checks without weakening approval', async () => {
+  const created = await api('/api/tasks', { kind: 'return' })
+  const nextId = created.body.task.id
+  await settle(nextId)
+  await api('/api/tasks/' + nextId + '/choice', { reason: 'too_small' })
+  assert.equal((await settle(nextId)).status, 'ready')
+  const beforeChange = phases.length
+  await api('/api/tasks/' + nextId + '/choice', { method: 'qr_dropoff' })
+  const conflict = await settle(nextId)
+  assert.equal(conflict.status, 'conflict')
+  assert.equal(conflict.validation, null)
+  assert.equal((await api('/api/tasks/' + nextId + '/approve', {})).status, 409)
+  assert.deepEqual(phases.slice(beforeChange), ['change-method'])
+  const beforeRestore = phases.length
+  await api('/api/tasks/' + nextId + '/check', { repair: true })
+  const restored = await settle(nextId)
+  assert.equal(restored.status, 'ready')
+  assert.equal(restored.merchant.refundDestination, 'original_payment')
+  assert.equal(restored.merchant.expectedRefundCents, 7500)
+  assert.ok(restored.verificationFields.every((f) => f.status === 'match'))
+  assert.deepEqual(phases.slice(beforeRestore), ['correct'])
 })
 test.after(async () => {
   await new Promise((resolve) => server.close(resolve))

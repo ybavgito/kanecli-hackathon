@@ -322,11 +322,9 @@ export function createController({
     const r = await browser(
       t,
       'correct',
-      `Restore only the requested source draft choices: select only red shoes Size 8, keep jacket excluded, reason ${reasons[t.reason]}, method ${methodLabel(expectedMethod(t))}, and then refund destination ${destinationLabel(t.intent.refundDestination)}. Wait for the saves. Do not submit.`,
+      `Restore only the requested source draft choices: select only red shoes Size 8, keep jacket excluded, reason ${reasons[t.reason]}, method ${methodLabel(expectedMethod(t))}, and then refund destination ${destinationLabel(t.intent.refundDestination)}. Wait for the saves. Do not submit. After the edits, ${validationObjective(t)}`,
     )
-    ensurePass(r)
-    event(t, 'The draft was corrected. Running the same review check again.')
-    await validate(t)
+    accept(t, r)
   }
   async function verifyConfirmation(t) {
     if (!t.sourceReturn && !reconcile(t)) return
@@ -627,10 +625,9 @@ export function createController({
               const r = await browser(
                 t,
                 'change-method',
-                `Choose ${methodLabel(expectedMethod(t))} under Return method. Wait for the saved message. Do not change the refund destination. Do not submit.`,
+                `Choose ${methodLabel(expectedMethod(t))} under Return method. Wait for the saved message. Do not change the refund destination. Do not submit. After this change, ${validationObjective(t)}`,
               )
-              ensurePass(r)
-              await validate(t)
+              accept(t, r)
             } else await prepare(t)
           })
       }
