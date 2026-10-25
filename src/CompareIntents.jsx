@@ -4,7 +4,7 @@ const columns = [
   {
     id: 'store-overview',
     image: '/examples/overview-full.webp',
-    height: 1569,
+    height: 2195,
     icon: MagnifyingGlass,
     label: 'No intent',
     heading: 'A read-only guide to the store',
@@ -18,7 +18,7 @@ const columns = [
   {
     id: 'store-focused',
     image: '/examples/focused-full.webp',
-    height: 1762,
+    height: 2423,
     icon: ArrowRight,
     label: 'With intent',
     heading: 'One task, the choices that matter',
@@ -55,7 +55,7 @@ export default function CompareIntents({ catalog, pending, onOpen }) {
                 <h3>{c.heading}</h3>
               </header>
               <div className="rk-compare-frame" tabIndex={0} aria-label={c.alt + ' Scrollable.'}>
-                <img src={c.image} width="1000" height={c.height} alt={c.alt} loading="lazy" />
+                <img src={c.image} width="1400" height={c.height} alt={c.alt} loading="lazy" />
               </div>
               <ul>
                 {c.points.map((p) => (

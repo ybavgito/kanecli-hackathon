@@ -77,8 +77,8 @@ export default function LandingExample({ catalog, pending, onUse, onOpen }) {
         >
           <img
             src={'/examples/' + (focused ? 'focused' : 'overview') + '-full.webp'}
-            width="1000"
-            height={focused ? 1762 : 1569}
+            width="1400"
+            height={focused ? 2423 : 2195}
             alt={
               focused
                 ? 'Captured generated interface headed Return the red shoes. Keep the jacket., with printer-free return requirements.'
