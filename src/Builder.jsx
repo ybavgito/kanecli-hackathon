@@ -13,6 +13,7 @@ import {
   CaretDown,
 } from '@phosphor-icons/react'
 import './builder.css'
+import LandingExample from './LandingExample.jsx'
 async function api(path, body) {
   const r = await fetch(path, {
     method: body === undefined ? 'GET' : 'POST',
@@ -180,92 +181,151 @@ export default function Builder() {
       <main className="builder-main">
         {!buildId ? (
           <>
-            <section className="builder-intro">
-              <span className="builder-eyebrow">A website, on your terms</span>
-              <h1>
-                Keep what it does.
-                <br />
-                <em>Simplify how you do it.</em>
-              </h1>
-              <p>
-                Kane follows the original website. Your coding agent builds from what it finds. Then
-                Kane puts the new interface to work.
-              </p>
-            </section>
-            <form className="builder-form" onSubmit={start}>
-              <label htmlFor="website-url">Website URL</label>
-              <input
-                id="website-url"
-                type="url"
-                required
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder="https://your-website.com"
-              />
-              <div className="builder-sources">
-                {catalog?.sources.map((s) => (
-                  <button
-                    type="button"
-                    className={url === s.url ? 'selected' : ''}
-                    key={s.kind}
-                    onClick={() => setUrl(s.url)}
-                  >
-                    {s.name}
-                    <small>Synthetic website</small>
-                  </button>
-                ))}
-              </div>
-              <label htmlFor="task-goal">
-                What would you like to do? <span>Optional</span>
-              </label>
-              <textarea
-                id="task-goal"
-                value={goal}
-                onChange={(e) => setGoal(e.target.value)}
-                placeholder="Leave blank to discover the website’s flows, or describe what matters to you."
-                rows={2}
-              />
-              <p className="builder-hint">
-                {goal.trim()
-                  ? 'Kane will prioritize the flows around your task.'
-                  : 'No task required. We’ll map reachable flows and build an overview first.'}
-              </p>
-              <div className="builder-start">
+            <LandingExample
+              catalog={catalog}
+              pending={pending}
+              onOpen={openRecorded}
+              onUse={(exampleUrl, exampleGoal) => {
+                setUrl(exampleUrl)
+                setGoal(exampleGoal)
+                document
+                  .getElementById('build-interface')
+                  ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                document.getElementById('task-goal')?.focus({ preventScroll: true })
+              }}
+            />
+            <section
+              id="build-interface"
+              className="rk-build-section"
+              aria-labelledby="build-title"
+            >
+              <div className="rk-section-heading">
+                <span className="rk-kicker">YOUR STARTING POINT</span>
+                <h2 id="build-title">
+                  A URL is enough.
+                  <br />
+                  <em>A goal makes it yours.</em>
+                </h2>
                 <p>
-                  This release supports the two demonstration websites above. Exploration and
-                  testing use synthetic records. Page content and screenshots are processed by
-                  TestMu AI and OpenAI.
+                  Start with either demo website. Your intent guides what Kane investigates and what
+                  the coding agent builds.
                 </p>
-                <button className="builder-primary" disabled={pending || !catalog?.configured}>
-                  {pending ? <CircleNotch className="spin" /> : <ArrowRight />}
-                  {pending ? 'Starting…' : 'Explore & simplify'}
-                </button>
+                <ol className="rk-process">
+                  <li>
+                    <span>01</span>
+                    <div>
+                      <strong>Kane discovers</strong>
+                      <p>Actual pages, choices and unexpected branches.</p>
+                    </div>
+                  </li>
+                  <li>
+                    <span>02</span>
+                    <div>
+                      <strong>The agent builds</strong>
+                      <p>React shaped by screenshots and observed behavior.</p>
+                    </div>
+                  </li>
+                  <li>
+                    <span>03</span>
+                    <div>
+                      <strong>Kane checks again</strong>
+                      <p>A failed journey feeds the repair loop. The source outcome must match.</p>
+                    </div>
+                  </li>
+                </ol>
               </div>
-              {catalog && !catalog.configured && (
-                <p role="status">
-                  Add OPENAI_API_KEY to the server environment to enable the builder.
+              <form className="builder-form" onSubmit={start}>
+                <h3>Build your interface</h3>
+                <label htmlFor="website-url">Website URL</label>
+                <input
+                  id="website-url"
+                  type="url"
+                  required
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="https://your-website.com"
+                />
+                <div className="builder-sources">
+                  {catalog?.sources.map((s) => (
+                    <button
+                      type="button"
+                      className={url === s.url ? 'selected' : ''}
+                      key={s.kind}
+                      onClick={() => setUrl(s.url)}
+                    >
+                      {s.name}
+                      <small>Synthetic website</small>
+                    </button>
+                  ))}
+                </div>
+                <label htmlFor="task-goal">
+                  What would you like to do? <span>Optional</span>
+                </label>
+                <textarea
+                  id="task-goal"
+                  value={goal}
+                  onChange={(e) => setGoal(e.target.value)}
+                  placeholder="Leave blank to discover the website’s flows, or describe what matters to you."
+                  rows={2}
+                />
+                <p className="builder-hint">
+                  {goal.trim()
+                    ? 'Kane will prioritize the flows around your task.'
+                    : 'No task required. We’ll map reachable flows and build an overview first.'}
                 </p>
-              )}
-            </form>
+                <div className="builder-start">
+                  <p>
+                    This release supports the two demonstration websites above. Exploration and
+                    testing use synthetic records. Page content and screenshots are processed by
+                    TestMu AI and OpenAI.
+                  </p>
+                  <button className="builder-primary" disabled={pending || !catalog?.configured}>
+                    {pending ? <CircleNotch className="spin" /> : <ArrowRight />}
+                    {pending ? 'Starting…' : 'Explore & simplify'}
+                  </button>
+                </div>
+                {catalog && !catalog.configured && (
+                  <p role="status">
+                    Add OPENAI_API_KEY to the server environment to enable the builder.
+                  </p>
+                )}
+              </form>
+            </section>
             {catalog?.recordedDemos?.length > 0 && (
-              <section className="builder-history">
-                <h2>Demo now</h2>
+              <section id="recorded-demos" className="builder-history rk-demo-section">
+                <div className="rk-demo-heading">
+                  <span className="rk-kicker">SKIP THE GENERATION WAIT</span>
+                  <h2>Demo now</h2>
+                </div>
                 <p>
                   Open an actual recorded, verified build immediately. Its capture date stays
-                  visible. Starting a new task runs Kane live; this does not pretend to generate a
-                  new interface.
+                  visible. Start a fresh task to watch Kane operate and verify the source live.
                 </p>
-                {catalog.recordedDemos.map((d) => (
-                  <button
-                    className="builder-primary"
-                    type="button"
-                    disabled={pending}
-                    key={d.id}
-                    onClick={() => openRecorded(d.id)}
-                  >
-                    {d.title} <ArrowRight />
-                  </button>
-                ))}
+                <div className="rk-demo-options">
+                  {catalog.recordedDemos.map((d) => (
+                    <button
+                      className="builder-primary"
+                      type="button"
+                      disabled={pending}
+                      key={d.id}
+                      onClick={() => openRecorded(d.id)}
+                    >
+                      <span>
+                        {d.title}
+                        <small>
+                          {d.id === 'store-overview'
+                            ? 'No intent · read-only discovery'
+                            : d.id === 'store-focused'
+                              ? 'Return intent · focused flow'
+                              : d.id === 'linden'
+                                ? 'Appointment intent · different website'
+                                : 'Earlier verified return build'}
+                        </small>
+                      </span>{' '}
+                      <ArrowRight />
+                    </button>
+                  ))}
+                </div>
               </section>
             )}
             {catalog?.builds.length > 0 && (

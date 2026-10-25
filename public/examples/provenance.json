@@ -1,0 +1,5 @@
+{
+  "description": "Cropped actual Kane Explore screenshots of generated interfaces; no invented controls or results. Captured before starting a source transaction.",
+  "overview.webp": {"buildId": "a292d00c-7281-4b24-bf7f-141123d3a3fa", "revision": 1, "capture": "candidates/1/explore/screen-0.jpg", "crop": [477,330,1415,1080]},
+  "focused.webp": {"buildId": "0f6166ea-0a24-4e54-88cf-4a0634b46c43", "revision": 2, "capture": "candidates/2/explore/screen-0.jpg", "crop": [477,255,1415,1005]}
+}

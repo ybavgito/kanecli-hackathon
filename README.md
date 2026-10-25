@@ -8,6 +8,8 @@
 
 **When websites raise hell, raise Kane**
 
+![Raising Kane: the same website with a generated overview or task-focused interface](docs/raising-kane/evidence/builder/ui/landing/desktop.png)
+
 The [Explore-driven interface builder](docs/raising-kane/explore-driven-builder-plan.md)
 implements URL → Explore → generated React → verification and repair. The
 [implementation record](docs/raising-kane/builder-implementation.md) separates implemented

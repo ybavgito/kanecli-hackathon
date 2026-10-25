@@ -21,6 +21,8 @@ as a fresh generation.
 
 ## Show the product difference
 
+Start on the landing page. Toggle **Just the URL** and **URL + a goal** to show two actual generated previews from the same store. **Use this example** fills the URL and either supplies or clears the optional intent; it does not start a build. Use **Demo now** to open a verified artifact without waiting for generation.
+
 1. Open **the original Northstar website** at `http://127.0.0.1:5174/store`.
    Follow Shop → Red running shoes → size 9 (sold out). Open My orders → ORD-0938
    (return window closed) → warranty. Then ORD-1042 → return policy → return form.
@@ -39,6 +41,8 @@ as a fresh generation.
    is the live action: the source resets the destination to store credit; Kane detects
    the mismatch and approval is blocked. Restore the original choice and show the green
    source check. Approval and submission are separate trusted-host controls.
+
+For a three-minute stage slot, show the recorded evidence while one live source check runs. A complete fresh build or full return transaction can exceed the stage slot; do not promise it finishes in seconds.
 
 A return receipt confirms a **request with refund pending**, not money already refunded.
 For Linden, the result is a changed Saturday appointment with Maya, zero added fee and

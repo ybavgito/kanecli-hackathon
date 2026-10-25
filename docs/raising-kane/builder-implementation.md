@@ -1,6 +1,6 @@
 # Explore-driven builder: implementation record
 
-Implementation in progress, October 24, 2026. This record supplements the
+Bounded demo implementation, October 24, 2026. This record supplements the
 [architecture plan](explore-driven-builder-plan.md); only the attached verification
 results establish tested behavior.
 
@@ -83,7 +83,7 @@ this implementation does not claim WCAG compliance or screen-reader usability.
 3. Set `OPENAI_API_KEY` in the private server environment or ignored `.env`.
    The builder defaults to `BUILDER_MODEL=gpt-6.1-sol`.
 4. Run `npm run dev`, then open `http://127.0.0.1:5173`.
-5. Choose a demonstration URL, optionally enter an intent, and start the build.
+5. For an immediate demonstration, open a recorded interface under **Demo now**. For fresh generation, choose a demonstration URL, optionally enter an intent, and start the build. See [the demo runbook](../../DEMO.md).
 
 Both OpenAI generation and Kane exploration/execution consume their respective account
 credits. A build performs multiple browser jobs and can take several minutes; elapsed
@@ -99,7 +99,7 @@ experiments remain separate from this runtime integration.
 ## Latency and recorded replay
 
 Source method changes now perform the action and extract/verify the resulting terms in
-one browser job. Restoring approved choices also combines action and validation. Exact
+one browser job. The method-change job reads actual resulting terms rather than trying to make them match the desired refund destination; the controller compares those observations independently. Restoring approved choices combines action and validation only after the user requests correction. Exact
 field comparisons, approval and post-submission confirmation remain separate gates.
 
 A blocked build can reuse its captured source observations. The journal labels their
