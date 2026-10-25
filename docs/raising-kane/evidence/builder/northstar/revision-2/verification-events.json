@@ -1,0 +1,26 @@
+[
+  {
+    "type": "test_md_step_end",
+    "step_index": 1,
+    "status": "passed",
+    "duration_s": 43.3,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-24T23:56:36.315Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 2,
+    "status": "passed",
+    "duration_s": 209.2,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:00:05.549Z"
+  }
+]

@@ -108,8 +108,9 @@ receive a different workspace. Completed candidate evidence is copied to its own
 before a later run updates the shared recordings.
 
 Kane decides which steps can replay: unchanged successful recordings replay; missing or
-failed steps are authored. Adaptive healing is disabled for this acceptance gate so a
-failed replay is reported to the coding agent. Runtime results retain Kane's actual
+failed steps are authored. Kane may refresh stale recordings through adaptive healing. The test digest is checked
+before and after execution; changed English expectations are rejected. A surviving
+browser failure is reported to the coding agent. Runtime results retain Kane's actual
 replayed/authored step counts. Merely retaining a recording is not proof it replayed.
 Source actions still use bounded one-shot objectives; no source-transaction replay speedup
 is claimed. The first discovery/generation/verification run remains relatively expensive.

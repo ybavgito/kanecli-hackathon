@@ -455,6 +455,8 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
             shots: result.shots,
             testFile: result.testFile,
             replay: result.replay,
+            requirementsPreserved: result.requirementsPreserved,
+            healingUsed: result.healingUsed,
             coverage: result.coverage,
             evidenceIngestStatus: result.ingestStatus,
             artifactHash: candidate.hash,
@@ -500,7 +502,7 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
           event(b, 'check.failed', `Revision ${revision} did not pass. Its evidence is retained.`, {
             revision,
           })
-          if (['timeout', 'unavailable', 'error'].includes(result.status) && !task?.receipt)
+          if (['timeout', 'unavailable', 'error'].includes(result.status))
             throw Error(
               'Browser verification was interrupted or unavailable. Retained the candidate; no speculative code repair was attempted.',
             )

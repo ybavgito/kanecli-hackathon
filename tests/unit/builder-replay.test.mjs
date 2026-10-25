@@ -80,3 +80,19 @@ test('stable verification URL serves only the current sandbox candidate and reje
   session.mode = 'use'
   assert.equal((await request('private-test-key')).status, 403)
 })
+
+test('retained journey edits cannot silently reuse a frozen verification workspace', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'rk-replay-integrity-'))
+  try {
+    const work = await verificationWorkspace(root, 'fixed requirements')
+    await mkdir(join(work.directory, '.testmuai/tests'), { recursive: true })
+    await writeFile(join(work.directory, '.testmuai/tests/fixture_test.md'), 'altered expectations')
+    await writeFile(
+      join(work.directory, 'designed-test.json'),
+      JSON.stringify({ key: work.key, testFile: 'fixture_test.md', testDigest: 'original-digest' }),
+    )
+    await assert.rejects(verificationWorkspace(root, 'fixed requirements'), /journey changed/)
+  } finally {
+    await rm(root, { recursive: true, force: true })
+  }
+})

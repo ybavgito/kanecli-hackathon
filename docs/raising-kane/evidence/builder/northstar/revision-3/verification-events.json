@@ -1,0 +1,125 @@
+[
+  {
+    "type": "test_md_step_end",
+    "step_index": 1,
+    "status": "passed",
+    "duration_s": 68.1,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:05:26.003Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 2,
+    "status": "passed",
+    "duration_s": 181.2,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:08:27.175Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 3,
+    "status": "passed",
+    "duration_s": 148.1,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:10:55.316Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 4,
+    "status": "passed",
+    "duration_s": 129.2,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:13:04.557Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 5,
+    "status": "passed",
+    "duration_s": 333.5,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:18:38.027Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 6,
+    "status": "passed",
+    "duration_s": 52.1,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:19:30.186Z"
+  },
+  {
+    "type": "test_md_evidence_ingest",
+    "status": "failed",
+    "evidence_id": "e375dc7e-2afb-4afa-9e87-cbfc3545a37e",
+    "stage": "ingest",
+    "v": 1,
+    "ts": "2026-10-25T00:19:40.013Z"
+  },
+  {
+    "type": "test_md_summary",
+    "overall_status": "passed",
+    "duration_s": 916,
+    "steps": {
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "replay_decisions": 0,
+      "author_decisions": 6
+    },
+    "adaptive_heal": {
+      "triggered": false
+    },
+    "commit": {
+      "committed": true,
+      "reason": "ok",
+      "testcase_id": "01M5R5YGR632CVHW4BEW4V8R0T"
+    },
+    "artifacts": {
+      "replaced": true
+    },
+    "upload": {
+      "performed": true,
+      "succeeded": true
+    },
+    "cancelled": false,
+    "v": 1,
+    "ts": "2026-10-25T00:19:40.266Z"
+  },
+  {
+    "type": "test_md_done",
+    "overall_status": "passed",
+    "duration_s": 916,
+    "session_id": "afdd6fce-2c21-461d-bc80-cc26652dff2c",
+    "coverage": {
+      "status": "written",
+      "pct": 100
+    },
+    "v": 1,
+    "ts": "2026-10-25T00:19:40.275Z"
+  }
+]

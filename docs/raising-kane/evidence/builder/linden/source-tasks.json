@@ -1,0 +1,332 @@
+[
+  {
+    "id": "72ec09e8-dbf8-4c7b-ac3e-1714ff0f3bbb",
+    "kind": "appointment",
+    "status": "complete",
+    "error": null,
+    "checks": [
+      {
+        "key": "booking",
+        "label": "Same booking",
+        "expected": "BOOK-2048",
+        "observed": "BOOK-2048",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "slot",
+        "label": "Selected time",
+        "expected": "sat-1100",
+        "observed": "sat-1100",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "availability",
+        "label": "Slot available",
+        "expected": true,
+        "observed": true,
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "date",
+        "label": "Saturday morning",
+        "expected": "2026-10-31, before noon",
+        "observed": "2026-10-31T11:00:00-07:00",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "technician",
+        "label": "Technician",
+        "expected": "Maya Chen",
+        "observed": "Maya Chen",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "fee",
+        "label": "Additional fee",
+        "expected": "At most $0.00",
+        "observed": "$0.00",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "service",
+        "label": "Same service",
+        "expected": "Washer repair",
+        "observed": "Washer repair",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "address",
+        "label": "Same address",
+        "expected": "42 Linden Street, San Francisco",
+        "observed": "42 Linden Street, San Francisco",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "timezone",
+        "label": "Timezone",
+        "expected": "America/Los_Angeles",
+        "observed": "America/Los_Angeles",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "currency",
+        "label": "Currency",
+        "expected": "USD",
+        "observed": "USD",
+        "status": "match",
+        "provenance": "source-adapter"
+      }
+    ],
+    "verificationFields": [
+      {
+        "key": "booking_id",
+        "expected": "BOOK-2048",
+        "observed": "BOOK-2048",
+        "status": "match"
+      },
+      {
+        "key": "slot_id",
+        "expected": "sat-1100",
+        "observed": "sat-1100",
+        "status": "match"
+      },
+      {
+        "key": "starts_at",
+        "expected": "2026-10-31T11:00:00-07:00",
+        "observed": "2026-10-31T11:00:00-07:00",
+        "status": "match"
+      },
+      {
+        "key": "technician",
+        "expected": "Maya Chen",
+        "observed": "Maya Chen",
+        "status": "match"
+      },
+      {
+        "key": "service",
+        "expected": "Washer repair",
+        "observed": "Washer repair",
+        "status": "match"
+      },
+      {
+        "key": "address",
+        "expected": "42 Linden Street, San Francisco",
+        "observed": "42 Linden Street, San Francisco",
+        "status": "match"
+      },
+      {
+        "key": "timezone",
+        "expected": "America/Los_Angeles",
+        "observed": "America/Los_Angeles",
+        "status": "match"
+      },
+      {
+        "key": "fee",
+        "expected": 0,
+        "observed": 0,
+        "status": "match"
+      },
+      {
+        "key": "currency",
+        "expected": "USD",
+        "observed": "USD",
+        "status": "match"
+      },
+      {
+        "key": "draft_revision",
+        "expected": 2,
+        "observed": 2,
+        "status": "match"
+      }
+    ],
+    "confirmationFields": [
+      {
+        "key": "booking_id",
+        "expected": "BOOK-2048",
+        "observed": "BOOK-2048",
+        "status": "match"
+      },
+      {
+        "key": "slot_id",
+        "expected": "sat-1100",
+        "observed": "sat-1100",
+        "status": "match"
+      },
+      {
+        "key": "starts_at",
+        "expected": "2026-10-31T11:00:00-07:00",
+        "observed": "2026-10-31T11:00:00-07:00",
+        "status": "match"
+      },
+      {
+        "key": "technician",
+        "expected": "Maya Chen",
+        "observed": "Maya Chen",
+        "status": "match"
+      },
+      {
+        "key": "service",
+        "expected": "Washer repair",
+        "observed": "Washer repair",
+        "status": "match"
+      },
+      {
+        "key": "address",
+        "expected": "42 Linden Street, San Francisco",
+        "observed": "42 Linden Street, San Francisco",
+        "status": "match"
+      },
+      {
+        "key": "timezone",
+        "expected": "America/Los_Angeles",
+        "observed": "America/Los_Angeles",
+        "status": "match"
+      },
+      {
+        "key": "fee",
+        "expected": 0,
+        "observed": 0,
+        "status": "match"
+      },
+      {
+        "key": "currency",
+        "expected": "USD",
+        "observed": "USD",
+        "status": "match"
+      },
+      {
+        "key": "request_id",
+        "expected": "CHG-1001",
+        "observed": "CHG-1001",
+        "status": "match"
+      },
+      {
+        "key": "active_bookings",
+        "expected": 1,
+        "observed": 1,
+        "status": "match"
+      }
+    ],
+    "receipt": {
+      "taskId": "72ec09e8-dbf8-4c7b-ac3e-1714ff0f3bbb",
+      "revision": 2,
+      "bookingId": "BOOK-2048",
+      "accountId": "SERVICE-ACCOUNT-1",
+      "originalBooking": {
+        "startsAt": "2026-10-30T14:00:00-07:00",
+        "technician": "Maya Chen",
+        "service": "Washer repair",
+        "address": "42 Linden Street, San Francisco",
+        "timezone": "America/Los_Angeles",
+        "version": 1
+      },
+      "currentBooking": {
+        "startsAt": "2026-10-30T14:00:00-07:00",
+        "technician": "Maya Chen",
+        "service": "Washer repair",
+        "address": "42 Linden Street, San Francisco",
+        "timezone": "America/Los_Angeles",
+        "version": 1
+      },
+      "slots": [
+        {
+          "id": "sat-0900",
+          "label": "Saturday, October 31 \u00b7 9:00 AM",
+          "startsAt": "2026-10-31T09:00:00-07:00",
+          "technician": "Luis Rivera",
+          "feeCents": 0,
+          "available": true
+        },
+        {
+          "id": "sat-1000",
+          "label": "Saturday, October 31 \u00b7 10:00 AM",
+          "startsAt": "2026-10-31T10:00:00-07:00",
+          "technician": "Maya Chen",
+          "feeCents": 2500,
+          "available": true
+        },
+        {
+          "id": "sat-1100",
+          "label": "Saturday, October 31 \u00b7 11:00 AM",
+          "startsAt": "2026-10-31T11:00:00-07:00",
+          "technician": "Maya Chen",
+          "feeCents": 0,
+          "available": true
+        }
+      ],
+      "slotId": "sat-1100",
+      "kind": "appointment",
+      "startsAt": "2026-10-31T11:00:00-07:00",
+      "technician": "Maya Chen",
+      "feeCents": 0,
+      "currency": "USD",
+      "timezone": "America/Los_Angeles",
+      "service": "Washer repair",
+      "address": "42 Linden Street, San Francisco",
+      "bookingVersion": 1,
+      "nextStep": "Be home for your confirmed service window.",
+      "proposalDigest": "cfeae98e70c0a8d7372f0a5d1bce0b5e13b848f559b21b9a4446d5ad3269f973",
+      "requestId": "CHG-1001",
+      "operationId": "75a76a57-4770-41a5-8af1-6dc69aa1ba00",
+      "oldStartsAt": "2026-10-30T14:00:00-07:00",
+      "status": "appointment_changed",
+      "activeBookings": 1,
+      "createdAt": "2026-10-25T00:04:44.779Z",
+      "sourceUrl": "http://127.0.0.1:5242/appointments/confirmations/CHG-1001",
+      "verifiedAt": "2026-10-25T00:06:01.539Z",
+      "evidenceReference": "/home/harish/.testmuai/kaneai/sessions/5e11302b-a593-4fd0-ae28-689bada66cab/evidence/8e995483-c297-45e3-bc5c-8d69292c9300.evidence",
+      "qrUrl": null
+    },
+    "events": [
+      {
+        "at": "2026-10-25T00:00:36.906Z",
+        "text": "Your choices are saved. Reading the source record.",
+        "kind": "info"
+      },
+      {
+        "at": "2026-10-25T00:00:36.906Z",
+        "text": "Reading your source record",
+        "kind": "progress"
+      },
+      {
+        "at": "2026-10-25T00:01:47.784Z",
+        "text": "Your current appointment is confirmed. Choose a replacement time.",
+        "kind": "success"
+      },
+      {
+        "at": "2026-10-25T00:02:00.164Z",
+        "text": "Preparing your choices on the website",
+        "kind": "progress"
+      },
+      {
+        "at": "2026-10-25T00:03:13.788Z",
+        "text": "The current source proposal matches your choices. All required browser observations were compared.",
+        "kind": "success"
+      },
+      {
+        "at": "2026-10-25T00:03:50.550Z",
+        "text": "You approved this exact proposal. The source grant is bound to these terms.",
+        "kind": "success"
+      },
+      {
+        "at": "2026-10-25T00:04:20.659Z",
+        "text": "Sending your approved request",
+        "kind": "progress"
+      },
+      {
+        "at": "2026-10-25T00:06:01.539Z",
+        "text": "The changed appointment is verified. Your old time has been replaced.",
+        "kind": "success"
+      }
+    ]
+  }
+]

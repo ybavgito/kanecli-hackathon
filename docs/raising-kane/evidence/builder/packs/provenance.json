@@ -1,0 +1,112 @@
+[
+  {
+    "file": "northstar-68feb782-2-change-method-passed.evidence",
+    "scope": "source change-method",
+    "status": "passed",
+    "sourceSha256": "a6cc7beb57ef62b70f7e227cad4c056d193ab9a544be36430508ff11e53e937a",
+    "publishedSha256": "14270352e9f490f95495d210f35f59fde2d0b71edb800432d6432d962ed0a772",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/go-to-http-127-0-0-1-5221-merchant-taski-fff53d67/result.yaml"
+    ]
+  },
+  {
+    "file": "northstar-68feb782-3-validate-review-failed.evidence",
+    "scope": "source validate-review",
+    "status": "failed",
+    "sourceSha256": "71e30e653d681cbb595b7e04e93df9b0f510a3cefaa98fce6df0942566828e2f",
+    "publishedSha256": "f804a77f62a16eb008b3150870cb2c4b41e9c3029488fd89cee075f90af31511",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/go-to-http-127-0-0-1-5221-merchant-taski-d49fb82c/result.yaml"
+    ]
+  },
+  {
+    "file": "northstar-bafeaca0-2-change-method-failed.evidence",
+    "scope": "source change-method",
+    "status": "failed",
+    "sourceSha256": "acc3f2cc5fd2d944f9f114f498be0ff485decf84677502b14f459523593e1a29",
+    "publishedSha256": "0ba114a93156a1e31cbd4b45cb6ab0762f1e4fe77c40e450a5e010256aeead42",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/go-to-http-127-0-0-1-5221-merchant-taski-0797237f/result.yaml"
+    ]
+  },
+  {
+    "file": "northstar-bafeaca0-3-correct-passed.evidence",
+    "scope": "source correct",
+    "status": "passed",
+    "sourceSha256": "3936d24a88c64e346a7bf08862440073a86d02591e5508a418875b090dd157e4",
+    "publishedSha256": "871cac919fb6537377d74ce56c14351f7ccccba8265da9674b4cb8087f50ece7",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/go-to-http-127-0-0-1-5221-merchant-taski-c8af3be0/result.yaml"
+    ]
+  },
+  {
+    "file": "northstar-bafeaca0-4-validate-review-passed.evidence",
+    "scope": "source validate-review",
+    "status": "passed",
+    "sourceSha256": "3a7463e4c3a8e4d38e179bb54e16a3c3161c05b5ebb92e2ddedb6e3c3b93538e",
+    "publishedSha256": "717ab5c2404a6cdfd2a8a5c606e6707841c20501d1ead0ae73555b701bfa6c3f",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/go-to-http-127-0-0-1-5221-merchant-taski-1c10ab8a/result.yaml"
+    ]
+  },
+  {
+    "file": "northstar-bafeaca0-6-verify-confirmation-passed.evidence",
+    "scope": "source verify-confirmation",
+    "status": "passed",
+    "sourceSha256": "587e21553bf3b43fa2bd6b07198a56930450c288590efae2f510ee88bba16116",
+    "publishedSha256": "11b57e19d98d42621912f781c9e2899b45118f8392ab17097582c3fa49898846",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/go-to-http-127-0-0-1-5221-merchant-retur-5e546d04/result.yaml"
+    ]
+  },
+  {
+    "file": "northstar-revision-1-browser.evidence",
+    "scope": "generated interface",
+    "status": "failed",
+    "sourceSha256": "6cd70a0bf6c916fecd2c7b84464d6246649d35d243a4e40088d2256f77a0efeb",
+    "publishedSha256": "f9feb48fda756a7a6e1e41d413aa316a10fe69d59aae43a8002d5af4ff3aa5a0",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/approve-red-shoes-return-after-qr-confli-aedd1f8b/result.yaml"
+    ]
+  },
+  {
+    "file": "northstar-revision-3-browser.evidence",
+    "scope": "generated interface",
+    "status": "passed",
+    "sourceSha256": "27d367ecea34165abf16aa60ff3d4ad675704a01a8be57a46a46dea4db348624",
+    "publishedSha256": "ea9f679831ed85854a40aaf2792f987aa4627a3ad491f3819c4bb2431487f76c",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/verify-approved-red-shoes-return-and-per-cdec0e3c/result.yaml"
+    ]
+  },
+  {
+    "file": "linden-72ec09e8-3-verify-confirmation-passed.evidence",
+    "scope": "source verify-confirmation",
+    "status": "passed",
+    "sourceSha256": "11487f7eb0667c695623d0ad975629968d86feef8e934f89daecfb30b153e76b",
+    "publishedSha256": "7d355d5c08ce876932edbfc69fd2586eada4cae714eb06ba95a0938a6eb94e78",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/go-to-http-127-0-0-1-5242-appointments-c-d69db9e8/result.yaml"
+    ]
+  },
+  {
+    "file": "linden-revision-1-browser.evidence",
+    "scope": "generated interface",
+    "status": "passed",
+    "sourceSha256": "e9d1c4825eff590be3da5168a64fb6e1d81abea387889d938a0347ef6aeee15c",
+    "publishedSha256": "b4c164b84ef07c24816a9ef41bbbf8e2d3889770ff9ddda2d37840d6d0d77bba",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/approved-appointment-change-retains-the--48b47014/result.yaml"
+    ]
+  }
+]

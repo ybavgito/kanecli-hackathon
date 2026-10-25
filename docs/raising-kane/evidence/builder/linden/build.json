@@ -1,0 +1,818 @@
+{
+  "id": "c4af2431-30ac-45a5-a5f2-d9c5c706d9a3",
+  "kind": "appointment",
+  "goal": "Help me move my washer repair to Saturday morning, keeping Maya without extra fees.",
+  "contract": {
+    "version": 1,
+    "kind": "appointment",
+    "goal": "Help me move my washer repair to Saturday morning, keeping Maya without extra fees.",
+    "mode": "focused",
+    "executionMode": "sandbox",
+    "scope": "Synthetic records only; no production access.",
+    "supportedTask": "Move the washer repair to Saturday morning, keep Maya, no added fee.",
+    "requirements": [
+      "Keep original booking until confirmation",
+      "Saturday morning in Pacific time",
+      "Keep Maya Chen",
+      "No added fee",
+      "Show excluded alternatives and reasons",
+      "Explicit approval of exact terms",
+      "Verify one active booking after confirmation"
+    ],
+    "actions": [
+      "start",
+      "choice:slotId",
+      "check"
+    ],
+    "unknownPolicy": "Unknowns stay visible and block dependent operations."
+  },
+  "contractHash": "4fc6b33edda7f48f3a242dce0ea36e8c9a391ea5d68199aa2fc9ff42c3c6d53d",
+  "status": "ready",
+  "createdAt": "2026-10-24T23:54:49.438Z",
+  "updatedAt": "2026-10-25T00:08:48.329Z",
+  "error": null,
+  "promotedRevision": 1,
+  "events": [
+    {
+      "sequence": 1,
+      "at": "2026-10-24T23:54:49.442Z",
+      "phase": "exploring_source",
+      "kind": "explore.started",
+      "summary": "Exploring paths relevant to your task."
+    },
+    {
+      "sequence": 2,
+      "at": "2026-10-24T23:54:50.844Z",
+      "phase": "exploring_source",
+      "kind": "explore.progress",
+      "summary": "Kane Explore started in its own project."
+    },
+    {
+      "sequence": 3,
+      "at": "2026-10-24T23:55:02.277Z",
+      "phase": "exploring_source",
+      "kind": "explore.progress",
+      "summary": "Kane has visited 1 states; 3 exploration candidates remain."
+    },
+    {
+      "sequence": 4,
+      "at": "2026-10-24T23:55:16.569Z",
+      "phase": "exploring_source",
+      "kind": "explore.finished",
+      "summary": "1 screens and 0 flow records observed. Exploration finished."
+    },
+    {
+      "sequence": 5,
+      "at": "2026-10-24T23:55:16.569Z",
+      "phase": "building",
+      "kind": "agent.started",
+      "summary": "Building your interface from Kane\u2019s observations."
+    },
+    {
+      "sequence": 6,
+      "at": "2026-10-24T23:55:18.788Z",
+      "phase": "building",
+      "kind": "model.response",
+      "summary": "gpt-6.1-sol returned a builder response.",
+      "usage": {
+        "input_tokens": 5666,
+        "input_tokens_details": {
+          "cache_write_tokens": 5663,
+          "cached_tokens": 0
+        },
+        "output_tokens": 48,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 5714
+      }
+    },
+    {
+      "sequence": 7,
+      "at": "2026-10-24T23:55:18.788Z",
+      "phase": "investigating",
+      "kind": "agent.tool",
+      "summary": "The builder asked Kane to inspect the primary source branch."
+    },
+    {
+      "sequence": 8,
+      "at": "2026-10-24T23:55:28.924Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "navigate: Navigate to http://127.0.0.1:5242/appointments?taskId=4a46156d-5e87-40ba-b101-7a"
+    },
+    {
+      "sequence": 9,
+      "at": "2026-10-24T23:55:39.369Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "click: Clicking Saturday October 31 11:00 AM slot for Maya Chen"
+    },
+    {
+      "sequence": 10,
+      "at": "2026-10-24T23:55:45.556Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "wait: PRIMARY: wait 500 ms for the draft-saved status to remain visible"
+    },
+    {
+      "sequence": 11,
+      "at": "2026-10-24T23:56:21.072Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "analyze: current page URL is stored as {{current_url}}"
+    },
+    {
+      "sequence": 12,
+      "at": "2026-10-24T23:56:21.696Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "assert: a draft is visible and the original booking is still unchanged"
+    },
+    {
+      "sequence": 13,
+      "at": "2026-10-24T23:56:27.764Z",
+      "phase": "investigating",
+      "kind": "journey.observed",
+      "summary": "Original choice observed and captured.",
+      "evidenceId": "4a46156d-5e87-40ba-b101-7ac9c383e935"
+    },
+    {
+      "sequence": 14,
+      "at": "2026-10-24T23:56:27.765Z",
+      "phase": "investigating",
+      "kind": "agent.tool",
+      "summary": "The builder asked Kane to inspect the alternative source branch."
+    },
+    {
+      "sequence": 15,
+      "at": "2026-10-24T23:56:40.690Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "navigate: Navigate to http://127.0.0.1:5242/appointments?taskId=a7f93e3f-5a9f-4c7e-bac8-e8"
+    },
+    {
+      "sequence": 16,
+      "at": "2026-10-24T23:56:55.521Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "click: Clicking the earliest Saturday 9:00 AM slot with technician Luis Rivera"
+    },
+    {
+      "sequence": 17,
+      "at": "2026-10-24T23:57:03.474Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "wait: PRIMARY: wait briefly after selecting the Saturday 9:00 AM Luis Rivera slot"
+    },
+    {
+      "sequence": 18,
+      "at": "2026-10-24T23:57:09.142Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "wait: PRIMARY: wait after the visible \"Draft saved\" status"
+    },
+    {
+      "sequence": 19,
+      "at": "2026-10-24T23:57:31.282Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "analyze: The current page URL is stored as {{current_url}}."
+    },
+    {
+      "sequence": 20,
+      "at": "2026-10-24T23:57:31.912Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "assert: A draft is visible and the original booking is still unchanged."
+    },
+    {
+      "sequence": 21,
+      "at": "2026-10-24T23:57:38.002Z",
+      "phase": "investigating",
+      "kind": "journey.observed",
+      "summary": "Changed choice observed and captured.",
+      "evidenceId": "a7f93e3f-5a9f-4c7e-bac8-e8e67dc18210"
+    },
+    {
+      "sequence": 22,
+      "at": "2026-10-24T23:58:36.457Z",
+      "phase": "investigating",
+      "kind": "model.response",
+      "summary": "gpt-6.1-sol returned a builder response.",
+      "usage": {
+        "input_tokens": 12445,
+        "input_tokens_details": {
+          "cache_write_tokens": 12442,
+          "cached_tokens": 0
+        },
+        "output_tokens": 5356,
+        "output_tokens_details": {
+          "reasoning_tokens": 352
+        },
+        "total_tokens": 17801
+      }
+    },
+    {
+      "sequence": 23,
+      "at": "2026-10-24T23:58:36.575Z",
+      "phase": "investigating",
+      "kind": "artifact.built",
+      "summary": "Revision 1 compiled. Checking it before release.",
+      "revision": 1,
+      "hash": "6380d7655790b3505586b740adaf94b46c09ce6f4bc1483b90f7fefcf5054acc"
+    },
+    {
+      "sequence": 24,
+      "at": "2026-10-24T23:58:38.083Z",
+      "phase": "exploring_preview",
+      "kind": "explore.progress",
+      "summary": "Kane Explore started in its own project."
+    },
+    {
+      "sequence": 25,
+      "at": "2026-10-24T23:58:50.446Z",
+      "phase": "exploring_preview",
+      "kind": "explore.progress",
+      "summary": "Kane has visited 1 states; 1 exploration candidates remain."
+    },
+    {
+      "sequence": 26,
+      "at": "2026-10-24T23:59:03.403Z",
+      "phase": "verifying",
+      "kind": "check.started",
+      "summary": "Kane is using the generated interface and checking source-backed outcomes."
+    },
+    {
+      "sequence": 27,
+      "at": "2026-10-24T23:59:16.212Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Designing a requirements-linked Kane journey."
+    },
+    {
+      "sequence": 28,
+      "at": "2026-10-24T23:59:58.200Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Running the assurance-designed journey against the generated interface."
+    },
+    {
+      "sequence": 29,
+      "at": "2026-10-25T00:00:47.089Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 1: passed."
+    },
+    {
+      "sequence": 30,
+      "at": "2026-10-25T00:02:24.531Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 2: passed."
+    },
+    {
+      "sequence": 31,
+      "at": "2026-10-25T00:03:04.860Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 3: passed."
+    },
+    {
+      "sequence": 32,
+      "at": "2026-10-25T00:04:07.728Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 4: passed."
+    },
+    {
+      "sequence": 33,
+      "at": "2026-10-25T00:07:52.203Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 5: passed."
+    },
+    {
+      "sequence": 34,
+      "at": "2026-10-25T00:08:18.854Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 6: passed."
+    },
+    {
+      "sequence": 35,
+      "at": "2026-10-25T00:08:41.833Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 7: passed."
+    },
+    {
+      "sequence": 36,
+      "at": "2026-10-25T00:08:48.329Z",
+      "phase": "ready",
+      "kind": "artifact.promoted",
+      "summary": "Your interface passed the browser journey and its saved source outcome was confirmed.",
+      "revision": 1
+    }
+  ],
+  "sourceMap": {
+    "projectId": "01M5R5DAZ7N4T40NEQEA53Z0AW",
+    "explorationId": "01a17056-b06a-7be8-a2db-55890bd28dea",
+    "runId": "01a17056-b130-79cc-8b7a-55bab3c53f0a",
+    "complete": true,
+    "stopReason": {
+      "code": "completed",
+      "message": "the map has nothing left to explore"
+    },
+    "screens": [
+      {
+        "id": "01M5R5DNT7YZBXJVQVTGGD1Y1H",
+        "name": "Change your appointment | Linden Home",
+        "url": "REDACTED",
+        "runId": "01a17056-b130-79cc-8b7a-55bab3c53f0a",
+        "controls": [
+          {
+            "group": "main",
+            "more": 0,
+            "names": [
+              "Saturday, October {n} \u00b7 {n}:{n} AM Luis Rivera \u00b7 Additional fee {amount} \u00b7 Available",
+              "Saturday, October {n} \u00b7 {n}:{n} AM Maya Chen \u00b7 Additional fee {amount} \u00b7 Available",
+              "Saturday, October {n} \u00b7 {n}:{n} AM Maya Chen \u00b7 Additional fee {amount} \u00b7 Available",
+              "Confirm appointment change"
+            ]
+          }
+        ],
+        "origin": "observed",
+        "description": null,
+        "affordances": [
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17056-b130-79cc-8b7a-55bab3c53f0a",
+            "gated": false,
+            "hint": "",
+            "href_pattern": null,
+            "instance": "",
+            "key": "81f6c44a2015c12068f01a507e5ec1da083f95b4475a26dee5f1668d758976cf",
+            "last_seen_run": "01a17056-b130-79cc-8b7a-55bab3c53f0a",
+            "name": "Saturday, October {n} \u00b7 {n}:{n} AM Luis Rivera \u00b7 Additional fee {amount} \u00b7 Available",
+            "region": "",
+            "revealed_by": null,
+            "role": "radio",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17056-b130-79cc-8b7a-55bab3c53f0a",
+            "gated": false,
+            "hint": "",
+            "href_pattern": null,
+            "instance": "",
+            "key": "faaa9da886ac96a64bcf2cd10c106b6eaab1d5a978c4ead4328faefd2d251891",
+            "last_seen_run": "01a17056-b130-79cc-8b7a-55bab3c53f0a",
+            "name": "Saturday, October {n} \u00b7 {n}:{n} AM Maya Chen \u00b7 Additional fee {amount} \u00b7 Available",
+            "region": "",
+            "revealed_by": null,
+            "role": "radio",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17056-b130-79cc-8b7a-55bab3c53f0a",
+            "gated": false,
+            "hint": "",
+            "href_pattern": null,
+            "instance": "",
+            "key": "5db4b0f57e3fe62d0421436b2f65565b0a7559a59faa4201ae70a0de091a252d",
+            "last_seen_run": "01a17056-b130-79cc-8b7a-55bab3c53f0a",
+            "name": "Saturday, October {n} \u00b7 {n}:{n} AM Maya Chen \u00b7 Additional fee {amount} \u00b7 Available",
+            "region": "",
+            "revealed_by": null,
+            "role": "radio",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": true,
+            "expands_collection": false,
+            "first_seen_run": "01a17056-b130-79cc-8b7a-55bab3c53f0a",
+            "gated": false,
+            "hint": "",
+            "href_pattern": null,
+            "instance": "",
+            "key": "5919f7e2e912ab03093d51884777baa32907c412dad7985b3c816e3b782b8061",
+            "last_seen_run": "01a17056-b130-79cc-8b7a-55bab3c53f0a",
+            "name": "Confirm appointment change",
+            "region": "",
+            "revealed_by": null,
+            "role": "button",
+            "scope": "policy_blocked",
+            "walked": false
+          }
+        ],
+        "image": "screen-0.jpg"
+      }
+    ],
+    "flows": [],
+    "findings": [],
+    "detailReads": [
+      {
+        "collection": "junctions",
+        "id": "01M5R5DNT7YZBXJVQVTGGD1Y1H",
+        "status": "read"
+      }
+    ],
+    "writeup": {
+      "status": "not_configured"
+    },
+    "capturedAt": "2026-10-24T23:55:16.567Z"
+  },
+  "observations": [
+    {
+      "id": "4a46156d-5e87-40ba-b101-7ac9c383e935",
+      "branch": "primary",
+      "facts": {
+        "source_terms": "{\"Start time\":\"2026-10-31T11:00:00-07:00\",\"Technician\":\"Maya Chen\",\"Additional fee\":\"0.00\",\"Timezone\":\"America/Los_Angeles\"}",
+        "source_choices": "[{\"time\":\"Saturday, October 31 \u00b7 9:00 AM\",\"technician\":\"Luis Rivera\",\"fee\":\"0.00\",\"availability\":\"Available\",\"selected\":false},{\"time\":\"Saturday, October 31 \u00b7 10:00 AM\",\"technician\":\"Maya Chen\",\"fee\":\"25.00\",\"availability\":\"Available\",\"selected\":false},{\"time\":\"Saturday, October 31 \u00b7 11:00 AM\",\"technician\":\"Maya Chen\",\"fee\":\"0.00\",\"availability\":\"Available\",\"selected\":true}]",
+        "source_transition": "{\"originalStart\":\"2026-10-30T14:00:00-07:00\",\"selectedStart\":\"2026-10-31T11:00:00-07:00\",\"originalTechnician\":\"Maya Chen\",\"selectedSlot\":\"sat-1100\"}",
+        "source_requirements": "[]",
+        "source_identity": "{\"Booking ID\":\"BOOK-2048\",\"Service\":\"Washer repair\"}",
+        "current_url": "http://127.0.0.1:5242/appointments?taskId=4a46156d-5e87-40ba-b101-7ac9c383e935"
+      },
+      "shots": [
+        {
+          "image": "step-0.jpg",
+          "stepId": "0-1",
+          "ordinal": 1,
+          "kind": "navigate",
+          "status": "passed",
+          "summary": "navigate: Navigate to http://127.0.0.1:5242/appointments?taskId=4a46156d-5e87-40ba-b101-7a",
+          "url": "http://127.0.0.1:5242/appointments?taskId=4a46156d-5e87-40ba-b101-7ac9c383e935"
+        },
+        {
+          "image": "step-1.jpg",
+          "stepId": "0-2",
+          "ordinal": 2,
+          "kind": "click",
+          "status": "passed",
+          "summary": "click: Clicking Saturday October 31 11:00 AM slot for Maya Chen",
+          "url": "http://127.0.0.1:5242/appointments?taskId=4a46156d-5e87-40ba-b101-7ac9c383e935"
+        },
+        {
+          "image": "step-2.jpg",
+          "stepId": "0-3",
+          "ordinal": 3,
+          "kind": "wait",
+          "status": "passed",
+          "summary": "wait: PRIMARY: wait 500 ms for the draft-saved status to remain visible",
+          "url": "http://127.0.0.1:5242/appointments?taskId=4a46156d-5e87-40ba-b101-7ac9c383e935"
+        },
+        {
+          "image": "step-3.jpg",
+          "stepId": "0-4",
+          "ordinal": 4,
+          "kind": "analyze",
+          "status": "passed",
+          "summary": "analyze: current page URL is stored as {{current_url}}",
+          "url": "http://127.0.0.1:5242/appointments?taskId=4a46156d-5e87-40ba-b101-7ac9c383e935"
+        },
+        {
+          "image": "step-4.jpg",
+          "stepId": "0-5",
+          "ordinal": 5,
+          "kind": "assert",
+          "status": "passed",
+          "summary": "assert: a draft is visible and the original booking is still unchanged",
+          "url": "http://127.0.0.1:5242/appointments?taskId=4a46156d-5e87-40ba-b101-7ac9c383e935"
+        }
+      ],
+      "at": "2026-10-24T23:56:27.764Z",
+      "runId": "run-0",
+      "sessionId": null
+    },
+    {
+      "id": "a7f93e3f-5a9f-4c7e-bac8-e8e67dc18210",
+      "branch": "alternative",
+      "facts": {
+        "source_terms": "{\"Start time\":\"2026-10-31T09:00:00-07:00\",\"Technician\":\"Luis Rivera\",\"Additional fee\":\"0.00\",\"Timezone\":\"America/Los_Angeles\"}",
+        "source_choices": "[{\"id\":\"sat-0900\",\"time\":\"Saturday, October 31 \u00b7 9:00 AM\",\"technician\":\"Luis Rivera\",\"fee\":\"0.00\",\"availability\":true},{\"id\":\"sat-1000\",\"time\":\"Saturday, October 31 \u00b7 10:00 AM\",\"technician\":\"Maya Chen\",\"fee\":\"25.00\",\"availability\":true},{\"id\":\"sat-1100\",\"time\":\"Saturday, October 31 \u00b7 11:00 AM\",\"technician\":\"Maya Chen\",\"fee\":\"0.00\",\"availability\":true}]",
+        "source_transition": "{\"startTime\":{\"from\":\"2026-10-30T14:00:00-07:00\",\"to\":\"2026-10-31T09:00:00-07:00\"},\"technician\":{\"from\":\"Maya Chen\",\"to\":\"Luis Rivera\"},\"additionalFee\":\"0.00\",\"timezone\":\"America/Los_Angeles\"}",
+        "source_requirements": "[\"Your existing appointment stays booked until you confirm a replacement.\",\"Choose a time. Review technician and additional fee before confirming.\"]",
+        "source_identity": "{\"bookingId\":\"BOOK-2048\",\"service\":\"Washer repair\"}",
+        "current_url": "http://127.0.0.1:5242/appointments?taskId=a7f93e3f-5a9f-4c7e-bac8-e8e67dc18210"
+      },
+      "shots": [
+        {
+          "image": "step-0.jpg",
+          "stepId": "0-1",
+          "ordinal": 1,
+          "kind": "navigate",
+          "status": "passed",
+          "summary": "navigate: Navigate to http://127.0.0.1:5242/appointments?taskId=a7f93e3f-5a9f-4c7e-bac8-e8",
+          "url": "http://127.0.0.1:5242/appointments?taskId=a7f93e3f-5a9f-4c7e-bac8-e8e67dc18210"
+        },
+        {
+          "image": "step-1.jpg",
+          "stepId": "0-2",
+          "ordinal": 2,
+          "kind": "click",
+          "status": "passed",
+          "summary": "click: Clicking the earliest Saturday 9:00 AM slot with technician Luis Rivera",
+          "url": "http://127.0.0.1:5242/appointments?taskId=a7f93e3f-5a9f-4c7e-bac8-e8e67dc18210"
+        },
+        {
+          "image": "step-2.jpg",
+          "stepId": "0-3",
+          "ordinal": 3,
+          "kind": "wait",
+          "status": "passed",
+          "summary": "wait: PRIMARY: wait briefly after selecting the Saturday 9:00 AM Luis Rivera slot",
+          "url": "http://127.0.0.1:5242/appointments?taskId=a7f93e3f-5a9f-4c7e-bac8-e8e67dc18210"
+        },
+        {
+          "image": "step-3.jpg",
+          "stepId": "0-4",
+          "ordinal": 4,
+          "kind": "wait",
+          "status": "passed",
+          "summary": "wait: PRIMARY: wait after the visible \"Draft saved\" status",
+          "url": "http://127.0.0.1:5242/appointments?taskId=a7f93e3f-5a9f-4c7e-bac8-e8e67dc18210"
+        },
+        {
+          "image": "step-4.jpg",
+          "stepId": "0-5",
+          "ordinal": 5,
+          "kind": "analyze",
+          "status": "passed",
+          "summary": "analyze: The current page URL is stored as {{current_url}}.",
+          "url": "http://127.0.0.1:5242/appointments?taskId=a7f93e3f-5a9f-4c7e-bac8-e8e67dc18210"
+        },
+        {
+          "image": "step-5.jpg",
+          "stepId": "0-6",
+          "ordinal": 6,
+          "kind": "assert",
+          "status": "passed",
+          "summary": "assert: A draft is visible and the original booking is still unchanged.",
+          "url": "http://127.0.0.1:5242/appointments?taskId=a7f93e3f-5a9f-4c7e-bac8-e8e67dc18210"
+        }
+      ],
+      "at": "2026-10-24T23:57:38.002Z",
+      "runId": "run-0",
+      "sessionId": null
+    }
+  ],
+  "candidates": [
+    {
+      "revision": 1,
+      "status": "verified",
+      "createdAt": "2026-10-24T23:55:16.573Z",
+      "hash": "6380d7655790b3505586b740adaf94b46c09ce6f4bc1483b90f7fefcf5054acc",
+      "codeHash": "54ccfb8ff9c941a6f07ba54a3f26f7a7a53c29d92e72140a168a4af01fad0b80",
+      "cssHash": "4e51e1d12d17479197acc874e1c17ce4726ab69d4feb7a0d56350489a5913630",
+      "contractHash": "4fc6b33edda7f48f3a242dce0ea36e8c9a391ea5d68199aa2fc9ff42c3c6d53d",
+      "change": null,
+      "decisions": [
+        {
+          "component": "Task overview and approval boundary",
+          "change": "Explain the focused repair task before start, preserve the original booking, and leave start, exact approval, and completion to the trusted host.",
+          "evidenceIds": [
+            "user-contract",
+            "01M5R5DNT7YZBXJVQVTGGD1Y1H"
+          ]
+        },
+        {
+          "component": "Matching appointment choices",
+          "change": "Use labeled native radio controls for current available Saturday morning slots with Maya Chen and no additional fee. Format times in Pacific time and block choices with unknown required details.",
+          "evidenceIds": [
+            "user-contract",
+            "4a46156d-5e87-40ba-b101-7ac9c383e935"
+          ]
+        },
+        {
+          "component": "Excluded alternatives",
+          "change": "Show incompatible alternatives without execution controls, explaining technician, fee, date, time, and availability exclusions. Exploration distinguishes the Luis alternative from the Maya draft.",
+          "evidenceIds": [
+            "user-contract",
+            "a7f93e3f-5a9f-4c7e-bac8-e8e67dc18210",
+            "01M5R5DNT7YZBXJVQVTGGD1Y1H"
+          ]
+        },
+        {
+          "component": "Source review and validation",
+          "change": "Separate requested draft values from current observed source terms, display checks and conflicts, and offer only explicit Validate source and Restore my choices actions. Do not represent a saved draft as a confirmed booking.",
+          "evidenceIds": [
+            "user-contract",
+            "4a46156d-5e87-40ba-b101-7ac9c383e935",
+            "a7f93e3f-5a9f-4c7e-bac8-e8e67dc18210"
+          ]
+        },
+        {
+          "component": "Visual hierarchy and accessibility",
+          "change": "Use a warm cream canvas, forest-colored text, restrained panels, large headings, visible control labels, keyboard focus indicators, a live status region, and a narrow-screen single-column layout.",
+          "evidenceIds": [
+            "user-contract",
+            "01M5R5DNT7YZBXJVQVTGGD1Y1H"
+          ]
+        }
+      ],
+      "failure": null,
+      "verification": {
+        "status": "passed",
+        "summary": "All 7 assurance journey steps passed.",
+        "sessionId": "70a197e6-f574-4c01-bc14-903d08332274",
+        "shots": [
+          {
+            "image": "step-0.jpg",
+            "stepId": "4-18",
+            "ordinal": 44,
+            "kind": "assert",
+            "status": "passed",
+            "summary": "assert: the saved confirmation shows Appointment change confirmed, the new Saturday Octo",
+            "url": "http://127.0.0.1:5240/builder-preview/c4af2431-30ac-45a5-a5f2-d9c5c706d9a3/1?session=4a4be78b-9723-422c-a945-4efcd6a72d0e"
+          },
+          {
+            "image": "step-1.jpg",
+            "stepId": "5-1",
+            "ordinal": 45,
+            "kind": "analyze",
+            "status": "passed",
+            "summary": "analyze: ANALYZE(textual_visual, 'The entire visible saved appointment-change confirmatio",
+            "url": "http://127.0.0.1:5240/builder-preview/c4af2431-30ac-45a5-a5f2-d9c5c706d9a3/1?session=4a4be78b-9723-422c-a945-4efcd6a72d0e"
+          },
+          {
+            "image": "step-2.jpg",
+            "stepId": "5-2",
+            "ordinal": 46,
+            "kind": "",
+            "status": "passed",
+            "summary": "wait: Waiting with no further page interaction",
+            "url": "http://127.0.0.1:5240/builder-preview/c4af2431-30ac-45a5-a5f2-d9c5c706d9a3/1?session=4a4be78b-9723-422c-a945-4efcd6a72d0e"
+          },
+          {
+            "image": "step-3.jpg",
+            "stepId": "6-1",
+            "ordinal": 47,
+            "kind": "wait",
+            "status": "passed",
+            "summary": "wait: PRIMARY: wait 1000 ms for the saved appointment-change receipt to load",
+            "url": "http://127.0.0.1:5240/builder-preview/c4af2431-30ac-45a5-a5f2-d9c5c706d9a3/1?session=4a4be78b-9723-422c-a945-4efcd6a72d0e"
+          },
+          {
+            "image": "step-4.jpg",
+            "stepId": "6-2",
+            "ordinal": 48,
+            "kind": "analyze",
+            "status": "passed",
+            "summary": "analyze: ANALYZE(textual_visual, 'the entire visible saved receipt equals {{appointment_c",
+            "url": "http://127.0.0.1:5240/builder-preview/c4af2431-30ac-45a5-a5f2-d9c5c706d9a3/1?session=4a4be78b-9723-422c-a945-4efcd6a72d0e"
+          },
+          {
+            "image": "step-5.jpg",
+            "stepId": "6-3",
+            "ordinal": 49,
+            "kind": "assert",
+            "status": "passed",
+            "summary": "assert: the entire visible saved receipt equals {{appointment_change_confirmation_receip",
+            "url": "http://127.0.0.1:5240/builder-preview/c4af2431-30ac-45a5-a5f2-d9c5c706d9a3/1?session=4a4be78b-9723-422c-a945-4efcd6a72d0e"
+          }
+        ],
+        "testFile": "approved-appointment-change-retains-the-saved-receipt-after_test.md",
+        "coverage": {
+          "type": "coverage",
+          "v": 1,
+          "verb": "cover",
+          "source": "project",
+          "coverage_version": 2,
+          "scope": "project",
+          "config": {
+            "rule": "newest_counted_verdict",
+            "weighting": "risk",
+            "weights": {
+              "high": 1.25,
+              "med": 1,
+              "low": 0.75,
+              "unknown": 1
+            }
+          },
+          "pct": 100,
+          "usecases": {
+            "total": 1,
+            "proven": 1,
+            "partial": 0,
+            "failing": 0,
+            "not_run": 0,
+            "not_designed": 0,
+            "no_criteria": 0
+          },
+          "criteria": {
+            "total": 12,
+            "proven": 12
+          },
+          "perUc": [
+            {
+              "id": "uc-1",
+              "title": "Change an appointment to an approved available slot",
+              "risk": "high",
+              "weight": 1.25,
+              "state": "proven",
+              "pct": 100,
+              "criteria": 12,
+              "proven": 12,
+              "manual_runs": 0,
+              "stale": false
+            }
+          ],
+          "perAc": {
+            "ac-1": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "021bd59c-fa92-4793-aa91-ec6d049dd3a6"
+            },
+            "ac-2": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "021bd59c-fa92-4793-aa91-ec6d049dd3a6"
+            },
+            "ac-3": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "021bd59c-fa92-4793-aa91-ec6d049dd3a6"
+            },
+            "ac-4": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "021bd59c-fa92-4793-aa91-ec6d049dd3a6"
+            },
+            "ac-5": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "021bd59c-fa92-4793-aa91-ec6d049dd3a6"
+            },
+            "ac-6": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "021bd59c-fa92-4793-aa91-ec6d049dd3a6"
+            },
+            "ac-7": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "021bd59c-fa92-4793-aa91-ec6d049dd3a6"
+            },
+            "ac-8": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "021bd59c-fa92-4793-aa91-ec6d049dd3a6"
+            },
+            "ac-9": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "021bd59c-fa92-4793-aa91-ec6d049dd3a6"
+            },
+            "ac-10": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "021bd59c-fa92-4793-aa91-ec6d049dd3a6"
+            },
+            "ac-11": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "021bd59c-fa92-4793-aa91-ec6d049dd3a6"
+            },
+            "ac-12": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "021bd59c-fa92-4793-aa91-ec6d049dd3a6"
+            }
+          },
+          "flags": {
+            "stale_sources": 0,
+            "sources_not_fully_extracted": [],
+            "orphaned_usecases": 0
+          }
+        },
+        "artifactHash": "6380d7655790b3505586b740adaf94b46c09ce6f4bc1483b90f7fefcf5054acc",
+        "contractHash": "4fc6b33edda7f48f3a242dce0ea36e8c9a391ea5d68199aa2fc9ff42c3c6d53d",
+        "taskId": "72ec09e8-dbf8-4c7b-ac3e-1714ff0f3bbb",
+        "sourceMatch": true,
+        "at": "2026-10-25T00:08:48.329Z"
+      }
+    }
+  ]
+}

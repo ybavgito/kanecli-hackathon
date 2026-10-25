@@ -1,0 +1,8 @@
+# Verify one generated synthetic task interface
+
+One user story: complete this exact supported synthetic journey through the generated interface at http://127.0.0.1:5220/builder-preview/c9970e0e-3fbf-4863-b72f-8febf206cea0/2?session=eb147f41-63b5-4a84-8fb5-226d2a783d3c. This is a sandbox-only test session, so the browser verifier acts as the sandbox user, including approval through the trusted host panel. Generated code itself cannot approve. No production accounts or actions are involved.
+
+## Required journey and observable outcomes
+Click Start this task if visible. Wait for the source order to load. In the generated interface choose Size or fit issue under Return reason. Wait until source work finishes. Verify the review shows only red shoes, jacket kept, original payment and $80 refund for the printed label. Change Return method to Printer-free QR drop-off. Wait for the source check. Verify a conflict is visible, $5 deduction and $75 refund are shown, and requested Original payment differs from observed Store credit. Click Restore my choices and wait until the source review is verified. Verify Original payment and $75 refund are displayed. Use the trusted approval panel: click Approve exact terms, then Submit approved request. Wait for the saved confirmation. Verify Return requested; refund pending, a request identifier, $75 refund, original payment and jacket kept. Reload and verify the same saved receipt remains.
+
+Stay within this one journey. Wait for source browser jobs to finish; they can take two minutes. Only use visible browser controls, not API calls, scripts or direct source edits. Keep all expectations above unchanged. Browser reload must preserve the same receipt.

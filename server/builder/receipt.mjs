@@ -23,7 +23,9 @@ export function receiptMarkup(task) {
           timeZone: r.timezone || 'America/Los_Angeles',
         }).format(new Date(r.startsAt)) +
         ' · ' +
-        (r.timezone || 'America/Los_Angeles')
+        (!r.timezone || r.timezone === 'America/Los_Angeles'
+          ? 'Pacific time (America/Los_Angeles)'
+          : r.timezone)
     } catch {}
   const rows =
     task.kind === 'return'

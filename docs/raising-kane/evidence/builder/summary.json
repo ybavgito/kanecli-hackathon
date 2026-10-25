@@ -1,0 +1,14 @@
+[
+  {
+    "site": "northstar",
+    "buildId": "c9970e0e-3fbf-4863-b72f-8febf206cea0",
+    "status": "ready",
+    "promotedRevision": 3
+  },
+  {
+    "site": "linden",
+    "buildId": "c4af2431-30ac-45a5-a5f2-d9c5c706d9a3",
+    "status": "ready",
+    "promotedRevision": 1
+  }
+]

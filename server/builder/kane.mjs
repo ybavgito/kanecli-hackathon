@@ -336,13 +336,21 @@ export async function verificationWorkspace(cacheDirectory, requirements) {
   await mkdir(directory, { recursive: true })
   await writeFile(join(directory, 'requirements.md'), requirements)
   let testFile = null
+  let saved
   try {
-    const saved = JSON.parse(await readFile(join(directory, 'designed-test.json'), 'utf8'))
+    saved = JSON.parse(await readFile(join(directory, 'designed-test.json'), 'utf8'))
     if (saved.key === key && /^[\w-]+_test\.md$/.test(saved.testFile)) {
       await readFile(join(directory, '.testmuai/tests', saved.testFile))
       testFile = saved.testFile
     }
   } catch {}
+  if (testFile && saved.testDigest) {
+    const actual = createHash('sha256')
+      .update(await readFile(join(directory, '.testmuai/tests', testFile)))
+      .digest('hex')
+    if (actual !== saved.testDigest)
+      throw Error('Kane journey changed outside its frozen requirements. Verification was stopped.')
+  }
   return { directory, key, testFile }
 }
 export function replayStats(events, reusedJourney) {
@@ -432,6 +440,14 @@ Stay within this one journey. Wait for source browser jobs to finish; they can t
       'Reusing the unchanged Kane journey and its recordings. Eligible steps will replay; missing or failed steps will be authored.',
     )
   }
+  const journeyPath = join(directory, '.testmuai/tests', files[0])
+  const testDigest = createHash('sha256')
+    .update(await readFile(journeyPath))
+    .digest('hex')
+  await writeFile(
+    join(directory, 'designed-test.json'),
+    JSON.stringify({ key: workspace.key, testFile: files[0], testDigest }),
+  )
   const browserId = 'preview-' + id,
     browser = await preparePreviewBrowser(browserId)
   try {
@@ -447,16 +463,20 @@ Stay within this one journey. Wait for source browser jobs to finish; they can t
         browser.endpoint,
         '--headless',
         '--agent',
-        '--no-adaptive-heal',
         '--timeout',
         '900',
       ],
       directory,
       {
-        timeout: 930000,
+        // The CLI timeout is per step; a whole journey includes several nested source jobs.
+        timeout: 1800000,
         onEvent: (e) => {
           if (e.type === 'test_md_step_end')
             onProgress(`Journey step ${e.step_index}: ${e.status}.`)
+          if (e.type === 'test_md_adaptive_heal')
+            onProgress(
+              'Kane is refreshing a browser recording. The English requirements must remain unchanged.',
+            )
         },
       },
     )
@@ -489,8 +509,13 @@ Stay within this one journey. Wait for source browser jobs to finish; they can t
           }
         })
       })
-    const status =
-      result.code === 0 && done?.overall_status === 'passed'
+    const requirementsPreserved =
+      createHash('sha256')
+        .update(await readFile(journeyPath))
+        .digest('hex') === testDigest
+    const status = !requirementsPreserved
+      ? 'error'
+      : result.code === 0 && done?.overall_status === 'passed'
         ? 'passed'
         : done?.overall_status === 'failed'
           ? 'failed'
@@ -516,8 +541,9 @@ Stay within this one journey. Wait for source browser jobs to finish; they can t
       })
     return {
       status,
-      summary:
-        status === 'passed'
+      summary: !requirementsPreserved
+        ? 'Kane changed the frozen English journey during replay recovery. This result was not accepted.'
+        : status === 'passed'
           ? `All ${summary?.steps?.passed || 0} assurance journey steps passed.`
           : last?.summary || 'Kane did not pass the entire assurance journey.',
       sessionId: done?.session_id,
@@ -525,6 +551,8 @@ Stay within this one journey. Wait for source browser jobs to finish; they can t
       evidencePath: pack,
       testFile: files[0],
       replay: replayStats(result.events, !!workspace.testFile),
+      requirementsPreserved,
+      healingUsed: result.events.some((e) => e.type === 'test_md_adaptive_heal'),
       coverage: cover.events.find((e) => e.type === 'coverage'),
       ingestStatus: result.events.find((e) => e.type === 'test_md_evidence_ingest')?.status,
     }

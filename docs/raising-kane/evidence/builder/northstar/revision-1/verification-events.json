@@ -1,0 +1,89 @@
+[
+  {
+    "type": "test_md_step_end",
+    "step_index": 1,
+    "status": "passed",
+    "duration_s": 62.6,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-24T23:48:27.637Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 2,
+    "status": "passed",
+    "duration_s": 102.4,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-24T23:50:10.074Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 3,
+    "status": "failed",
+    "duration_s": 184.5,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-24T23:53:14.621Z"
+  },
+  {
+    "type": "test_md_evidence_ingest",
+    "status": "failed",
+    "evidence_id": "2df3ef9d-c75a-47ea-b608-8b7833b5387e",
+    "stage": "ingest",
+    "v": 1,
+    "ts": "2026-10-24T23:53:19.636Z"
+  },
+  {
+    "type": "test_md_summary",
+    "overall_status": "failed",
+    "duration_s": 354,
+    "steps": {
+      "total": 7,
+      "passed": 2,
+      "failed": 1,
+      "skipped": 4,
+      "replay_decisions": 0,
+      "author_decisions": 7
+    },
+    "adaptive_heal": {
+      "triggered": false
+    },
+    "commit": {
+      "committed": false,
+      "reason": "run_failed",
+      "testcase_id": "01M5R4ZKH98RXA0EDPB65B2NM0"
+    },
+    "artifacts": {
+      "replaced": true
+    },
+    "upload": {
+      "performed": true,
+      "succeeded": true
+    },
+    "cancelled": false,
+    "v": 1,
+    "ts": "2026-10-24T23:53:19.885Z"
+  },
+  {
+    "type": "test_md_done",
+    "overall_status": "failed",
+    "duration_s": 354,
+    "session_id": "3ce12519-62d0-4f4f-803c-8fea0b312dd3",
+    "coverage": {
+      "status": "written",
+      "pct": 21
+    },
+    "v": 1,
+    "ts": "2026-10-24T23:53:19.891Z"
+  }
+]
