@@ -3,6 +3,7 @@ import {
   ArrowRight,
   ArrowLeft,
   ArrowSquareOut,
+  GithubLogo,
   CheckCircle,
   CircleNotch,
   MagnifyingGlass,
@@ -25,6 +26,7 @@ async function api(path, body) {
   if (!r.ok) throw Error(d.error || 'Request failed.')
   return d
 }
+const repo = 'https://github.com/ybavgito/kanecli-hackathon'
 const titles = {
   connecting: 'Connecting to your website',
   exploring_source: 'Learning the original website',
@@ -737,6 +739,41 @@ export default function Builder() {
           </p>
         )}
       </main>
+      <footer className="rk-site-footer">
+        <div>
+          <strong>raisingkane.</strong>
+          <p>When websites raise hell, raise Kane.</p>
+        </div>
+        <nav aria-label="Project links">
+          <a href={repo} target="_blank" rel="noreferrer">
+            <GithubLogo size={16} /> GitHub repository
+          </a>
+          <a href={repo + '/blob/main/DEMO.md'} target="_blank" rel="noreferrer">
+            Demo guide
+          </a>
+          <a
+            href={repo + '/tree/main/docs/raising-kane/evidence/builder'}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Verification evidence
+          </a>
+          <a
+            href={repo + '/blob/main/docs/kane-cli/field-guide.md'}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Kane CLI field guide
+          </a>
+          <a href="https://github.com/LambdaTest/kane-cli" target="_blank" rel="noreferrer">
+            Kane CLI
+          </a>
+        </nav>
+        <p className="rk-site-footer-note">
+          Two fictional sandbox websites with synthetic records. Recorded demos replay verified
+          builds; starting a task runs Kane live.
+        </p>
+      </footer>
       {selectedImage && (
         <div
           className="builder-lightbox"
