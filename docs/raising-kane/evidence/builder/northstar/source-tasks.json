@@ -220,7 +220,8 @@
         "text": "The website changed a choice that matters. Submission is blocked.",
         "kind": "warning"
       }
-    ]
+    ],
+    "overviewBaseline": null
   },
   {
     "id": "bafeaca0-7e4a-4947-bebe-f5e75f2896c4",
@@ -604,6 +605,7 @@
         "text": "Return requested; refund pending. Kane verified the saved source record.",
         "kind": "success"
       }
-    ]
+    ],
+    "overviewBaseline": null
   }
 ]

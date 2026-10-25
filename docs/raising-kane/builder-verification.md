@@ -10,7 +10,7 @@ output or mocked browser worker was used for the runtime results.
 | Source | Input | Generated candidate | Browser result | Independent source result |
 | --- | --- | --- | --- | --- |
 | Linden Home | URL plus a request for Saturday morning, Maya and no extra fee | Revision 1 | All seven assurance-designed steps passed | CHG-1001; October 31, 2026 at 11 AM Pacific; Maya Chen; $0; one active booking |
-| Northstar Outfitters | URL with blank intent | Revision 3 | All six assurance-designed steps passed | RET-1001; QR drop-off; $75 original-payment refund pending; jacket kept; final confirmation verified |
+| Northstar Outfitters (earlier v1 contract) | URL with blank intent; explicit task start in its generated overview | Revision 3 | All six assurance-designed steps passed | RET-1001; QR drop-off; $75 original-payment refund pending; jacket kept; final confirmation verified |
 
 The app used actual Explore maps, detailed findings, reached-state screenshots and two
 bounded source-branch observations to generate React/CSS. Explore itself reached limited
@@ -24,6 +24,28 @@ The build workspace's seven-step evidence inspection also passed: source capture
 transitions, generated decisions, retained candidate results and capture times remained
 available. Requirements and the designed English journey can be inspected from a completed
 candidate. Initial URL presets and optional blank intent passed a separate browser check.
+
+## Navigable store and optional intent (current v2 contract)
+
+Northstar now has linked product, category, order, delivery, help, returns and warranty
+pages. Size availability and return eligibility differ by product/order. This gives
+URL-only and task-focused exploration meaningfully different inputs.
+
+The URL-only build `a292d00c-7281-4b24-bf7f-141123d3a3fa` passed all four browser
+steps. Its generated Shop / My orders / Help views are read-only; independent comparison
+confirmed the source draft and return list were unchanged. Explore recorded **eight screen
+states and ten flow records**, including two home states, not eight unique URLs or an
+exhaustive crawl. The host offers a separate focused-build action; that generation action
+was deliberately not triggered during the read-only acceptance run.
+
+The focused-store acceptance result is recorded in the selected build evidence. Its
+Explore run observed four states and four flow records; separate bounded source jobs
+reached the actual return branches. Do not attribute all branch discoveries to Explore.
+
+**Demo now** imports the exact verified compiled artifact with its captured evidence and
+hashes. No previous source task, approval or receipt is reused. Fresh sessions run Kane
+against fresh synthetic records. The UI labels recorded generation explicitly. The old
+v1 return artifact remains available alongside the new modes for reproducibility.
 
 ## What failed, and what changed
 
@@ -39,6 +61,7 @@ candidate. Initial URL presets and optional blank intent passed a separate brows
 - Candidate 2 was interrupted to apply that correction and the source-job speed changes.
   It is labeled interrupted, not failed or passed. Candidate 3 reused captured source
   evidence and used a new synthetic verification task.
+- The first recorded-demo inspection moved off the build page prematurely, then started a source task despite the read-only instruction. Its failure is retained. The shared assurance wrapper also added an irrelevant receipt expectation to read-only checks; that wording was removed. Transaction objectives still explicitly require reload persistence.
 - Earlier setup attempts exposed screenshot decoding, AST filtering and React development
   runtime resolution problems. Those were repaired and covered by targeted checks. They
   are implementation problems, not fabricated Kane browser failures.
@@ -61,7 +84,11 @@ A separate two-step integration probe exercises the new cache against an isolate
 of a completed appointment receipt. The first run authored and passed both steps. The
 next replay failed to recognize fields buried below the generated form. The trusted host
 was improved to show the result, request and terms together, with technical details
-collapsed. The unchanged test is being rerun. The app counts observed replay starts rather
+collapsed. After the receipt layout and timezone wording were clarified, the unchanged test passed
+with recording recovery. The next run passed both steps using pure replay: **35 seconds**,
+**two replayed steps and zero authored steps**, versus **155 seconds** for first authoring.
+The English test digest was unchanged. This is a measured improvement for that read-only
+check, not a whole-product speed claim. The app counts observed replay starts rather
 than treating all planned replay decisions as executed steps.
 
 The first complete Linden build took about **14 minutes**. Initial discovery, generation
@@ -87,7 +114,7 @@ ports; another machine must run its own configured source servers and user sessi
 
 ## Checks and limits
 
-26 unit checks and the production build pass. Unit checks include source approval,
+29 unit checks and the production build pass. Unit checks include source approval,
 stale revisions, duplicate reconciliation, exact outcome matching, generated-code
 boundaries, replay workspace identity, replay reporting and readable escaped receipts.
 Worker doubles in unit tests are not counted as browser evidence.

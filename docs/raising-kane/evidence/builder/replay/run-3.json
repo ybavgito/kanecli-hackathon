@@ -1,0 +1,81 @@
+{
+  "result": {
+    "status": "failed",
+    "summary": "Kane did not pass the entire assurance journey.",
+    "replay": {
+      "reusedJourney": true,
+      "replayedSteps": 2,
+      "authoredSteps": 0
+    },
+    "requirementsPreserved": null,
+    "healingUsed": null
+  },
+  "events": [
+    {
+      "type": "test_md_step_end",
+      "step_index": 1,
+      "status": "passed",
+      "duration_s": 31.39,
+      "ref_kind": null,
+      "unit_kind": null,
+      "inlined_count": null,
+      "failed_sub_step_index": null,
+      "v": 1,
+      "ts": "2026-10-25T00:15:54.231Z"
+    },
+    {
+      "type": "test_md_step_end",
+      "step_index": 2,
+      "status": "failed",
+      "duration_s": 42.62,
+      "ref_kind": null,
+      "unit_kind": null,
+      "inlined_count": null,
+      "failed_sub_step_index": null,
+      "v": 1,
+      "ts": "2026-10-25T00:16:36.859Z"
+    },
+    {
+      "type": "test_md_summary",
+      "overall_status": "failed",
+      "duration_s": 78,
+      "steps": {
+        "total": 2,
+        "passed": 1,
+        "failed": 1,
+        "skipped": 0,
+        "replay_decisions": 2,
+        "author_decisions": 0
+      },
+      "adaptive_heal": {
+        "triggered": false
+      },
+      "commit": {
+        "committed": false,
+        "reason": "run_failed"
+      },
+      "artifacts": {
+        "replaced": false
+      },
+      "upload": {
+        "performed": true,
+        "succeeded": true
+      },
+      "cancelled": false,
+      "v": 1,
+      "ts": "2026-10-25T00:16:39.123Z"
+    },
+    {
+      "type": "test_md_done",
+      "overall_status": "failed",
+      "duration_s": 78,
+      "session_id": "7cd65b9d-ceb0-4d0f-b27b-8305a4608832",
+      "coverage": {
+        "status": "written",
+        "pct": 0
+      },
+      "v": 1,
+      "ts": "2026-10-25T00:16:39.131Z"
+    }
+  ]
+}

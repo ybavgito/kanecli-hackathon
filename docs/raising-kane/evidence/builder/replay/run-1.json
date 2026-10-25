@@ -1,0 +1,82 @@
+{
+  "result": {
+    "status": "passed",
+    "summary": "All 2 assurance journey steps passed.",
+    "replay": {
+      "reusedJourney": false,
+      "replayedSteps": 0,
+      "authoredSteps": 2
+    },
+    "requirementsPreserved": null,
+    "healingUsed": null
+  },
+  "events": [
+    {
+      "type": "test_md_step_end",
+      "step_index": 1,
+      "status": "passed",
+      "duration_s": 112.2,
+      "ref_kind": null,
+      "unit_kind": null,
+      "inlined_count": null,
+      "failed_sub_step_index": null,
+      "v": 1,
+      "ts": "2026-10-25T00:12:08.928Z"
+    },
+    {
+      "type": "test_md_step_end",
+      "step_index": 2,
+      "status": "passed",
+      "duration_s": 38.6,
+      "ref_kind": null,
+      "unit_kind": null,
+      "inlined_count": null,
+      "failed_sub_step_index": null,
+      "v": 1,
+      "ts": "2026-10-25T00:12:47.573Z"
+    },
+    {
+      "type": "test_md_summary",
+      "overall_status": "passed",
+      "duration_s": 155,
+      "steps": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0,
+        "replay_decisions": 0,
+        "author_decisions": 2
+      },
+      "adaptive_heal": {
+        "triggered": false
+      },
+      "commit": {
+        "committed": true,
+        "reason": "ok",
+        "testcase_id": "01M5R69EYV0G8G49TS06RVX1V4"
+      },
+      "artifacts": {
+        "replaced": true
+      },
+      "upload": {
+        "performed": true,
+        "succeeded": true
+      },
+      "cancelled": false,
+      "v": 1,
+      "ts": "2026-10-25T00:12:51.245Z"
+    },
+    {
+      "type": "test_md_done",
+      "overall_status": "passed",
+      "duration_s": 155,
+      "session_id": "7e361fe5-524d-4fab-906f-bd4914c4d4f8",
+      "coverage": {
+        "status": "written",
+        "pct": 100
+      },
+      "v": 1,
+      "ts": "2026-10-25T00:12:51.253Z"
+    }
+  ]
+}

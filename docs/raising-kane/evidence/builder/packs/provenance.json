@@ -108,5 +108,16 @@
     "modifiedEntries": [
       "tests/approved-appointment-change-retains-the--48b47014/result.yaml"
     ]
+  },
+  {
+    "file": "store-overview-revision-1-browser.evidence",
+    "scope": "generated interface",
+    "status": "passed",
+    "sourceSha256": "eae9673b7df7f8c7fd992dd00bceb3c903031d1f489b4eb31c2c68549ec48c2c",
+    "publishedSha256": "fd038081b8c44be6bfeccc09f8625c931a1dd509962a8ad02b75f7b5233e100a",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/inspect-the-read-only-overview-without-s-39b47a08/result.yaml"
+    ]
   }
 ]

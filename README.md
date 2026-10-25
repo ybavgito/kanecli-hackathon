@@ -67,6 +67,11 @@ not deleted or silently adopted by another browser.
 
 ## Experience and demo
 
+Use **Demo now** to open a recorded verified generated interface immediately. Its capture
+date and unchanged-artifact status remain explicit; new user tasks run Kane live. See the
+[short demo runbook](DEMO.md). Fresh generation still requires the server API key.
+
+
 Enter a supported URL, optionally describe a task, and choose **Explore & simplify**.
 Blank intent produces a strictly read-only site overview. Choosing a supported task
 starts a separate focused build; supplying an intent initially goes directly to focused

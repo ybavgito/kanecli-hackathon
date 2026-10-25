@@ -1,0 +1,2415 @@
+{
+  "id": "0f6166ea-0a24-4e54-88cf-4a0634b46c43",
+  "kind": "return",
+  "goal": "Return my red shoes without a printer, keep the jacket, and refund my original payment method.",
+  "contract": {
+    "version": 2,
+    "kind": "return",
+    "goal": "Return my red shoes without a printer, keep the jacket, and refund my original payment method.",
+    "mode": "focused",
+    "executionMode": "sandbox",
+    "scope": "Synthetic records only; no production access.",
+    "supportedTask": "Return the red shoes, keep the jacket, refund original payment.",
+    "requirements": [
+      "Keep the jacket",
+      "Return only red shoes",
+      "Preserve original-payment preference",
+      "Show method fee and refund destination",
+      "Changing a method must expose any source conflict",
+      "Explicit approval of exact current terms before submission",
+      "Separately verified saved confirmation"
+    ],
+    "actions": [
+      "start",
+      "choice:reason",
+      "choice:method",
+      "check",
+      "restore"
+    ],
+    "unknownPolicy": "Unknowns stay visible and block dependent operations."
+  },
+  "contractHash": "ce68e6b0f041fea0094d2de30dbaaf6656cc0cd24f3f721ad9ce60ce3616a09a",
+  "status": "verifying",
+  "createdAt": "2026-10-25T00:23:58.628Z",
+  "updatedAt": "2026-10-25T00:34:23.005Z",
+  "error": null,
+  "promotedRevision": null,
+  "events": [
+    {
+      "sequence": 1,
+      "at": "2026-10-25T00:23:58.632Z",
+      "phase": "exploring_source",
+      "kind": "explore.started",
+      "summary": "Exploring paths relevant to your task."
+    },
+    {
+      "sequence": 2,
+      "at": "2026-10-25T00:24:00.090Z",
+      "phase": "exploring_source",
+      "kind": "explore.progress",
+      "summary": "Kane Explore started in its own project."
+    },
+    {
+      "sequence": 3,
+      "at": "2026-10-25T00:24:15.215Z",
+      "phase": "exploring_source",
+      "kind": "explore.progress",
+      "summary": "Kane has visited 1 states; 10 exploration candidates remain."
+    },
+    {
+      "sequence": 4,
+      "at": "2026-10-25T00:24:34.772Z",
+      "phase": "exploring_source",
+      "kind": "explore.progress",
+      "summary": "Kane has visited 2 states; 19 exploration candidates remain."
+    },
+    {
+      "sequence": 5,
+      "at": "2026-10-25T00:24:47.372Z",
+      "phase": "exploring_source",
+      "kind": "explore.progress",
+      "summary": "Kane has visited 3 states; 22 exploration candidates remain."
+    },
+    {
+      "sequence": 6,
+      "at": "2026-10-25T00:24:48.932Z",
+      "phase": "exploring_source",
+      "kind": "explore.progress",
+      "summary": "Kane has visited 3 states; 22 exploration candidates remain."
+    },
+    {
+      "sequence": 7,
+      "at": "2026-10-25T00:25:03.824Z",
+      "phase": "exploring_source",
+      "kind": "explore.progress",
+      "summary": "Kane has visited 4 states; 31 exploration candidates remain."
+    },
+    {
+      "sequence": 8,
+      "at": "2026-10-25T00:25:14.236Z",
+      "phase": "exploring_source",
+      "kind": "explore.progress",
+      "summary": "Kane has visited 4 states; 30 exploration candidates remain."
+    },
+    {
+      "sequence": 9,
+      "at": "2026-10-25T00:25:22.498Z",
+      "phase": "exploring_source",
+      "kind": "explore.finished",
+      "summary": "4 screens and 4 flow records observed. Exploration was bounded; unseen paths remain unverified."
+    },
+    {
+      "sequence": 10,
+      "at": "2026-10-25T00:25:22.499Z",
+      "phase": "building",
+      "kind": "agent.started",
+      "summary": "Building your interface from Kane\u2019s observations."
+    },
+    {
+      "sequence": 11,
+      "at": "2026-10-25T00:25:24.900Z",
+      "phase": "building",
+      "kind": "model.response",
+      "summary": "gpt-6.1-sol returned a builder response.",
+      "usage": {
+        "input_tokens": 39517,
+        "input_tokens_details": {
+          "cache_write_tokens": 39514,
+          "cached_tokens": 0
+        },
+        "output_tokens": 48,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 39565
+      }
+    },
+    {
+      "sequence": 12,
+      "at": "2026-10-25T00:25:24.902Z",
+      "phase": "investigating",
+      "kind": "agent.tool",
+      "summary": "The builder asked Kane to inspect the primary source branch."
+    },
+    {
+      "sequence": 13,
+      "at": "2026-10-25T00:25:36.071Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "navigate: Navigate to http://127.0.0.1:5301/merchant?taskId=6beef79b-2011-495e-b194-d25663"
+    },
+    {
+      "sequence": 14,
+      "at": "2026-10-25T00:25:50.829Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "click: Clicking the Black jacket selection checkbox"
+    },
+    {
+      "sequence": 15,
+      "at": "2026-10-25T00:25:57.933Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "select: Selecting return reason as Size or fit issue"
+    },
+    {
+      "sequence": 16,
+      "at": "2026-10-25T00:26:03.669Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "select: Selecting Return method in the dropdown combo box"
+    },
+    {
+      "sequence": 17,
+      "at": "2026-10-25T00:26:08.784Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "select: Selecting original payment method as refund destination"
+    },
+    {
+      "sequence": 18,
+      "at": "2026-10-25T00:26:14.874Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "wait: PRIMARY: wait 1500 ms for return-draft saves to settle"
+    },
+    {
+      "sequence": 19,
+      "at": "2026-10-25T00:26:41.678Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "analyze: the current page URL is stored as {{current_url}}"
+    },
+    {
+      "sequence": 20,
+      "at": "2026-10-25T00:26:42.311Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "assert: the review shows only the shoes and the jacket is kept"
+    },
+    {
+      "sequence": 21,
+      "at": "2026-10-25T00:26:49.121Z",
+      "phase": "investigating",
+      "kind": "journey.observed",
+      "summary": "Original choice observed and captured.",
+      "evidenceId": "6beef79b-2011-495e-b194-d2566350105c"
+    },
+    {
+      "sequence": 22,
+      "at": "2026-10-25T00:26:49.124Z",
+      "phase": "investigating",
+      "kind": "agent.tool",
+      "summary": "The builder asked Kane to inspect the alternative source branch."
+    },
+    {
+      "sequence": 23,
+      "at": "2026-10-25T00:26:59.864Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "navigate: Navigate to http://127.0.0.1:5301/merchant?taskId=ce556d2f-923c-45d7-944a-8e1905"
+    },
+    {
+      "sequence": 24,
+      "at": "2026-10-25T00:27:12.991Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "click: Clicking the Black jacket selection checkbox"
+    },
+    {
+      "sequence": 25,
+      "at": "2026-10-25T00:27:20.737Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "select: Selecting return reason combobox for size or fit issue"
+    },
+    {
+      "sequence": 26,
+      "at": "2026-10-25T00:27:26.477Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "select: Selecting Original payment method as the refund destination"
+    },
+    {
+      "sequence": 27,
+      "at": "2026-10-25T00:27:32.303Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "select: Selecting return method from the dropdown"
+    },
+    {
+      "sequence": 28,
+      "at": "2026-10-25T00:27:36.918Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "wait: PRIMARY: wait 1500 ms for the return draft saves to settle"
+    },
+    {
+      "sequence": 29,
+      "at": "2026-10-25T00:28:01.322Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "analyze: ANALYZE(textual_visual, 'visible requirements are stored as {{source_requirement"
+    },
+    {
+      "sequence": 30,
+      "at": "2026-10-25T00:28:01.960Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "assert: the review shows only the shoes and the jacket is kept."
+    },
+    {
+      "sequence": 31,
+      "at": "2026-10-25T00:28:09.525Z",
+      "phase": "investigating",
+      "kind": "journey.observed",
+      "summary": "Changed choice observed and captured.",
+      "evidenceId": "ce556d2f-923c-45d7-944a-8e1905a9368b"
+    },
+    {
+      "sequence": 32,
+      "at": "2026-10-25T00:29:08.060Z",
+      "phase": "investigating",
+      "kind": "model.response",
+      "summary": "gpt-6.1-sol returned a builder response.",
+      "usage": {
+        "input_tokens": 46191,
+        "input_tokens_details": {
+          "cache_write_tokens": 46188,
+          "cached_tokens": 0
+        },
+        "output_tokens": 6060,
+        "output_tokens_details": {
+          "reasoning_tokens": 135
+        },
+        "total_tokens": 52251
+      }
+    },
+    {
+      "sequence": 33,
+      "at": "2026-10-25T00:29:08.185Z",
+      "phase": "investigating",
+      "kind": "artifact.built",
+      "summary": "Revision 1 compiled. Checking it before release.",
+      "revision": 1,
+      "hash": "eb2ab359b136627f0bb313c39c724a2fa3672772063b45ae71ec681c9cd0b42d"
+    },
+    {
+      "sequence": 34,
+      "at": "2026-10-25T00:29:09.615Z",
+      "phase": "exploring_preview",
+      "kind": "explore.progress",
+      "summary": "Kane Explore started in its own project."
+    },
+    {
+      "sequence": 35,
+      "at": "2026-10-25T00:29:22.227Z",
+      "phase": "exploring_preview",
+      "kind": "explore.progress",
+      "summary": "Kane has visited 1 states; 1 exploration candidates remain."
+    },
+    {
+      "sequence": 36,
+      "at": "2026-10-25T00:29:30.937Z",
+      "phase": "verifying",
+      "kind": "check.started",
+      "summary": "Kane is using the generated interface and checking source-backed outcomes."
+    },
+    {
+      "sequence": 37,
+      "at": "2026-10-25T00:29:48.198Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Designing a requirements-linked Kane journey."
+    },
+    {
+      "sequence": 38,
+      "at": "2026-10-25T00:30:51.076Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Running the assurance-designed journey against the generated interface."
+    },
+    {
+      "sequence": 39,
+      "at": "2026-10-25T00:31:44.306Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 1: passed."
+    },
+    {
+      "sequence": 40,
+      "at": "2026-10-25T00:32:35.597Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 2: passed."
+    },
+    {
+      "sequence": 41,
+      "at": "2026-10-25T00:34:23.005Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 3: passed."
+    }
+  ],
+  "overviewBaseline": null,
+  "sourceMap": {
+    "projectId": "01M5R72Q6D2H5HEH6MZRBNTW5G",
+    "explorationId": "01a17071-6149-79b5-a8ac-0465578482fa",
+    "runId": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+    "complete": false,
+    "stopReason": {
+      "code": "budget",
+      "message": "the run's budget ran out (budget_leases)"
+    },
+    "screens": [
+      {
+        "id": "01M5R734ZYDK2NYEEKF72WVVNG",
+        "name": "Your next chapter, outside. | Northstar Outfitters \u2014 Your next chapter, outside.",
+        "url": "REDACTED",
+        "runId": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+        "controls": [
+          {
+            "group": "banner",
+            "more": 0,
+            "names": [
+              "NORTHSTAR OUTFITTERS"
+            ]
+          },
+          {
+            "group": "navigation",
+            "more": 0,
+            "names": [
+              "Shop",
+              "My orders",
+              "Help centre"
+            ]
+          },
+          {
+            "group": "main",
+            "more": 1,
+            "names": [
+              "Browse all products",
+              "View orders & delivery",
+              "Returns, exchanges & warranty",
+              "Red running shoes",
+              "Black jacket",
+              "Trail day pack"
+            ]
+          },
+          {
+            "group": "contentinfo",
+            "more": 0,
+            "names": [
+              "Home",
+              "Return policy",
+              "Warranty"
+            ]
+          }
+        ],
+        "origin": "observed",
+        "description": null,
+        "affordances": [
+          {
+            "choice": "",
+            "container": "banner",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store?taskId",
+            "instance": "",
+            "key": "15f686d7c6951c607a645d0aeb1133b4741cbe77d9be416d14cad466bf9dd72b",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "NORTHSTAR OUTFITTERS",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/products?taskId",
+            "instance": "",
+            "key": "8c2723b39bbe353cd0c71989eff8c92af27fe5fbf1e3cc089c5aa2b2f59e8b56",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Shop",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/orders?taskId",
+            "instance": "",
+            "key": "165822dfc6470f3d6b38047f79da454669cf2a4683d9e6df7656893525e2d4b7",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "My orders",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": true
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/help?taskId",
+            "instance": "",
+            "key": "267b2b8ea4d4103c28678c5c5adebb27975b26629ea93501bb2e4603d0104544",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Help centre",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/products?taskId",
+            "instance": "",
+            "key": "3692b101545365461c200131a74151caf0c5549bb8eebf6c274177a3882e7a88",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Browse all products",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": true
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/orders?taskId",
+            "instance": "",
+            "key": "460c847294892f4e0ca4b72f79a3b263571393904df862bd40205cd491760ee0",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "View orders & delivery",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": true
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/help?taskId",
+            "instance": "",
+            "key": "8f27bce2ceae965556fe4cb633176561cf65f6f6fc3f5f1e7a647484a6943d55",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Returns, exchanges & warranty",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/products/red-running-shoes?taskId",
+            "instance": "",
+            "key": "2e890ad12f1f4b713b41560d2d21d3b1c557c7e3b4267ce123c755e5ca47fee2",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Red running shoes",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/products/black-jacket?taskId",
+            "instance": "",
+            "key": "4e29366198e4f96fed3736f9e142ece886cfe2918c10a56183a9395b2be3a213",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Black jacket",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/products/trail-pack?taskId",
+            "instance": "",
+            "key": "b5e1ac8305140b8456fc994a7f792c0e82f66f3e2039303155e22980c0f49a35",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Trail day pack",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 3,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/products/red-running-shoes?taskId",
+            "instance": "",
+            "key": "a9763b8b87b5ea6688cdc5fcda742706eaab8d2d3a1fc142e77e8119f6c3055a",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "View product & options \u2192",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": true
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store?taskId",
+            "instance": "",
+            "key": "0071c0f28ec3f65734d6533f65988fa606476c338a17cdc27d19191703144685",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Home",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/help/returns?taskId",
+            "instance": "",
+            "key": "93d13f80fe14aa9288c79b02eaa73a355a0f61015a1cda50c2ba6254fd4c649c",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Return policy",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/help/warranty?taskId",
+            "instance": "",
+            "key": "459a19cd54939aa9d03f3267a0d9915c1ebcdc0b0ca89a92822baca3269f8960",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Warranty",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          }
+        ],
+        "image": "screen-0.jpg"
+      },
+      {
+        "id": "01M5R73NT08XXCVGVY7X7S1M2P",
+        "name": "Your next chapter, outside. | Northstar Outfitters \u2014 Your next chapter, outside.",
+        "url": "REDACTED",
+        "runId": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+        "controls": [
+          {
+            "group": "banner",
+            "more": 0,
+            "names": [
+              "NORTHSTAR OUTFITTERS"
+            ]
+          },
+          {
+            "group": "navigation",
+            "more": 0,
+            "names": [
+              "Shop",
+              "My orders",
+              "Help centre"
+            ]
+          },
+          {
+            "group": "main",
+            "more": 1,
+            "names": [
+              "Browse all products",
+              "View orders & delivery",
+              "Returns, exchanges & warranty",
+              "Red running shoes",
+              "Black jacket",
+              "Trail day pack"
+            ]
+          },
+          {
+            "group": "contentinfo",
+            "more": 0,
+            "names": [
+              "Home",
+              "Return policy",
+              "Warranty"
+            ]
+          }
+        ],
+        "origin": "observed",
+        "description": null,
+        "affordances": [
+          {
+            "choice": "",
+            "container": "banner",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store?taskId&view=readonly",
+            "instance": "",
+            "key": "15f686d7c6951c607a645d0aeb1133b4741cbe77d9be416d14cad466bf9dd72b",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "NORTHSTAR OUTFITTERS",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/products?taskId&view=readonly",
+            "instance": "",
+            "key": "8c2723b39bbe353cd0c71989eff8c92af27fe5fbf1e3cc089c5aa2b2f59e8b56",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Shop",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/orders?taskId&view=readonly",
+            "instance": "",
+            "key": "165822dfc6470f3d6b38047f79da454669cf2a4683d9e6df7656893525e2d4b7",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "My orders",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/help?taskId&view=readonly",
+            "instance": "",
+            "key": "267b2b8ea4d4103c28678c5c5adebb27975b26629ea93501bb2e4603d0104544",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Help centre",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/products?taskId&view=readonly",
+            "instance": "",
+            "key": "3692b101545365461c200131a74151caf0c5549bb8eebf6c274177a3882e7a88",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Browse all products",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/orders?taskId&view=readonly",
+            "instance": "",
+            "key": "460c847294892f4e0ca4b72f79a3b263571393904df862bd40205cd491760ee0",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "View orders & delivery",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/help?taskId&view=readonly",
+            "instance": "",
+            "key": "8f27bce2ceae965556fe4cb633176561cf65f6f6fc3f5f1e7a647484a6943d55",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Returns, exchanges & warranty",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/products/red-running-shoes?taskId&view=readonly",
+            "instance": "",
+            "key": "2e890ad12f1f4b713b41560d2d21d3b1c557c7e3b4267ce123c755e5ca47fee2",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Red running shoes",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/products/black-jacket?taskId&view=readonly",
+            "instance": "",
+            "key": "4e29366198e4f96fed3736f9e142ece886cfe2918c10a56183a9395b2be3a213",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Black jacket",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/products/trail-pack?taskId&view=readonly",
+            "instance": "",
+            "key": "b5e1ac8305140b8456fc994a7f792c0e82f66f3e2039303155e22980c0f49a35",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Trail day pack",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 3,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/products/red-running-shoes?taskId&view=readonly",
+            "instance": "",
+            "key": "a9763b8b87b5ea6688cdc5fcda742706eaab8d2d3a1fc142e77e8119f6c3055a",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "View product & options \u2192",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store?taskId&view=readonly",
+            "instance": "",
+            "key": "0071c0f28ec3f65734d6533f65988fa606476c338a17cdc27d19191703144685",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Home",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/help/returns?taskId&view=readonly",
+            "instance": "",
+            "key": "93d13f80fe14aa9288c79b02eaa73a355a0f61015a1cda50c2ba6254fd4c649c",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Return policy",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/help/warranty?taskId&view=readonly",
+            "instance": "",
+            "key": "459a19cd54939aa9d03f3267a0d9915c1ebcdc0b0ca89a92822baca3269f8960",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Warranty",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          }
+        ],
+        "image": "screen-1.jpg"
+      },
+      {
+        "id": "01M5R742D3KSREFCGXJB6T13PP",
+        "name": "Your orders | Northstar Outfitters",
+        "url": "REDACTED",
+        "runId": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+        "controls": [
+          {
+            "group": "banner",
+            "more": 0,
+            "names": [
+              "NORTHSTAR OUTFITTERS"
+            ]
+          },
+          {
+            "group": "navigation",
+            "more": 0,
+            "names": [
+              "Shop",
+              "My orders",
+              "Help centre"
+            ]
+          },
+          {
+            "group": "main",
+            "more": 0,
+            "names": [
+              "View order"
+            ]
+          },
+          {
+            "group": "contentinfo",
+            "more": 0,
+            "names": [
+              "Home",
+              "Return policy",
+              "Warranty"
+            ]
+          }
+        ],
+        "origin": "observed",
+        "description": null,
+        "affordances": [
+          {
+            "choice": "",
+            "container": "banner",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store?taskId&view=readonly",
+            "instance": "",
+            "key": "15f686d7c6951c607a645d0aeb1133b4741cbe77d9be416d14cad466bf9dd72b",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "NORTHSTAR OUTFITTERS",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/products?taskId&view=readonly",
+            "instance": "",
+            "key": "8c2723b39bbe353cd0c71989eff8c92af27fe5fbf1e3cc089c5aa2b2f59e8b56",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Shop",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/orders?taskId&view=readonly",
+            "instance": "",
+            "key": "165822dfc6470f3d6b38047f79da454669cf2a4683d9e6df7656893525e2d4b7",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "My orders",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/help?taskId&view=readonly",
+            "instance": "",
+            "key": "267b2b8ea4d4103c28678c5c5adebb27975b26629ea93501bb2e4603d0104544",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Help centre",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 2,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/orders/{slug}?taskId&view=readonly",
+            "instance": "",
+            "key": "464abaabe47809ac9b24defa664b0f89bacf0b250e12122e171a33b73b12c0ec",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "View order",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store?taskId&view=readonly",
+            "instance": "",
+            "key": "0071c0f28ec3f65734d6533f65988fa606476c338a17cdc27d19191703144685",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Home",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/help/returns?taskId&view=readonly",
+            "instance": "",
+            "key": "93d13f80fe14aa9288c79b02eaa73a355a0f61015a1cda50c2ba6254fd4c649c",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Return policy",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5281/store/help/warranty?taskId&view=readonly",
+            "instance": "",
+            "key": "459a19cd54939aa9d03f3267a0d9915c1ebcdc0b0ca89a92822baca3269f8960",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Warranty",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          }
+        ],
+        "image": "screen-2.jpg"
+      },
+      {
+        "id": "01M5R74H4C80FFNPT6PV15Q9GE",
+        "name": "Shop the collection | Northstar Outfitters",
+        "url": "REDACTED",
+        "runId": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+        "controls": [
+          {
+            "group": "banner",
+            "more": 0,
+            "names": [
+              "NORTHSTAR OUTFITTERS"
+            ]
+          },
+          {
+            "group": "navigation",
+            "more": 1,
+            "names": [
+              "Shop",
+              "My orders",
+              "Help centre",
+              "All products",
+              "Footwear",
+              "Outerwear"
+            ]
+          },
+          {
+            "group": "main",
+            "more": 0,
+            "names": [
+              "Red running shoes",
+              "Black jacket",
+              "Trail day pack",
+              "View product & options \u2192"
+            ]
+          },
+          {
+            "group": "contentinfo",
+            "more": 0,
+            "names": [
+              "Home",
+              "Return policy",
+              "Warranty"
+            ]
+          }
+        ],
+        "origin": "observed",
+        "description": null,
+        "affordances": [
+          {
+            "choice": "",
+            "container": "banner",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store?taskId",
+            "instance": "",
+            "key": "15f686d7c6951c607a645d0aeb1133b4741cbe77d9be416d14cad466bf9dd72b",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "NORTHSTAR OUTFITTERS",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/products?taskId",
+            "instance": "",
+            "key": "8c2723b39bbe353cd0c71989eff8c92af27fe5fbf1e3cc089c5aa2b2f59e8b56",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Shop",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/orders?taskId",
+            "instance": "",
+            "key": "165822dfc6470f3d6b38047f79da454669cf2a4683d9e6df7656893525e2d4b7",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "My orders",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/help?taskId",
+            "instance": "",
+            "key": "267b2b8ea4d4103c28678c5c5adebb27975b26629ea93501bb2e4603d0104544",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Help centre",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/products?taskId",
+            "instance": "",
+            "key": "e566f5e193b81cc05d67ab33d5739ee437202039c04025e90a2628448f186ef1",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "All products",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/products?category&taskId",
+            "instance": "",
+            "key": "280959a8731b52c644954213c276c1a9bfe0ca620728d1fa2cb139af1bed447e",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Footwear",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/products?category&taskId",
+            "instance": "",
+            "key": "606c8deee9c9bba74b03d5b8fbd1fc1199cbcf42fe3e8a4e49ed5ec8309310e3",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Outerwear",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/products?category&taskId",
+            "instance": "",
+            "key": "e021425f5e4cbd299fdf7ba6403962dd64a44cf4828c1517b474fe35f818d9c5",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Equipment",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/products/red-running-shoes?taskId",
+            "instance": "",
+            "key": "2e890ad12f1f4b713b41560d2d21d3b1c557c7e3b4267ce123c755e5ca47fee2",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Red running shoes",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/products/black-jacket?taskId",
+            "instance": "",
+            "key": "4e29366198e4f96fed3736f9e142ece886cfe2918c10a56183a9395b2be3a213",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Black jacket",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/products/trail-pack?taskId",
+            "instance": "",
+            "key": "b5e1ac8305140b8456fc994a7f792c0e82f66f3e2039303155e22980c0f49a35",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Trail day pack",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 3,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/products/red-running-shoes?taskId",
+            "instance": "",
+            "key": "a9763b8b87b5ea6688cdc5fcda742706eaab8d2d3a1fc142e77e8119f6c3055a",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "View product & options \u2192",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store?taskId",
+            "instance": "",
+            "key": "0071c0f28ec3f65734d6533f65988fa606476c338a17cdc27d19191703144685",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Home",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/help/returns?taskId",
+            "instance": "",
+            "key": "93d13f80fe14aa9288c79b02eaa73a355a0f61015a1cda50c2ba6254fd4c649c",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Return policy",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5301/store/help/warranty?taskId",
+            "instance": "",
+            "key": "459a19cd54939aa9d03f3267a0d9915c1ebcdc0b0ca89a92822baca3269f8960",
+            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "name": "Warranty",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          }
+        ],
+        "image": "screen-3.jpg"
+      }
+    ],
+    "flows": [
+      {
+        "annotations": {},
+        "changes": [],
+        "current_observation": "12131e113148b4dc3b6459fe2e15d19d25b3e3a7a6af74dcb8f6e542948df8ad",
+        "description": "",
+        "entry": "01M5R734ZYDK2NYEEKF72WVVNG",
+        "exit": "01M5R73NT08XXCVGVY7X7S1M2P",
+        "feedback": [],
+        "finding_ids": [],
+        "id": "01M5R73RHDGTV5P3C6CKD2K7JK",
+        "name": "View product & options \u2192",
+        "origin": "agent",
+        "parent_id": null,
+        "plan": null,
+        "priority": 0,
+        "stateful": null,
+        "status": "verified",
+        "superseded_by": null,
+        "supersedes": null,
+        "currentObservation": {
+          "credits": {
+            "by_node": {
+              "page_observer": 0.05644250000000001,
+              "reasoning/v2": 1.52902
+            },
+            "by_phase": {
+              "walk": 1.5854625000000002
+            },
+            "calls": 3,
+            "total": 1.5854625000000002
+          },
+          "diverged_at": null,
+          "flow_id": "01M5R73RHDGTV5P3C6CKD2K7JK",
+          "id": "12131e113148b4dc3b6459fe2e15d19d25b3e3a7a6af74dcb8f6e542948df8ad",
+          "lease_id": "01M5R73CFN5P833VPYCG7PYC3S",
+          "load_blocked": [],
+          "outcome": "verified",
+          "reached": "01M5R73NT08XXCVGVY7X7S1M2P",
+          "reached_via": "jump",
+          "reason": null,
+          "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+          "steps": [
+            {
+              "in_place": false,
+              "ordinal": 1,
+              "record": {
+                "action_instruction": "Scrolling",
+                "action_type": "scroll",
+                "output_variable": null,
+                "step": 3
+              },
+              "url_after": "REDACTED"
+            }
+          ],
+          "version": "284da9befa730cc01a5fcf904aaff0b95c94e370b85de5c179eb1a457202cacc"
+        }
+      },
+      {
+        "annotations": {},
+        "changes": [],
+        "current_observation": "d13b3d8791e9079c53b606f63beecae0fd08d97fc04be608f8b22d778abc748c",
+        "description": "",
+        "entry": "01M5R734ZYDK2NYEEKF72WVVNG",
+        "exit": "01M5R742D3KSREFCGXJB6T13PP",
+        "feedback": [],
+        "finding_ids": [],
+        "id": "01M5R7451Y26PZWSB16W15RRKY",
+        "name": "My orders",
+        "origin": "agent",
+        "parent_id": null,
+        "plan": null,
+        "priority": 0,
+        "stateful": null,
+        "status": "verified",
+        "superseded_by": null,
+        "supersedes": null,
+        "currentObservation": {
+          "credits": {
+            "by_node": {
+              "page_observer": 0.055755,
+              "reasoning/v2": 1.38911
+            },
+            "by_phase": {
+              "walk": 1.444865
+            },
+            "calls": 3,
+            "total": 1.444865
+          },
+          "diverged_at": null,
+          "flow_id": "01M5R7451Y26PZWSB16W15RRKY",
+          "id": "d13b3d8791e9079c53b606f63beecae0fd08d97fc04be608f8b22d778abc748c",
+          "lease_id": "01M5R73S60JD66ABA0F36QHCBA",
+          "load_blocked": [],
+          "outcome": "verified",
+          "reached": "01M5R742D3KSREFCGXJB6T13PP",
+          "reached_via": "jump",
+          "reason": null,
+          "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+          "steps": [
+            {
+              "in_place": false,
+              "ordinal": 1,
+              "record": {
+                "action_instruction": "Clicking My orders navigation link",
+                "action_type": "click",
+                "output_variable": null,
+                "step": 5
+              },
+              "url_after": "REDACTED"
+            }
+          ],
+          "version": "b716de4e900d4edac93af51505cb30adb99ffbd40506de5bd7673f22235888c3"
+        }
+      },
+      {
+        "annotations": {},
+        "changes": [],
+        "current_observation": "438710d4eb7705ee1ee4529aff5620d5cc4ce3355279119820a022a3b2e04eb3",
+        "description": "",
+        "entry": "01M5R734ZYDK2NYEEKF72WVVNG",
+        "exit": "01M5R74H4C80FFNPT6PV15Q9GE",
+        "feedback": [],
+        "finding_ids": [
+          "5ac94b9f335a346cb534605fd0a6f5033e4076c45c4fce0de6aba78c48fd3744"
+        ],
+        "id": "01M5R74MA6GG4HDB9T2VNW75HB",
+        "name": "Browse all products",
+        "origin": "agent",
+        "parent_id": null,
+        "plan": null,
+        "priority": 0,
+        "stateful": null,
+        "status": "verified",
+        "superseded_by": null,
+        "supersedes": null,
+        "currentObservation": {
+          "credits": {
+            "by_node": {
+              "page_observer": 0.0558675,
+              "reasoning/v2": 1.7871200000000003
+            },
+            "by_phase": {
+              "walk": 1.8429875
+            },
+            "calls": 4,
+            "total": 1.8429875
+          },
+          "diverged_at": null,
+          "flow_id": "01M5R74MA6GG4HDB9T2VNW75HB",
+          "id": "438710d4eb7705ee1ee4529aff5620d5cc4ce3355279119820a022a3b2e04eb3",
+          "lease_id": "01M5R7470GYV44WJCBWZMR6M2C",
+          "load_blocked": [],
+          "outcome": "verified",
+          "reached": "01M5R74H4C80FFNPT6PV15Q9GE",
+          "reached_via": "jump",
+          "reason": null,
+          "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+          "steps": [
+            {
+              "in_place": false,
+              "ordinal": 1,
+              "record": {
+                "action_instruction": "Clicking Browse all products link",
+                "action_type": "click",
+                "output_variable": null,
+                "step": 8
+              },
+              "url_after": "REDACTED"
+            }
+          ],
+          "version": "f0529a35b36287ce3f27f3d243e349ee5b8239146c44325bfd184a46973ca43e"
+        }
+      },
+      {
+        "annotations": {},
+        "changes": [],
+        "current_observation": "bdf74a42a4b082785f470f4f08c567acdc9bcfc4825422e09ece6cd4ca0ed6eb",
+        "description": "",
+        "entry": "01M5R734ZYDK2NYEEKF72WVVNG",
+        "exit": "01M5R73NT08XXCVGVY7X7S1M2P",
+        "feedback": [],
+        "finding_ids": [],
+        "id": "01M5R74ZPWYKEJK4F9MJF7DRRS",
+        "name": "View orders & delivery",
+        "origin": "agent",
+        "parent_id": null,
+        "plan": null,
+        "priority": 0,
+        "stateful": null,
+        "status": "verified",
+        "superseded_by": null,
+        "supersedes": null,
+        "currentObservation": {
+          "credits": {
+            "by_node": {
+              "page_observer": 0.055830000000000005,
+              "reasoning/v2": 1.3253
+            },
+            "by_phase": {
+              "walk": 1.38113
+            },
+            "calls": 3,
+            "total": 1.38113
+          },
+          "diverged_at": null,
+          "flow_id": "01M5R74ZPWYKEJK4F9MJF7DRRS",
+          "id": "bdf74a42a4b082785f470f4f08c567acdc9bcfc4825422e09ece6cd4ca0ed6eb",
+          "lease_id": "01M5R74NHTYSNA2TZJ2DA0GMDD",
+          "load_blocked": [],
+          "outcome": "verified",
+          "reached": "01M5R73NT08XXCVGVY7X7S1M2P",
+          "reached_via": "jump",
+          "reason": null,
+          "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+          "steps": [
+            {
+              "in_place": false,
+              "ordinal": 1,
+              "record": {
+                "action_instruction": "Clicking orders and delivery link",
+                "action_type": "click",
+                "output_variable": null,
+                "step": 10
+              },
+              "url_after": "REDACTED"
+            }
+          ],
+          "version": "284da9befa730cc01a5fcf904aaff0b95c94e370b85de5c179eb1a457202cacc"
+        }
+      }
+    ],
+    "findings": [
+      {
+        "candidate_id": null,
+        "category": "accessibility",
+        "confirmed": false,
+        "description": "On 127.0.0.1:5281/store?taskId&view=readonly, 1 element breaks the rule color-contrast.",
+        "feedback": [],
+        "id": "033e2d68f5962b65a20348bd4f204f76a8ecd9bf4befc7f1b7ccf9e675f8f7e5",
+        "kind": "accessibility",
+        "occurrences": [
+          {
+            "annotations": [],
+            "detail": {
+              "elements": 1,
+              "help": "Elements must meet minimum color contrast ratio thresholds",
+              "impact": "serious",
+              "rule": "color-contrast",
+              "wcag": [
+                "2.0 \u00b7 1.4.3 Contrast (Minimum) (AA)"
+              ]
+            },
+            "flow_id": null,
+            "junction_id": "01M5R734ZYDK2NYEEKF72WVVNG",
+            "lease_id": "01M5R72YE37QS768TPVTQB34YD",
+            "observation_id": null,
+            "pack": {
+              "bytes": 198104,
+              "files": [
+                "clip",
+                "timeline",
+                "network",
+                "console",
+                "element"
+              ],
+              "fps": 0.6,
+              "frames": 7,
+              "height": 540,
+              "width": 960,
+              "window_ms": [
+                -8000,
+                3000
+              ]
+            },
+            "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "screenshot": true,
+            "screenshot_size": {
+              "h": 1080,
+              "w": 1920
+            },
+            "step_ordinal": null,
+            "what_happened": {
+              "actual": "1 element does not.",
+              "expected": "Elements must meet minimum color contrast ratio thresholds.",
+              "text": "On 127.0.0.1:5281/store?taskId&view=readonly, 1 element breaks the rule color-contrast (2.0 \u00b7 1.4.3 Contrast (Minimum) (AA))."
+            }
+          }
+        ],
+        "severity": "medium",
+        "similar": [
+          {
+            "by": "subject",
+            "closeness": 1,
+            "finding_id": "5ac94b9f335a346cb534605fd0a6f5033e4076c45c4fce0de6aba78c48fd3744"
+          }
+        ],
+        "status": "open",
+        "status_change": {
+          "at": "2026-10-25T00:24:15.329840Z",
+          "by": {
+            "display_name": "KaneAI explorer",
+            "kind": "agent",
+            "run_id": null
+          },
+          "record_id": null,
+          "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+          "transition": "opened"
+        },
+        "status_history": [
+          {
+            "at": "2026-10-25T00:24:15.329840Z",
+            "by": {
+              "display_name": "KaneAI explorer",
+              "kind": "agent",
+              "run_id": null
+            },
+            "record_id": null,
+            "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "transition": "opened"
+          }
+        ],
+        "title": "Elements must meet minimum color contrast ratio thresholds (1 element on 127.0.0.1:5281/store?taskId&view=readonly)",
+        "unblock": ""
+      },
+      {
+        "blocked_by": "path_broken",
+        "candidate_id": "8c371299e71e3a4b003f93c6ee7fef67aa7b3dabd5af04c5e5c40b716e9838c6",
+        "category": "coverage",
+        "confirmed": false,
+        "description": "\"Red running shoes\" the way to it broke: the recorded path no longer reaches its screen.",
+        "feedback": [],
+        "id": "0e685684e203ccad038d9c5b7b8f14a5feaa3a71aa3b7efe469f692185e00948",
+        "kind": "coverage",
+        "occurrences": [
+          {
+            "annotations": [],
+            "flow_id": null,
+            "junction_id": "01M5R734ZYDK2NYEEKF72WVVNG",
+            "lease_id": "01M5R745FQ7BH69T98HBCCWH98",
+            "observation_id": "fdf4f1ca5e8966bc1b05b1937f8b96f1ff6045723db887dc1655b962c7085f60",
+            "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "screenshot": true,
+            "screenshot_size": null,
+            "step_ordinal": null,
+            "what_happened": {
+              "actual": "\"Red running shoes\" was not explored: the way to it broke \u00b7 blocked: path_broken \u00b7 unblock: re-run; if it persists, the path to this screen changed",
+              "expected": "Every control the run was given is reached.",
+              "text": "The explorer could not reach part of the app."
+            }
+          }
+        ],
+        "severity": "info",
+        "similar": [],
+        "status": "open",
+        "status_change": {
+          "at": "2026-10-25T00:24:49.056785Z",
+          "by": {
+            "display_name": "KaneAI explorer",
+            "kind": "agent",
+            "run_id": null
+          },
+          "record_id": null,
+          "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+          "transition": "opened"
+        },
+        "status_history": [
+          {
+            "at": "2026-10-25T00:24:49.056785Z",
+            "by": {
+              "display_name": "KaneAI explorer",
+              "kind": "agent",
+              "run_id": null
+            },
+            "record_id": null,
+            "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "transition": "opened"
+          }
+        ],
+        "title": "\"Red running shoes\" was not explored: the way to it broke",
+        "unblock": "re-run; if it persists, the path to this screen changed"
+      },
+      {
+        "candidate_id": null,
+        "category": "accessibility",
+        "confirmed": false,
+        "description": "On 127.0.0.1:5301/store/products?taskId, 1 element breaks the rule color-contrast.",
+        "feedback": [],
+        "id": "5ac94b9f335a346cb534605fd0a6f5033e4076c45c4fce0de6aba78c48fd3744",
+        "kind": "accessibility",
+        "occurrences": [
+          {
+            "annotations": [],
+            "detail": {
+              "elements": 1,
+              "help": "Elements must meet minimum color contrast ratio thresholds",
+              "impact": "serious",
+              "rule": "color-contrast",
+              "wcag": [
+                "2.0 \u00b7 1.4.3 Contrast (Minimum) (AA)"
+              ]
+            },
+            "flow_id": "01M5R74MA6GG4HDB9T2VNW75HB",
+            "junction_id": "01M5R74H4C80FFNPT6PV15Q9GE",
+            "lease_id": "01M5R7470GYV44WJCBWZMR6M2C",
+            "observation_id": "438710d4eb7705ee1ee4529aff5620d5cc4ce3355279119820a022a3b2e04eb3",
+            "pack": {
+              "bytes": 212054,
+              "files": [
+                "clip",
+                "timeline",
+                "network",
+                "console",
+                "element"
+              ],
+              "fps": 0.7,
+              "frames": 8,
+              "height": 540,
+              "width": 960,
+              "window_ms": [
+                -8000,
+                3000
+              ]
+            },
+            "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "screenshot": true,
+            "screenshot_size": {
+              "h": 1080,
+              "w": 1920
+            },
+            "step_ordinal": null,
+            "what_happened": {
+              "actual": "1 element does not.",
+              "expected": "Elements must meet minimum color contrast ratio thresholds.",
+              "text": "On 127.0.0.1:5301/store/products?taskId, 1 element breaks the rule color-contrast (2.0 \u00b7 1.4.3 Contrast (Minimum) (AA))."
+            }
+          }
+        ],
+        "severity": "medium",
+        "similar": [
+          {
+            "by": "subject",
+            "closeness": 1,
+            "finding_id": "033e2d68f5962b65a20348bd4f204f76a8ecd9bf4befc7f1b7ccf9e675f8f7e5"
+          }
+        ],
+        "status": "open",
+        "status_change": {
+          "at": "2026-10-25T00:25:04.134319Z",
+          "by": {
+            "display_name": "KaneAI explorer",
+            "kind": "agent",
+            "run_id": null
+          },
+          "record_id": null,
+          "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+          "transition": "opened"
+        },
+        "status_history": [
+          {
+            "at": "2026-10-25T00:25:04.134319Z",
+            "by": {
+              "display_name": "KaneAI explorer",
+              "kind": "agent",
+              "run_id": null
+            },
+            "record_id": null,
+            "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "transition": "opened"
+          }
+        ],
+        "title": "Elements must meet minimum color contrast ratio thresholds (1 element on 127.0.0.1:5301/store/products?taskId)",
+        "unblock": ""
+      },
+      {
+        "candidate_id": null,
+        "category": "broken",
+        "confirmed": false,
+        "description": "On , the page threw an uncaught exception.",
+        "feedback": [],
+        "id": "b75243d881c12e1b3745bf7f1a65a3733e8c7baf465a2e605cf895084206b2dd",
+        "kind": "console",
+        "occurrences": [
+          {
+            "annotations": [],
+            "detail": {
+              "count": 2,
+              "message": "Error: Function \"__kaneExploreLeave\" is not exposed",
+              "wcag": []
+            },
+            "flow_id": null,
+            "junction_id": "01M5R734ZYDK2NYEEKF72WVVNG",
+            "lease_id": "01M5R72YE37QS768TPVTQB34YD",
+            "observation_id": null,
+            "pack": {
+              "bytes": 198008,
+              "files": [
+                "clip",
+                "timeline",
+                "network",
+                "console"
+              ],
+              "fps": 0.6,
+              "frames": 7,
+              "height": 540,
+              "width": 960,
+              "window_ms": [
+                -8000,
+                3000
+              ]
+            },
+            "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "screenshot": true,
+            "screenshot_size": {
+              "h": 1080,
+              "w": 1920
+            },
+            "step_ordinal": null,
+            "what_happened": {
+              "actual": "Error: Function \"__kaneExploreLeave\" is not exposed",
+              "expected": "The page runs without uncaught exceptions.",
+              "text": "On , the page threw an uncaught exception."
+            }
+          }
+        ],
+        "severity": "medium",
+        "similar": [],
+        "status": "open",
+        "status_change": {
+          "at": "2026-10-25T00:24:15.329840Z",
+          "by": {
+            "display_name": "KaneAI explorer",
+            "kind": "agent",
+            "run_id": null
+          },
+          "record_id": null,
+          "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+          "transition": "opened"
+        },
+        "status_history": [
+          {
+            "at": "2026-10-25T00:24:15.329840Z",
+            "by": {
+              "display_name": "KaneAI explorer",
+              "kind": "agent",
+              "run_id": null
+            },
+            "record_id": null,
+            "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "transition": "opened"
+          }
+        ],
+        "title": "The page threw Error: Function \"__kaneExploreLeave\" is not exposed",
+        "unblock": ""
+      }
+    ],
+    "detailReads": [
+      {
+        "collection": "junctions",
+        "id": "01M5R734ZYDK2NYEEKF72WVVNG",
+        "status": "read"
+      },
+      {
+        "collection": "junctions",
+        "id": "01M5R73NT08XXCVGVY7X7S1M2P",
+        "status": "read"
+      },
+      {
+        "collection": "junctions",
+        "id": "01M5R742D3KSREFCGXJB6T13PP",
+        "status": "read"
+      },
+      {
+        "collection": "junctions",
+        "id": "01M5R74H4C80FFNPT6PV15Q9GE",
+        "status": "read"
+      },
+      {
+        "collection": "flows",
+        "id": "01M5R73RHDGTV5P3C6CKD2K7JK",
+        "status": "read"
+      },
+      {
+        "collection": "flows",
+        "id": "01M5R7451Y26PZWSB16W15RRKY",
+        "status": "read"
+      },
+      {
+        "collection": "flows",
+        "id": "01M5R74MA6GG4HDB9T2VNW75HB",
+        "status": "read"
+      },
+      {
+        "collection": "flows",
+        "id": "01M5R74ZPWYKEJK4F9MJF7DRRS",
+        "status": "read"
+      },
+      {
+        "collection": "findings",
+        "id": "033e2d68f5962b65a20348bd4f204f76a8ecd9bf4befc7f1b7ccf9e675f8f7e5",
+        "status": "read"
+      },
+      {
+        "collection": "findings",
+        "id": "0e685684e203ccad038d9c5b7b8f14a5feaa3a71aa3b7efe469f692185e00948",
+        "status": "read"
+      },
+      {
+        "collection": "findings",
+        "id": "5ac94b9f335a346cb534605fd0a6f5033e4076c45c4fce0de6aba78c48fd3744",
+        "status": "read"
+      },
+      {
+        "collection": "findings",
+        "id": "b75243d881c12e1b3745bf7f1a65a3733e8c7baf465a2e605cf895084206b2dd",
+        "status": "read"
+      }
+    ],
+    "writeup": {
+      "status": "not_configured"
+    },
+    "capturedAt": "2026-10-25T00:25:22.496Z"
+  },
+  "observations": [
+    {
+      "id": "6beef79b-2011-495e-b194-d2566350105c",
+      "branch": "primary",
+      "facts": {
+        "source_terms": "{\"method\":\"print_label\",\"fee\":\"\u2212$0.00\",\"refund\":\"$80.00\",\"destination\":\"original_payment\"}",
+        "source_choices": "{\"reasons\":[\"Choose a reason\",\"Size or fit issue\",\"Changed my mind\",\"Arrived damaged\"],\"methods\":[\"Print a shipping label\",\"Printer-free QR drop-off\"],\"destinations\":[\"Store credit\",\"Original payment method\"]}",
+        "source_transition": "{\"methodDescription\":\"Print and attach the label, then drop off the parcel.\",\"selectionEffectNotice\":\"Changing the return method may change the refund destination. Review it before submitting.\",\"currentRefundDestination\":\"original_payment\"}",
+        "source_requirements": "{\"returnInstructions\":\"Print the synthetic label and attach it to the parcel.\",\"selectedQuantity\":\"Selected quantity: 1\",\"reviewStatus\":\"Draft saved. Review all choices before submitting.\"}",
+        "source_identity": "{\"orderId\":\"ORD-1042\",\"item\":\"Red running shoes\",\"size\":null,\"lineId\":\"SHOE-RED-8\",\"account\":\"DEMO-ACCOUNT-1\"}",
+        "current_url": "http://127.0.0.1:5301/merchant?taskId=6beef79b-2011-495e-b194-d2566350105c"
+      },
+      "shots": [
+        {
+          "image": "step-0.jpg",
+          "stepId": "0-3",
+          "ordinal": 3,
+          "kind": "select",
+          "status": "passed",
+          "summary": "select: Selecting return reason as Size or fit issue",
+          "url": "http://127.0.0.1:5301/merchant?taskId=6beef79b-2011-495e-b194-d2566350105c"
+        },
+        {
+          "image": "step-1.jpg",
+          "stepId": "0-4",
+          "ordinal": 4,
+          "kind": "select",
+          "status": "passed",
+          "summary": "select: Selecting Return method in the dropdown combo box",
+          "url": "http://127.0.0.1:5301/merchant?taskId=6beef79b-2011-495e-b194-d2566350105c"
+        },
+        {
+          "image": "step-2.jpg",
+          "stepId": "0-5",
+          "ordinal": 5,
+          "kind": "select",
+          "status": "passed",
+          "summary": "select: Selecting original payment method as refund destination",
+          "url": "http://127.0.0.1:5301/merchant?taskId=6beef79b-2011-495e-b194-d2566350105c"
+        },
+        {
+          "image": "step-3.jpg",
+          "stepId": "0-6",
+          "ordinal": 6,
+          "kind": "wait",
+          "status": "passed",
+          "summary": "wait: PRIMARY: wait 1500 ms for return-draft saves to settle",
+          "url": "http://127.0.0.1:5301/merchant?taskId=6beef79b-2011-495e-b194-d2566350105c"
+        },
+        {
+          "image": "step-4.jpg",
+          "stepId": "0-7",
+          "ordinal": 7,
+          "kind": "analyze",
+          "status": "passed",
+          "summary": "analyze: the current page URL is stored as {{current_url}}",
+          "url": "http://127.0.0.1:5301/merchant?taskId=6beef79b-2011-495e-b194-d2566350105c"
+        },
+        {
+          "image": "step-5.jpg",
+          "stepId": "0-8",
+          "ordinal": 8,
+          "kind": "assert",
+          "status": "passed",
+          "summary": "assert: the review shows only the shoes and the jacket is kept",
+          "url": "http://127.0.0.1:5301/merchant?taskId=6beef79b-2011-495e-b194-d2566350105c"
+        }
+      ],
+      "at": "2026-10-25T00:26:49.121Z",
+      "runId": "run-0",
+      "sessionId": null
+    },
+    {
+      "id": "ce556d2f-923c-45d7-944a-8e1905a9368b",
+      "branch": "alternative",
+      "facts": {
+        "source_terms": "{\"method\":\"qr_dropoff\",\"fee\":\"$5\",\"refundAmount\":\"$75.00\",\"destination\":\"store_credit\"}",
+        "source_choices": "{\"reasons\":[\"Choose a reason\",\"Size or fit issue\",\"Changed my mind\",\"Arrived damaged\"],\"methods\":[\"Print a shipping label\",\"Printer-free QR drop-off\"],\"destinations\":[\"Store credit\",\"Original payment method\"]}",
+        "source_transition": "{\"selectedMethod\":\"qr_dropoff\",\"methodEffect\":\"Show a QR code at the drop-off counter. A $5 fee applies.\",\"destinationNotice\":\"Changing the return method may change the refund destination. Review it before submitting.\"}",
+        "source_requirements": "{\"dropOffInstruction\":\"Show the synthetic QR code at a simulated drop-off counter.\",\"accountAndCurrency\":\"Account ID: DEMO-ACCOUNT-1 \u00b7 Currency: USD\",\"selectedLineIds\":\"Selected line IDs: SHOE-RED-8\",\"selectedQuantity\":\"Selected quantity: 1\"}",
+        "source_identity": "{\"orderId\":\"ORD-1042\",\"items\":[{\"name\":\"Red running shoes\",\"details\":\"Size 8 \u00b7 Qty 1$80.00\"},{\"name\":\"Black jacket\",\"details\":\"Medium \u00b7 Qty 1$120.00\"}]}",
+        "current_url": "http://127.0.0.1:5301/merchant?taskId=ce556d2f-923c-45d7-944a-8e1905a9368b"
+      },
+      "shots": [
+        {
+          "image": "step-0.jpg",
+          "stepId": "0-3",
+          "ordinal": 3,
+          "kind": "select",
+          "status": "passed",
+          "summary": "select: Selecting return reason combobox for size or fit issue",
+          "url": "http://127.0.0.1:5301/merchant?taskId=ce556d2f-923c-45d7-944a-8e1905a9368b"
+        },
+        {
+          "image": "step-1.jpg",
+          "stepId": "0-4",
+          "ordinal": 4,
+          "kind": "select",
+          "status": "passed",
+          "summary": "select: Selecting Original payment method as the refund destination",
+          "url": "http://127.0.0.1:5301/merchant?taskId=ce556d2f-923c-45d7-944a-8e1905a9368b"
+        },
+        {
+          "image": "step-2.jpg",
+          "stepId": "0-5",
+          "ordinal": 5,
+          "kind": "select",
+          "status": "passed",
+          "summary": "select: Selecting return method from the dropdown",
+          "url": "http://127.0.0.1:5301/merchant?taskId=ce556d2f-923c-45d7-944a-8e1905a9368b"
+        },
+        {
+          "image": "step-3.jpg",
+          "stepId": "0-6",
+          "ordinal": 6,
+          "kind": "wait",
+          "status": "passed",
+          "summary": "wait: PRIMARY: wait 1500 ms for the return draft saves to settle",
+          "url": "http://127.0.0.1:5301/merchant?taskId=ce556d2f-923c-45d7-944a-8e1905a9368b"
+        },
+        {
+          "image": "step-4.jpg",
+          "stepId": "0-7",
+          "ordinal": 7,
+          "kind": "analyze",
+          "status": "passed",
+          "summary": "analyze: ANALYZE(textual_visual, 'visible requirements are stored as {{source_requirement",
+          "url": "http://127.0.0.1:5301/merchant?taskId=ce556d2f-923c-45d7-944a-8e1905a9368b"
+        },
+        {
+          "image": "step-5.jpg",
+          "stepId": "0-8",
+          "ordinal": 8,
+          "kind": "assert",
+          "status": "passed",
+          "summary": "assert: the review shows only the shoes and the jacket is kept.",
+          "url": "http://127.0.0.1:5301/merchant?taskId=ce556d2f-923c-45d7-944a-8e1905a9368b"
+        }
+      ],
+      "at": "2026-10-25T00:28:09.525Z",
+      "runId": "run-0",
+      "sessionId": null
+    }
+  ],
+  "candidates": [
+    {
+      "revision": 1,
+      "status": "checking",
+      "createdAt": "2026-10-25T00:25:22.503Z",
+      "hash": "eb2ab359b136627f0bb313c39c724a2fa3672772063b45ae71ec681c9cd0b42d",
+      "codeHash": "d6a8f8f87f421b8a40fc27864731abb94d6c35f08e8e7fc604d119acce198322",
+      "cssHash": "3c34eadff7ee263a0026cfebdb5d839b423f308359e8cc7613ca28b61a1cdbaf",
+      "contractHash": "ce68e6b0f041fea0094d2de30dbaaf6656cc0cd24f3f721ad9ce60ce3616a09a",
+      "change": null,
+      "decisions": [
+        {
+          "component": "Focused overview and observed routes",
+          "change": "Prioritize the red-shoes return and order routes while labeling each route with its actual reached screen. Keep discovery informational and leave starting to the host; disclose incomplete coverage.",
+          "evidenceIds": [
+            "user-contract",
+            "01M5R7451Y26PZWSB16W15RRKY",
+            "01M5R74ZPWYKEJK4F9MJF7DRRS",
+            "01M5R73RHDGTV5P3C6CKD2K7JK",
+            "01M5R74MA6GG4HDB9T2VNW75HB",
+            "0e685684e203ccad038d9c5b7b8f14a5feaa3a71aa3b7efe469f692185e00948",
+            "b75243d881c12e1b3745bf7f1a65a3733e8c7baf465a2e605cf895084206b2dd"
+          ]
+        },
+        {
+          "component": "Item scope",
+          "change": "Keep the jacket informational and non-editable. Display live selected line IDs and flag source selections outside the red-shoes-only scope.",
+          "evidenceIds": [
+            "user-contract",
+            "6beef79b-2011-495e-b194-d2566350105c",
+            "ce556d2f-923c-45d7-944a-8e1905a9368b"
+          ]
+        },
+        {
+          "component": "Return choices and conflict handling",
+          "change": "Offer supported reason and method choices, distinguish selected choices from observed method values, preserve original-payment intent, and expose the QR method's observed destination dependency with Restore controls.",
+          "evidenceIds": [
+            "user-contract",
+            "6beef79b-2011-495e-b194-d2566350105c",
+            "ce556d2f-923c-45d7-944a-8e1905a9368b"
+          ]
+        },
+        {
+          "component": "Current terms and validation",
+          "change": "Render deduction, expected refund and destination from runtime task data. Keep missing values explicitly unknown. Provide only Validate and Restore actions; leave exact approval, submission and independently verified completion to the host.",
+          "evidenceIds": [
+            "user-contract",
+            "6beef79b-2011-495e-b194-d2566350105c",
+            "ce556d2f-923c-45d7-944a-8e1905a9368b"
+          ]
+        },
+        {
+          "component": "Accessible visual system",
+          "change": "Use a warm cream canvas, forest text, restrained green accents, visible native-control labels, strong focus indicators, live status messaging and a responsive single-column layout instead of decorative product graphics.",
+          "evidenceIds": [
+            "user-contract",
+            "01M5R734ZYDK2NYEEKF72WVVNG",
+            "033e2d68f5962b65a20348bd4f204f76a8ecd9bf4befc7f1b7ccf9e675f8f7e5",
+            "5ac94b9f335a346cb534605fd0a6f5033e4076c45c4fce0de6aba78c48fd3744"
+          ]
+        }
+      ],
+      "failure": null,
+      "verification": null
+    }
+  ]
+}

@@ -327,6 +327,7 @@
         "text": "The changed appointment is verified. Your old time has been replaced.",
         "kind": "success"
       }
-    ]
+    ],
+    "overviewBaseline": null
   }
 ]

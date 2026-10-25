@@ -377,12 +377,12 @@ export async function assureAndVerify({
   await mkdir(directory, { recursive: true })
   const requirements = `# Verify one generated synthetic task interface
 
-One user story: complete this exact supported synthetic journey through the generated interface at ${url}. This is a sandbox-only test session, so the browser verifier acts as the sandbox user, including approval through the trusted host panel. Generated code itself cannot approve. No production accounts or actions are involved.
+One user story: perform only the explicitly requested browser journey at ${url}. This is a synthetic sandbox. Approve or submit only if the required journey below explicitly instructs those actions, and then only through the trusted host panel. Generated code itself cannot approve. No production accounts or actions are involved.
 
 ## Required journey and observable outcomes
 ${objective}
 
-Stay within this one journey. Wait for source browser jobs to finish; they can take two minutes. Only use visible browser controls, not API calls, scripts or direct source edits. Keep all expectations above unchanged. Browser reload must preserve the same receipt.
+Stay within this one journey. Wait for source browser jobs only when the required journey explicitly starts them; they can take two minutes. Only use visible browser controls, not API calls, scripts or direct source edits. Keep all expectations above unchanged. Do not add transaction, receipt or approval steps to a read-only inspection.
 `
   const snapshotDirectory = directory
   const workspace = await verificationWorkspace(

@@ -1,0 +1,69 @@
+{
+  "result": {
+    "status": "failed",
+    "summary": "Kane did not pass the entire assurance journey.",
+    "replay": {
+      "reusedJourney": true,
+      "replayedSteps": 2,
+      "authoredSteps": 0
+    },
+    "requirementsPreserved": null,
+    "healingUsed": null
+  },
+  "events": [
+    {
+      "type": "test_md_step_end",
+      "step_index": 1,
+      "status": "failed",
+      "duration_s": 52.29,
+      "ref_kind": null,
+      "unit_kind": null,
+      "inlined_count": null,
+      "failed_sub_step_index": null,
+      "v": 1,
+      "ts": "2026-10-25T00:13:50.289Z"
+    },
+    {
+      "type": "test_md_summary",
+      "overall_status": "failed",
+      "duration_s": 56,
+      "steps": {
+        "total": 2,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 1,
+        "replay_decisions": 2,
+        "author_decisions": 0
+      },
+      "adaptive_heal": {
+        "triggered": false
+      },
+      "commit": {
+        "committed": false,
+        "reason": "run_failed"
+      },
+      "artifacts": {
+        "replaced": false
+      },
+      "upload": {
+        "performed": true,
+        "succeeded": true
+      },
+      "cancelled": false,
+      "v": 1,
+      "ts": "2026-10-25T00:13:52.491Z"
+    },
+    {
+      "type": "test_md_done",
+      "overall_status": "failed",
+      "duration_s": 56,
+      "session_id": "465b6373-3295-4bca-9ca0-8931b2159b88",
+      "coverage": {
+        "status": "written",
+        "pct": 0
+      },
+      "v": 1,
+      "ts": "2026-10-25T00:13:52.498Z"
+    }
+  ]
+}

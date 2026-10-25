@@ -10,5 +10,17 @@
     "buildId": "c4af2431-30ac-45a5-a5f2-d9c5c706d9a3",
     "status": "ready",
     "promotedRevision": 1
+  },
+  {
+    "site": "store-overview",
+    "buildId": "a292d00c-7281-4b24-bf7f-141123d3a3fa",
+    "status": "ready",
+    "promotedRevision": 1
+  },
+  {
+    "site": "store-focused",
+    "buildId": "0f6166ea-0a24-4e54-88cf-4a0634b46c43",
+    "status": "verifying",
+    "promotedRevision": null
   }
 ]

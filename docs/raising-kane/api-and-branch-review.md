@@ -89,9 +89,7 @@ was unavailable in that checkout. Unit/build success should not be presented as 
 The two implementations use different artifact props/manifests, source-session models,
 API routes and controllers. A blind merge would install competing builders and could
 disconnect the verification boundary. Keep main's current builder intact while its live
-verification runs, and preserve the PoC branch. A deliberate follow-up can adopt its overview→focused-build journey and public
-reading entry; copy the interaction design with compatible tests rather than transplanting
-its 1,100-line source broker alongside the existing transaction controller.
+verification runs, and preserve the PoC branch. Main subsequently adapted its overview→focused-build interaction with compatible contracts and tests. Public-site reading remains separate; its source broker was not transplanted.
 
 Meanwhile, main received the independent generic field guide in `c2472ad`. That commit
 was merged intact before pushing the next builder checkpoint; no force push or teammate
@@ -108,8 +106,8 @@ but test counts do not establish comparative runtime correctness.
 
 | Area | PoC advantage | Main advantage / decision |
 | --- | --- | --- |
-| URL without a task | A strictly read-only generated overview; choosing a task starts a separate focused build. This better separates discovery from commitment. | Main explicitly starts a supported task before a user-session draft, but rehearses the synthetic transaction during build even for blank intent. Keep that distinction visible. Adopt the two-stage journey later, not two controllers today. |
-| Actual generated transaction | Strong code structure and independent source oracle, but the branch reports no full live proof yet. | Main's Linden generation, seven-step Kane journey, exact source result and reload have passed. Northstar's latest progress is recorded in the builder verification report. Keep main as the shipping base. |
+| URL without a task | A strictly read-only generated overview; choosing a task starts a separate focused build. This better separates discovery from commitment. | Adapted in main: v2 blank-intent builds are strictly read-only, including direct bridge calls. A separate focused build starts after explicit task choice. Older recorded v1 artifacts retain their original contract and evidence. |
+| Actual generated transaction | Strong code structure and independent source oracle, but the branch reports no full live proof yet. | Both original transaction journeys passed: Linden seven steps and Northstar six, with exact independent source outcomes. New store-mode results are recorded in the builder verification report. Keep main as the shipping base. |
 | Replay | `kane-journeys.mjs` records and reuses independently corroborated **public, read-only** journeys. It checks test digests, isolates attempted healing and expires recipes. | Main now retains assurance-designed candidate tests and recordings across unchanged requirements, and adopted pre/post test-digest checks around recording recovery. These are different replay paths. The PoC helper intentionally excludes our task-ID query URLs and account transactions; copying it would not speed these source jobs. |
 | Generated-code boundary | Blocks more reflective/DOM capabilities and uses a script-hash CSP. | Adapted its additional global, reflective-property and DOM-ref rejection into main, with regression cases. Both remain defense in depth, not formal JavaScript sandboxes. The broader artifact protocol is incompatible and was not copied. |
 | Source response checks | Can corroborate public facts from observed same-origin GET responses; it distinguishes HTML from JSON and unknowns from conflicts. | Main independently checks exact synthetic source records and receipts. Adding a further browser network job now would duplicate that check and increase latency. Useful when public-site reading becomes a supported product path. |
@@ -117,8 +115,6 @@ but test counts do not establish comparative runtime correctness.
 | Verification | One-shot browser objective plus independent outcome checks. | Main has requirements ingestion, assurance-designed committed journeys, coverage, preview Explore, retained failures and replay reporting. Keep those. |
 | CI and arbitrary-site reading | Additional suites, cloud workflow and public-site discovery are already implemented. | They depend on the PoC's script names, stores and APIs. Port deliberately after the two supported generated workflows; do not install nonfunctional CI entries just to increase the feature count. |
 
-Decision: main is the release candidate. Preserve the PoC work. Its best product follow-up
-is overview → explicit task → focused generation; its best replay follow-up is the
-proven-public-read cache when main supports that reading workflow. No branch was reset,
+Decision: main is the release candidate. Preserve the PoC work. The overview → explicit task → focused generation interaction is now implemented on main. Its public-read replay cache remains a follow-up when main supports that reading workflow. No branch was reset,
 force-pushed or overwritten. Compatible code-boundary improvements were adapted rather
 than cherry-picking the competing builder wholesale.
