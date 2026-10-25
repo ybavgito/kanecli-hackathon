@@ -1,3 +1,4 @@
+import { storefrontPage } from './storefront.mjs'
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { randomUUID } from 'node:crypto'
@@ -202,7 +203,7 @@ function merchantPage() {
 <body>
   <header><strong>Northstar Outfitters</strong><span>Merchant sandbox — simulated order</span></header>
   <main>
-    <h1>Start a return</h1>
+    <nav id="store-links" aria-label="Store navigation"></nav><h1>Start a return</h1>
     <p class="note">Order <strong>ORD-1042</strong> · This is a fictional merchant portal with synthetic data.</p>
     <div class="grid">
       <div>
@@ -245,6 +246,8 @@ function merchantPage() {
       if (!response.ok) throw new Error(data.error || 'The merchant could not process this request.');
       return data;
     }
+    const storeQuery = new URLSearchParams(location.search).toString();
+    document.getElementById('store-links').innerHTML = '<a href="/store?'+storeQuery+'">Store</a> · <a href="/store/orders/ORD-1042?'+storeQuery+'">Order details</a> · <a href="/store/help/returns?'+storeQuery+'">Return policy</a>';
     function render(draft) {
       state = draft;
       $('revision').textContent = 'Draft revision ' + draft.revision;
@@ -378,6 +381,10 @@ export function createMerchant({ verifyApproval = () => false } = {}) {
   }
 
   async function handle(req, res, url) {
+    if (req.method === 'GET' && url.pathname.startsWith('/store')) {
+      const page = storefrontPage(url)
+      return page ? html(res, page) : bad(res, 'Store page not found', 404)
+    }
     const confirmation = url.pathname.match(/^\/merchant\/returns\/([^/]+)(\/qr)?$/)
     if (req.method === 'GET' && confirmation) {
       const record = Object.values(loadStore().returns).find(

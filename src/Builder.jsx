@@ -119,6 +119,17 @@ export default function Builder() {
       setPending(false)
     }
   }
+  async function openRecorded(id) {
+    setPending(true)
+    setError('')
+    try {
+      const d = await api('/api/builder/demo/' + id, {})
+      location.href = '/?build=' + d.build.id
+    } catch (e) {
+      setError(e.message)
+      setPending(false)
+    }
+  }
   async function open() {
     setPending(true)
     try {
@@ -151,7 +162,8 @@ export default function Builder() {
   }
   const current = build?.candidates.at(-1),
     running = build && !['ready', 'blocked'].includes(build.status),
-    evidence = build?.evidence.filter((e) => ['primary', 'alternative'].includes(e.branch)) || []
+    evidence =
+      build?.evidence.filter((e) => ['overview', 'primary', 'alternative'].includes(e.branch)) || []
   return (
     <div className="builder-page">
       <header className="app-header">
@@ -235,6 +247,27 @@ export default function Builder() {
                 </p>
               )}
             </form>
+            {catalog?.recordedDemos?.length > 0 && (
+              <section className="builder-history">
+                <h2>Demo now</h2>
+                <p>
+                  Open an actual recorded, verified build immediately. Its capture date stays
+                  visible. Starting a new task runs Kane live; this does not pretend to generate a
+                  new interface.
+                </p>
+                {catalog.recordedDemos.map((d) => (
+                  <button
+                    className="builder-primary"
+                    type="button"
+                    disabled={pending}
+                    key={d.id}
+                    onClick={() => openRecorded(d.id)}
+                  >
+                    {d.title} <ArrowRight />
+                  </button>
+                ))}
+              </section>
+            )}
             {catalog?.builds.length > 0 && (
               <section className="builder-history">
                 <h2>Your interfaces</h2>
@@ -273,10 +306,21 @@ export default function Builder() {
                   {build.goal ||
                     'You supplied a URL without a task. Kane is mapping observed flows before you choose where to start.'}
                 </p>
+                <a href={build.url} target="_blank" rel="noreferrer">
+                  Open the original website <ArrowSquareOut size={15} />
+                </a>
+                {build.parentBuildId && (
+                  <p>
+                    <a href={'/?build=' + build.parentBuildId}>Back to the read-only overview</a>
+                  </p>
+                )}
               </div>
               {build.status === 'ready' ? (
                 <button className="builder-primary" disabled={pending} onClick={open}>
-                  Use my interface <ArrowRight />
+                  {build.contract?.version >= 2 && build.contract.mode === 'overview'
+                    ? 'Open site overview'
+                    : 'Use my interface'}{' '}
+                  <ArrowRight />
                 </button>
               ) : running ? (
                 <span className="builder-working">
@@ -286,6 +330,18 @@ export default function Builder() {
                 <WarningCircle size={36} />
               )}
             </section>
+            {build.importedDemo && (
+              <div className="builder-alert" role="status">
+                <div>
+                  <strong>Recorded generated build</strong>
+                  <p>
+                    Verification captured {new Date(build.recordedAt).toLocaleString()}. Artifact
+                    bytes are unchanged. Your next task uses fresh synthetic records and live Kane
+                    jobs.
+                  </p>
+                </div>
+              </div>
+            )}
             <ol className="builder-stages">
               {[
                 ['exploring_source', 'Explore'],
@@ -318,7 +374,7 @@ export default function Builder() {
                 <div>
                   <strong>No unverified interface was published.</strong>
                   <p>{build.error}</p>
-                  {build.sourceMap && evidence.length === 2 && (
+                  {build.sourceMap && evidence.length > 0 && (
                     <button disabled={pending} onClick={rebuild}>
                       Rebuild from captured evidence
                     </button>
@@ -394,9 +450,11 @@ export default function Builder() {
                               <div className="builder-step-number">{i + 1}</div>
                               <div>
                                 <h3>
-                                  {e.branch === 'primary'
-                                    ? 'Observe the original choice'
-                                    : 'Change the choice. Follow the consequences.'}
+                                  {e.branch === 'overview'
+                                    ? 'Browse the observed website paths'
+                                    : e.branch === 'primary'
+                                      ? 'Observe the original choice'
+                                      : 'Change the choice. Follow the consequences.'}
                                 </h3>
                                 <Observation value={e.facts.source_terms} />
                                 <Observation value={e.facts.source_transition} />

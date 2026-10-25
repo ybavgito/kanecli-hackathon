@@ -96,7 +96,7 @@ const merchantServer = sourceServer(merchant, sourceUrls.return),
   appointmentServer = sourceServer(appointments, sourceUrls.appointment)
 server.listen(port, '127.0.0.1', () => console.log(`Raising Kane at ${baseUrl}`))
 merchantServer.listen(merchantPort, '127.0.0.1', () =>
-  console.log(`Northstar sandbox at ${sourceUrls.return}/merchant`),
+  console.log(`Northstar sandbox at ${sourceUrls.return}/store`),
 )
 appointmentServer.listen(appointmentPort, '127.0.0.1', () =>
   console.log(`Linden sandbox at ${sourceUrls.appointment}/appointments`),

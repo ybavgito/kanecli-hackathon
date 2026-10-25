@@ -96,3 +96,63 @@ test('retained journey edits cannot silently reuse a frozen verification workspa
     await rm(root, { recursive: true, force: true })
   }
 })
+
+test('read-only overview sessions reject source operations even through direct bridge requests', async () => {
+  const { createBuilder, buildContract } = await import('../../server/builder/controller.mjs')
+  const { Readable } = await import('node:stream')
+  const root = await mkdtemp(join(tmpdir(), 'rk-overview-boundary-')),
+    old = process.env.RAISING_KANE_DATA_DIR
+  process.env.RAISING_KANE_DATA_DIR = root
+  let operations = 0
+  try {
+    const builder = createBuilder({
+      baseUrl: 'http://localhost',
+      sourceUrls: { return: 'http://source' },
+      controller: {
+        invoke: async () => {
+          operations++
+          throw Error('Unexpected source operation')
+        },
+      },
+      merchant: {},
+      appointments: {},
+    })
+    builder.builds.set('build', {
+      id: 'build',
+      kind: 'return',
+      ownerId: 'owner',
+      contract: buildContract('return', ''),
+    })
+    builder.sessions.set('session', {
+      id: 'session',
+      buildId: 'build',
+      mode: 'use',
+      ownerId: 'owner',
+    })
+    for (const action of ['start', 'choice', 'check', 'approve', 'submit']) {
+      const req = Readable.from([JSON.stringify({ action, payload: {} })])
+      req.method = 'POST'
+      req.clientId = 'owner'
+      let status, body
+      await builder.handle(
+        req,
+        {
+          writeHead(s) {
+            status = s
+          },
+          end(b) {
+            body = JSON.parse(b)
+          },
+        },
+        new URL('http://localhost/api/builder/build/session/session'),
+      )
+      assert.equal(status, 400)
+      assert.match(body.error, /read-only/)
+    }
+    assert.equal(operations, 0)
+  } finally {
+    if (old === undefined) delete process.env.RAISING_KANE_DATA_DIR
+    else process.env.RAISING_KANE_DATA_DIR = old
+    await rm(root, { recursive: true, force: true })
+  }
+})

@@ -5,6 +5,7 @@ import { resolve, join } from 'node:path'
 import { explore, mission, assureAndVerify } from './kane.mjs'
 import { generate, compileArtifact, hash, MODEL } from './model.mjs'
 import { sourceOutcomeMatches } from './outcome.mjs'
+import { recordedDemoCatalog, importRecordedDemo } from './demo.mjs'
 
 const busyStates = new Set([
   'connecting',
@@ -48,9 +49,9 @@ export function sourceKind(url, sourceUrls) {
   for (const [kind, origin] of Object.entries(sourceUrls))
     if (
       u.origin === origin &&
-      ['/', '/merchant', '/appointments'].includes(u.pathname) &&
+      ['/', '/store', '/merchant', '/appointments'].includes(u.pathname) &&
       ((kind === 'return' && u.pathname !== '/appointments') ||
-        (kind === 'appointment' && u.pathname !== '/merchant'))
+        (kind === 'appointment' && !['/merchant', '/store'].includes(u.pathname)))
     )
       return kind
   throw Error(
@@ -59,7 +60,7 @@ export function sourceKind(url, sourceUrls) {
 }
 export function buildContract(kind, goal) {
   return {
-    version: 1,
+    version: 2,
     kind,
     goal: goal || null,
     mode: goal ? 'focused' : 'overview',
@@ -69,8 +70,15 @@ export function buildContract(kind, goal) {
       kind === 'return'
         ? 'Return the red shoes, keep the jacket, refund original payment.'
         : 'Move the washer repair to Saturday morning, keep Maya, no added fee.',
-    requirements:
-      kind === 'return'
+    requirements: !goal
+      ? [
+          'Show only actually observed source screens, links and read-only facts',
+          'Distinguish browsing, order information and supported transactions',
+          'Keep unknown or unvisited paths visibly unverified',
+          'Do not start, prepare, approve or submit any transaction',
+          'Offer an explicit transition to a separate focused build',
+        ]
+      : kind === 'return'
         ? [
             'Keep the jacket',
             'Return only red shoes',
@@ -89,13 +97,15 @@ export function buildContract(kind, goal) {
             'Explicit approval of exact terms',
             'Verify one active booking after confirmation',
           ],
-    actions:
-      kind === 'return'
+    actions: !goal
+      ? []
+      : kind === 'return'
         ? ['start', 'choice:reason', 'choice:method', 'check', 'restore']
         : ['start', 'choice:slotId', 'check'],
     unknownPolicy: 'Unknowns stay visible and block dependent operations.',
   }
 }
+export const isReadOnlyOverview = (b) => b.contract?.version >= 2 && b.contract.mode === 'overview'
 export function validateBridgeAction(kind, action, payload = {}) {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload))
     throw Error('Invalid action payload.')
@@ -174,6 +184,19 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
   function sourceUrl(b, id) {
     return sourceUrls[b.kind] + sourcePath(b) + '?taskId=' + id
   }
+  function explorationUrl(b) {
+    const url = new URL(b.url)
+    url.searchParams.set('taskId', b.sourceTaskId)
+    if (isReadOnlyOverview(b)) url.searchParams.set('view', 'readonly')
+    return url.href
+  }
+  function overviewFingerprint(b) {
+    const adapter = b.kind === 'return' ? merchant : appointments
+    return hash({
+      draft: adapter.getDraft(b.sourceTaskId),
+      returns: b.kind === 'return' ? merchant.listReturns(b.sourceTaskId) : null,
+    })
+  }
   function summaryMap(map) {
     return {
       explorationId: map.explorationId,
@@ -189,16 +212,21 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
   async function observe(b, branch) {
     const cached = b.evidence.find((e) => e.branch === branch)
     if (cached) return cached
-    if (!['primary', 'alternative'].includes(branch)) throw Error('Unsupported source branch.')
+    if (
+      isReadOnlyOverview(b) ? branch !== 'overview' : !['primary', 'alternative'].includes(branch)
+    )
+      throw Error('Unsupported source branch for this build mode.')
     b.status = 'investigating'
     event(b, 'agent.tool', `The builder asked Kane to inspect the ${branch} source branch.`)
     const id = randomUUID(),
       directory = join(root, b.id, 'observations', id),
-      url = sourceUrl(b, id)
+      url = branch === 'overview' ? explorationUrl(b) : sourceUrl(b, id)
     const instruction =
-      b.kind === 'return'
-        ? `Select only Red running shoes Size 8 and keep Black jacket unselected. Choose Size or fit issue as the reason. ${branch === 'primary' ? 'Choose Print a shipping label and then Original payment method.' : 'First choose Print a shipping label and Original payment method. Then change to Printer-free QR drop-off and DO NOT change the refund destination afterward.'} Wait for saves. Do not submit. Store exact current method, fee, refund amount and destination as source_terms. Store available reasons, methods and destinations as source_choices. Store the observed effect of the method selection as source_transition. Store item and order identity as source_identity. Store visible requirements as source_requirements. Store current page URL as current_url. Verify the review shows only the shoes and the jacket is kept.`
-        : `Inspect the original booking, then ${branch === 'primary' ? 'select the available Saturday morning slot that keeps Maya Chen without adding a fee' : 'select the earliest Saturday slot with a different technician'}. Wait for Draft saved; do not confirm. Store selected time, technician, fee and timezone as source_terms. Store every available slot with time, technician, fee and availability as source_choices. Store what changed compared with the original booking as source_transition. Store service and booking ID as source_identity. Store visible requirements as source_requirements. Store current page URL as current_url. Verify a draft is visible and the original booking is still unchanged.`
+      branch === 'overview'
+        ? 'Read only. Follow visible links to inspect the product collection, one product detail, order list and help options when available. Preserve taskId and view=readonly in links. Do not prepare a return, choose return items, change an appointment, approve or submit. Store observed screens and facts as source_terms. Store distinct browsable paths with their actual URLs as source_choices. Store the actual links followed and reached pages as source_transition. Store source identity as source_identity and limitations as source_requirements. Store the current URL as current_url. Verify no transaction was started.'
+        : b.kind === 'return'
+          ? `Select only Red running shoes Size 8 and keep Black jacket unselected. Choose Size or fit issue as the reason. ${branch === 'primary' ? 'Choose Print a shipping label and then Original payment method.' : 'First choose Print a shipping label and Original payment method. Then change to Printer-free QR drop-off and DO NOT change the refund destination afterward.'} Wait for saves. Do not submit. Store exact current method, fee, refund amount and destination as source_terms. Store available reasons, methods and destinations as source_choices. Store the observed effect of the method selection as source_transition. Store item and order identity as source_identity. Store visible requirements as source_requirements. Store current page URL as current_url. Verify the review shows only the shoes and the jacket is kept.`
+          : `Inspect the original booking, then ${branch === 'primary' ? 'select the available Saturday morning slot that keeps Maya Chen without adding a fee' : 'select the earliest Saturday slot with a different technician'}. Wait for Draft saved; do not confirm. Store selected time, technician, fee and timezone as source_terms. Store every available slot with time, technician, fee and availability as source_choices. Store what changed compared with the original booking as source_transition. Store service and booking ID as source_identity. Store visible requirements as source_requirements. Store current page URL as current_url. Verify a draft is visible and the original booking is still unchanged.`
     const result = await mission({
       directory,
       id,
@@ -234,7 +262,7 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
     event(
       b,
       'journey.observed',
-      `${branch === 'primary' ? 'Original choice' : 'Changed choice'} observed and captured.`,
+      `${branch === 'overview' ? 'Read-only site paths' : branch === 'primary' ? 'Original choice' : 'Changed choice'} observed and captured.`,
       { evidenceId: id },
     )
     return e
@@ -243,6 +271,7 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
     try {
       const directory = join(root, b.id)
       await mkdir(directory, { recursive: true })
+      if (isReadOnlyOverview(b)) b.overviewBaseline ||= overviewFingerprint(b)
       b.status = reuseEvidence ? 'building' : 'exploring_source'
       event(
         b,
@@ -257,7 +286,7 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
         ? b.sourceMap
         : await explore({
             directory: join(directory, 'source-map'),
-            url: sourceUrl(b, b.sourceTaskId),
+            url: explorationUrl(b),
             label: `source ${b.id.slice(0, 8)}`,
             leases: b.goal ? 6 : 12,
             goal: b.goal,
@@ -305,6 +334,7 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
           at: b.createdAt,
         })
       }
+      if (isReadOnlyOverview(b)) await observe(b, 'overview')
       let previous = null,
         failure = null
       if (reuseEvidence && b.candidates.length) {
@@ -356,9 +386,9 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
               }),
           })
           // Both supported branches must be observed, even if the model omitted a request.
-          const missing = ['primary', 'alternative'].filter(
-            (branch) => !b.evidence.some((e) => e.branch === branch),
-          )
+          const missing = (
+            isReadOnlyOverview(b) ? ['overview'] : ['primary', 'alternative']
+          ).filter((branch) => !b.evidence.some((e) => e.branch === branch))
           if (missing.length) {
             for (const branch of missing) await observe(b, branch)
             previous = artifact
@@ -430,8 +460,9 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
           b.verificationSessionId = test.id
           save()
           const checkUrl = `${baseUrl}/builder-preview/${b.id}/verify?key=${b.verificationKey}`
-          const objective =
-            b.kind === 'return'
+          const objective = isReadOnlyOverview(b)
+            ? 'Inspect the generated read-only website overview. Verify it displays actual observed source screens and distinct browsable paths, identifies unknown or unvisited paths honestly, and does not claim any transaction is completed. Use a local details or navigation control if one is available. Verify the trusted host offers Build a focused interface as an explicit next step; do not activate it during this check. No Return reason, return-method selection, approval or submission controls may be offered by this overview. Open the same URL again and verify the overview remains available. Do not start or change a source task.'
+            : b.kind === 'return'
               ? 'Click Start this task if visible. Wait for the source order to load. In the generated interface choose Size or fit issue under Return reason. Wait until source work finishes. Verify the review shows only red shoes, jacket kept, Original payment method and $80 refund for the printed label. Change Return method to Printer-free QR drop-off. Wait for the source check. Verify a conflict is visible, $5 deduction and $75 refund are shown, and requested Original payment method differs from observed Store credit. Click Restore my choices and wait until the source review is verified. Verify Original payment method and $75 refund are displayed. Use the trusted approval panel: click Approve exact terms, then Submit approved request. Wait for the saved confirmation. Verify Return requested; refund pending, a request identifier, $75 refund, Original payment method and jacket kept. Reload and verify the same saved receipt remains.'
               : 'Click Start this task if visible. Wait for the source booking to load. Choose the available Saturday October 31 11:00 slot with Maya Chen and no added fee in the generated interface. Wait for the source review to be verified. Verify Maya, Saturday morning and $0 added fee. Use the trusted approval panel: click Approve exact terms, then Submit approved request. Wait for the saved confirmation. Verify Appointment change confirmed, the new time, Maya and no added fee. Reload and verify the same saved receipt remains.'
           const result = await assureAndVerify({
@@ -462,7 +493,9 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
             artifactHash: candidate.hash,
             contractHash: b.contractHash,
             taskId: test.taskId,
-            sourceMatch: sourceOutcomeMatches(b.kind, task, source),
+            sourceMatch: isReadOnlyOverview(b)
+              ? !test.taskId && overviewFingerprint(b) === b.overviewBaseline
+              : sourceOutcomeMatches(b.kind, task, source),
             at: new Date().toISOString(),
           }
           if (result.status === 'passed' && candidate.verification.sourceMatch) {
@@ -472,7 +505,9 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
             event(
               b,
               'artifact.promoted',
-              'Your interface passed the browser journey and its saved source outcome was confirmed.',
+              isReadOnlyOverview(b)
+                ? 'Your read-only overview passed its browser journey; the source record remained unchanged.'
+                : 'Your interface passed the browser journey and its saved source outcome was confirmed.',
               { revision },
             )
             return
@@ -548,6 +583,8 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
       kind: b.kind,
       status: 'not_started',
       discovery: {
+        capturedAt: b.sourceMap.capturedAt,
+        observations: b.evidence.filter((e) => e.branch === 'overview').map((e) => e.facts),
         screens: b.sourceMap.screens,
         flows: [
           ...b.sourceMap.flows,
@@ -578,6 +615,8 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
     }
   }
   async function act(s, b, action, payload = {}) {
+    if (isReadOnlyOverview(b))
+      throw Error('This overview is read-only. Start a separate focused build to perform a task.')
     validateBridgeAction(b.kind, action, payload)
     if (locks.has(s.id)) throw Error('A request is already being handled.')
     locks.add(s.id)
@@ -622,7 +661,7 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
               {
                 kind: 'return',
                 name: 'Northstar Outfitters',
-                url: sourceUrls.return + '/merchant',
+                url: sourceUrls.return + '/store',
               },
               {
                 kind: 'appointment',
@@ -632,6 +671,7 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
             ],
             model: MODEL,
             configured: !!process.env.OPENAI_API_KEY,
+            recordedDemos: await recordedDemoCatalog(),
           })
           return true
         }
@@ -673,6 +713,28 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
         send(res, 202, { build: publicBuild(b) })
         return true
       }
+      if (parts[2] === 'demo' && req.method === 'POST') {
+        const label = parts[3]
+        let demo = [...builds.values()].find(
+          (b) => b.ownerId === req.clientId && b.importedDemo === label,
+        )
+        if (!demo) {
+          demo = await importRecordedDemo(label, {
+            root,
+            ownerId: req.clientId,
+            baseUrl,
+            sourceUrls,
+          })
+          builds.set(demo.id, demo)
+          event(
+            demo,
+            'demo.loaded',
+            'Opened a recorded generated build with preserved artifact hashes. No fresh generation or verification is claimed; new user tasks run Kane live.',
+          )
+        }
+        send(res, 201, { build: publicBuild(demo) })
+        return true
+      }
       const b = builds.get(parts[2])
       if (!b) throw Error('Build not found.')
       // Source evidence is synthetic, but build control and account history stay owner-bound.
@@ -703,6 +765,42 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
         return true
       }
       if (b.ownerId !== req.clientId) throw Error('Open this build in its original browser.')
+      if (parts[3] === 'focus' && req.method === 'POST') {
+        if (!isReadOnlyOverview(b) || b.status !== 'ready')
+          throw Error('Choose a task from a verified overview first.')
+        if ([...builds.values()].some((other) => busyStates.has(other.status)))
+          throw Error('Wait for the current build to finish.')
+        if (!process.env.OPENAI_API_KEY)
+          throw Error('Set OPENAI_API_KEY to build a focused interface.')
+        const goal = b.contract.supportedTask
+        const contract = buildContract(b.kind, goal)
+        const focused = {
+          id: randomUUID(),
+          parentBuildId: b.id,
+          ownerId: req.clientId,
+          kind: b.kind,
+          url: b.url,
+          goal,
+          contract,
+          contractHash: hash(contract),
+          sourceTaskId: randomUUID(),
+          status: 'connecting',
+          events: [],
+          evidence: [],
+          candidates: [],
+          createdAt: new Date().toISOString(),
+        }
+        builds.set(focused.id, focused)
+        save()
+        event(
+          focused,
+          'task.chosen',
+          'You chose a supported task from the read-only overview. Starting a separate focused build.',
+        )
+        void executeBuild(focused)
+        send(res, 202, { build: publicBuild(focused) })
+        return true
+      }
       if (parts[3] === 'rebuild' && req.method === 'POST') {
         if (
           b.status !== 'blocked' ||
@@ -711,7 +809,9 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
           throw Error('Wait for running work to finish before rebuilding a blocked interface.')
         if (
           !b.sourceMap?.screens?.length ||
-          !['primary', 'alternative'].every((branch) => b.evidence.some((e) => e.branch === branch))
+          !(isReadOnlyOverview(b) ? ['overview'] : ['primary', 'alternative']).every((branch) =>
+            b.evidence.some((e) => e.branch === branch),
+          )
         )
           throw Error('Source evidence is incomplete. Start a new build with fresh discovery.')
         if (!process.env.OPENAI_API_KEY) throw Error('Set OPENAI_API_KEY to rebuild.')

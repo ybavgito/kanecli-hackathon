@@ -7,7 +7,9 @@ results establish tested behavior.
 ## Product entry and scope
 
 The default entry accepts a supported website URL and an optional intent. Blank intent
-is stored as null and selects overview mode. A supplied intent guides the exploration
+is stored as null and selects a strictly read-only overview (contract v2). Choosing
+**Build a focused interface** creates a separate build with an explicit supported task.
+The overview bridge rejects every source operation, including direct requests. A supplied intent guides the exploration
 prompt and the generated composition. This is focus, not permission to expand the source
 adapter's supported transaction scope. The person explicitly starts the supported task
 shown in the trusted host before any user-session source draft is prepared.
@@ -19,7 +21,10 @@ and all transactions are explicitly synthetic. The earlier workflows are preserv
 `/?legacy=1`; existing `?taskId=` links still open their original task.
 
 URL-only mode maps reachable screens and candidate flows within a budget, generates an
-overview, and shows observed alternate branches. It does not promise an exhaustive crawl
+overview with local detail/navigation controls. It does not rehearse a transaction.
+The independent overview check verifies that its source record remained unchanged.
+Focused builds separately inspect the supported mutation branches and validate the final
+transaction. Earlier v1 build records retain their original behavior and evidence. It does not promise an exhaustive crawl
 or executable support for every flow name. A read-only Explore pass may report a single
 screen and no flow records on a form-heavy source. Bounded branch missions establish
 actual conditional behavior separately, on disposable synthetic records.
@@ -87,7 +92,7 @@ local evidence are stored under the private data directory, excluded from git.
 
 ## Verification status
 
-See the implementation verification report once published. Unit tests and a frontend
+See the [builder verification report](builder-verification.md). Unit tests and a frontend
 build are necessary checks but do not establish the full browser journey. Earlier input
 experiments remain separate from this runtime integration.
 
@@ -114,3 +119,14 @@ browser failure is reported to the coding agent. Runtime results retain Kane's a
 replayed/authored step counts. Merely retaining a recording is not proof it replayed.
 Source actions still use bounded one-shot objectives; no source-transaction replay speedup
 is claimed. The first discovery/generation/verification run remains relatively expensive.
+
+## Navigable Northstar source
+
+The default store entry is `/store`; the existing `/merchant` return flow is preserved.
+The store has a product collection and category links, three product-detail pages, size
+availability variants, two orders, delivery history, and returns/delivery/warranty help.
+One order is eligible for returns; the older equipment order directs the reader toward
+warranty information. Size 9 shoes are sold out while size 8 is available. Every internal
+link retains the synthetic record and read-only inspection context. There is no pretend
+checkout or warranty submission. These paths exist to make broad and task-focused
+discovery materially different, not to inflate the map with empty pages.

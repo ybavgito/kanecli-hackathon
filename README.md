@@ -68,7 +68,10 @@ not deleted or silently adopted by another browser.
 ## Experience and demo
 
 Enter a supported URL, optionally describe a task, and choose **Explore & simplify**.
-Blank intent produces an overview; a supplied intent focuses discovery and generation.
+Blank intent produces a strictly read-only site overview. Choosing a supported task
+starts a separate focused build; supplying an intent initially goes directly to focused
+discovery and generation. Northstar now starts at `/store`, with product/category links,
+order details, delivery tracking and separate returns/warranty paths.
 Inspect source captures and evidence-linked decisions while the builder works. Only
 a candidate that passes its Kane journey and saved-source check gets **Use my interface**.
 The generated interface then operates through the same trusted source controller:

@@ -20,16 +20,20 @@ const artifact = {
     { component: 'Validate', change: 'Expose current validation', evidenceIds: ['source-1'] },
   ],
 }
-test('URL-only remains an overview; an optional goal changes focus without weakening requirements', () => {
+test('URL-only has a read-only contract; choosing a goal enables the fixed transaction contract', () => {
   const broad = buildContract('return', ''),
     focused = buildContract('return', 'Make printer-free return easier')
   assert.equal(broad.mode, 'overview')
   assert.equal(broad.goal, null)
   assert.equal(focused.mode, 'focused')
-  assert.deepEqual(broad.requirements, focused.requirements)
+  assert.deepEqual(broad.actions, [])
+  assert.ok(broad.requirements.includes('Do not start, prepare, approve or submit any transaction'))
+  assert.ok(focused.requirements.includes('Preserve original-payment preference'))
+  assert.ok(focused.actions.includes('choice:method'))
 })
 test('execution scope accepts only exact configured synthetic source entrypoints', () => {
   assert.equal(sourceKind(sources.return + '/merchant', sources), 'return')
+  assert.equal(sourceKind(sources.return + '/store', sources), 'return')
   for (const url of [
     'https://example.com',
     'http://127.0.0.1:5174/appointments',

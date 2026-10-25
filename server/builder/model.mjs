@@ -51,7 +51,7 @@ const tool = {
   strict: true,
   parameters: {
     type: 'object',
-    properties: { branch: { type: 'string', enum: ['primary', 'alternative'] } },
+    properties: { branch: { type: 'string', enum: ['overview', 'primary', 'alternative'] } },
     required: ['branch'],
     additionalProperties: false,
   },
@@ -120,7 +120,11 @@ export async function generate({
       },
       body: JSON.stringify({
         model: MODEL,
-        instructions,
+        instructions:
+          instructions +
+          (contract.version >= 2 && contract.mode === 'overview'
+            ? '\nOVERVIEW CONTRACT OVERRIDES THE TRANSACTION GUIDANCE ABOVE. No task was selected. Generate a strictly read-only site navigator, with actual observed products, orders, help topics and links represented as local detail views or filters. Do not assume the user wants a return or appointment. Do not call act at all. Do not show return reason, return method, validation, restore, approval or submission controls. Never display a transaction success. Use evidence and discovery facts to make distinct observed paths easy to inspect; label unvisited or unsupported paths unknown. Local buttons may expand actual captured details. The host provides Build a focused interface for the later explicit task choice. Your only inspection tool branch is overview, which reads without changing the source. Do not request primary or alternative in this mode.'
+            : ''),
         input,
         store: false,
         reasoning: { effort: 'medium' },
@@ -150,7 +154,12 @@ export async function generate({
         if (call.name !== 'inspect_branch' || ++toolCalls > 2)
           throw Error('Builder inspection budget exceeded.')
         const { branch } = JSON.parse(call.arguments)
-        if (!['primary', 'alternative'].includes(branch)) throw Error('Unsupported branch request.')
+        if (
+          contract.version >= 2 && contract.mode === 'overview'
+            ? branch !== 'overview'
+            : !['primary', 'alternative'].includes(branch)
+        )
+          throw Error('Unsupported branch request.')
         const e = await inspect(branch)
         input.push({
           type: 'function_call_output',

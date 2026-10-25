@@ -67,6 +67,8 @@ export function previewHandler(builder) {
           kind: b.kind,
           status: 'not_started',
           discovery: {
+            capturedAt: b.sourceMap.capturedAt,
+            observations: b.evidence.filter((e) => e.branch === 'overview').map((e) => e.facts),
             screens: b.sourceMap.screens,
             flows: [
               ...b.sourceMap.flows,
@@ -96,7 +98,16 @@ export function previewHandler(builder) {
           merchant: null,
         }
       : await builder.sessionTask(s, b)
-    const config = { buildId: b.id, revision: c.revision, sessionId: s?.id, inspect, initial }
+    const config = {
+      buildId: b.id,
+      revision: c.revision,
+      sessionId: s?.id,
+      inspect,
+      initial,
+      overview: b.contract?.version >= 2 && b.contract.mode === 'overview',
+      test: s?.mode === 'test',
+      supportedTask: b.contract?.supportedTask,
+    }
     res.writeHead(200, {
       'Content-Type': 'text/html; charset=utf-8',
       'Cache-Control': 'no-store',
@@ -109,7 +120,7 @@ const renderReceipt=${receiptMarkup.toString()};
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>n==null?'Unknown':new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n/100);
 function paint(){frame.contentWindow.postMessage({type:'rk-state',task},'*');document.getElementById('status').textContent=task.progress?.text||(task.status==='complete'?'Source confirmation verified.':task.status==='not_started'?'Choose a discovered flow. This release can execute the supported task below.':task.status.replaceAll('_',' '));document.getElementById('error').textContent=task.error||'';
-const start=document.getElementById('start');start.innerHTML=task.status==='not_started'?'<strong>'+escape(task.request)+'</strong><br><button id="start-task" '+(config.inspect?'disabled':'')+'>Start this task</button>':'';document.getElementById('start-task')?.addEventListener('click',()=>action('start',{}));
+const start=document.getElementById('start');if(config.overview){start.innerHTML='<p>Read-only overview · No task has started. This shows captured observations, not live inventory.</p><p>'+escape(config.supportedTask)+'</p><button id="focus-task" '+(config.inspect||config.test?'disabled':'')+'>Build a focused interface</button>';document.getElementById('focus-task').onclick=async()=>{try{const r=await fetch('/api/builder/'+config.buildId+'/focus',{method:'POST'});const d=await r.json();if(!r.ok)throw Error(d.error);location.href='/?build='+d.build.id}catch(e){document.getElementById('error').textContent=e.message}};}else{start.innerHTML=task.status==='not_started'?'<strong>'+escape(task.request)+'</strong><br><button id="start-task" '+(config.inspect?'disabled':'')+'>Start this task</button>':'';document.getElementById('start-task')?.addEventListener('click',()=>action('start',{}));}
 const approval=document.getElementById('approval');approval.hidden=!['ready','approved'].includes(task.status);approval.innerHTML='';if(!approval.hidden){const d=task.merchant;approval.innerHTML='<h2>Approve these exact source terms</h2><p>'+escape(task.kind==='return'?'Shoes only · Jacket kept · '+(d.refundDestination==='original_payment'?'Original payment method':'Store credit')+' · '+money(d.expectedRefundCents):d.startsAt+' · '+d.technician+' · '+money(d.feeCents)+' added fee')+'</p><p>Only this trusted panel can approve and submit. All records in this demo are synthetic.</p><button id="commit">'+(task.status==='ready'?'Approve exact terms':'Submit approved request')+'</button>';document.getElementById('commit').disabled=pending;document.getElementById('commit').onclick=()=>action(task.status==='ready'?'approve':'submit',{});}
 const receipt=document.getElementById('receipt');receipt.hidden=!task.receipt;frame.hidden=!!task.receipt;if(task.receipt)receipt.innerHTML=renderReceipt(task);}
 
