@@ -44,6 +44,13 @@ const fail = (res, error) => {
 const server = createServer(async (req, res) => {
   try {
     const url = new URL(req.url, baseUrl)
+    // The session cookie and request origin are bound to one host, so send loopback
+    // aliases (localhost, [::1]) to it instead of letting actions fail on a host mismatch.
+    const host = (req.headers.host || '').toLowerCase()
+    if (host === `localhost:${port}` || host === `[::1]:${port}`) {
+      res.writeHead(302, { Location: baseUrl + req.url })
+      return res.end()
+    }
     // Approval is bound to the human app session. Kane's source browser owns a
     // different profile and cannot approve somebody else's task by navigating here.
     const rawCookie = (req.headers.cookie || '')
@@ -63,7 +70,9 @@ const server = createServer(async (req, res) => {
     if (req.method === 'POST' && req.headers.origin && req.headers.origin !== baseUrl) {
       res.writeHead(403, { 'Content-Type': 'application/json' })
       return res.end(
-        JSON.stringify({ error: 'Use the Raising Kane task interface for this action.' }),
+        JSON.stringify({
+          error: `Open Raising Kane at ${baseUrl} to use this action. Other addresses are blocked.`,
+        }),
       )
     }
     if (await builder.handle(req, res, url)) return
