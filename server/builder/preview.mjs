@@ -4,10 +4,26 @@ import { hash } from './model.mjs'
 const json = (value) => JSON.stringify(value).replaceAll('<', '\\u003c')
 export function previewHandler(builder) {
   return async (req, res, url) => {
-    const match = url.pathname.match(/^\/builder-(preview|artifact)\/([a-f0-9-]+)\/(\d+)$/)
+    const match = url.pathname.match(/^\/builder-(preview|artifact)\/([a-f0-9-]+)\/(\d+|verify)$/)
     if (!match) return false
-    const b = builder.builds.get(match[2]),
-      c = b?.candidates.find((c) => c.revision === Number(match[3]))
+    const b = builder.builds.get(match[2])
+    const verification = match[3] === 'verify'
+    const verificationSession = verification && builder.sessions.get(b?.verificationSessionId)
+    if (
+      verification &&
+      (match[1] !== 'preview' ||
+        !b?.verificationKey ||
+        url.searchParams.get('key') !== b.verificationKey ||
+        verificationSession?.mode !== 'test' ||
+        verificationSession.buildId !== b.id)
+    ) {
+      res.writeHead(403)
+      res.end('Invalid sandbox verification session.')
+      return true
+    }
+    const c = b?.candidates.find(
+      (c) => c.revision === (verification ? verificationSession.revision : Number(match[3])),
+    )
     if (!c?.hash) {
       res.writeHead(404)
       res.end('Candidate not built.')
@@ -32,8 +48,8 @@ export function previewHandler(builder) {
       res.end(html)
       return true
     }
-    const inspect = url.searchParams.get('inspect') === '1',
-      s = builder.sessions.get(url.searchParams.get('session'))
+    const inspect = !verification && url.searchParams.get('inspect') === '1',
+      s = verification ? verificationSession : builder.sessions.get(url.searchParams.get('session'))
     if (
       !inspect &&
       (!s ||

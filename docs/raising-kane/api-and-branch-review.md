@@ -72,3 +72,27 @@ The new CI files and source explorer UI expect the PoC's package scripts and con
 They should not be cherry-picked in isolation. Both branches retain their work; no PoC
 branch was reset or overwritten. A later integration should choose one connection model
 and explicitly migrate its tests, rather than run competing explorers for the same URL.
+
+## Later branch updates during verification
+
+The PoC advanced again to `63db8e4`, through `3f5b334` and `7008bba`. It now has a
+parallel implementation of generated artifacts, an inspection broker, source contracts,
+bounded code repair and separate preview execution. Its latest change makes blank-intent
+builds strictly read-only overviews and starts a separate focused build after task choice.
+It also retains the earlier public-site reading view. Those are useful product directions.
+
+This is substantial implementation work, not just a design sketch. Its own
+`runtime-builder-status.md` nevertheless reports landing verification only and explicitly
+says the complete live OpenAI/Kane builder loop has not passed there because the API key
+was unavailable in that checkout. Unit/build success should not be presented as that proof.
+
+The two implementations use different artifact props/manifests, source-session models,
+API routes and controllers. A blind merge would install competing builders and could
+disconnect the verification boundary. Keep main's current builder intact while its live
+verification runs, and preserve the PoC branch. A deliberate follow-up can adopt its overview→focused-build journey and public
+reading entry; copy the interaction design with compatible tests rather than transplanting
+its 1,100-line source broker alongside the existing transaction controller.
+
+Meanwhile, main received the independent generic field guide in `c2472ad`. That commit
+was merged intact before pushing the next builder checkpoint; no force push or teammate
+history rewrite was used. The generic guide is at [docs/kane-cli/field-guide.md](../kane-cli/field-guide.md).

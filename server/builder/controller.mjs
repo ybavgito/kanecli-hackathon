@@ -130,7 +130,7 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
       if (busyStates.has(b.status)) {
         b.status = 'blocked'
         b.error =
-          'Build interrupted. Start a new build; existing evidence and candidates are retained.'
+          'Build interrupted. Rebuild from captured evidence when available, or start a new build. Existing candidates are retained.'
         const pending = b.candidates?.at(-1)
         if (pending && ['checking', 'building'].includes(pending.status)) {
           pending.status = 'interrupted'
@@ -167,7 +167,7 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
     save()
   }
   function publicBuild(b) {
-    const { ownerId, ...copy } = b
+    const { ownerId, verificationKey, verificationSessionId, ...copy } = b
     return { ...copy, evidence: b.evidence.map(({ imagePath, ...e }) => e) }
   }
   const sourcePath = (b) => (b.kind === 'return' ? '/merchant' : '/appointments')
@@ -266,8 +266,10 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
       b.sourceMap = map
       event(
         b,
-        'explore.finished',
-        `${map.screens.length} screens and ${map.flows.length} flow records observed. ${map.complete ? 'Exploration finished.' : 'Exploration was bounded; unseen paths remain unverified.'}`,
+        reuseEvidence ? 'evidence.reused' : 'explore.finished',
+        reuseEvidence
+          ? `Reusing ${map.screens.length} screens and ${map.flows.length} flow records captured at ${map.capturedAt}. No fresh discovery is claimed.`
+          : `${map.screens.length} screens and ${map.flows.length} flow records observed. ${map.complete ? 'Exploration finished.' : 'Exploration was bounded; unseen paths remain unverified.'}`,
       )
       if (!map.screens.length)
         throw Error('No source screens were observed. No supported interface can be generated.')
@@ -423,13 +425,18 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
             'test',
             'verifier-' + b.id + '-' + revision,
           )
-          const checkUrl = candidate.previewUrl + '?session=' + test.id
+          // Stable sandbox-only entry lets the original test and recorded steps survive repairs.
+          b.verificationKey ||= randomUUID()
+          b.verificationSessionId = test.id
+          save()
+          const checkUrl = `${baseUrl}/builder-preview/${b.id}/verify?key=${b.verificationKey}`
           const objective =
             b.kind === 'return'
               ? 'Click Start this task if visible. Wait for the source order to load. In the generated interface choose Size or fit issue under Return reason. Wait until source work finishes. Verify the review shows only red shoes, jacket kept, Original payment method and $80 refund for the printed label. Change Return method to Printer-free QR drop-off. Wait for the source check. Verify a conflict is visible, $5 deduction and $75 refund are shown, and requested Original payment method differs from observed Store credit. Click Restore my choices and wait until the source review is verified. Verify Original payment method and $75 refund are displayed. Use the trusted approval panel: click Approve exact terms, then Submit approved request. Wait for the saved confirmation. Verify Return requested; refund pending, a request identifier, $75 refund, Original payment method and jacket kept. Reload and verify the same saved receipt remains.'
               : 'Click Start this task if visible. Wait for the source booking to load. Choose the available Saturday October 31 11:00 slot with Maya Chen and no added fee in the generated interface. Wait for the source review to be verified. Verify Maya, Saturday morning and $0 added fee. Use the trusted approval panel: click Approve exact terms, then Submit approved request. Wait for the saved confirmation. Verify Appointment change confirmed, the new time, Maya and no added fee. Reload and verify the same saved receipt remains.'
           const result = await assureAndVerify({
             directory: join(candidateDir, 'verification'),
+            cacheDirectory: join(directory, 'verification-cache'),
             id: b.id + '-' + revision,
             url: checkUrl,
             objective,
@@ -447,6 +454,7 @@ export function createBuilder({ baseUrl, sourceUrls, controller, merchant, appoi
             sessionId: result.sessionId,
             shots: result.shots,
             testFile: result.testFile,
+            replay: result.replay,
             coverage: result.coverage,
             evidenceIngestStatus: result.ingestStatus,
             artifactHash: candidate.hash,

@@ -539,6 +539,12 @@ export default function Builder() {
                           {c.verification && (
                             <ul>
                               <li>Browser journey: {c.verification.status}</li>
+                              {c.verification.replay && (
+                                <li>
+                                  Recorded steps replayed: {c.verification.replay.replayedSteps};
+                                  steps authored: {c.verification.replay.authoredSteps}
+                                </li>
+                              )}
                               <li>
                                 Saved source outcome:{' '}
                                 {c.verification.sourceMatch ? 'Confirmed' : 'Not confirmed'}

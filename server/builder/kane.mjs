@@ -1,5 +1,6 @@
 import { spawn, spawnSync } from 'node:child_process'
-import { mkdir, writeFile, readFile, readdir } from 'node:fs/promises'
+import { mkdir, writeFile, readFile, readdir, cp } from 'node:fs/promises'
+import { createHash } from 'node:crypto'
 import { createServer } from 'node:net'
 import { join } from 'node:path'
 import { readMapDetails, readExplorationWriteup } from './exploration-api.mjs'
@@ -329,7 +330,29 @@ export async function mission({
 
 // Requirements stay outside the coding agent's writable artifact. Assurance designs
 // the journey; generated criteria retain derived trust, never human-approved status.
-export async function assureAndVerify({ directory, id, url, objective, onProgress = () => {} }) {
+export async function verificationWorkspace(cacheDirectory, requirements) {
+  const key = createHash('sha256').update(requirements).digest('hex')
+  const directory = join(cacheDirectory, key)
+  await mkdir(directory, { recursive: true })
+  await writeFile(join(directory, 'requirements.md'), requirements)
+  let testFile = null
+  try {
+    const saved = JSON.parse(await readFile(join(directory, 'designed-test.json'), 'utf8'))
+    if (saved.key === key && /^[\w-]+_test\.md$/.test(saved.testFile)) {
+      await readFile(join(directory, '.testmuai/tests', saved.testFile))
+      testFile = saved.testFile
+    }
+  } catch {}
+  return { directory, key, testFile }
+}
+export async function assureAndVerify({
+  directory,
+  cacheDirectory,
+  id,
+  url,
+  objective,
+  onProgress = () => {},
+}) {
   await mkdir(directory, { recursive: true })
   const requirements = `# Verify one generated synthetic task interface
 
@@ -340,45 +363,62 @@ ${objective}
 
 Stay within this one journey. Wait for source browser jobs to finish; they can take two minutes. Only use visible browser controls, not API calls, scripts or direct source edits. Keep all expectations above unchanged. Browser reload must preserve the same receipt.
 `
-  await writeFile(join(directory, 'requirements.md'), requirements)
-  const ingest = await command(
-    ['context', 'ingest', 'requirements.md', '--mode', 'agent'],
-    directory,
-    { timeout: 240000 },
+  const snapshotDirectory = directory
+  const workspace = await verificationWorkspace(
+    cacheDirectory || join(directory, 'cache'),
+    requirements,
   )
-  await writeFile(join(directory, 'ingest.json'), JSON.stringify(ingest.events, null, 2))
-  if (ingest.code !== 0)
-    throw Error(
-      'Kane assurance needs clarification before this candidate can be tested. Its question and requirements are retained.',
+  directory = workspace.directory
+  let files = workspace.testFile ? [workspace.testFile] : []
+  if (!workspace.testFile) {
+    const ingest = await command(
+      ['context', 'ingest', 'requirements.md', '--mode', 'agent'],
+      directory,
+      { timeout: 240000 },
     )
-  const usecase = ingest.events
-    .filter((e) => e.type === 'commit')
-    .flatMap((e) => e.minted || [])
-    .find((e) => e.logical_id?.startsWith('uc-'))?.logical_id
-  if (!usecase) throw Error('Kane assurance did not extract a testable requirement.')
-  onProgress('Designing a requirements-linked Kane journey.')
-  const design = await command(
-    [
-      'design',
-      'tests',
-      '--use-case',
-      usecase,
-      '--mode',
-      'agent',
-      '--max',
-      '1',
-      '--allow-unreviewed',
-    ],
-    directory,
-    { timeout: 300000 },
-  )
-  await writeFile(join(directory, 'design.json'), JSON.stringify(design.events, null, 2))
-  if (design.code !== 0)
-    throw Error('Kane test design did not complete. No candidate was promoted.')
-  const files = (await readdir(join(directory, '.testmuai/tests'))).filter((f) =>
-    f.endsWith('_test.md'),
-  )
-  if (files.length !== 1) throw Error('Expected one assurance-designed journey for this candidate.')
+    await writeFile(join(directory, 'ingest.json'), JSON.stringify(ingest.events, null, 2))
+    if (ingest.code !== 0)
+      throw Error(
+        'Kane assurance needs clarification before this candidate can be tested. Its question and requirements are retained.',
+      )
+    const usecase = ingest.events
+      .filter((e) => e.type === 'commit')
+      .flatMap((e) => e.minted || [])
+      .find((e) => e.logical_id?.startsWith('uc-'))?.logical_id
+    if (!usecase) throw Error('Kane assurance did not extract a testable requirement.')
+    onProgress('Designing a requirements-linked Kane journey.')
+    const design = await command(
+      [
+        'design',
+        'tests',
+        '--use-case',
+        usecase,
+        '--mode',
+        'agent',
+        '--max',
+        '1',
+        '--allow-unreviewed',
+      ],
+      directory,
+      { timeout: 300000 },
+    )
+    await writeFile(join(directory, 'design.json'), JSON.stringify(design.events, null, 2))
+    if (design.code !== 0)
+      throw Error('Kane test design did not complete. No candidate was promoted.')
+    files = (await readdir(join(directory, '.testmuai/tests'))).filter((f) =>
+      f.endsWith('_test.md'),
+    )
+    if (files.length !== 1)
+      throw Error('Expected one assurance-designed journey for this candidate.')
+    await writeFile(
+      join(directory, 'designed-test.json'),
+      JSON.stringify({ key: workspace.key, testFile: files[0] }),
+    )
+  } else {
+    onProgress(
+      'Reusing the unchanged Kane journey and its recordings. Eligible steps will replay; missing or failed steps will be authored.',
+    )
+  }
   const browserId = 'preview-' + id,
     browser = await preparePreviewBrowser(browserId)
   try {
@@ -442,6 +482,25 @@ Stay within this one journey. Wait for source browser jobs to finish; they can t
         : done?.overall_status === 'failed'
           ? 'failed'
           : 'error'
+    // Snapshot each candidate's evidence before a later run updates the reusable workspace.
+    for (const name of [
+      'requirements.md',
+      'ingest.json',
+      'design.json',
+      'verification-events.json',
+      'coverage.json',
+      '.testmuai/tests',
+    ]) {
+      try {
+        await cp(join(directory, name), join(snapshotDirectory, name), { recursive: true })
+      } catch (error) {
+        if (error.code !== 'ENOENT') throw error
+      }
+    }
+    for (const shot of shots)
+      await cp(join(directory, shot.image), join(snapshotDirectory, shot.image), {
+        recursive: true,
+      })
     return {
       status,
       summary:
@@ -452,6 +511,11 @@ Stay within this one journey. Wait for source browser jobs to finish; they can t
       shots,
       evidencePath: pack,
       testFile: files[0],
+      replay: {
+        reusedJourney: !!workspace.testFile,
+        replayedSteps: summary?.steps?.replay_decisions || 0,
+        authoredSteps: summary?.steps?.author_decisions || 0,
+      },
       coverage: cover.events.find((e) => e.type === 'coverage'),
       ingestStatus: result.events.find((e) => e.type === 'test_md_evidence_ingest')?.status,
     }

@@ -90,3 +90,26 @@ local evidence are stored under the private data directory, excluded from git.
 See the implementation verification report once published. Unit tests and a frontend
 build are necessary checks but do not establish the full browser journey. Earlier input
 experiments remain separate from this runtime integration.
+
+## Latency and recorded replay
+
+Source method changes now perform the action and extract/verify the resulting terms in
+one browser job. Restoring approved choices also combines action and validation. Exact
+field comparisons, approval and post-submission confirmation remain separate gates.
+
+A blocked build can reuse its captured source observations. The journal labels their
+original capture time; each candidate still receives a fresh synthetic transaction.
+
+Candidate verification now retains a per-build workspace keyed by the exact requirement
+text. An unchanged requirement reuses its assurance-designed `_test.md` and Kane's
+recordings. A stable, unguessable sandbox verification URL resolves to the current
+candidate's fresh test session; it never opens a real user session. Changed requirements
+receive a different workspace. Completed candidate evidence is copied to its own revision
+before a later run updates the shared recordings.
+
+Kane decides which steps can replay: unchanged successful recordings replay; missing or
+failed steps are authored. Adaptive healing is disabled for this acceptance gate so a
+failed replay is reported to the coding agent. Runtime results retain Kane's actual
+replayed/authored step counts. Merely retaining a recording is not proof it replayed.
+Source actions still use bounded one-shot objectives; no source-transaction replay speedup
+is claimed. The first discovery/generation/verification run remains relatively expensive.
