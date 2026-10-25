@@ -19,3 +19,6 @@ __pycache__/
 
 # Local generated recordings; selected reviewed evidence is published under docs.
 .testmuai/tests/output-inspect-*/
+
+# Private launch drafts and evidence-derived media
+launch/
