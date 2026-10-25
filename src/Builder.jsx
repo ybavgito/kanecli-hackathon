@@ -14,6 +14,7 @@ import {
 } from '@phosphor-icons/react'
 import './builder.css'
 import LandingExample from './LandingExample.jsx'
+import CompareIntents from './CompareIntents.jsx'
 async function api(path, body) {
   const r = await fetch(path, {
     method: body === undefined ? 'GET' : 'POST',
@@ -194,6 +195,7 @@ export default function Builder() {
                 document.getElementById('task-goal')?.focus({ preventScroll: true })
               }}
             />
+            <CompareIntents catalog={catalog} pending={pending} onOpen={openRecorded} />
             <section
               id="build-interface"
               className="rk-build-section"
