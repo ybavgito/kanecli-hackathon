@@ -345,6 +345,19 @@ export async function verificationWorkspace(cacheDirectory, requirements) {
   } catch {}
   return { directory, key, testFile }
 }
+export function replayStats(events, reusedJourney) {
+  const replayed = new Set(),
+    authored = new Set()
+  let step = null
+  for (const event of events) {
+    if (event.type === 'test_md_step_start') step = event.step_index
+    if (step == null) continue
+    if (event.type === 'step_event' && event.event === 'replay_started') replayed.add(step)
+    if (event.type === 'bifurcation') authored.add(step)
+  }
+  // Summary replay_decisions can include steps skipped after an earlier failure.
+  return { reusedJourney, replayedSteps: replayed.size, authoredSteps: authored.size }
+}
 export async function assureAndVerify({
   directory,
   cacheDirectory,
@@ -511,11 +524,7 @@ Stay within this one journey. Wait for source browser jobs to finish; they can t
       shots,
       evidencePath: pack,
       testFile: files[0],
-      replay: {
-        reusedJourney: !!workspace.testFile,
-        replayedSteps: summary?.steps?.replay_decisions || 0,
-        authoredSteps: summary?.steps?.author_decisions || 0,
-      },
+      replay: replayStats(result.events, !!workspace.testFile),
       coverage: cover.events.find((e) => e.type === 'coverage'),
       ingestStatus: result.events.find((e) => e.type === 'test_md_evidence_ingest')?.status,
     }

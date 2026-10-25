@@ -3,8 +3,24 @@ import assert from 'node:assert/strict'
 import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { verificationWorkspace } from '../../server/builder/kane.mjs'
+import { verificationWorkspace, replayStats } from '../../server/builder/kane.mjs'
 import { previewHandler } from '../../server/builder/preview.mjs'
+
+test('replay reporting counts observed execution, not skipped planned decisions', () => {
+  assert.deepEqual(
+    replayStats(
+      [
+        { type: 'test_md_step_start', step_index: 1 },
+        { type: 'step_event', event: 'replay_started' },
+        { type: 'test_md_step_start', step_index: 2 },
+        { type: 'bifurcation' },
+        { type: 'test_md_summary', steps: { replay_decisions: 7, author_decisions: 0 } },
+      ],
+      true,
+    ),
+    { reusedJourney: true, replayedSteps: 1, authoredSteps: 1 },
+  )
+})
 
 test('replay workspace reuses a designed journey only for byte-identical requirements', async () => {
   const root = await mkdtemp(join(tmpdir(), 'rk-replay-'))

@@ -541,8 +541,8 @@ export default function Builder() {
                               <li>Browser journey: {c.verification.status}</li>
                               {c.verification.replay && (
                                 <li>
-                                  Recorded steps replayed: {c.verification.replay.replayedSteps};
-                                  steps authored: {c.verification.replay.authoredSteps}
+                                  Replay attempts: {c.verification.replay.replayedSteps}; steps
+                                  authored: {c.verification.replay.authoredSteps}
                                 </li>
                               )}
                               <li>

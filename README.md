@@ -75,9 +75,14 @@ The generated interface then operates through the same trusted source controller
 
 Choose a supported task → make choices → watch the current Kane
 step → resolve any mismatch → approve exact terms → send → receive verified proof.
-Previous choices collapse behind **Change preferences**. The source page is optional,
-read-only inspection. The evidence panel keeps failures as well as passing runs.
-Only the browser session that started a task can approve, submit or download its pack.
+The generated frame supplies choices and review; the trusted host supplies approval,
+submission and the saved receipt. The build workspace retains source screenshots,
+interface decisions, failed candidates and passing checks. User sessions remain owner-bound;
+separate unguessable test sessions operate only on the synthetic sites.
+
+Repairs reuse captured discovery. Unchanged verification requirements reuse Kane's saved
+journey and recordings, while every candidate gets a fresh synthetic transaction. Replay
+counts come from Kane's results; the first build still requires discovery and authoring.
 
 The [earlier product and demo guide](docs/raising-kane/implementation-and-demo.md)
 and [verification report](docs/raising-kane/verification.md) describe the prebuilt workflows and distinguish real runtime
@@ -120,7 +125,9 @@ using shared-project assurance or Explore.
 
 ## Architecture and boundaries
 
-React/Vite interface → Node task controller → Kane CLI → separate source website.
+Kane Explore and bounded branch observations → OpenAI coding agent → compiled React
+interface → Kane verification/repair → published interface. During use: generated React
+frame → trusted host → Node task controller → Kane CLI → separate source website.
 The controller stores intent, checks typed browser observations against source records,
 and manages recovery. Each source atomically consumes a grant bound to the exact
 proposal, draft revision and operation ID. Repeated delivery of the same operation
