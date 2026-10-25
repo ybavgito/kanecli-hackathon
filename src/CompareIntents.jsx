@@ -3,7 +3,8 @@ import { ArrowRight, CheckCircle, MagnifyingGlass } from '@phosphor-icons/react'
 const columns = [
   {
     id: 'store-overview',
-    image: '/examples/overview.webp',
+    image: '/examples/overview-full.webp',
+    height: 1569,
     icon: MagnifyingGlass,
     label: 'No intent',
     heading: 'A read-only guide to the store',
@@ -16,7 +17,8 @@ const columns = [
   },
   {
     id: 'store-focused',
-    image: '/examples/focused.webp',
+    image: '/examples/focused-full.webp',
+    height: 1762,
     icon: ArrowRight,
     label: 'With intent',
     heading: 'One task, the choices that matter',
@@ -52,7 +54,9 @@ export default function CompareIntents({ catalog, pending, onOpen }) {
                 </span>
                 <h3>{c.heading}</h3>
               </header>
-              <img src={c.image} width="938" height="750" alt={c.alt} loading="lazy" />
+              <div className="rk-compare-frame" tabIndex={0} aria-label={c.alt + ' Scrollable.'}>
+                <img src={c.image} width="1000" height={c.height} alt={c.alt} loading="lazy" />
+              </div>
               <ul>
                 {c.points.map((p) => (
                   <li key={p}>{p}</li>

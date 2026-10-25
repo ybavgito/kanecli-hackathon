@@ -16,30 +16,30 @@
         "unknown": 1
       }
     },
-    "pct": 65,
+    "pct": 100,
     "usecases": {
       "total": 1,
-      "proven": 0,
+      "proven": 1,
       "partial": 0,
-      "failing": 1,
+      "failing": 0,
       "not_run": 0,
       "not_designed": 0,
       "no_criteria": 0
     },
     "criteria": {
       "total": 20,
-      "proven": 13
+      "proven": 20
     },
     "perUc": [
       {
         "id": "uc-1",
-        "title": "Complete and verify an approved synthetic return request",
+        "title": "Request a return for red shoes with approved refund terms",
         "risk": "high",
         "weight": 1.25,
-        "state": "failing",
-        "pct": 65,
+        "state": "proven",
+        "pct": 100,
         "criteria": 20,
-        "proven": 13,
+        "proven": 20,
         "manual_runs": 0,
         "stale": false
       }
@@ -48,96 +48,102 @@
       "ac-1": {
         "state": "proven",
         "uc": "uc-1",
-        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-2": {
         "state": "proven",
         "uc": "uc-1",
-        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-3": {
         "state": "proven",
         "uc": "uc-1",
-        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-4": {
-        "state": "failing",
+        "state": "proven",
         "uc": "uc-1",
-        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-5": {
-        "state": "not_run",
-        "uc": "uc-1"
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-6": {
-        "state": "not_run",
-        "uc": "uc-1"
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-7": {
-        "state": "not_run",
-        "uc": "uc-1"
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-8": {
-        "state": "not_run",
-        "uc": "uc-1"
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-9": {
-        "state": "not_run",
-        "uc": "uc-1"
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-10": {
-        "state": "not_run",
-        "uc": "uc-1"
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-11": {
         "state": "proven",
         "uc": "uc-1",
-        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-12": {
         "state": "proven",
         "uc": "uc-1",
-        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-13": {
         "state": "proven",
         "uc": "uc-1",
-        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-14": {
         "state": "proven",
         "uc": "uc-1",
-        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-15": {
         "state": "proven",
         "uc": "uc-1",
-        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-16": {
         "state": "proven",
         "uc": "uc-1",
-        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-17": {
         "state": "proven",
         "uc": "uc-1",
-        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-18": {
         "state": "proven",
         "uc": "uc-1",
-        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-19": {
         "state": "proven",
         "uc": "uc-1",
-        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       },
       "ac-20": {
         "state": "proven",
         "uc": "uc-1",
-        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+        "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
       }
     },
     "flags": {
@@ -151,12 +157,6 @@
     "v": 1,
     "verb": "cover",
     "status": "complete",
-    "exit_code": 0,
-    "next": [
-      {
-        "cmd": "kane-cli testmd run .testmuai/tests/verify-red-shoes-return-conflict-approved-terms-and_test.md",
-        "why": "runs its failing test again"
-      }
-    ]
+    "exit_code": 0
   }
 ]

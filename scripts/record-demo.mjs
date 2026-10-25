@@ -43,13 +43,24 @@ for (const c of b.candidates) {
   for (const name of await readdir(join(ver, '.testmuai', 'tests')).catch(() => []))
     if (name.endsWith('_test.md')) await cp(join(ver, '.testmuai', 'tests', name), join(to, name))
 }
-for (const dir of ['source-map', 'observations'])
-  for (const name of await readdir(join(src, dir)).catch(() => []))
-    await cp(join(src, dir, name), join(out, name))
+// Evidence images are flattened to the names the demo importer looks up:
+// explore-<screen id>.<ext> for source screens, <branch>-<id>.<ext> for observations.
+const observations = []
+for (const e of b.evidence || []) {
+  if (!e.imagePath) continue
+  const ext = e.imagePath.slice(e.imagePath.lastIndexOf('.'))
+  if (e.branch === 'explore') await cp(e.imagePath, join(out, 'explore-' + e.id + ext))
+  else if (['primary', 'alternative', 'overview'].includes(e.branch)) {
+    await cp(e.imagePath, join(out, e.branch + '-' + e.id + ext))
+    const { imagePath, imageUrl, ...rest } = e
+    observations.push(rest)
+  }
+}
 
 const record = { ...b }
-for (const key of ['ownerId', 'sourceTaskId', 'importedDemo', 'recordedBuildId', 'recordedAt', 'importedAt', 'url', 'evidence'])
+for (const key of ['ownerId', 'sourceTaskId', 'importedDemo', 'recordedBuildId', 'recordedAt', 'importedAt', 'url', 'evidence', 'verificationKey', 'verificationSessionId'])
   delete record[key]
+if (!record.observations && observations.length) record.observations = observations
 record.candidates = b.candidates.map(({ previewUrl, ...c }) => c)
 await writeFile(join(out, 'build.json'), JSON.stringify(record, null, 2) + '\n')
 

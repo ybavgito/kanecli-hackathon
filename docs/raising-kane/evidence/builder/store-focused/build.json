@@ -1,5 +1,5 @@
 {
-  "id": "0f6166ea-0a24-4e54-88cf-4a0634b46c43",
+  "id": "87fb50e3-35c8-49ae-8fea-06f43f171105",
   "kind": "return",
   "goal": "Return my red shoes without a printer, keep the jacket, and refund my original payment method.",
   "contract": {
@@ -29,562 +29,1169 @@
     "unknownPolicy": "Unknowns stay visible and block dependent operations."
   },
   "contractHash": "ce68e6b0f041fea0094d2de30dbaaf6656cc0cd24f3f721ad9ce60ce3616a09a",
-  "status": "verifying",
-  "createdAt": "2026-10-25T00:23:58.628Z",
-  "updatedAt": "2026-10-25T00:53:25.960Z",
-  "error": null,
-  "promotedRevision": null,
+  "status": "ready",
   "events": [
     {
       "sequence": 1,
-      "at": "2026-10-25T00:23:58.632Z",
+      "at": "2026-10-25T01:16:52.911Z",
       "phase": "exploring_source",
       "kind": "explore.started",
       "summary": "Exploring paths relevant to your task."
     },
     {
       "sequence": 2,
-      "at": "2026-10-25T00:24:00.090Z",
+      "at": "2026-10-25T01:16:54.053Z",
       "phase": "exploring_source",
       "kind": "explore.progress",
       "summary": "Kane Explore started in its own project."
     },
     {
       "sequence": 3,
-      "at": "2026-10-25T00:24:15.215Z",
+      "at": "2026-10-25T01:17:14.805Z",
       "phase": "exploring_source",
       "kind": "explore.progress",
       "summary": "Kane has visited 1 states; 10 exploration candidates remain."
     },
     {
       "sequence": 4,
-      "at": "2026-10-25T00:24:34.772Z",
+      "at": "2026-10-25T01:17:34.543Z",
       "phase": "exploring_source",
       "kind": "explore.progress",
       "summary": "Kane has visited 2 states; 19 exploration candidates remain."
     },
     {
       "sequence": 5,
-      "at": "2026-10-25T00:24:47.372Z",
+      "at": "2026-10-25T01:17:42.935Z",
       "phase": "exploring_source",
       "kind": "explore.progress",
-      "summary": "Kane has visited 3 states; 22 exploration candidates remain."
+      "summary": "Kane has visited 3 states; 24 exploration candidates remain."
     },
     {
       "sequence": 6,
-      "at": "2026-10-25T00:24:48.932Z",
+      "at": "2026-10-25T01:17:51.874Z",
       "phase": "exploring_source",
       "kind": "explore.progress",
-      "summary": "Kane has visited 3 states; 22 exploration candidates remain."
+      "summary": "Kane has visited 4 states; 33 exploration candidates remain."
     },
     {
       "sequence": 7,
-      "at": "2026-10-25T00:25:03.824Z",
+      "at": "2026-10-25T01:18:02.446Z",
       "phase": "exploring_source",
       "kind": "explore.progress",
-      "summary": "Kane has visited 4 states; 31 exploration candidates remain."
+      "summary": "Kane has visited 4 states; 34 exploration candidates remain."
     },
     {
       "sequence": 8,
-      "at": "2026-10-25T00:25:14.236Z",
+      "at": "2026-10-25T01:18:05.457Z",
       "phase": "exploring_source",
       "kind": "explore.progress",
-      "summary": "Kane has visited 4 states; 30 exploration candidates remain."
+      "summary": "Kane has visited 4 states; 34 exploration candidates remain."
     },
     {
       "sequence": 9,
-      "at": "2026-10-25T00:25:22.498Z",
+      "at": "2026-10-25T01:18:16.978Z",
       "phase": "exploring_source",
       "kind": "explore.finished",
       "summary": "4 screens and 4 flow records observed. Exploration was bounded; unseen paths remain unverified."
     },
     {
       "sequence": 10,
-      "at": "2026-10-25T00:25:22.499Z",
+      "at": "2026-10-25T01:18:16.980Z",
       "phase": "building",
       "kind": "agent.started",
-      "summary": "Building your interface from Kane\u2019s observations."
+      "summary": "Building your interface from Kane’s observations."
     },
     {
       "sequence": 11,
-      "at": "2026-10-25T00:25:24.900Z",
+      "at": "2026-10-25T01:18:19.293Z",
       "phase": "building",
       "kind": "model.response",
       "summary": "gpt-6.1-sol returned a builder response.",
       "usage": {
-        "input_tokens": 39517,
+        "input_tokens": 39809,
         "input_tokens_details": {
-          "cache_write_tokens": 39514,
+          "cache_write_tokens": 39806,
           "cached_tokens": 0
         },
         "output_tokens": 48,
         "output_tokens_details": {
           "reasoning_tokens": 0
         },
-        "total_tokens": 39565
+        "total_tokens": 39857
       }
     },
     {
       "sequence": 12,
-      "at": "2026-10-25T00:25:24.902Z",
+      "at": "2026-10-25T01:18:19.295Z",
       "phase": "investigating",
       "kind": "agent.tool",
       "summary": "The builder asked Kane to inspect the primary source branch."
     },
     {
       "sequence": 13,
-      "at": "2026-10-25T00:25:36.071Z",
+      "at": "2026-10-25T01:18:29.679Z",
       "phase": "investigating",
       "kind": "kane.step",
-      "summary": "navigate: Navigate to http://127.0.0.1:5301/merchant?taskId=6beef79b-2011-495e-b194-d25663"
+      "summary": "navigate: Navigate to http://127.0.0.1:5174/merchant?taskId=151a4cb1-2fa4-4f6b-83b9-a9cc63"
     },
     {
       "sequence": 14,
-      "at": "2026-10-25T00:25:50.829Z",
+      "at": "2026-10-25T01:18:42.125Z",
       "phase": "investigating",
       "kind": "kane.step",
-      "summary": "click: Clicking the Black jacket selection checkbox"
+      "summary": "wait: queued plan (4 steps): click \"Black jacket Medium · Qty 1 $120.00\"; select \"Reas"
     },
     {
       "sequence": 15,
-      "at": "2026-10-25T00:25:57.933Z",
+      "at": "2026-10-25T01:18:43.415Z",
       "phase": "investigating",
       "kind": "kane.step",
-      "summary": "select: Selecting return reason as Size or fit issue"
+      "summary": "click: Click \"Black jacket Medium · Qty 1 $120.00\""
     },
     {
       "sequence": 16,
-      "at": "2026-10-25T00:26:03.669Z",
+      "at": "2026-10-25T01:18:44.051Z",
       "phase": "investigating",
       "kind": "kane.step",
-      "summary": "select: Selecting Return method in the dropdown combo box"
+      "summary": "select: Select \"Size or fit issue\" in \"Reason for return\""
     },
     {
       "sequence": 17,
-      "at": "2026-10-25T00:26:08.784Z",
+      "at": "2026-10-25T01:18:44.680Z",
       "phase": "investigating",
       "kind": "kane.step",
-      "summary": "select: Selecting original payment method as refund destination"
+      "summary": "select: Select \"Print a shipping label\" in \"Return method\""
     },
     {
       "sequence": 18,
-      "at": "2026-10-25T00:26:14.874Z",
+      "at": "2026-10-25T01:18:45.309Z",
       "phase": "investigating",
       "kind": "kane.step",
-      "summary": "wait: PRIMARY: wait 1500 ms for return-draft saves to settle"
+      "summary": "select: Select \"Original payment method\" in \"Refund destination\""
     },
     {
       "sequence": 19,
-      "at": "2026-10-25T00:26:41.678Z",
+      "at": "2026-10-25T01:18:50.914Z",
       "phase": "investigating",
       "kind": "kane.step",
-      "summary": "analyze: the current page URL is stored as {{current_url}}"
+      "summary": "wait: PRIMARY: wait 1000 ms after item selection save"
     },
     {
       "sequence": 20,
-      "at": "2026-10-25T00:26:42.311Z",
+      "at": "2026-10-25T01:18:55.794Z",
       "phase": "investigating",
       "kind": "kane.step",
-      "summary": "assert: the review shows only the shoes and the jacket is kept"
+      "summary": "wait: PRIMARY: wait 500 ms after return reason save"
     },
     {
       "sequence": 21,
-      "at": "2026-10-25T00:26:49.121Z",
+      "at": "2026-10-25T01:19:01.695Z",
       "phase": "investigating",
-      "kind": "journey.observed",
-      "summary": "Original choice observed and captured.",
-      "evidenceId": "6beef79b-2011-495e-b194-d2566350105c"
+      "kind": "kane.step",
+      "summary": "wait: PRIMARY: wait 500 ms after method and refund destination saves"
     },
     {
       "sequence": 22,
-      "at": "2026-10-25T00:26:49.124Z",
+      "at": "2026-10-25T01:19:05.868Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "wait: PRIMARY: wait 1500 ms for the return draft to finish saving"
+    },
+    {
+      "sequence": 23,
+      "at": "2026-10-25T01:19:34.559Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "analyze: The current page URL is saved as {{current_url}}."
+    },
+    {
+      "sequence": 24,
+      "at": "2026-10-25T01:19:35.144Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "assert: The review shows only the shoes and the jacket is kept."
+    },
+    {
+      "sequence": 25,
+      "at": "2026-10-25T01:19:40.825Z",
+      "phase": "investigating",
+      "kind": "journey.observed",
+      "summary": "Original choice observed and captured.",
+      "evidenceId": "151a4cb1-2fa4-4f6b-83b9-a9cc631f3697"
+    },
+    {
+      "sequence": 26,
+      "at": "2026-10-25T01:19:40.826Z",
       "phase": "investigating",
       "kind": "agent.tool",
       "summary": "The builder asked Kane to inspect the alternative source branch."
     },
     {
-      "sequence": 23,
-      "at": "2026-10-25T00:26:59.864Z",
-      "phase": "investigating",
-      "kind": "kane.step",
-      "summary": "navigate: Navigate to http://127.0.0.1:5301/merchant?taskId=ce556d2f-923c-45d7-944a-8e1905"
-    },
-    {
-      "sequence": 24,
-      "at": "2026-10-25T00:27:12.991Z",
-      "phase": "investigating",
-      "kind": "kane.step",
-      "summary": "click: Clicking the Black jacket selection checkbox"
-    },
-    {
-      "sequence": 25,
-      "at": "2026-10-25T00:27:20.737Z",
-      "phase": "investigating",
-      "kind": "kane.step",
-      "summary": "select: Selecting return reason combobox for size or fit issue"
-    },
-    {
-      "sequence": 26,
-      "at": "2026-10-25T00:27:26.477Z",
-      "phase": "investigating",
-      "kind": "kane.step",
-      "summary": "select: Selecting Original payment method as the refund destination"
-    },
-    {
       "sequence": 27,
-      "at": "2026-10-25T00:27:32.303Z",
+      "at": "2026-10-25T01:19:51.741Z",
       "phase": "investigating",
       "kind": "kane.step",
-      "summary": "select: Selecting return method from the dropdown"
+      "summary": "navigate: Navigate to http://127.0.0.1:5174/merchant?taskId=c89f361a-21c5-4659-a8e1-1c88fc"
     },
     {
       "sequence": 28,
-      "at": "2026-10-25T00:27:36.918Z",
+      "at": "2026-10-25T01:20:06.456Z",
       "phase": "investigating",
       "kind": "kane.step",
-      "summary": "wait: PRIMARY: wait 1500 ms for the return draft saves to settle"
+      "summary": "click: Clicking Black jacket Medium selection checkbox"
     },
     {
       "sequence": 29,
-      "at": "2026-10-25T00:28:01.322Z",
+      "at": "2026-10-25T01:20:13.054Z",
       "phase": "investigating",
       "kind": "kane.step",
-      "summary": "analyze: ANALYZE(textual_visual, 'visible requirements are stored as {{source_requirement"
+      "summary": "select: Selecting the reason for return from the dropdown"
     },
     {
       "sequence": 30,
-      "at": "2026-10-25T00:28:01.960Z",
+      "at": "2026-10-25T01:20:20.410Z",
       "phase": "investigating",
       "kind": "kane.step",
-      "summary": "assert: the review shows only the shoes and the jacket is kept."
+      "summary": "select: Selecting Print a shipping label in the return method dropdown"
     },
     {
       "sequence": 31,
-      "at": "2026-10-25T00:28:09.525Z",
+      "at": "2026-10-25T01:20:25.650Z",
       "phase": "investigating",
-      "kind": "journey.observed",
-      "summary": "Changed choice observed and captured.",
-      "evidenceId": "ce556d2f-923c-45d7-944a-8e1905a9368b"
+      "kind": "kane.step",
+      "summary": "select: Selecting Original payment method in refund destination dropdown"
     },
     {
       "sequence": 32,
-      "at": "2026-10-25T00:29:08.060Z",
+      "at": "2026-10-25T01:20:30.919Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "select: Selecting Return method from dropdown"
+    },
+    {
+      "sequence": 33,
+      "at": "2026-10-25T01:20:35.483Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "wait: PRIMARY: wait 1500 ms for return-draft saves to settle"
+    },
+    {
+      "sequence": 34,
+      "at": "2026-10-25T01:21:07.761Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "analyze: The Black jacket is kept."
+    },
+    {
+      "sequence": 35,
+      "at": "2026-10-25T01:21:08.370Z",
+      "phase": "investigating",
+      "kind": "kane.step",
+      "summary": "assert: The review shows only the shoes and the jacket is kept."
+    },
+    {
+      "sequence": 36,
+      "at": "2026-10-25T01:21:15.002Z",
+      "phase": "investigating",
+      "kind": "journey.observed",
+      "summary": "Changed choice observed and captured.",
+      "evidenceId": "c89f361a-21c5-4659-a8e1-1c88fc80d943"
+    },
+    {
+      "sequence": 37,
+      "at": "2026-10-25T01:22:12.982Z",
       "phase": "investigating",
       "kind": "model.response",
       "summary": "gpt-6.1-sol returned a builder response.",
       "usage": {
-        "input_tokens": 46191,
+        "input_tokens": 46482,
         "input_tokens_details": {
-          "cache_write_tokens": 46188,
+          "cache_write_tokens": 46479,
           "cached_tokens": 0
         },
-        "output_tokens": 6060,
+        "output_tokens": 5664,
         "output_tokens_details": {
-          "reasoning_tokens": 135
+          "reasoning_tokens": 166
         },
-        "total_tokens": 52251
+        "total_tokens": 52146
       }
     },
     {
-      "sequence": 33,
-      "at": "2026-10-25T00:29:08.185Z",
+      "sequence": 38,
+      "at": "2026-10-25T01:22:13.102Z",
       "phase": "investigating",
       "kind": "artifact.built",
       "summary": "Revision 1 compiled. Checking it before release.",
       "revision": 1,
-      "hash": "eb2ab359b136627f0bb313c39c724a2fa3672772063b45ae71ec681c9cd0b42d"
-    },
-    {
-      "sequence": 34,
-      "at": "2026-10-25T00:29:09.615Z",
-      "phase": "exploring_preview",
-      "kind": "explore.progress",
-      "summary": "Kane Explore started in its own project."
-    },
-    {
-      "sequence": 35,
-      "at": "2026-10-25T00:29:22.227Z",
-      "phase": "exploring_preview",
-      "kind": "explore.progress",
-      "summary": "Kane has visited 1 states; 1 exploration candidates remain."
-    },
-    {
-      "sequence": 36,
-      "at": "2026-10-25T00:29:30.937Z",
-      "phase": "verifying",
-      "kind": "check.started",
-      "summary": "Kane is using the generated interface and checking source-backed outcomes."
-    },
-    {
-      "sequence": 37,
-      "at": "2026-10-25T00:29:48.198Z",
-      "phase": "verifying",
-      "kind": "check.step",
-      "summary": "Designing a requirements-linked Kane journey."
-    },
-    {
-      "sequence": 38,
-      "at": "2026-10-25T00:30:51.076Z",
-      "phase": "verifying",
-      "kind": "check.step",
-      "summary": "Running the assurance-designed journey against the generated interface."
+      "hash": "a605c98fd0edba4de8f24a3811422fe224cc731d920ed2084a8eb80dd7ae9615"
     },
     {
       "sequence": 39,
-      "at": "2026-10-25T00:31:44.306Z",
-      "phase": "verifying",
-      "kind": "check.step",
-      "summary": "Journey step 1: passed."
-    },
-    {
-      "sequence": 40,
-      "at": "2026-10-25T00:32:35.597Z",
-      "phase": "verifying",
-      "kind": "check.step",
-      "summary": "Journey step 2: passed."
-    },
-    {
-      "sequence": 41,
-      "at": "2026-10-25T00:34:23.005Z",
-      "phase": "verifying",
-      "kind": "check.step",
-      "summary": "Journey step 3: passed."
-    },
-    {
-      "sequence": 42,
-      "at": "2026-10-25T00:39:35.769Z",
-      "phase": "building",
-      "kind": "rebuild.requested",
-      "summary": "A new bounded build attempt was requested. Earlier candidates are retained."
-    },
-    {
-      "sequence": 43,
-      "at": "2026-10-25T00:39:35.777Z",
-      "phase": "building",
-      "kind": "build.resumed",
-      "summary": "Rebuilding from retained source evidence; verification uses fresh synthetic records."
-    },
-    {
-      "sequence": 44,
-      "at": "2026-10-25T00:39:35.779Z",
-      "phase": "building",
-      "kind": "evidence.reused",
-      "summary": "Reusing 4 screens and 4 flow records captured at 2026-10-25T00:25:22.496Z. No fresh discovery is claimed."
-    },
-    {
-      "sequence": 45,
-      "at": "2026-10-25T00:39:35.781Z",
-      "phase": "building",
-      "kind": "agent.started",
-      "summary": "Building your interface from Kane\u2019s observations."
-    },
-    {
-      "sequence": 46,
-      "at": "2026-10-25T00:40:26.437Z",
-      "phase": "building",
-      "kind": "model.response",
-      "summary": "gpt-6.1-sol returned a builder response.",
-      "usage": {
-        "input_tokens": 51409,
-        "input_tokens_details": {
-          "cache_write_tokens": 51406,
-          "cached_tokens": 0
-        },
-        "output_tokens": 6046,
-        "output_tokens_details": {
-          "reasoning_tokens": 99
-        },
-        "total_tokens": 57455
-      }
-    },
-    {
-      "sequence": 47,
-      "at": "2026-10-25T00:40:26.560Z",
-      "phase": "building",
-      "kind": "artifact.built",
-      "summary": "Revision 2 compiled. Checking it before release.",
-      "revision": 2,
-      "hash": "8c9fafd9ab804b7f03cb7d174c04d487739bfdf37d74558529998f79d97a17dd"
-    },
-    {
-      "sequence": 48,
-      "at": "2026-10-25T00:40:28.290Z",
+      "at": "2026-10-25T01:22:14.091Z",
       "phase": "exploring_preview",
       "kind": "explore.progress",
       "summary": "Kane Explore started in its own project."
     },
     {
-      "sequence": 49,
-      "at": "2026-10-25T00:40:40.621Z",
+      "sequence": 40,
+      "at": "2026-10-25T01:22:24.490Z",
       "phase": "exploring_preview",
       "kind": "explore.progress",
       "summary": "Kane has visited 1 states; 1 exploration candidates remain."
     },
     {
-      "sequence": 50,
-      "at": "2026-10-25T00:40:53.550Z",
+      "sequence": 41,
+      "at": "2026-10-25T01:22:33.313Z",
       "phase": "verifying",
       "kind": "check.started",
       "summary": "Kane is using the generated interface and checking source-backed outcomes."
     },
     {
-      "sequence": 51,
-      "at": "2026-10-25T00:41:11.791Z",
+      "sequence": 42,
+      "at": "2026-10-25T01:22:50.104Z",
       "phase": "verifying",
       "kind": "check.step",
       "summary": "Designing a requirements-linked Kane journey."
     },
     {
-      "sequence": 52,
-      "at": "2026-10-25T00:42:13.865Z",
+      "sequence": 43,
+      "at": "2026-10-25T01:23:37.911Z",
       "phase": "verifying",
       "kind": "check.step",
       "summary": "Running the assurance-designed journey against the generated interface."
     },
     {
-      "sequence": 53,
-      "at": "2026-10-25T00:42:58.781Z",
+      "sequence": 44,
+      "at": "2026-10-25T01:24:49.700Z",
       "phase": "verifying",
       "kind": "check.step",
       "summary": "Journey step 1: passed."
     },
     {
-      "sequence": 54,
-      "at": "2026-10-25T00:45:12.169Z",
+      "sequence": 45,
+      "at": "2026-10-25T01:27:49.822Z",
       "phase": "verifying",
       "kind": "check.step",
       "summary": "Journey step 2: passed."
     },
     {
-      "sequence": 55,
-      "at": "2026-10-25T00:46:53.070Z",
+      "sequence": 46,
+      "at": "2026-10-25T01:30:26.957Z",
       "phase": "verifying",
       "kind": "check.step",
       "summary": "Journey step 3: passed."
     },
     {
-      "sequence": 56,
-      "at": "2026-10-25T00:48:39.096Z",
+      "sequence": 47,
+      "at": "2026-10-25T01:32:04.492Z",
       "phase": "verifying",
       "kind": "check.step",
       "summary": "Journey step 4: passed."
     },
     {
-      "sequence": 57,
-      "at": "2026-10-25T00:50:13.806Z",
+      "sequence": 48,
+      "at": "2026-10-25T01:33:51.036Z",
       "phase": "verifying",
       "kind": "check.step",
       "summary": "Journey step 5: passed."
     },
     {
-      "sequence": 58,
-      "at": "2026-10-25T00:51:42.548Z",
+      "sequence": 49,
+      "at": "2026-10-25T01:36:52.164Z",
       "phase": "verifying",
       "kind": "check.step",
-      "summary": "Journey step 6: failed."
+      "summary": "Journey step 6: passed."
     },
     {
-      "sequence": 59,
-      "at": "2026-10-25T00:51:50.217Z",
-      "phase": "verifying",
-      "kind": "check.failed",
-      "summary": "Revision 2 did not pass. Its evidence is retained.",
-      "revision": 2
-    },
-    {
-      "sequence": 60,
-      "at": "2026-10-25T00:51:50.219Z",
-      "phase": "repairing",
-      "kind": "repair.started",
-      "summary": "Rebuilding the interface against the same requirements."
-    },
-    {
-      "sequence": 61,
-      "at": "2026-10-25T00:52:44.763Z",
-      "phase": "repairing",
-      "kind": "model.response",
-      "summary": "gpt-6.1-sol returned a builder response.",
-      "usage": {
-        "input_tokens": 55278,
-        "input_tokens_details": {
-          "cache_write_tokens": 55275,
-          "cached_tokens": 0
-        },
-        "output_tokens": 6364,
-        "output_tokens_details": {
-          "reasoning_tokens": 128
-        },
-        "total_tokens": 61642
-      }
-    },
-    {
-      "sequence": 62,
-      "at": "2026-10-25T00:52:44.884Z",
-      "phase": "repairing",
-      "kind": "artifact.built",
-      "summary": "Revision 3 compiled. Checking it before release.",
-      "revision": 3,
-      "hash": "785a77c94a11926d97b0acaf242e0946d98c53259d043429d683957f3761bff5"
-    },
-    {
-      "sequence": 63,
-      "at": "2026-10-25T00:52:46.346Z",
-      "phase": "exploring_preview",
-      "kind": "explore.progress",
-      "summary": "Kane Explore started in its own project."
-    },
-    {
-      "sequence": 64,
-      "at": "2026-10-25T00:52:59.004Z",
-      "phase": "exploring_preview",
-      "kind": "explore.progress",
-      "summary": "Kane has visited 1 states; 1 exploration candidates remain."
-    },
-    {
-      "sequence": 65,
-      "at": "2026-10-25T00:53:09.351Z",
-      "phase": "verifying",
-      "kind": "check.started",
-      "summary": "Kane is using the generated interface and checking source-backed outcomes."
-    },
-    {
-      "sequence": 66,
-      "at": "2026-10-25T00:53:09.362Z",
+      "sequence": 50,
+      "at": "2026-10-25T01:37:53.022Z",
       "phase": "verifying",
       "kind": "check.step",
-      "summary": "Reusing the unchanged Kane journey and its recordings. Eligible steps will replay; missing or failed steps will be authored."
+      "summary": "Journey step 7: passed."
     },
     {
-      "sequence": 67,
-      "at": "2026-10-25T00:53:09.603Z",
+      "sequence": 51,
+      "at": "2026-10-25T01:38:43.505Z",
       "phase": "verifying",
       "kind": "check.step",
-      "summary": "Running the assurance-designed journey against the generated interface."
+      "summary": "Journey step 8: passed."
     },
     {
-      "sequence": 68,
-      "at": "2026-10-25T00:53:25.960Z",
-      "phase": "verifying",
-      "kind": "check.step",
-      "summary": "Journey step 1: passed."
+      "sequence": 52,
+      "at": "2026-10-25T01:38:49.964Z",
+      "phase": "ready",
+      "kind": "artifact.promoted",
+      "summary": "Your interface passed the browser journey and its saved source outcome was confirmed.",
+      "revision": 1
     }
   ],
-  "overviewBaseline": null,
+  "candidates": [
+    {
+      "revision": 1,
+      "status": "verified",
+      "contractHash": "ce68e6b0f041fea0094d2de30dbaaf6656cc0cd24f3f721ad9ce60ce3616a09a",
+      "createdAt": "2026-10-25T01:18:16.983Z",
+      "hash": "a605c98fd0edba4de8f24a3811422fe224cc731d920ed2084a8eb80dd7ae9615",
+      "bytes": 605978,
+      "title": "Return the shoes, keep the jacket",
+      "decisions": [
+        {
+          "component": "Focused overview and task scope",
+          "change": "Prioritize returning only red shoes, visibly keep the jacket, and leave starting, approval, and completion to the host.",
+          "evidenceIds": [
+            "user-contract",
+            "151a4cb1-2fa4-4f6b-83b9-a9cc631f3697"
+          ]
+        },
+        {
+          "component": "Method selection and refund conflict",
+          "change": "Separate requested preferences from observed source values. Explain that the printed-label path requires a printer and the observed QR transition changed the destination to store credit; expose mismatches with Restore my choices.",
+          "evidenceIds": [
+            "user-contract",
+            "151a4cb1-2fa4-4f6b-83b9-a9cc631f3697",
+            "c89f361a-21c5-4659-a8e1-1c88fc80d943"
+          ]
+        },
+        {
+          "component": "Current terms and validation",
+          "change": "Render fees, refund amounts, options, and checks from runtime data. Keep unknowns explicit and provide only choice, validation, and restoration actions; never equate a saved draft with a completed return.",
+          "evidenceIds": [
+            "user-contract",
+            "151a4cb1-2fa4-4f6b-83b9-a9cc631f3697",
+            "c89f361a-21c5-4659-a8e1-1c88fc80d943"
+          ]
+        },
+        {
+          "component": "Discovery overview",
+          "change": "Generate informational reached-state cards from supplied discovery flows and screens, with observed fallbacks. Prioritize the help route, describe incomplete exploration, and disclose the changed product-page evidence rather than implying a verified transaction.",
+          "evidenceIds": [
+            "01M5RA52AH8QSDZR3NZC3RR7VE",
+            "01M5RA527TA07HKMCD7DKE7R13",
+            "01M5RA4S73H4YA05CBSWFZP37R",
+            "01M5RA4P45QHTY16WZXG0B4KY3",
+            "01M5RA5B1D9364BMK1582C9GPD",
+            "01M5RA5N42J3NSF85HT36N7W6T",
+            "e53f77f3859cb87b6c47923a51675fa772ff18fa35340c012c683e9e96df54aa"
+          ]
+        },
+        {
+          "component": "Accessible visual system",
+          "change": "Use a warm cream canvas, forest text, restrained green accents, labeled native selects, visible keyboard focus, responsive columns, and live status messaging. Avoid reproducing reported low-contrast source styling.",
+          "evidenceIds": [
+            "user-contract",
+            "01M5RA468597ZJDYFH435PEFX5",
+            "0a0ea868138d05eade4ec0c6a35dd5cf6006837724b6f8c8d023f8397166888c",
+            "480d6d02c15b91e8a7bd47c8dcc8acb5754f72b98825601e6064006608addeae"
+          ]
+        }
+      ],
+      "codeHash": "ea1e7985dbe941f4f1b387406907082b5aaefd0702a19cbe18f9de0b98f18455",
+      "cssHash": "09a374d47a4cf192b7f4829789d82f0145192ed9cb0ac89d46b2c1e0ffb8d8de",
+      "previewMap": {
+        "projectId": "01M5RADBB6X2FN17SSF1JCB1ZK",
+        "explorationId": "01a170a6-b0e5-714b-97c4-33035cfaacde",
+        "runId": "01a170a6-b1a8-7555-b998-817adb5361f6",
+        "complete": true,
+        "stopReason": {
+          "code": "completed",
+          "message": "the map has nothing left to explore"
+        },
+        "summary": {
+          "as_of_run": null,
+          "attempt": null,
+          "change_cursor": "eyJlIjoiMDFhMTcwYTYtYjBlNS03MTRiLTk3YzQtMzMwMzVjZmFhY2RlIiwiayI6ImNoYW5nZXMiLCJjIjozLCJsIjoxfQ.usGhpPD4x-JZUR2DgEv-Ng",
+          "counts": {
+            "aliases": 1,
+            "findings": 0,
+            "flows": 0,
+            "junctions": 1,
+            "observations": 0
+          },
+          "entry": "01M5RADN1ANHZSV1C4W4J9QMJS",
+          "exploration_id": "01a170a6-b0e5-714b-97c4-33035cfaacde",
+          "labels": [
+            {
+              "applies_to": [
+                "finding"
+              ],
+              "color": "#c0392b",
+              "group": "disposition",
+              "id": "label-d366b5670d72fe677fc8762e",
+              "meaning": "a real defect the team will fix; the reasoning says why",
+              "name": "bug",
+              "requires_reasoning": true,
+              "requires_ref": false,
+              "retired": false,
+              "system": true
+            },
+            {
+              "applies_to": [
+                "flow"
+              ],
+              "color": "#1f5fa8",
+              "group": null,
+              "id": "label-a97b88e23dc0980d5d940f9b",
+              "meaning": "verified first in every run",
+              "name": "critical path",
+              "requires_reasoning": false,
+              "requires_ref": false,
+              "retired": false,
+              "system": true
+            },
+            {
+              "applies_to": [
+                "junction"
+              ],
+              "color": "#8a8f98",
+              "group": "priority",
+              "id": "label-f43c901db56470ef2e56449d",
+              "meaning": "lowest priority: only if the budget allows, never re-checked",
+              "name": "deprecated",
+              "requires_reasoning": false,
+              "requires_ref": false,
+              "retired": false,
+              "system": true
+            },
+            {
+              "applies_to": [
+                "flow"
+              ],
+              "color": "#8a8f98",
+              "group": null,
+              "id": "label-b3c09c3e247c505a175274e2",
+              "meaning": "verified last or skipped",
+              "name": "deprecated",
+              "requires_reasoning": false,
+              "requires_ref": false,
+              "retired": false,
+              "system": true
+            },
+            {
+              "applies_to": [
+                "finding"
+              ],
+              "color": "#6b6f78",
+              "group": "disposition",
+              "id": "label-62d2148273cc5a4c46e76eb0",
+              "meaning": "the same defect as the finding it names",
+              "name": "duplicate",
+              "requires_reasoning": false,
+              "requires_ref": true,
+              "retired": false,
+              "system": true
+            },
+            {
+              "applies_to": [
+                "finding"
+              ],
+              "color": "#2e7d5b",
+              "group": "disposition",
+              "id": "label-fa32f40476c295b113898a6b",
+              "meaning": "the app is meant to behave this way: not a defect",
+              "name": "expected",
+              "requires_reasoning": false,
+              "requires_ref": false,
+              "retired": false,
+              "system": true
+            },
+            {
+              "applies_to": [
+                "finding"
+              ],
+              "color": "#8a7f6d",
+              "group": "disposition",
+              "id": "label-de7745eca24c79ac16baaba2",
+              "meaning": "comes and goes: not a defect the app reliably has",
+              "name": "flaky",
+              "requires_reasoning": false,
+              "requires_ref": false,
+              "retired": false,
+              "system": true
+            },
+            {
+              "applies_to": [
+                "junction"
+              ],
+              "color": "#1f7a5c",
+              "group": "priority",
+              "id": "label-8cfb2217c770472db6a7071d",
+              "meaning": "explored and re-checked first, kept fresh every run",
+              "name": "frequent",
+              "requires_reasoning": false,
+              "requires_ref": false,
+              "retired": false,
+              "system": true
+            },
+            {
+              "applies_to": [
+                "junction"
+              ],
+              "color": "#a67c1f",
+              "group": "priority",
+              "id": "label-a217211f761a70fdaa7cae23",
+              "meaning": "explored after everything else, re-checked less often",
+              "name": "low traffic",
+              "requires_reasoning": false,
+              "requires_ref": false,
+              "retired": false,
+              "system": true
+            },
+            {
+              "applies_to": [
+                "finding"
+              ],
+              "color": "#5f7d8a",
+              "group": "disposition",
+              "id": "label-a88be72976cc578b9528656f",
+              "meaning": "caused by the test environment, not the app",
+              "name": "test environment",
+              "requires_reasoning": false,
+              "requires_ref": false,
+              "retired": false,
+              "system": true
+            },
+            {
+              "applies_to": [
+                "finding"
+              ],
+              "color": "#7a6a4f",
+              "group": "disposition",
+              "id": "label-9b32ec55a8bd037e203bfd5e",
+              "meaning": "a known defect the team will not fix",
+              "name": "won't fix",
+              "requires_reasoning": false,
+              "requires_ref": false,
+              "retired": false,
+              "system": true
+            }
+          ],
+          "last_seq": 0,
+          "project_id": "01M5RADBB6X2FN17SSF1JCB1ZK",
+          "rejected_pairs": [],
+          "runs": [
+            {
+              "complete": true,
+              "credits": {
+                "by_node": {
+                  "exploration_judge/skill": 0.63917,
+                  "popup_prefs/read": 0.12452
+                },
+                "by_phase": {
+                  "judge": 0.63917,
+                  "popup_prefs": 0.12452
+                },
+                "calls": 2,
+                "total": 0.76369
+              },
+              "locale": "en-US",
+              "run_id": "01a170a6-b1a8-7555-b998-817adb5361f6",
+              "started_at": "2026-10-25T01:22:15Z"
+            }
+          ],
+          "verdicts": [],
+          "view_version": "1.0"
+        },
+        "screens": [
+          {
+            "id": "01M5RADN1ANHZSV1C4W4J9QMJS",
+            "name": "Your return · Raising Kane",
+            "url": "http://127.0.0.1:5173/builder-preview/87fb50e3-35c8-49ae-8fea-06f43f171105/1?inspect=1",
+            "runId": "01a170a6-b1a8-7555-b998-817adb5361f6",
+            "controls": [
+              {
+                "group": "main",
+                "more": 0,
+                "names": [
+                  "Start this task"
+                ]
+              }
+            ],
+            "origin": "observed",
+            "description": null,
+            "affordances": [
+              {
+                "choice": "",
+                "container": "main",
+                "count": 1,
+                "disabled": true,
+                "expands_collection": false,
+                "first_seen_run": "01a170a6-b1a8-7555-b998-817adb5361f6",
+                "gated": false,
+                "hint": "",
+                "href_pattern": null,
+                "instance": "",
+                "key": "72117af97ff134a640b856774fe9bee685ba8bc70da4469667d4d585aafc68b2",
+                "last_seen_run": "01a170a6-b1a8-7555-b998-817adb5361f6",
+                "name": "Start this task",
+                "region": "",
+                "revealed_by": null,
+                "role": "button",
+                "scope": "in",
+                "walked": false
+              }
+            ],
+            "image": "screen-0.jpg"
+          }
+        ],
+        "flows": [],
+        "findings": [],
+        "detailReads": [
+          {
+            "collection": "junctions",
+            "id": "01M5RADN1ANHZSV1C4W4J9QMJS",
+            "status": "read"
+          }
+        ],
+        "writeup": {
+          "status": "not_configured"
+        },
+        "capturedAt": "2026-10-25T01:22:33.312Z"
+      },
+      "verification": {
+        "status": "passed",
+        "summary": "All 8 assurance journey steps passed.",
+        "sessionId": "5f43855d-266f-44b0-a404-df6e4089822f",
+        "shots": [
+          {
+            "image": "step-0.jpg",
+            "stepId": "5-16",
+            "ordinal": 77,
+            "kind": "assert",
+            "status": "passed",
+            "summary": "assert: the host-panel submission produces Return requested; refund pending, a request i",
+            "url": "http://127.0.0.1:5173/builder-preview/87fb50e3-35c8-49ae-8fea-06f43f171105/verify?key=f851e64f-0038-4752-8326-0216e78d4a21"
+          },
+          {
+            "image": "step-1.jpg",
+            "stepId": "6-1",
+            "ordinal": 78,
+            "kind": "analyze",
+            "status": "passed",
+            "summary": "analyze: ANALYZE(visual, \"The saved receipt's jacket-kept state is saved as {{saved_recei",
+            "url": "http://127.0.0.1:5173/builder-preview/87fb50e3-35c8-49ae-8fea-06f43f171105/verify?key=f851e64f-0038-4752-8326-0216e78d4a21"
+          },
+          {
+            "image": "step-2.jpg",
+            "stepId": "6-2",
+            "ordinal": 79,
+            "kind": "",
+            "status": "passed",
+            "summary": "wait: Waiting after all saved receipt values have been verified",
+            "url": "http://127.0.0.1:5173/builder-preview/87fb50e3-35c8-49ae-8fea-06f43f171105/verify?key=f851e64f-0038-4752-8326-0216e78d4a21"
+          },
+          {
+            "image": "step-3.jpg",
+            "stepId": "7-1",
+            "ordinal": 80,
+            "kind": "wait",
+            "status": "passed",
+            "summary": "wait: PRIMARY: wait 500 ms after reloading the saved return confirmation",
+            "url": "http://127.0.0.1:5173/builder-preview/87fb50e3-35c8-49ae-8fea-06f43f171105/verify?key=f851e64f-0038-4752-8326-0216e78d4a21"
+          },
+          {
+            "image": "step-4.jpg",
+            "stepId": "7-2",
+            "ordinal": 81,
+            "kind": "analyze",
+            "status": "passed",
+            "summary": "analyze: ANALYZE(textual_visual, 'the saved receipt jacket kept state is {{saved_receipt_",
+            "url": "http://127.0.0.1:5173/builder-preview/87fb50e3-35c8-49ae-8fea-06f43f171105/verify?key=f851e64f-0038-4752-8326-0216e78d4a21"
+          },
+          {
+            "image": "step-5.jpg",
+            "stepId": "7-3",
+            "ordinal": 82,
+            "kind": "assert",
+            "status": "passed",
+            "summary": "assert: the same saved receipt remains, including the captured {{saved_receipt_request_i",
+            "url": "http://127.0.0.1:5173/builder-preview/87fb50e3-35c8-49ae-8fea-06f43f171105/verify?key=f851e64f-0038-4752-8326-0216e78d4a21"
+          }
+        ],
+        "testFile": "approve-red-shoes-qr-return-and-retain-the-saved-receipt_test.md",
+        "replay": {
+          "reusedJourney": false,
+          "replayedSteps": 0,
+          "authoredSteps": 8
+        },
+        "requirementsPreserved": true,
+        "healingUsed": false,
+        "coverage": {
+          "type": "coverage",
+          "v": 1,
+          "verb": "cover",
+          "source": "project",
+          "coverage_version": 2,
+          "scope": "project",
+          "config": {
+            "rule": "newest_counted_verdict",
+            "weighting": "risk",
+            "weights": {
+              "high": 1.25,
+              "med": 1,
+              "low": 0.75,
+              "unknown": 1
+            }
+          },
+          "pct": 100,
+          "usecases": {
+            "total": 1,
+            "proven": 1,
+            "partial": 0,
+            "failing": 0,
+            "not_run": 0,
+            "not_designed": 0,
+            "no_criteria": 0
+          },
+          "criteria": {
+            "total": 20,
+            "proven": 20
+          },
+          "perUc": [
+            {
+              "id": "uc-1",
+              "title": "Request a return for red shoes with approved refund terms",
+              "risk": "high",
+              "weight": 1.25,
+              "state": "proven",
+              "pct": 100,
+              "criteria": 20,
+              "proven": 20,
+              "manual_runs": 0,
+              "stale": false
+            }
+          ],
+          "perAc": {
+            "ac-1": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-2": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-3": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-4": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-5": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-6": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-7": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-8": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-9": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-10": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-11": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-12": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-13": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-14": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-15": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-16": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-17": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-18": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-19": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            },
+            "ac-20": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "e2ffacd0-390a-4136-a9cb-0a0cda035624"
+            }
+          },
+          "flags": {
+            "stale_sources": 0,
+            "sources_not_fully_extracted": [],
+            "orphaned_usecases": 0
+          }
+        },
+        "evidenceIngestStatus": "failed",
+        "artifactHash": "a605c98fd0edba4de8f24a3811422fe224cc731d920ed2084a8eb80dd7ae9615",
+        "contractHash": "ce68e6b0f041fea0094d2de30dbaaf6656cc0cd24f3f721ad9ce60ce3616a09a",
+        "taskId": "8b5fbcf2-acab-4c48-83a2-da9876144206",
+        "sourceMatch": true,
+        "at": "2026-10-25T01:38:49.964Z"
+      }
+    }
+  ],
+  "createdAt": "2026-10-25T01:16:52.909Z",
+  "updatedAt": "2026-10-25T01:38:49.964Z",
   "sourceMap": {
-    "projectId": "01M5R72Q6D2H5HEH6MZRBNTW5G",
-    "explorationId": "01a17071-6149-79b5-a8ac-0465578482fa",
-    "runId": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+    "projectId": "01M5RA3JT0E8A90ZH8RPSNZ11C",
+    "explorationId": "01a170a1-ce52-7141-90cf-fbe698acaf56",
+    "runId": "01a170a1-cf0e-79eb-a050-7a13110c8115",
     "complete": false,
     "stopReason": {
       "code": "budget",
       "message": "the run's budget ran out (budget_leases)"
     },
+    "summary": {
+      "as_of_run": null,
+      "attempt": null,
+      "change_cursor": "eyJlIjoiMDFhMTcwYTEtY2U1Mi03MTQxLTkwY2YtZmJlNjk4YWNhZjU2IiwiayI6ImNoYW5nZXMiLCJjIjo4LCJsIjoxfQ.jvBy5TsjOl3THuWUsA0YhA",
+      "counts": {
+        "aliases": 5,
+        "findings": 3,
+        "flows": 4,
+        "junctions": 4,
+        "observations": 5
+      },
+      "entry": "01M5RA468597ZJDYFH435PEFX5",
+      "exploration_id": "01a170a1-ce52-7141-90cf-fbe698acaf56",
+      "labels": [
+        {
+          "applies_to": [
+            "finding"
+          ],
+          "color": "#c0392b",
+          "group": "disposition",
+          "id": "label-e16d13ff91ee02f4199074ef",
+          "meaning": "a real defect the team will fix; the reasoning says why",
+          "name": "bug",
+          "requires_reasoning": true,
+          "requires_ref": false,
+          "retired": false,
+          "system": true
+        },
+        {
+          "applies_to": [
+            "flow"
+          ],
+          "color": "#1f5fa8",
+          "group": null,
+          "id": "label-7777cbf3d83de6a942cd59f4",
+          "meaning": "verified first in every run",
+          "name": "critical path",
+          "requires_reasoning": false,
+          "requires_ref": false,
+          "retired": false,
+          "system": true
+        },
+        {
+          "applies_to": [
+            "junction"
+          ],
+          "color": "#8a8f98",
+          "group": "priority",
+          "id": "label-4310f99b5faf4f4517b48caf",
+          "meaning": "lowest priority: only if the budget allows, never re-checked",
+          "name": "deprecated",
+          "requires_reasoning": false,
+          "requires_ref": false,
+          "retired": false,
+          "system": true
+        },
+        {
+          "applies_to": [
+            "flow"
+          ],
+          "color": "#8a8f98",
+          "group": null,
+          "id": "label-77ac3ceade546d5868ea8ecb",
+          "meaning": "verified last or skipped",
+          "name": "deprecated",
+          "requires_reasoning": false,
+          "requires_ref": false,
+          "retired": false,
+          "system": true
+        },
+        {
+          "applies_to": [
+            "finding"
+          ],
+          "color": "#6b6f78",
+          "group": "disposition",
+          "id": "label-73b15fec932268d3746efabe",
+          "meaning": "the same defect as the finding it names",
+          "name": "duplicate",
+          "requires_reasoning": false,
+          "requires_ref": true,
+          "retired": false,
+          "system": true
+        },
+        {
+          "applies_to": [
+            "finding"
+          ],
+          "color": "#2e7d5b",
+          "group": "disposition",
+          "id": "label-88cfe3972db8c0a78deca754",
+          "meaning": "the app is meant to behave this way: not a defect",
+          "name": "expected",
+          "requires_reasoning": false,
+          "requires_ref": false,
+          "retired": false,
+          "system": true
+        },
+        {
+          "applies_to": [
+            "finding"
+          ],
+          "color": "#8a7f6d",
+          "group": "disposition",
+          "id": "label-a0ba5626c5a352cd70b8e671",
+          "meaning": "comes and goes: not a defect the app reliably has",
+          "name": "flaky",
+          "requires_reasoning": false,
+          "requires_ref": false,
+          "retired": false,
+          "system": true
+        },
+        {
+          "applies_to": [
+            "junction"
+          ],
+          "color": "#1f7a5c",
+          "group": "priority",
+          "id": "label-d19f9f9e2b3eea3e3014a35d",
+          "meaning": "explored and re-checked first, kept fresh every run",
+          "name": "frequent",
+          "requires_reasoning": false,
+          "requires_ref": false,
+          "retired": false,
+          "system": true
+        },
+        {
+          "applies_to": [
+            "junction"
+          ],
+          "color": "#a67c1f",
+          "group": "priority",
+          "id": "label-1835d5060ba9552f392506c3",
+          "meaning": "explored after everything else, re-checked less often",
+          "name": "low traffic",
+          "requires_reasoning": false,
+          "requires_ref": false,
+          "retired": false,
+          "system": true
+        },
+        {
+          "applies_to": [
+            "finding"
+          ],
+          "color": "#5f7d8a",
+          "group": "disposition",
+          "id": "label-cabd959b48782da464b92901",
+          "meaning": "caused by the test environment, not the app",
+          "name": "test environment",
+          "requires_reasoning": false,
+          "requires_ref": false,
+          "retired": false,
+          "system": true
+        },
+        {
+          "applies_to": [
+            "finding"
+          ],
+          "color": "#7a6a4f",
+          "group": "disposition",
+          "id": "label-9920fa5d1fdb6d4b86bf7a33",
+          "meaning": "a known defect the team will not fix",
+          "name": "won't fix",
+          "requires_reasoning": false,
+          "requires_ref": false,
+          "retired": false,
+          "system": true
+        }
+      ],
+      "last_seq": 0,
+      "project_id": "01M5RA3JT0E8A90ZH8RPSNZ11C",
+      "rejected_pairs": [],
+      "runs": [
+        {
+          "complete": false,
+          "credits": {
+            "by_node": {
+              "exploration_judge/skill": 2.11427,
+              "page_observer": 0.22333250000000004,
+              "popup_prefs/read": 0.19419999999999998,
+              "reasoning/v2": 5.51194
+            },
+            "by_phase": {
+              "judge": 2.11427,
+              "popup_prefs": 0.19419999999999998,
+              "walk": 5.735272500000001
+            },
+            "calls": 15,
+            "total": 8.0437425
+          },
+          "locale": "en-US",
+          "run_id": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+          "started_at": "2026-10-25T01:16:54Z"
+        }
+      ],
+      "verdicts": [],
+      "view_version": "1.0"
+    },
     "screens": [
       {
-        "id": "01M5R734ZYDK2NYEEKF72WVVNG",
-        "name": "Your next chapter, outside. | Northstar Outfitters \u2014 Your next chapter, outside.",
+        "id": "01M5RA468597ZJDYFH435PEFX5",
+        "name": "Your next chapter, outside. | Northstar Outfitters",
         "url": "REDACTED",
-        "runId": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+        "runId": "01a170a1-cf0e-79eb-a050-7a13110c8115",
         "controls": [
           {
             "group": "banner",
@@ -633,13 +1240,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store?taskId",
+            "href_pattern": "127.0.0.1:5174/store?taskId",
             "instance": "",
             "key": "15f686d7c6951c607a645d0aeb1133b4741cbe77d9be416d14cad466bf9dd72b",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "NORTHSTAR OUTFITTERS",
             "region": "",
             "revealed_by": null,
@@ -653,34 +1260,14 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/products?taskId",
+            "href_pattern": "127.0.0.1:5174/store/products?taskId",
             "instance": "",
             "key": "8c2723b39bbe353cd0c71989eff8c92af27fe5fbf1e3cc089c5aa2b2f59e8b56",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Shop",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "navigation",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/orders?taskId",
-            "instance": "",
-            "key": "165822dfc6470f3d6b38047f79da454669cf2a4683d9e6df7656893525e2d4b7",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "My orders",
             "region": "",
             "revealed_by": null,
             "role": "link",
@@ -693,13 +1280,33 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/help?taskId",
+            "href_pattern": "127.0.0.1:5174/store/orders?taskId",
+            "instance": "",
+            "key": "165822dfc6470f3d6b38047f79da454669cf2a4683d9e6df7656893525e2d4b7",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "My orders",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/help?taskId",
             "instance": "",
             "key": "267b2b8ea4d4103c28678c5c5adebb27975b26629ea93501bb2e4603d0104544",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Help centre",
             "region": "",
             "revealed_by": null,
@@ -713,54 +1320,14 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/products?taskId",
+            "href_pattern": "127.0.0.1:5174/store/products?taskId",
             "instance": "",
             "key": "3692b101545365461c200131a74151caf0c5549bb8eebf6c274177a3882e7a88",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Browse all products",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": true
-          },
-          {
-            "choice": "",
-            "container": "main",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/orders?taskId",
-            "instance": "",
-            "key": "460c847294892f4e0ca4b72f79a3b263571393904df862bd40205cd491760ee0",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "View orders & delivery",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": true
-          },
-          {
-            "choice": "",
-            "container": "main",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/help?taskId",
-            "instance": "",
-            "key": "8f27bce2ceae965556fe4cb633176561cf65f6f6fc3f5f1e7a647484a6943d55",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "Returns, exchanges & warranty",
             "region": "",
             "revealed_by": null,
             "role": "link",
@@ -773,13 +1340,53 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/products/red-running-shoes?taskId",
+            "href_pattern": "127.0.0.1:5174/store/orders?taskId",
+            "instance": "",
+            "key": "460c847294892f4e0ca4b72f79a3b263571393904df862bd40205cd491760ee0",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "View orders & delivery",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/help?taskId",
+            "instance": "",
+            "key": "8f27bce2ceae965556fe4cb633176561cf65f6f6fc3f5f1e7a647484a6943d55",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Returns, exchanges & warranty",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": true
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/products/red-running-shoes?taskId",
             "instance": "",
             "key": "2e890ad12f1f4b713b41560d2d21d3b1c557c7e3b4267ce123c755e5ca47fee2",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Red running shoes",
             "region": "",
             "revealed_by": null,
@@ -793,19 +1400,19 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/products/black-jacket?taskId",
+            "href_pattern": "127.0.0.1:5174/store/products/black-jacket?taskId",
             "instance": "",
             "key": "4e29366198e4f96fed3736f9e142ece886cfe2918c10a56183a9395b2be3a213",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Black jacket",
             "region": "",
             "revealed_by": null,
             "role": "link",
             "scope": "in",
-            "walked": false
+            "walked": true
           },
           {
             "choice": "",
@@ -813,13 +1420,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/products/trail-pack?taskId",
+            "href_pattern": "127.0.0.1:5174/store/products/trail-pack?taskId",
             "instance": "",
             "key": "b5e1ac8305140b8456fc994a7f792c0e82f66f3e2039303155e22980c0f49a35",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Trail day pack",
             "region": "",
             "revealed_by": null,
@@ -833,14 +1440,14 @@
             "count": 3,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/products/red-running-shoes?taskId",
+            "href_pattern": "127.0.0.1:5174/store/products/red-running-shoes?taskId",
             "instance": "",
             "key": "a9763b8b87b5ea6688cdc5fcda742706eaab8d2d3a1fc142e77e8119f6c3055a",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "View product & options \u2192",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "View product & options →",
             "region": "",
             "revealed_by": null,
             "role": "link",
@@ -853,13 +1460,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store?taskId",
+            "href_pattern": "127.0.0.1:5174/store?taskId",
             "instance": "",
             "key": "0071c0f28ec3f65734d6533f65988fa606476c338a17cdc27d19191703144685",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Home",
             "region": "",
             "revealed_by": null,
@@ -873,13 +1480,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/help/returns?taskId",
+            "href_pattern": "127.0.0.1:5174/store/help/returns?taskId",
             "instance": "",
             "key": "93d13f80fe14aa9288c79b02eaa73a355a0f61015a1cda50c2ba6254fd4c649c",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Return policy",
             "region": "",
             "revealed_by": null,
@@ -893,13 +1500,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/help/warranty?taskId",
+            "href_pattern": "127.0.0.1:5174/store/help/warranty?taskId",
             "instance": "",
             "key": "459a19cd54939aa9d03f3267a0d9915c1ebcdc0b0ca89a92822baca3269f8960",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Warranty",
             "region": "",
             "revealed_by": null,
@@ -911,545 +1518,10 @@
         "image": "screen-0.jpg"
       },
       {
-        "id": "01M5R73NT08XXCVGVY7X7S1M2P",
-        "name": "Your next chapter, outside. | Northstar Outfitters \u2014 Your next chapter, outside.",
-        "url": "REDACTED",
-        "runId": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-        "controls": [
-          {
-            "group": "banner",
-            "more": 0,
-            "names": [
-              "NORTHSTAR OUTFITTERS"
-            ]
-          },
-          {
-            "group": "navigation",
-            "more": 0,
-            "names": [
-              "Shop",
-              "My orders",
-              "Help centre"
-            ]
-          },
-          {
-            "group": "main",
-            "more": 1,
-            "names": [
-              "Browse all products",
-              "View orders & delivery",
-              "Returns, exchanges & warranty",
-              "Red running shoes",
-              "Black jacket",
-              "Trail day pack"
-            ]
-          },
-          {
-            "group": "contentinfo",
-            "more": 0,
-            "names": [
-              "Home",
-              "Return policy",
-              "Warranty"
-            ]
-          }
-        ],
-        "origin": "observed",
-        "description": null,
-        "affordances": [
-          {
-            "choice": "",
-            "container": "banner",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store?taskId&view=readonly",
-            "instance": "",
-            "key": "15f686d7c6951c607a645d0aeb1133b4741cbe77d9be416d14cad466bf9dd72b",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "NORTHSTAR OUTFITTERS",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "navigation",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/products?taskId&view=readonly",
-            "instance": "",
-            "key": "8c2723b39bbe353cd0c71989eff8c92af27fe5fbf1e3cc089c5aa2b2f59e8b56",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "Shop",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "navigation",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/orders?taskId&view=readonly",
-            "instance": "",
-            "key": "165822dfc6470f3d6b38047f79da454669cf2a4683d9e6df7656893525e2d4b7",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "My orders",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "navigation",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/help?taskId&view=readonly",
-            "instance": "",
-            "key": "267b2b8ea4d4103c28678c5c5adebb27975b26629ea93501bb2e4603d0104544",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "Help centre",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "main",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/products?taskId&view=readonly",
-            "instance": "",
-            "key": "3692b101545365461c200131a74151caf0c5549bb8eebf6c274177a3882e7a88",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "Browse all products",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "main",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/orders?taskId&view=readonly",
-            "instance": "",
-            "key": "460c847294892f4e0ca4b72f79a3b263571393904df862bd40205cd491760ee0",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "View orders & delivery",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "main",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/help?taskId&view=readonly",
-            "instance": "",
-            "key": "8f27bce2ceae965556fe4cb633176561cf65f6f6fc3f5f1e7a647484a6943d55",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "Returns, exchanges & warranty",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "main",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/products/red-running-shoes?taskId&view=readonly",
-            "instance": "",
-            "key": "2e890ad12f1f4b713b41560d2d21d3b1c557c7e3b4267ce123c755e5ca47fee2",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "Red running shoes",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "main",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/products/black-jacket?taskId&view=readonly",
-            "instance": "",
-            "key": "4e29366198e4f96fed3736f9e142ece886cfe2918c10a56183a9395b2be3a213",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "Black jacket",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "main",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/products/trail-pack?taskId&view=readonly",
-            "instance": "",
-            "key": "b5e1ac8305140b8456fc994a7f792c0e82f66f3e2039303155e22980c0f49a35",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "Trail day pack",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "main",
-            "count": 3,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/products/red-running-shoes?taskId&view=readonly",
-            "instance": "",
-            "key": "a9763b8b87b5ea6688cdc5fcda742706eaab8d2d3a1fc142e77e8119f6c3055a",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "View product & options \u2192",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "contentinfo",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store?taskId&view=readonly",
-            "instance": "",
-            "key": "0071c0f28ec3f65734d6533f65988fa606476c338a17cdc27d19191703144685",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "Home",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "out",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "contentinfo",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/help/returns?taskId&view=readonly",
-            "instance": "",
-            "key": "93d13f80fe14aa9288c79b02eaa73a355a0f61015a1cda50c2ba6254fd4c649c",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "Return policy",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "out",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "contentinfo",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/help/warranty?taskId&view=readonly",
-            "instance": "",
-            "key": "459a19cd54939aa9d03f3267a0d9915c1ebcdc0b0ca89a92822baca3269f8960",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "Warranty",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "out",
-            "walked": false
-          }
-        ],
-        "image": "screen-1.jpg"
-      },
-      {
-        "id": "01M5R742D3KSREFCGXJB6T13PP",
-        "name": "Your orders | Northstar Outfitters",
-        "url": "REDACTED",
-        "runId": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-        "controls": [
-          {
-            "group": "banner",
-            "more": 0,
-            "names": [
-              "NORTHSTAR OUTFITTERS"
-            ]
-          },
-          {
-            "group": "navigation",
-            "more": 0,
-            "names": [
-              "Shop",
-              "My orders",
-              "Help centre"
-            ]
-          },
-          {
-            "group": "main",
-            "more": 0,
-            "names": [
-              "View order"
-            ]
-          },
-          {
-            "group": "contentinfo",
-            "more": 0,
-            "names": [
-              "Home",
-              "Return policy",
-              "Warranty"
-            ]
-          }
-        ],
-        "origin": "observed",
-        "description": null,
-        "affordances": [
-          {
-            "choice": "",
-            "container": "banner",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store?taskId&view=readonly",
-            "instance": "",
-            "key": "15f686d7c6951c607a645d0aeb1133b4741cbe77d9be416d14cad466bf9dd72b",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "NORTHSTAR OUTFITTERS",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "navigation",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/products?taskId&view=readonly",
-            "instance": "",
-            "key": "8c2723b39bbe353cd0c71989eff8c92af27fe5fbf1e3cc089c5aa2b2f59e8b56",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "Shop",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "navigation",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/orders?taskId&view=readonly",
-            "instance": "",
-            "key": "165822dfc6470f3d6b38047f79da454669cf2a4683d9e6df7656893525e2d4b7",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "My orders",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "navigation",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/help?taskId&view=readonly",
-            "instance": "",
-            "key": "267b2b8ea4d4103c28678c5c5adebb27975b26629ea93501bb2e4603d0104544",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "Help centre",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "main",
-            "count": 2,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/orders/{slug}?taskId&view=readonly",
-            "instance": "",
-            "key": "464abaabe47809ac9b24defa664b0f89bacf0b250e12122e171a33b73b12c0ec",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "View order",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "in",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "contentinfo",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store?taskId&view=readonly",
-            "instance": "",
-            "key": "0071c0f28ec3f65734d6533f65988fa606476c338a17cdc27d19191703144685",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "Home",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "out",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "contentinfo",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/help/returns?taskId&view=readonly",
-            "instance": "",
-            "key": "93d13f80fe14aa9288c79b02eaa73a355a0f61015a1cda50c2ba6254fd4c649c",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "Return policy",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "out",
-            "walked": false
-          },
-          {
-            "choice": "",
-            "container": "contentinfo",
-            "count": 1,
-            "disabled": false,
-            "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "gated": false,
-            "hint": "",
-            "href_pattern": "127.0.0.1:5281/store/help/warranty?taskId&view=readonly",
-            "instance": "",
-            "key": "459a19cd54939aa9d03f3267a0d9915c1ebcdc0b0ca89a92822baca3269f8960",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "Warranty",
-            "region": "",
-            "revealed_by": null,
-            "role": "link",
-            "scope": "out",
-            "walked": false
-          }
-        ],
-        "image": "screen-2.jpg"
-      },
-      {
-        "id": "01M5R74H4C80FFNPT6PV15Q9GE",
+        "id": "01M5RA4P45QHTY16WZXG0B4KY3",
         "name": "Shop the collection | Northstar Outfitters",
         "url": "REDACTED",
-        "runId": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+        "runId": "01a170a1-cf0e-79eb-a050-7a13110c8115",
         "controls": [
           {
             "group": "banner",
@@ -1477,7 +1549,7 @@
               "Red running shoes",
               "Black jacket",
               "Trail day pack",
-              "View product & options \u2192"
+              "View product & options →"
             ]
           },
           {
@@ -1499,13 +1571,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store?taskId",
+            "href_pattern": "127.0.0.1:5174/store?taskId",
             "instance": "",
             "key": "15f686d7c6951c607a645d0aeb1133b4741cbe77d9be416d14cad466bf9dd72b",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "NORTHSTAR OUTFITTERS",
             "region": "",
             "revealed_by": null,
@@ -1519,13 +1591,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/products?taskId",
+            "href_pattern": "127.0.0.1:5174/store/products?taskId",
             "instance": "",
             "key": "8c2723b39bbe353cd0c71989eff8c92af27fe5fbf1e3cc089c5aa2b2f59e8b56",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Shop",
             "region": "",
             "revealed_by": null,
@@ -1539,13 +1611,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/orders?taskId",
+            "href_pattern": "127.0.0.1:5174/store/orders?taskId",
             "instance": "",
             "key": "165822dfc6470f3d6b38047f79da454669cf2a4683d9e6df7656893525e2d4b7",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "My orders",
             "region": "",
             "revealed_by": null,
@@ -1559,13 +1631,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/help?taskId",
+            "href_pattern": "127.0.0.1:5174/store/help?taskId",
             "instance": "",
             "key": "267b2b8ea4d4103c28678c5c5adebb27975b26629ea93501bb2e4603d0104544",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Help centre",
             "region": "",
             "revealed_by": null,
@@ -1579,13 +1651,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/products?taskId",
+            "href_pattern": "127.0.0.1:5174/store/products?taskId",
             "instance": "",
             "key": "e566f5e193b81cc05d67ab33d5739ee437202039c04025e90a2628448f186ef1",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "All products",
             "region": "",
             "revealed_by": null,
@@ -1599,13 +1671,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/products?category&taskId",
+            "href_pattern": "127.0.0.1:5174/store/products?category&taskId",
             "instance": "",
             "key": "280959a8731b52c644954213c276c1a9bfe0ca620728d1fa2cb139af1bed447e",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Footwear",
             "region": "",
             "revealed_by": null,
@@ -1619,13 +1691,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/products?category&taskId",
+            "href_pattern": "127.0.0.1:5174/store/products?category&taskId",
             "instance": "",
             "key": "606c8deee9c9bba74b03d5b8fbd1fc1199cbcf42fe3e8a4e49ed5ec8309310e3",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Outerwear",
             "region": "",
             "revealed_by": null,
@@ -1639,13 +1711,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/products?category&taskId",
+            "href_pattern": "127.0.0.1:5174/store/products?category&taskId",
             "instance": "",
             "key": "e021425f5e4cbd299fdf7ba6403962dd64a44cf4828c1517b474fe35f818d9c5",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Equipment",
             "region": "",
             "revealed_by": null,
@@ -1659,13 +1731,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/products/red-running-shoes?taskId",
+            "href_pattern": "127.0.0.1:5174/store/products/red-running-shoes?taskId",
             "instance": "",
             "key": "2e890ad12f1f4b713b41560d2d21d3b1c557c7e3b4267ce123c755e5ca47fee2",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Red running shoes",
             "region": "",
             "revealed_by": null,
@@ -1679,13 +1751,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/products/black-jacket?taskId",
+            "href_pattern": "127.0.0.1:5174/store/products/black-jacket?taskId",
             "instance": "",
             "key": "4e29366198e4f96fed3736f9e142ece886cfe2918c10a56183a9395b2be3a213",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Black jacket",
             "region": "",
             "revealed_by": null,
@@ -1699,13 +1771,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/products/trail-pack?taskId",
+            "href_pattern": "127.0.0.1:5174/store/products/trail-pack?taskId",
             "instance": "",
             "key": "b5e1ac8305140b8456fc994a7f792c0e82f66f3e2039303155e22980c0f49a35",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Trail day pack",
             "region": "",
             "revealed_by": null,
@@ -1719,14 +1791,14 @@
             "count": 3,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/products/red-running-shoes?taskId",
+            "href_pattern": "127.0.0.1:5174/store/products/red-running-shoes?taskId",
             "instance": "",
             "key": "a9763b8b87b5ea6688cdc5fcda742706eaab8d2d3a1fc142e77e8119f6c3055a",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "name": "View product & options \u2192",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "View product & options →",
             "region": "",
             "revealed_by": null,
             "role": "link",
@@ -1739,13 +1811,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store?taskId",
+            "href_pattern": "127.0.0.1:5174/store?taskId",
             "instance": "",
             "key": "0071c0f28ec3f65734d6533f65988fa606476c338a17cdc27d19191703144685",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Home",
             "region": "",
             "revealed_by": null,
@@ -1759,13 +1831,13 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/help/returns?taskId",
+            "href_pattern": "127.0.0.1:5174/store/help/returns?taskId",
             "instance": "",
             "key": "93d13f80fe14aa9288c79b02eaa73a355a0f61015a1cda50c2ba6254fd4c649c",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Return policy",
             "region": "",
             "revealed_by": null,
@@ -1779,18 +1851,615 @@
             "count": 1,
             "disabled": false,
             "expands_collection": false,
-            "first_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "gated": false,
             "hint": "",
-            "href_pattern": "127.0.0.1:5301/store/help/warranty?taskId",
+            "href_pattern": "127.0.0.1:5174/store/help/warranty?taskId",
             "instance": "",
             "key": "459a19cd54939aa9d03f3267a0d9915c1ebcdc0b0ca89a92822baca3269f8960",
-            "last_seen_run": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "name": "Warranty",
             "region": "",
             "revealed_by": null,
             "role": "link",
             "scope": "out",
+            "walked": false
+          }
+        ],
+        "image": "screen-1.jpg"
+      },
+      {
+        "id": "01M5RA527TA07HKMCD7DKE7R13",
+        "name": "How can we help? | Northstar Outfitters",
+        "url": "REDACTED",
+        "runId": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+        "controls": [
+          {
+            "group": "banner",
+            "more": 0,
+            "names": [
+              "NORTHSTAR OUTFITTERS"
+            ]
+          },
+          {
+            "group": "navigation",
+            "more": 0,
+            "names": [
+              "Shop",
+              "My orders",
+              "Help centre"
+            ]
+          },
+          {
+            "group": "main",
+            "more": 0,
+            "names": [
+              "Check methods, eligibility and fees",
+              "Understand delivery and collection",
+              "Find the right route for a damaged pack"
+            ]
+          },
+          {
+            "group": "contentinfo",
+            "more": 0,
+            "names": [
+              "Home",
+              "Return policy",
+              "Warranty"
+            ]
+          }
+        ],
+        "origin": "observed",
+        "description": null,
+        "affordances": [
+          {
+            "choice": "",
+            "container": "banner",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store?taskId",
+            "instance": "",
+            "key": "15f686d7c6951c607a645d0aeb1133b4741cbe77d9be416d14cad466bf9dd72b",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "NORTHSTAR OUTFITTERS",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/products?taskId",
+            "instance": "",
+            "key": "8c2723b39bbe353cd0c71989eff8c92af27fe5fbf1e3cc089c5aa2b2f59e8b56",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Shop",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/orders?taskId",
+            "instance": "",
+            "key": "165822dfc6470f3d6b38047f79da454669cf2a4683d9e6df7656893525e2d4b7",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "My orders",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/help?taskId",
+            "instance": "",
+            "key": "267b2b8ea4d4103c28678c5c5adebb27975b26629ea93501bb2e4603d0104544",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Help centre",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/help/returns?taskId",
+            "instance": "",
+            "key": "ceafbf0dfc2ecfca1c24fb07cbadc2ba4de81fcc63328db47d6260ee19d71f66",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Check methods, eligibility and fees",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/help/delivery?taskId",
+            "instance": "",
+            "key": "6b895127cc42f94d7582024e580cb4ac0abddb694306e4cf9866d7d6f5a8deef",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Understand delivery and collection",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/help/warranty?taskId",
+            "instance": "",
+            "key": "53fc9e30a02d1c822313c96896e47476b7f25fdfe127186eae8fa4c384a60929",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Find the right route for a damaged pack",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store?taskId",
+            "instance": "",
+            "key": "0071c0f28ec3f65734d6533f65988fa606476c338a17cdc27d19191703144685",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Home",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/help/returns?taskId",
+            "instance": "",
+            "key": "93d13f80fe14aa9288c79b02eaa73a355a0f61015a1cda50c2ba6254fd4c649c",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Return policy",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/help/warranty?taskId",
+            "instance": "",
+            "key": "459a19cd54939aa9d03f3267a0d9915c1ebcdc0b0ca89a92822baca3269f8960",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Warranty",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          }
+        ],
+        "image": "screen-2.jpg"
+      },
+      {
+        "id": "01M5RA5AYG9YAKGHYQYJ2ZJ8K2",
+        "name": "Black jacket | Northstar Outfitters",
+        "url": "REDACTED",
+        "runId": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+        "controls": [
+          {
+            "group": "banner",
+            "more": 0,
+            "names": [
+              "NORTHSTAR OUTFITTERS"
+            ]
+          },
+          {
+            "group": "navigation",
+            "more": 2,
+            "names": [
+              "Shop",
+              "My orders",
+              "Help centre",
+              "Small",
+              "Medium",
+              "Large"
+            ]
+          },
+          {
+            "group": "main",
+            "more": 0,
+            "names": [
+              "Collection",
+              "Delivery and collection details",
+              "Returns and exchanges"
+            ]
+          },
+          {
+            "group": "contentinfo",
+            "more": 0,
+            "names": [
+              "Home",
+              "Return policy",
+              "Warranty"
+            ]
+          }
+        ],
+        "origin": "observed",
+        "description": null,
+        "affordances": [
+          {
+            "choice": "",
+            "container": "banner",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store?taskId",
+            "instance": "",
+            "key": "15f686d7c6951c607a645d0aeb1133b4741cbe77d9be416d14cad466bf9dd72b",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "NORTHSTAR OUTFITTERS",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/products?taskId",
+            "instance": "",
+            "key": "8c2723b39bbe353cd0c71989eff8c92af27fe5fbf1e3cc089c5aa2b2f59e8b56",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Shop",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/orders?taskId",
+            "instance": "",
+            "key": "165822dfc6470f3d6b38047f79da454669cf2a4683d9e6df7656893525e2d4b7",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "My orders",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/help?taskId",
+            "instance": "",
+            "key": "267b2b8ea4d4103c28678c5c5adebb27975b26629ea93501bb2e4603d0104544",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Help centre",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/products?taskId",
+            "instance": "",
+            "key": "737df0d2c36db4c539cb8a002f6b64b2d8f8c77c13216f32ae68d64286e17bab",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Collection",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/products/black-jacket?size&taskId",
+            "instance": "",
+            "key": "7b15fa94dcbbb608cf348f863ac4e8823053f870f4102c4c02f92da4ec09f875",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Small",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/products/black-jacket?size&taskId",
+            "instance": "",
+            "key": "d12e6ab96f58514dd31f17af29839c25d869ceee8286444c6539e33e05d3f593",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Medium",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/products/black-jacket?size&taskId",
+            "instance": "",
+            "key": "0f6d50c41ae1d00d7b9b3ef202cd1cab9a5bd508bed7b343875bd25c62afbc4e",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Large",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/help/delivery?taskId",
+            "instance": "",
+            "key": "d63843da7c241f3a3ccee0c8dfe3bf8d2dba0db2cf1d83364f0e80beddd6bfeb",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Delivery and collection details",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "main",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/help/returns?taskId",
+            "instance": "",
+            "key": "0faf98b17605dbff2164756822e893c55163a22631eef83bb774f06699450c73",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Returns and exchanges",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store?taskId",
+            "instance": "",
+            "key": "0071c0f28ec3f65734d6533f65988fa606476c338a17cdc27d19191703144685",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Home",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/help/returns?taskId",
+            "instance": "",
+            "key": "93d13f80fe14aa9288c79b02eaa73a355a0f61015a1cda50c2ba6254fd4c649c",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Return policy",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "contentinfo",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": false,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/help/warranty?taskId",
+            "instance": "",
+            "key": "459a19cd54939aa9d03f3267a0d9915c1ebcdc0b0ca89a92822baca3269f8960",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "Warranty",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "out",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": true,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/products/red-running-shoes?size&taskId",
+            "instance": "",
+            "key": "004af4318db050dc44d3892859544ef749ab610f39d03e132462084ea6746474",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "{n}",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
+            "walked": false
+          },
+          {
+            "choice": "",
+            "container": "navigation",
+            "count": 1,
+            "disabled": false,
+            "expands_collection": true,
+            "first_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "gated": false,
+            "hint": "",
+            "href_pattern": "127.0.0.1:5174/store/products/red-running-shoes?size&taskId",
+            "instance": "",
+            "key": "9b513ab8f9c9a4fe691944f19c804524eab0577f9ab048004e6b44a2491cbee8",
+            "last_seen_run": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "name": "{n}",
+            "region": "",
+            "revealed_by": null,
+            "role": "link",
+            "scope": "in",
             "walked": false
           }
         ],
@@ -1801,14 +2470,16 @@
       {
         "annotations": {},
         "changes": [],
-        "current_observation": "12131e113148b4dc3b6459fe2e15d19d25b3e3a7a6af74dcb8f6e542948df8ad",
+        "current_observation": "91255034a4240f872e36ad6783404548d5c5a1068ec2566496204956903fbdac",
         "description": "",
-        "entry": "01M5R734ZYDK2NYEEKF72WVVNG",
-        "exit": "01M5R73NT08XXCVGVY7X7S1M2P",
+        "entry": "01M5RA468597ZJDYFH435PEFX5",
+        "exit": "01M5RA4P45QHTY16WZXG0B4KY3",
         "feedback": [],
-        "finding_ids": [],
-        "id": "01M5R73RHDGTV5P3C6CKD2K7JK",
-        "name": "View product & options \u2192",
+        "finding_ids": [
+          "480d6d02c15b91e8a7bd47c8dcc8acb5754f72b98825601e6064006608addeae"
+        ],
+        "id": "01M5RA4S73H4YA05CBSWFZP37R",
+        "name": "Shop",
         "origin": "agent",
         "parent_id": null,
         "plan": null,
@@ -1820,52 +2491,52 @@
         "currentObservation": {
           "credits": {
             "by_node": {
-              "page_observer": 0.05644250000000001,
-              "reasoning/v2": 1.52902
+              "page_observer": 0.055892500000000005,
+              "reasoning/v2": 1.3323400000000003
             },
             "by_phase": {
-              "walk": 1.5854625000000002
+              "walk": 1.3882325000000002
             },
             "calls": 3,
-            "total": 1.5854625000000002
+            "total": 1.3882325000000002
           },
           "diverged_at": null,
-          "flow_id": "01M5R73RHDGTV5P3C6CKD2K7JK",
-          "id": "12131e113148b4dc3b6459fe2e15d19d25b3e3a7a6af74dcb8f6e542948df8ad",
-          "lease_id": "01M5R73CFN5P833VPYCG7PYC3S",
+          "flow_id": "01M5RA4S73H4YA05CBSWFZP37R",
+          "id": "91255034a4240f872e36ad6783404548d5c5a1068ec2566496204956903fbdac",
+          "lease_id": "01M5RA4DAPCGW6HKHYZ2CPDB5T",
           "load_blocked": [],
           "outcome": "verified",
-          "reached": "01M5R73NT08XXCVGVY7X7S1M2P",
+          "reached": "01M5RA4P45QHTY16WZXG0B4KY3",
           "reached_via": "jump",
           "reason": null,
-          "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+          "run_id": "01a170a1-cf0e-79eb-a050-7a13110c8115",
           "steps": [
             {
               "in_place": false,
               "ordinal": 1,
               "record": {
-                "action_instruction": "Scrolling",
-                "action_type": "scroll",
+                "action_instruction": "Clicking Shop navigation link",
+                "action_type": "click",
                 "output_variable": null,
                 "step": 3
               },
               "url_after": "REDACTED"
             }
           ],
-          "version": "284da9befa730cc01a5fcf904aaff0b95c94e370b85de5c179eb1a457202cacc"
+          "version": "6f321ae316a7a7aadeadbd34c3d33892bccf6754c88cbafdef4206b0c96bf382"
         }
       },
       {
         "annotations": {},
         "changes": [],
-        "current_observation": "d13b3d8791e9079c53b606f63beecae0fd08d97fc04be608f8b22d778abc748c",
+        "current_observation": "7d9927b9b5edf19b1cce70f1200f57609e325e0867ef499bc8dc4af0b45ff44b",
         "description": "",
-        "entry": "01M5R734ZYDK2NYEEKF72WVVNG",
-        "exit": "01M5R742D3KSREFCGXJB6T13PP",
+        "entry": "01M5RA468597ZJDYFH435PEFX5",
+        "exit": "01M5RA527TA07HKMCD7DKE7R13",
         "feedback": [],
         "finding_ids": [],
-        "id": "01M5R7451Y26PZWSB16W15RRKY",
-        "name": "My orders",
+        "id": "01M5RA52AH8QSDZR3NZC3RR7VE",
+        "name": "Returns, exchanges & warranty",
         "origin": "agent",
         "parent_id": null,
         "plan": null,
@@ -1877,31 +2548,31 @@
         "currentObservation": {
           "credits": {
             "by_node": {
-              "page_observer": 0.055755,
-              "reasoning/v2": 1.38911
+              "page_observer": 0.05604250000000001,
+              "reasoning/v2": 1.33017
             },
             "by_phase": {
-              "walk": 1.444865
+              "walk": 1.3862125
             },
             "calls": 3,
-            "total": 1.444865
+            "total": 1.3862125
           },
           "diverged_at": null,
-          "flow_id": "01M5R7451Y26PZWSB16W15RRKY",
-          "id": "d13b3d8791e9079c53b606f63beecae0fd08d97fc04be608f8b22d778abc748c",
-          "lease_id": "01M5R73S60JD66ABA0F36QHCBA",
+          "flow_id": "01M5RA52AH8QSDZR3NZC3RR7VE",
+          "id": "7d9927b9b5edf19b1cce70f1200f57609e325e0867ef499bc8dc4af0b45ff44b",
+          "lease_id": "01M5RA4TDWXJCGEVA9HRPME4S3",
           "load_blocked": [],
           "outcome": "verified",
-          "reached": "01M5R742D3KSREFCGXJB6T13PP",
+          "reached": "01M5RA527TA07HKMCD7DKE7R13",
           "reached_via": "jump",
           "reason": null,
-          "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+          "run_id": "01a170a1-cf0e-79eb-a050-7a13110c8115",
           "steps": [
             {
               "in_place": false,
               "ordinal": 1,
               "record": {
-                "action_instruction": "Clicking My orders navigation link",
+                "action_instruction": "Clicking Returns, exchanges & warranty link",
                 "action_type": "click",
                 "output_variable": null,
                 "step": 5
@@ -1909,22 +2580,22 @@
               "url_after": "REDACTED"
             }
           ],
-          "version": "b716de4e900d4edac93af51505cb30adb99ffbd40506de5bd7673f22235888c3"
+          "version": "f8e037051ea2df9c5e88e7a1fe6b532d94ef7d97075f722ab2794022e39043bf"
         }
       },
       {
         "annotations": {},
         "changes": [],
-        "current_observation": "438710d4eb7705ee1ee4529aff5620d5cc4ce3355279119820a022a3b2e04eb3",
+        "current_observation": "72eeb4168e932da97fe980ba4c826cebc39aa36a0747b1dae47728e4a588f720",
         "description": "",
-        "entry": "01M5R734ZYDK2NYEEKF72WVVNG",
-        "exit": "01M5R74H4C80FFNPT6PV15Q9GE",
+        "entry": "01M5RA468597ZJDYFH435PEFX5",
+        "exit": "01M5RA5AYG9YAKGHYQYJ2ZJ8K2",
         "feedback": [],
         "finding_ids": [
-          "5ac94b9f335a346cb534605fd0a6f5033e4076c45c4fce0de6aba78c48fd3744"
+          "e53f77f3859cb87b6c47923a51675fa772ff18fa35340c012c683e9e96df54aa"
         ],
-        "id": "01M5R74MA6GG4HDB9T2VNW75HB",
-        "name": "Browse all products",
+        "id": "01M5RA5B1D9364BMK1582C9GPD",
+        "name": "Black jacket",
         "origin": "agent",
         "parent_id": null,
         "plan": null,
@@ -1935,53 +2606,48 @@
         "supersedes": null,
         "currentObservation": {
           "credits": {
-            "by_node": {
-              "page_observer": 0.0558675,
-              "reasoning/v2": 1.7871200000000003
-            },
-            "by_phase": {
-              "walk": 1.8429875
-            },
-            "calls": 4,
-            "total": 1.8429875
+            "by_node": {},
+            "by_phase": {},
+            "calls": 0,
+            "total": 0
           },
           "diverged_at": null,
-          "flow_id": "01M5R74MA6GG4HDB9T2VNW75HB",
-          "id": "438710d4eb7705ee1ee4529aff5620d5cc4ce3355279119820a022a3b2e04eb3",
-          "lease_id": "01M5R7470GYV44WJCBWZMR6M2C",
+          "flow_id": "01M5RA5B1D9364BMK1582C9GPD",
+          "id": "72eeb4168e932da97fe980ba4c826cebc39aa36a0747b1dae47728e4a588f720",
+          "lease_id": "01M5RA5NP1KYVDTXBGG3XE0BVW",
           "load_blocked": [],
           "outcome": "verified",
-          "reached": "01M5R74H4C80FFNPT6PV15Q9GE",
+          "reached": "01M5RA5AYG9YAKGHYQYJ2ZJ8K2",
           "reached_via": "jump",
           "reason": null,
-          "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+          "run_id": "01a170a1-cf0e-79eb-a050-7a13110c8115",
           "steps": [
             {
               "in_place": false,
               "ordinal": 1,
               "record": {
-                "action_instruction": "Clicking Browse all products link",
+                "action_instruction": "Clicking Black jacket product link",
                 "action_type": "click",
                 "output_variable": null,
-                "step": 8
+                "step": 7
               },
               "url_after": "REDACTED"
             }
           ],
-          "version": "f0529a35b36287ce3f27f3d243e349ee5b8239146c44325bfd184a46973ca43e"
+          "version": "325a8da3e8592483ab38dafdea6f791dc5e1f23f49d705e6022c347a662b1d4f"
         }
       },
       {
         "annotations": {},
         "changes": [],
-        "current_observation": "bdf74a42a4b082785f470f4f08c567acdc9bcfc4825422e09ece6cd4ca0ed6eb",
+        "current_observation": "856797cbfc20feb5be7ebd0082ea78a87e000376e8ae73087fe73ee6d8db0ac5",
         "description": "",
-        "entry": "01M5R734ZYDK2NYEEKF72WVVNG",
-        "exit": "01M5R73NT08XXCVGVY7X7S1M2P",
+        "entry": "01M5RA468597ZJDYFH435PEFX5",
+        "exit": "01M5RA5AYG9YAKGHYQYJ2ZJ8K2",
         "feedback": [],
         "finding_ids": [],
-        "id": "01M5R74ZPWYKEJK4F9MJF7DRRS",
-        "name": "View orders & delivery",
+        "id": "01M5RA5N42J3NSF85HT36N7W6T",
+        "name": "View product & options →",
         "origin": "agent",
         "parent_id": null,
         "plan": null,
@@ -1993,39 +2659,39 @@
         "currentObservation": {
           "credits": {
             "by_node": {
-              "page_observer": 0.055830000000000005,
-              "reasoning/v2": 1.3253
+              "page_observer": 0.05579250000000001,
+              "reasoning/v2": 1.50627
             },
             "by_phase": {
-              "walk": 1.38113
+              "walk": 1.5620625000000001
             },
             "calls": 3,
-            "total": 1.38113
+            "total": 1.5620625000000001
           },
           "diverged_at": null,
-          "flow_id": "01M5R74ZPWYKEJK4F9MJF7DRRS",
-          "id": "bdf74a42a4b082785f470f4f08c567acdc9bcfc4825422e09ece6cd4ca0ed6eb",
-          "lease_id": "01M5R74NHTYSNA2TZJ2DA0GMDD",
+          "flow_id": "01M5RA5N42J3NSF85HT36N7W6T",
+          "id": "856797cbfc20feb5be7ebd0082ea78a87e000376e8ae73087fe73ee6d8db0ac5",
+          "lease_id": "01M5RA5BBPNAYC3WBZ9J6HKBY5",
           "load_blocked": [],
           "outcome": "verified",
-          "reached": "01M5R73NT08XXCVGVY7X7S1M2P",
+          "reached": "01M5RA5AYG9YAKGHYQYJ2ZJ8K2",
           "reached_via": "jump",
           "reason": null,
-          "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+          "run_id": "01a170a1-cf0e-79eb-a050-7a13110c8115",
           "steps": [
             {
               "in_place": false,
               "ordinal": 1,
               "record": {
-                "action_instruction": "Clicking orders and delivery link",
+                "action_instruction": "Clicking View product & options link",
                 "action_type": "click",
                 "output_variable": null,
-                "step": 10
+                "step": 9
               },
               "url_after": "REDACTED"
             }
           ],
-          "version": "284da9befa730cc01a5fcf904aaff0b95c94e370b85de5c179eb1a457202cacc"
+          "version": "a50dda4fb5d82b656a104918d725f614359aa8d243303eee8a857a1b9a7b0df8"
         }
       }
     ],
@@ -2034,9 +2700,9 @@
         "candidate_id": null,
         "category": "accessibility",
         "confirmed": false,
-        "description": "On 127.0.0.1:5281/store?taskId&view=readonly, 1 element breaks the rule color-contrast.",
+        "description": "On 127.0.0.1:5174/store?taskId, 1 element breaks the rule color-contrast.",
         "feedback": [],
-        "id": "033e2d68f5962b65a20348bd4f204f76a8ecd9bf4befc7f1b7ccf9e675f8f7e5",
+        "id": "0a0ea868138d05eade4ec0c6a35dd5cf6006837724b6f8c8d023f8397166888c",
         "kind": "accessibility",
         "occurrences": [
           {
@@ -2047,15 +2713,15 @@
               "impact": "serious",
               "rule": "color-contrast",
               "wcag": [
-                "2.0 \u00b7 1.4.3 Contrast (Minimum) (AA)"
+                "2.0 · 1.4.3 Contrast (Minimum) (AA)"
               ]
             },
             "flow_id": null,
-            "junction_id": "01M5R734ZYDK2NYEEKF72WVVNG",
-            "lease_id": "01M5R72YE37QS768TPVTQB34YD",
+            "junction_id": "01M5RA468597ZJDYFH435PEFX5",
+            "lease_id": "01M5RA3ZT0ZWXF086Y2T2THPNN",
             "observation_id": null,
             "pack": {
-              "bytes": 198104,
+              "bytes": 71781,
               "files": [
                 "clip",
                 "timeline",
@@ -2063,8 +2729,8 @@
                 "console",
                 "element"
               ],
-              "fps": 0.6,
-              "frames": 7,
+              "fps": 0.3,
+              "frames": 3,
               "height": 540,
               "width": 960,
               "window_ms": [
@@ -2072,7 +2738,7 @@
                 3000
               ]
             },
-            "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "run_id": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "screenshot": true,
             "screenshot_size": {
               "h": 1080,
@@ -2082,7 +2748,7 @@
             "what_happened": {
               "actual": "1 element does not.",
               "expected": "Elements must meet minimum color contrast ratio thresholds.",
-              "text": "On 127.0.0.1:5281/store?taskId&view=readonly, 1 element breaks the rule color-contrast (2.0 \u00b7 1.4.3 Contrast (Minimum) (AA))."
+              "text": "On 127.0.0.1:5174/store?taskId, 1 element breaks the rule color-contrast (2.0 · 1.4.3 Contrast (Minimum) (AA))."
             }
           }
         ],
@@ -2091,61 +2757,156 @@
           {
             "by": "subject",
             "closeness": 1,
-            "finding_id": "5ac94b9f335a346cb534605fd0a6f5033e4076c45c4fce0de6aba78c48fd3744"
+            "finding_id": "480d6d02c15b91e8a7bd47c8dcc8acb5754f72b98825601e6064006608addeae"
           }
         ],
         "status": "open",
         "status_change": {
-          "at": "2026-10-25T00:24:15.329840Z",
+          "at": "2026-10-25T01:17:14.896094Z",
           "by": {
             "display_name": "KaneAI explorer",
             "kind": "agent",
             "run_id": null
           },
           "record_id": null,
-          "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+          "run_id": "01a170a1-cf0e-79eb-a050-7a13110c8115",
           "transition": "opened"
         },
         "status_history": [
           {
-            "at": "2026-10-25T00:24:15.329840Z",
+            "at": "2026-10-25T01:17:14.896094Z",
             "by": {
               "display_name": "KaneAI explorer",
               "kind": "agent",
               "run_id": null
             },
             "record_id": null,
-            "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "run_id": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "transition": "opened"
           }
         ],
-        "title": "Elements must meet minimum color contrast ratio thresholds (1 element on 127.0.0.1:5281/store?taskId&view=readonly)",
+        "title": "Elements must meet minimum color contrast ratio thresholds (1 element on 127.0.0.1:5174/store?taskId)",
         "unblock": ""
       },
       {
-        "blocked_by": "path_broken",
-        "candidate_id": "8c371299e71e3a4b003f93c6ee7fef67aa7b3dabd5af04c5e5c40b716e9838c6",
-        "category": "coverage",
+        "candidate_id": null,
+        "category": "accessibility",
         "confirmed": false,
-        "description": "\"Red running shoes\" the way to it broke: the recorded path no longer reaches its screen.",
+        "description": "On 127.0.0.1:5174/store/products?taskId, 1 element breaks the rule color-contrast.",
         "feedback": [],
-        "id": "0e685684e203ccad038d9c5b7b8f14a5feaa3a71aa3b7efe469f692185e00948",
-        "kind": "coverage",
+        "id": "480d6d02c15b91e8a7bd47c8dcc8acb5754f72b98825601e6064006608addeae",
+        "kind": "accessibility",
         "occurrences": [
           {
             "annotations": [],
-            "flow_id": null,
-            "junction_id": "01M5R734ZYDK2NYEEKF72WVVNG",
-            "lease_id": "01M5R745FQ7BH69T98HBCCWH98",
-            "observation_id": "fdf4f1ca5e8966bc1b05b1937f8b96f1ff6045723db887dc1655b962c7085f60",
-            "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "detail": {
+              "elements": 1,
+              "help": "Elements must meet minimum color contrast ratio thresholds",
+              "impact": "serious",
+              "rule": "color-contrast",
+              "wcag": [
+                "2.0 · 1.4.3 Contrast (Minimum) (AA)"
+              ]
+            },
+            "flow_id": "01M5RA4S73H4YA05CBSWFZP37R",
+            "junction_id": "01M5RA4P45QHTY16WZXG0B4KY3",
+            "lease_id": "01M5RA4DAPCGW6HKHYZ2CPDB5T",
+            "observation_id": "91255034a4240f872e36ad6783404548d5c5a1068ec2566496204956903fbdac",
+            "pack": {
+              "bytes": 167324,
+              "files": [
+                "clip",
+                "timeline",
+                "network",
+                "console",
+                "element"
+              ],
+              "fps": 0.5,
+              "frames": 6,
+              "height": 540,
+              "width": 960,
+              "window_ms": [
+                -8000,
+                3000
+              ]
+            },
+            "run_id": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "screenshot": true,
+            "screenshot_size": {
+              "h": 1080,
+              "w": 1920
+            },
+            "step_ordinal": null,
+            "what_happened": {
+              "actual": "1 element does not.",
+              "expected": "Elements must meet minimum color contrast ratio thresholds.",
+              "text": "On 127.0.0.1:5174/store/products?taskId, 1 element breaks the rule color-contrast (2.0 · 1.4.3 Contrast (Minimum) (AA))."
+            }
+          }
+        ],
+        "severity": "medium",
+        "similar": [
+          {
+            "by": "subject",
+            "closeness": 1,
+            "finding_id": "0a0ea868138d05eade4ec0c6a35dd5cf6006837724b6f8c8d023f8397166888c"
+          }
+        ],
+        "status": "open",
+        "status_change": {
+          "at": "2026-10-25T01:17:34.678283Z",
+          "by": {
+            "display_name": "KaneAI explorer",
+            "kind": "agent",
+            "run_id": null
+          },
+          "record_id": null,
+          "run_id": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+          "transition": "opened"
+        },
+        "status_history": [
+          {
+            "at": "2026-10-25T01:17:34.678283Z",
+            "by": {
+              "display_name": "KaneAI explorer",
+              "kind": "agent",
+              "run_id": null
+            },
+            "record_id": null,
+            "run_id": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "transition": "opened"
+          }
+        ],
+        "title": "Elements must meet minimum color contrast ratio thresholds (1 element on 127.0.0.1:5174/store/products?taskId)",
+        "unblock": ""
+      },
+      {
+        "candidate_id": null,
+        "category": "changed",
+        "confirmed": false,
+        "description": "A new version of Black jacket | Northstar Outfitters (127.0.0.1:5174/store/products/{slug}?taskId), matched by rule; added \"{n}\", \"{n}\"; removed \"Delivery and collection details\", \"Large\", \"Medium\", \"Returns and exchanges\", \"Small\". Flows into it: Black jacket.",
+        "feedback": [],
+        "id": "e53f77f3859cb87b6c47923a51675fa772ff18fa35340c012c683e9e96df54aa",
+        "kind": "screen_changed",
+        "occurrences": [
+          {
+            "annotations": [],
+            "compare": {
+              "after": "a50dda4fb5d82b656a104918d725f614359aa8d243303eee8a857a1b9a7b0df8",
+              "before": "325a8da3e8592483ab38dafdea6f791dc5e1f23f49d705e6022c347a662b1d4f"
+            },
+            "flow_id": "01M5RA5B1D9364BMK1582C9GPD",
+            "junction_id": "01M5RA5AYG9YAKGHYQYJ2ZJ8K2",
+            "lease_id": "01M5RA5BBPNAYC3WBZ9J6HKBY5",
+            "observation_id": null,
+            "run_id": "01a170a1-cf0e-79eb-a050-7a13110c8115",
+            "screenshot": false,
             "screenshot_size": null,
             "step_ordinal": null,
             "what_happened": {
-              "actual": "\"Red running shoes\" was not explored: the way to it broke \u00b7 blocked: path_broken \u00b7 unblock: re-run; if it persists, the path to this screen changed",
-              "expected": "Every control the run was given is reached.",
-              "text": "The explorer could not reach part of the app."
+              "actual": "Added \"{n}\", \"{n}\"; removed \"Delivery and collection details\", \"Large\", \"Medium\", \"Returns and exchanges\", \"Small\".",
+              "expected": "The screen looks as it did when its flows were verified.",
+              "text": "Black jacket | Northstar Outfitters looks different from the version its flows were verified on."
             }
           }
         ],
@@ -2153,952 +2914,240 @@
         "similar": [],
         "status": "open",
         "status_change": {
-          "at": "2026-10-25T00:24:49.056785Z",
+          "at": "2026-10-25T01:18:02.560131Z",
           "by": {
             "display_name": "KaneAI explorer",
             "kind": "agent",
             "run_id": null
           },
           "record_id": null,
-          "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+          "run_id": "01a170a1-cf0e-79eb-a050-7a13110c8115",
           "transition": "opened"
         },
         "status_history": [
           {
-            "at": "2026-10-25T00:24:49.056785Z",
+            "at": "2026-10-25T01:18:02.560131Z",
             "by": {
               "display_name": "KaneAI explorer",
               "kind": "agent",
               "run_id": null
             },
             "record_id": null,
-            "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
+            "run_id": "01a170a1-cf0e-79eb-a050-7a13110c8115",
             "transition": "opened"
           }
         ],
-        "title": "\"Red running shoes\" was not explored: the way to it broke",
-        "unblock": "re-run; if it persists, the path to this screen changed"
-      },
-      {
-        "candidate_id": null,
-        "category": "accessibility",
-        "confirmed": false,
-        "description": "On 127.0.0.1:5301/store/products?taskId, 1 element breaks the rule color-contrast.",
-        "feedback": [],
-        "id": "5ac94b9f335a346cb534605fd0a6f5033e4076c45c4fce0de6aba78c48fd3744",
-        "kind": "accessibility",
-        "occurrences": [
-          {
-            "annotations": [],
-            "detail": {
-              "elements": 1,
-              "help": "Elements must meet minimum color contrast ratio thresholds",
-              "impact": "serious",
-              "rule": "color-contrast",
-              "wcag": [
-                "2.0 \u00b7 1.4.3 Contrast (Minimum) (AA)"
-              ]
-            },
-            "flow_id": "01M5R74MA6GG4HDB9T2VNW75HB",
-            "junction_id": "01M5R74H4C80FFNPT6PV15Q9GE",
-            "lease_id": "01M5R7470GYV44WJCBWZMR6M2C",
-            "observation_id": "438710d4eb7705ee1ee4529aff5620d5cc4ce3355279119820a022a3b2e04eb3",
-            "pack": {
-              "bytes": 212054,
-              "files": [
-                "clip",
-                "timeline",
-                "network",
-                "console",
-                "element"
-              ],
-              "fps": 0.7,
-              "frames": 8,
-              "height": 540,
-              "width": 960,
-              "window_ms": [
-                -8000,
-                3000
-              ]
-            },
-            "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "screenshot": true,
-            "screenshot_size": {
-              "h": 1080,
-              "w": 1920
-            },
-            "step_ordinal": null,
-            "what_happened": {
-              "actual": "1 element does not.",
-              "expected": "Elements must meet minimum color contrast ratio thresholds.",
-              "text": "On 127.0.0.1:5301/store/products?taskId, 1 element breaks the rule color-contrast (2.0 \u00b7 1.4.3 Contrast (Minimum) (AA))."
-            }
-          }
-        ],
-        "severity": "medium",
-        "similar": [
-          {
-            "by": "subject",
-            "closeness": 1,
-            "finding_id": "033e2d68f5962b65a20348bd4f204f76a8ecd9bf4befc7f1b7ccf9e675f8f7e5"
-          }
-        ],
-        "status": "open",
-        "status_change": {
-          "at": "2026-10-25T00:25:04.134319Z",
-          "by": {
-            "display_name": "KaneAI explorer",
-            "kind": "agent",
-            "run_id": null
-          },
-          "record_id": null,
-          "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-          "transition": "opened"
-        },
-        "status_history": [
-          {
-            "at": "2026-10-25T00:25:04.134319Z",
-            "by": {
-              "display_name": "KaneAI explorer",
-              "kind": "agent",
-              "run_id": null
-            },
-            "record_id": null,
-            "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "transition": "opened"
-          }
-        ],
-        "title": "Elements must meet minimum color contrast ratio thresholds (1 element on 127.0.0.1:5301/store/products?taskId)",
-        "unblock": ""
-      },
-      {
-        "candidate_id": null,
-        "category": "broken",
-        "confirmed": false,
-        "description": "On , the page threw an uncaught exception.",
-        "feedback": [],
-        "id": "b75243d881c12e1b3745bf7f1a65a3733e8c7baf465a2e605cf895084206b2dd",
-        "kind": "console",
-        "occurrences": [
-          {
-            "annotations": [],
-            "detail": {
-              "count": 2,
-              "message": "Error: Function \"__kaneExploreLeave\" is not exposed",
-              "wcag": []
-            },
-            "flow_id": null,
-            "junction_id": "01M5R734ZYDK2NYEEKF72WVVNG",
-            "lease_id": "01M5R72YE37QS768TPVTQB34YD",
-            "observation_id": null,
-            "pack": {
-              "bytes": 198008,
-              "files": [
-                "clip",
-                "timeline",
-                "network",
-                "console"
-              ],
-              "fps": 0.6,
-              "frames": 7,
-              "height": 540,
-              "width": 960,
-              "window_ms": [
-                -8000,
-                3000
-              ]
-            },
-            "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "screenshot": true,
-            "screenshot_size": {
-              "h": 1080,
-              "w": 1920
-            },
-            "step_ordinal": null,
-            "what_happened": {
-              "actual": "Error: Function \"__kaneExploreLeave\" is not exposed",
-              "expected": "The page runs without uncaught exceptions.",
-              "text": "On , the page threw an uncaught exception."
-            }
-          }
-        ],
-        "severity": "medium",
-        "similar": [],
-        "status": "open",
-        "status_change": {
-          "at": "2026-10-25T00:24:15.329840Z",
-          "by": {
-            "display_name": "KaneAI explorer",
-            "kind": "agent",
-            "run_id": null
-          },
-          "record_id": null,
-          "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-          "transition": "opened"
-        },
-        "status_history": [
-          {
-            "at": "2026-10-25T00:24:15.329840Z",
-            "by": {
-              "display_name": "KaneAI explorer",
-              "kind": "agent",
-              "run_id": null
-            },
-            "record_id": null,
-            "run_id": "01a17071-61ec-72d2-bfc4-e37547a908fd",
-            "transition": "opened"
-          }
-        ],
-        "title": "The page threw Error: Function \"__kaneExploreLeave\" is not exposed",
+        "title": "Black jacket | Northstar Outfitters changed: +2 −5 affordances",
         "unblock": ""
       }
     ],
     "detailReads": [
       {
         "collection": "junctions",
-        "id": "01M5R734ZYDK2NYEEKF72WVVNG",
+        "id": "01M5RA468597ZJDYFH435PEFX5",
         "status": "read"
       },
       {
         "collection": "junctions",
-        "id": "01M5R73NT08XXCVGVY7X7S1M2P",
+        "id": "01M5RA4P45QHTY16WZXG0B4KY3",
         "status": "read"
       },
       {
         "collection": "junctions",
-        "id": "01M5R742D3KSREFCGXJB6T13PP",
+        "id": "01M5RA527TA07HKMCD7DKE7R13",
         "status": "read"
       },
       {
         "collection": "junctions",
-        "id": "01M5R74H4C80FFNPT6PV15Q9GE",
+        "id": "01M5RA5AYG9YAKGHYQYJ2ZJ8K2",
         "status": "read"
       },
       {
         "collection": "flows",
-        "id": "01M5R73RHDGTV5P3C6CKD2K7JK",
+        "id": "01M5RA4S73H4YA05CBSWFZP37R",
         "status": "read"
       },
       {
         "collection": "flows",
-        "id": "01M5R7451Y26PZWSB16W15RRKY",
+        "id": "01M5RA52AH8QSDZR3NZC3RR7VE",
         "status": "read"
       },
       {
         "collection": "flows",
-        "id": "01M5R74MA6GG4HDB9T2VNW75HB",
+        "id": "01M5RA5B1D9364BMK1582C9GPD",
         "status": "read"
       },
       {
         "collection": "flows",
-        "id": "01M5R74ZPWYKEJK4F9MJF7DRRS",
+        "id": "01M5RA5N42J3NSF85HT36N7W6T",
         "status": "read"
       },
       {
         "collection": "findings",
-        "id": "033e2d68f5962b65a20348bd4f204f76a8ecd9bf4befc7f1b7ccf9e675f8f7e5",
+        "id": "0a0ea868138d05eade4ec0c6a35dd5cf6006837724b6f8c8d023f8397166888c",
         "status": "read"
       },
       {
         "collection": "findings",
-        "id": "0e685684e203ccad038d9c5b7b8f14a5feaa3a71aa3b7efe469f692185e00948",
+        "id": "480d6d02c15b91e8a7bd47c8dcc8acb5754f72b98825601e6064006608addeae",
         "status": "read"
       },
       {
         "collection": "findings",
-        "id": "5ac94b9f335a346cb534605fd0a6f5033e4076c45c4fce0de6aba78c48fd3744",
-        "status": "read"
-      },
-      {
-        "collection": "findings",
-        "id": "b75243d881c12e1b3745bf7f1a65a3733e8c7baf465a2e605cf895084206b2dd",
+        "id": "e53f77f3859cb87b6c47923a51675fa772ff18fa35340c012c683e9e96df54aa",
         "status": "read"
       }
     ],
     "writeup": {
       "status": "not_configured"
     },
-    "capturedAt": "2026-10-25T00:25:22.496Z"
+    "capturedAt": "2026-10-25T01:18:16.977Z"
   },
+  "promotedRevision": 1,
   "observations": [
     {
-      "id": "6beef79b-2011-495e-b194-d2566350105c",
+      "id": "151a4cb1-2fa4-4f6b-83b9-a9cc631f3697",
       "branch": "primary",
+      "status": "passed",
       "facts": {
-        "source_terms": "{\"method\":\"print_label\",\"fee\":\"\u2212$0.00\",\"refund\":\"$80.00\",\"destination\":\"original_payment\"}",
+        "source_terms": "{\"method\":\"print_label\",\"fee\":\"−$0.00\",\"refund\":\"$80.00\",\"destination\":\"original_payment\"}",
         "source_choices": "{\"reasons\":[\"Choose a reason\",\"Size or fit issue\",\"Changed my mind\",\"Arrived damaged\"],\"methods\":[\"Print a shipping label\",\"Printer-free QR drop-off\"],\"destinations\":[\"Store credit\",\"Original payment method\"]}",
-        "source_transition": "{\"methodDescription\":\"Print and attach the label, then drop off the parcel.\",\"selectionEffectNotice\":\"Changing the return method may change the refund destination. Review it before submitting.\",\"currentRefundDestination\":\"original_payment\"}",
-        "source_requirements": "{\"returnInstructions\":\"Print the synthetic label and attach it to the parcel.\",\"selectedQuantity\":\"Selected quantity: 1\",\"reviewStatus\":\"Draft saved. Review all choices before submitting.\"}",
-        "source_identity": "{\"orderId\":\"ORD-1042\",\"item\":\"Red running shoes\",\"size\":null,\"lineId\":\"SHOE-RED-8\",\"account\":\"DEMO-ACCOUNT-1\"}",
-        "current_url": "http://127.0.0.1:5301/merchant?taskId=6beef79b-2011-495e-b194-d2566350105c"
+        "source_transition": "{\"methodInstruction\":\"Print and attach the label, then drop off the parcel.\",\"selectionEffect\":\"Changing the return method may change the refund destination. Review it before submitting.\"}",
+        "source_requirements": "{\"returnMethodInstruction\":\"Print and attach the label, then drop off the parcel.\",\"methodChangeNotice\":\"Changing the return method may change the refund destination. Review it before submitting.\",\"parcelRequirement\":\"Print the synthetic label and attach it to the parcel.\",\"submissionRequirement\":\"Draft saved. Review all choices before submitting.\"}",
+        "source_identity": "{\"order\":\"ORD-1042\",\"item\":\"Red running shoesSize 8 · Qty 1$80.00\",\"selectedLine\":\"Selected line IDs: SHOE-RED-8\"}",
+        "current_url": "http://127.0.0.1:5174/merchant?taskId=151a4cb1-2fa4-4f6b-83b9-a9cc631f3697"
       },
       "shots": [
         {
           "image": "step-0.jpg",
-          "stepId": "0-3",
-          "ordinal": 3,
-          "kind": "select",
+          "stepId": "0-7",
+          "ordinal": 7,
+          "kind": "wait",
           "status": "passed",
-          "summary": "select: Selecting return reason as Size or fit issue",
-          "url": "http://127.0.0.1:5301/merchant?taskId=6beef79b-2011-495e-b194-d2566350105c"
+          "summary": "wait: PRIMARY: wait 1000 ms after item selection save",
+          "url": "http://127.0.0.1:5174/merchant?taskId=151a4cb1-2fa4-4f6b-83b9-a9cc631f3697"
         },
         {
           "image": "step-1.jpg",
+          "stepId": "0-8",
+          "ordinal": 8,
+          "kind": "wait",
+          "status": "passed",
+          "summary": "wait: PRIMARY: wait 500 ms after return reason save",
+          "url": "http://127.0.0.1:5174/merchant?taskId=151a4cb1-2fa4-4f6b-83b9-a9cc631f3697"
+        },
+        {
+          "image": "step-2.jpg",
+          "stepId": "0-9",
+          "ordinal": 9,
+          "kind": "wait",
+          "status": "passed",
+          "summary": "wait: PRIMARY: wait 500 ms after method and refund destination saves",
+          "url": "http://127.0.0.1:5174/merchant?taskId=151a4cb1-2fa4-4f6b-83b9-a9cc631f3697"
+        },
+        {
+          "image": "step-3.jpg",
+          "stepId": "0-10",
+          "ordinal": 10,
+          "kind": "wait",
+          "status": "passed",
+          "summary": "wait: PRIMARY: wait 1500 ms for the return draft to finish saving",
+          "url": "http://127.0.0.1:5174/merchant?taskId=151a4cb1-2fa4-4f6b-83b9-a9cc631f3697"
+        },
+        {
+          "image": "step-4.jpg",
+          "stepId": "0-11",
+          "ordinal": 11,
+          "kind": "analyze",
+          "status": "passed",
+          "summary": "analyze: The current page URL is saved as {{current_url}}.",
+          "url": "http://127.0.0.1:5174/merchant?taskId=151a4cb1-2fa4-4f6b-83b9-a9cc631f3697"
+        },
+        {
+          "image": "step-5.jpg",
+          "stepId": "0-12",
+          "ordinal": 12,
+          "kind": "assert",
+          "status": "passed",
+          "summary": "assert: The review shows only the shoes and the jacket is kept.",
+          "url": "http://127.0.0.1:5174/merchant?taskId=151a4cb1-2fa4-4f6b-83b9-a9cc631f3697"
+        }
+      ],
+      "at": "2026-10-25T01:19:40.824Z",
+      "runId": "run-0",
+      "sessionId": null
+    },
+    {
+      "id": "c89f361a-21c5-4659-a8e1-1c88fc80d943",
+      "branch": "alternative",
+      "status": "passed",
+      "facts": {
+        "source_terms": "{\"method\":\"qr_dropoff\",\"fee\":\"$5\",\"refund\":\"$75.00\",\"destination\":\"store_credit\"}",
+        "source_choices": "{\"reasons\":[\"Choose a reason\",\"Size or fit issue\",\"Changed my mind\",\"Arrived damaged\"],\"methods\":[\"Print a shipping label\",\"Printer-free QR drop-off\"],\"destinations\":[\"Store credit\",\"Original payment method\"]}",
+        "source_transition": "Changing the return method may change the refund destination. Review it before submitting.",
+        "source_requirements": "[\"Show a QR code at the drop-off counter. A $5 fee applies.\",\"Show the synthetic QR code at a simulated drop-off counter.\",\"Account ID: DEMO-ACCOUNT-1 · Currency: USD\",\"Draft saved. Review all choices before submitting.\"]",
+        "source_identity": "{\"order\":\"ORD-1042\",\"item\":\"Red running shoes (Size 8)\"}",
+        "current_url": "http://127.0.0.1:5174/merchant?taskId=c89f361a-21c5-4659-a8e1-1c88fc80d943"
+      },
+      "shots": [
+        {
+          "image": "step-0.jpg",
           "stepId": "0-4",
           "ordinal": 4,
           "kind": "select",
           "status": "passed",
-          "summary": "select: Selecting Return method in the dropdown combo box",
-          "url": "http://127.0.0.1:5301/merchant?taskId=6beef79b-2011-495e-b194-d2566350105c"
+          "summary": "select: Selecting Print a shipping label in the return method dropdown",
+          "url": "http://127.0.0.1:5174/merchant?taskId=c89f361a-21c5-4659-a8e1-1c88fc80d943"
         },
         {
-          "image": "step-2.jpg",
+          "image": "step-1.jpg",
           "stepId": "0-5",
           "ordinal": 5,
           "kind": "select",
           "status": "passed",
-          "summary": "select: Selecting original payment method as refund destination",
-          "url": "http://127.0.0.1:5301/merchant?taskId=6beef79b-2011-495e-b194-d2566350105c"
+          "summary": "select: Selecting Original payment method in refund destination dropdown",
+          "url": "http://127.0.0.1:5174/merchant?taskId=c89f361a-21c5-4659-a8e1-1c88fc80d943"
+        },
+        {
+          "image": "step-2.jpg",
+          "stepId": "0-6",
+          "ordinal": 6,
+          "kind": "select",
+          "status": "passed",
+          "summary": "select: Selecting Return method from dropdown",
+          "url": "http://127.0.0.1:5174/merchant?taskId=c89f361a-21c5-4659-a8e1-1c88fc80d943"
         },
         {
           "image": "step-3.jpg",
-          "stepId": "0-6",
-          "ordinal": 6,
+          "stepId": "0-7",
+          "ordinal": 7,
           "kind": "wait",
           "status": "passed",
           "summary": "wait: PRIMARY: wait 1500 ms for return-draft saves to settle",
-          "url": "http://127.0.0.1:5301/merchant?taskId=6beef79b-2011-495e-b194-d2566350105c"
+          "url": "http://127.0.0.1:5174/merchant?taskId=c89f361a-21c5-4659-a8e1-1c88fc80d943"
         },
         {
           "image": "step-4.jpg",
-          "stepId": "0-7",
-          "ordinal": 7,
+          "stepId": "0-8",
+          "ordinal": 8,
           "kind": "analyze",
           "status": "passed",
-          "summary": "analyze: the current page URL is stored as {{current_url}}",
-          "url": "http://127.0.0.1:5301/merchant?taskId=6beef79b-2011-495e-b194-d2566350105c"
+          "summary": "analyze: The Black jacket is kept.",
+          "url": "http://127.0.0.1:5174/merchant?taskId=c89f361a-21c5-4659-a8e1-1c88fc80d943"
         },
         {
           "image": "step-5.jpg",
-          "stepId": "0-8",
-          "ordinal": 8,
+          "stepId": "0-9",
+          "ordinal": 9,
           "kind": "assert",
           "status": "passed",
-          "summary": "assert: the review shows only the shoes and the jacket is kept",
-          "url": "http://127.0.0.1:5301/merchant?taskId=6beef79b-2011-495e-b194-d2566350105c"
+          "summary": "assert: The review shows only the shoes and the jacket is kept.",
+          "url": "http://127.0.0.1:5174/merchant?taskId=c89f361a-21c5-4659-a8e1-1c88fc80d943"
         }
       ],
-      "at": "2026-10-25T00:26:49.121Z",
+      "at": "2026-10-25T01:21:15.002Z",
       "runId": "run-0",
       "sessionId": null
-    },
-    {
-      "id": "ce556d2f-923c-45d7-944a-8e1905a9368b",
-      "branch": "alternative",
-      "facts": {
-        "source_terms": "{\"method\":\"qr_dropoff\",\"fee\":\"$5\",\"refundAmount\":\"$75.00\",\"destination\":\"store_credit\"}",
-        "source_choices": "{\"reasons\":[\"Choose a reason\",\"Size or fit issue\",\"Changed my mind\",\"Arrived damaged\"],\"methods\":[\"Print a shipping label\",\"Printer-free QR drop-off\"],\"destinations\":[\"Store credit\",\"Original payment method\"]}",
-        "source_transition": "{\"selectedMethod\":\"qr_dropoff\",\"methodEffect\":\"Show a QR code at the drop-off counter. A $5 fee applies.\",\"destinationNotice\":\"Changing the return method may change the refund destination. Review it before submitting.\"}",
-        "source_requirements": "{\"dropOffInstruction\":\"Show the synthetic QR code at a simulated drop-off counter.\",\"accountAndCurrency\":\"Account ID: DEMO-ACCOUNT-1 \u00b7 Currency: USD\",\"selectedLineIds\":\"Selected line IDs: SHOE-RED-8\",\"selectedQuantity\":\"Selected quantity: 1\"}",
-        "source_identity": "{\"orderId\":\"ORD-1042\",\"items\":[{\"name\":\"Red running shoes\",\"details\":\"Size 8 \u00b7 Qty 1$80.00\"},{\"name\":\"Black jacket\",\"details\":\"Medium \u00b7 Qty 1$120.00\"}]}",
-        "current_url": "http://127.0.0.1:5301/merchant?taskId=ce556d2f-923c-45d7-944a-8e1905a9368b"
-      },
-      "shots": [
-        {
-          "image": "step-0.jpg",
-          "stepId": "0-3",
-          "ordinal": 3,
-          "kind": "select",
-          "status": "passed",
-          "summary": "select: Selecting return reason combobox for size or fit issue",
-          "url": "http://127.0.0.1:5301/merchant?taskId=ce556d2f-923c-45d7-944a-8e1905a9368b"
-        },
-        {
-          "image": "step-1.jpg",
-          "stepId": "0-4",
-          "ordinal": 4,
-          "kind": "select",
-          "status": "passed",
-          "summary": "select: Selecting Original payment method as the refund destination",
-          "url": "http://127.0.0.1:5301/merchant?taskId=ce556d2f-923c-45d7-944a-8e1905a9368b"
-        },
-        {
-          "image": "step-2.jpg",
-          "stepId": "0-5",
-          "ordinal": 5,
-          "kind": "select",
-          "status": "passed",
-          "summary": "select: Selecting return method from the dropdown",
-          "url": "http://127.0.0.1:5301/merchant?taskId=ce556d2f-923c-45d7-944a-8e1905a9368b"
-        },
-        {
-          "image": "step-3.jpg",
-          "stepId": "0-6",
-          "ordinal": 6,
-          "kind": "wait",
-          "status": "passed",
-          "summary": "wait: PRIMARY: wait 1500 ms for the return draft saves to settle",
-          "url": "http://127.0.0.1:5301/merchant?taskId=ce556d2f-923c-45d7-944a-8e1905a9368b"
-        },
-        {
-          "image": "step-4.jpg",
-          "stepId": "0-7",
-          "ordinal": 7,
-          "kind": "analyze",
-          "status": "passed",
-          "summary": "analyze: ANALYZE(textual_visual, 'visible requirements are stored as {{source_requirement",
-          "url": "http://127.0.0.1:5301/merchant?taskId=ce556d2f-923c-45d7-944a-8e1905a9368b"
-        },
-        {
-          "image": "step-5.jpg",
-          "stepId": "0-8",
-          "ordinal": 8,
-          "kind": "assert",
-          "status": "passed",
-          "summary": "assert: the review shows only the shoes and the jacket is kept.",
-          "url": "http://127.0.0.1:5301/merchant?taskId=ce556d2f-923c-45d7-944a-8e1905a9368b"
-        }
-      ],
-      "at": "2026-10-25T00:28:09.525Z",
-      "runId": "run-0",
-      "sessionId": null
-    }
-  ],
-  "candidates": [
-    {
-      "revision": 1,
-      "status": "interrupted",
-      "createdAt": "2026-10-25T00:25:22.503Z",
-      "hash": "eb2ab359b136627f0bb313c39c724a2fa3672772063b45ae71ec681c9cd0b42d",
-      "codeHash": "d6a8f8f87f421b8a40fc27864731abb94d6c35f08e8e7fc604d119acce198322",
-      "cssHash": "3c34eadff7ee263a0026cfebdb5d839b423f308359e8cc7613ca28b61a1cdbaf",
-      "contractHash": "ce68e6b0f041fea0094d2de30dbaaf6656cc0cd24f3f721ad9ce60ce3616a09a",
-      "change": null,
-      "decisions": [
-        {
-          "component": "Focused overview and observed routes",
-          "change": "Prioritize the red-shoes return and order routes while labeling each route with its actual reached screen. Keep discovery informational and leave starting to the host; disclose incomplete coverage.",
-          "evidenceIds": [
-            "user-contract",
-            "01M5R7451Y26PZWSB16W15RRKY",
-            "01M5R74ZPWYKEJK4F9MJF7DRRS",
-            "01M5R73RHDGTV5P3C6CKD2K7JK",
-            "01M5R74MA6GG4HDB9T2VNW75HB",
-            "0e685684e203ccad038d9c5b7b8f14a5feaa3a71aa3b7efe469f692185e00948",
-            "b75243d881c12e1b3745bf7f1a65a3733e8c7baf465a2e605cf895084206b2dd"
-          ]
-        },
-        {
-          "component": "Item scope",
-          "change": "Keep the jacket informational and non-editable. Display live selected line IDs and flag source selections outside the red-shoes-only scope.",
-          "evidenceIds": [
-            "user-contract",
-            "6beef79b-2011-495e-b194-d2566350105c",
-            "ce556d2f-923c-45d7-944a-8e1905a9368b"
-          ]
-        },
-        {
-          "component": "Return choices and conflict handling",
-          "change": "Offer supported reason and method choices, distinguish selected choices from observed method values, preserve original-payment intent, and expose the QR method's observed destination dependency with Restore controls.",
-          "evidenceIds": [
-            "user-contract",
-            "6beef79b-2011-495e-b194-d2566350105c",
-            "ce556d2f-923c-45d7-944a-8e1905a9368b"
-          ]
-        },
-        {
-          "component": "Current terms and validation",
-          "change": "Render deduction, expected refund and destination from runtime task data. Keep missing values explicitly unknown. Provide only Validate and Restore actions; leave exact approval, submission and independently verified completion to the host.",
-          "evidenceIds": [
-            "user-contract",
-            "6beef79b-2011-495e-b194-d2566350105c",
-            "ce556d2f-923c-45d7-944a-8e1905a9368b"
-          ]
-        },
-        {
-          "component": "Accessible visual system",
-          "change": "Use a warm cream canvas, forest text, restrained green accents, visible native-control labels, strong focus indicators, live status messaging and a responsive single-column layout instead of decorative product graphics.",
-          "evidenceIds": [
-            "user-contract",
-            "01M5R734ZYDK2NYEEKF72WVVNG",
-            "033e2d68f5962b65a20348bd4f204f76a8ecd9bf4befc7f1b7ccf9e675f8f7e5",
-            "5ac94b9f335a346cb534605fd0a6f5033e4076c45c4fce0de6aba78c48fd3744"
-          ]
-        }
-      ],
-      "failure": {
-        "kind": "interrupted",
-        "message": "Verification was interrupted; no pass or failure inferred."
-      },
-      "verification": null
-    },
-    {
-      "revision": 2,
-      "status": "failed",
-      "createdAt": "2026-10-25T00:39:35.784Z",
-      "hash": "8c9fafd9ab804b7f03cb7d174c04d487739bfdf37d74558529998f79d97a17dd",
-      "codeHash": "fad357e061668548180bd502edc3efa5fea920784bb69f094470470f265d5db9",
-      "cssHash": "68c0c152e42da0755b5797f6ac3127726ca74115fd004946979613cf950322d4",
-      "contractHash": "ce68e6b0f041fea0094d2de30dbaaf6656cc0cd24f3f721ad9ce60ce3616a09a",
-      "change": {
-        "fromHash": "d6a8f8f87f421b8a40fc27864731abb94d6c35f08e8e7fc604d119acce198322",
-        "toHash": "fad357e061668548180bd502edc3efa5fea920784bb69f094470470f265d5db9",
-        "codeChanged": true,
-        "cssChanged": true
-      },
-      "decisions": [
-        {
-          "component": "Focused overview and scope",
-          "change": "Prioritize the shoes-only return, explicitly keep the jacket, and leave task start and exact approval to the trusted host.",
-          "evidenceIds": [
-            "user-contract"
-          ]
-        },
-        {
-          "component": "Observed method alternatives",
-          "change": "Explain both reached draft routes: printed labels require a printer; QR drop-off has a deduction and changed the observed destination to store credit. Do not treat either draft as completion.",
-          "evidenceIds": [
-            "6beef79b-2011-495e-b194-d2566350105c",
-            "ce556d2f-923c-45d7-944a-8e1905a9368b"
-          ]
-        },
-        {
-          "component": "Choices and source review",
-          "change": "Separate selected choices and preserved refund intent from observed source values. Render current amounts from runtime data, flag mismatches and unknown terms, and provide explicit Validate and Restore controls.",
-          "evidenceIds": [
-            "user-contract",
-            "ce556d2f-923c-45d7-944a-8e1905a9368b"
-          ]
-        },
-        {
-          "component": "Discovery route cards",
-          "change": "Generate informational cards from discovery flows and reached screens, with observed fallbacks. Show actual reached labels rather than assuming route names establish outcomes.",
-          "evidenceIds": [
-            "01M5R7451Y26PZWSB16W15RRKY",
-            "01M5R74ZPWYKEJK4F9MJF7DRRS",
-            "01M5R73RHDGTV5P3C6CKD2K7JK",
-            "01M5R74MA6GG4HDB9T2VNW75HB"
-          ]
-        },
-        {
-          "component": "Evidence limitations",
-          "change": "Keep incomplete exploration, the unreached product path, and the recorded source exception visible without inferring transaction failure or success.",
-          "evidenceIds": [
-            "0e685684e203ccad038d9c5b7b8f14a5feaa3a71aa3b7efe469f692185e00948",
-            "b75243d881c12e1b3745bf7f1a65a3733e8c7baf465a2e605cf895084206b2dd"
-          ]
-        },
-        {
-          "component": "Accessible presentation and status",
-          "change": "Use high-contrast forest text on cream, visible native-control labels, keyboard focus outlines, a live status region, responsive stacking, and disabled actions during host processing or after a receipt.",
-          "evidenceIds": [
-            "user-contract",
-            "033e2d68f5962b65a20348bd4f204f76a8ecd9bf4befc7f1b7ccf9e675f8f7e5",
-            "5ac94b9f335a346cb534605fd0a6f5033e4076c45c4fce0de6aba78c48fd3744"
-          ]
-        }
-      ],
-      "failure": {
-        "kind": "interface-check",
-        "summary": "After the submit click, the automation only waited while the trusted-host area remained blank. It assumed a confirmation would appear without checking for a changed page state, a hidden confirmation, or a recovery path.\nUpdate the automation to wait for a specific confirmation signal and, if it does not appear, inspect the page state or reload and verify the saved request through a defined fallback. Avoid treating elapsed time alone as confirmation.",
-        "sourceMatch": false,
-        "taskStatus": "submitted_unverified",
-        "taskError": null,
-        "checks": [
-          {
-            "key": "order",
-            "label": "Order",
-            "expected": "ORD-1042",
-            "observed": "ORD-1042",
-            "status": "match",
-            "provenance": "source-adapter"
-          },
-          {
-            "key": "account",
-            "label": "Account",
-            "expected": "DEMO-ACCOUNT-1",
-            "observed": "DEMO-ACCOUNT-1",
-            "status": "match",
-            "provenance": "source-adapter"
-          },
-          {
-            "key": "items",
-            "label": "Return only the shoes",
-            "expected": "Red shoes \u00b7 size 8",
-            "observed": "Red running shoes",
-            "status": "match",
-            "provenance": "source-adapter"
-          },
-          {
-            "key": "quantity",
-            "label": "Quantity",
-            "expected": 1,
-            "observed": 1,
-            "status": "match",
-            "provenance": "source-adapter"
-          },
-          {
-            "key": "jacket",
-            "label": "Keep the jacket",
-            "expected": "Kept",
-            "observed": "Kept",
-            "status": "match",
-            "provenance": "source-adapter"
-          },
-          {
-            "key": "reason",
-            "label": "Return reason",
-            "expected": "Size or fit issue",
-            "observed": "Size or fit issue",
-            "status": "match",
-            "provenance": "source-adapter"
-          },
-          {
-            "key": "destination",
-            "label": "Refund destination",
-            "expected": "Original payment method",
-            "observed": "Original payment method",
-            "status": "match",
-            "provenance": "source-adapter"
-          },
-          {
-            "key": "method",
-            "label": "Return method",
-            "expected": "Printer-free QR drop-off",
-            "observed": "Printer-free QR drop-off",
-            "status": "match",
-            "provenance": "source-adapter"
-          },
-          {
-            "key": "currency",
-            "label": "Currency",
-            "expected": "USD",
-            "observed": "USD",
-            "status": "match",
-            "provenance": "source-adapter"
-          },
-          {
-            "key": "subtotal",
-            "label": "Item value",
-            "expected": "$80.00",
-            "observed": "$80.00",
-            "status": "match",
-            "provenance": "source-adapter"
-          },
-          {
-            "key": "deduction",
-            "label": "Deduction",
-            "expected": "$5.00",
-            "observed": "$5.00",
-            "status": "match",
-            "provenance": "source-adapter"
-          },
-          {
-            "key": "refund",
-            "label": "Expected refund",
-            "expected": "$75.00",
-            "observed": "$75.00",
-            "status": "match",
-            "provenance": "source-adapter"
-          }
-        ]
-      },
-      "verification": {
-        "status": "failed",
-        "summary": "After the submit click, the automation only waited while the trusted-host area remained blank. It assumed a confirmation would appear without checking for a changed page state, a hidden confirmation, or a recovery path.\nUpdate the automation to wait for a specific confirmation signal and, if it does not appear, inspect the page state or reload and verify the saved request through a defined fallback. Avoid treating elapsed time alone as confirmation.",
-        "sessionId": "0a1be705-2134-47e1-97f3-ab529eb9fc1b",
-        "shots": [
-          {
-            "image": "step-0.jpg",
-            "stepId": "5-4",
-            "ordinal": 58,
-            "kind": "wait",
-            "status": "passed",
-            "summary": "wait: PRIMARY: wait 2000 ms for the trusted host submission to finish saving",
-            "url": "http://127.0.0.1:5300/builder-preview/0f6166ea-0a24-4e54-88cf-4a0634b46c43/verify?key=043c0593-95c0-41de-855a-8b1ded330dac"
-          },
-          {
-            "image": "step-1.jpg",
-            "stepId": "5-5",
-            "ordinal": 59,
-            "kind": "wait",
-            "status": "passed",
-            "summary": "wait: PRIMARY: wait 3000 ms for the trusted host to finish saving the approved request",
-            "url": "http://127.0.0.1:5300/builder-preview/0f6166ea-0a24-4e54-88cf-4a0634b46c43/verify?key=043c0593-95c0-41de-855a-8b1ded330dac"
-          },
-          {
-            "image": "step-2.jpg",
-            "stepId": "5-6",
-            "ordinal": 60,
-            "kind": "wait",
-            "status": "passed",
-            "summary": "wait: PRIMARY: wait 5000 ms for the trusted host to complete and confirm the save",
-            "url": "http://127.0.0.1:5300/builder-preview/0f6166ea-0a24-4e54-88cf-4a0634b46c43/verify?key=043c0593-95c0-41de-855a-8b1ded330dac"
-          },
-          {
-            "image": "step-3.jpg",
-            "stepId": "5-7",
-            "ordinal": 61,
-            "kind": "wait",
-            "status": "passed",
-            "summary": "wait: PRIMARY: wait 10000 ms for the approved request submission to reach a saved conf",
-            "url": "http://127.0.0.1:5300/builder-preview/0f6166ea-0a24-4e54-88cf-4a0634b46c43/verify?key=043c0593-95c0-41de-855a-8b1ded330dac"
-          },
-          {
-            "image": "step-4.jpg",
-            "stepId": "5-8",
-            "ordinal": 62,
-            "kind": "",
-            "status": "passed",
-            "summary": "wait: Waiting while the trusted host submission remains indefinitely in the submitting state",
-            "url": "http://127.0.0.1:5300/builder-preview/0f6166ea-0a24-4e54-88cf-4a0634b46c43/verify?key=043c0593-95c0-41de-855a-8b1ded330dac"
-          },
-          {
-            "image": "step-5.jpg",
-            "stepId": "5-9",
-            "ordinal": 63,
-            "kind": "",
-            "status": "failed",
-            "summary": "wait: Waiting while the trusted host submission remains unavailable",
-            "url": "http://127.0.0.1:5300/builder-preview/0f6166ea-0a24-4e54-88cf-4a0634b46c43/verify?key=043c0593-95c0-41de-855a-8b1ded330dac"
-          }
-        ],
-        "testFile": "verify-red-shoes-return-conflict-approved-terms-and_test.md",
-        "replay": {
-          "reusedJourney": false,
-          "replayedSteps": 0,
-          "authoredSteps": 6
-        },
-        "requirementsPreserved": true,
-        "healingUsed": false,
-        "coverage": {
-          "type": "coverage",
-          "v": 1,
-          "verb": "cover",
-          "source": "project",
-          "coverage_version": 2,
-          "scope": "project",
-          "config": {
-            "rule": "newest_counted_verdict",
-            "weighting": "risk",
-            "weights": {
-              "high": 1.25,
-              "med": 1,
-              "low": 0.75,
-              "unknown": 1
-            }
-          },
-          "pct": 65,
-          "usecases": {
-            "total": 1,
-            "proven": 0,
-            "partial": 0,
-            "failing": 1,
-            "not_run": 0,
-            "not_designed": 0,
-            "no_criteria": 0
-          },
-          "criteria": {
-            "total": 20,
-            "proven": 13
-          },
-          "perUc": [
-            {
-              "id": "uc-1",
-              "title": "Complete and verify an approved synthetic return request",
-              "risk": "high",
-              "weight": 1.25,
-              "state": "failing",
-              "pct": 65,
-              "criteria": 20,
-              "proven": 13,
-              "manual_runs": 0,
-              "stale": false
-            }
-          ],
-          "perAc": {
-            "ac-1": {
-              "state": "proven",
-              "uc": "uc-1",
-              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
-            },
-            "ac-2": {
-              "state": "proven",
-              "uc": "uc-1",
-              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
-            },
-            "ac-3": {
-              "state": "proven",
-              "uc": "uc-1",
-              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
-            },
-            "ac-4": {
-              "state": "failing",
-              "uc": "uc-1",
-              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
-            },
-            "ac-5": {
-              "state": "not_run",
-              "uc": "uc-1"
-            },
-            "ac-6": {
-              "state": "not_run",
-              "uc": "uc-1"
-            },
-            "ac-7": {
-              "state": "not_run",
-              "uc": "uc-1"
-            },
-            "ac-8": {
-              "state": "not_run",
-              "uc": "uc-1"
-            },
-            "ac-9": {
-              "state": "not_run",
-              "uc": "uc-1"
-            },
-            "ac-10": {
-              "state": "not_run",
-              "uc": "uc-1"
-            },
-            "ac-11": {
-              "state": "proven",
-              "uc": "uc-1",
-              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
-            },
-            "ac-12": {
-              "state": "proven",
-              "uc": "uc-1",
-              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
-            },
-            "ac-13": {
-              "state": "proven",
-              "uc": "uc-1",
-              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
-            },
-            "ac-14": {
-              "state": "proven",
-              "uc": "uc-1",
-              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
-            },
-            "ac-15": {
-              "state": "proven",
-              "uc": "uc-1",
-              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
-            },
-            "ac-16": {
-              "state": "proven",
-              "uc": "uc-1",
-              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
-            },
-            "ac-17": {
-              "state": "proven",
-              "uc": "uc-1",
-              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
-            },
-            "ac-18": {
-              "state": "proven",
-              "uc": "uc-1",
-              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
-            },
-            "ac-19": {
-              "state": "proven",
-              "uc": "uc-1",
-              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
-            },
-            "ac-20": {
-              "state": "proven",
-              "uc": "uc-1",
-              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
-            }
-          },
-          "flags": {
-            "stale_sources": 0,
-            "sources_not_fully_extracted": [],
-            "orphaned_usecases": 0
-          }
-        },
-        "evidenceIngestStatus": "failed",
-        "artifactHash": "8c9fafd9ab804b7f03cb7d174c04d487739bfdf37d74558529998f79d97a17dd",
-        "contractHash": "ce68e6b0f041fea0094d2de30dbaaf6656cc0cd24f3f721ad9ce60ce3616a09a",
-        "taskId": "6e4cb661-fc02-4981-9cc0-8c84b0ab4768",
-        "sourceMatch": false,
-        "at": "2026-10-25T00:51:50.217Z"
-      }
-    },
-    {
-      "revision": 3,
-      "status": "checking",
-      "createdAt": "2026-10-25T00:51:50.222Z",
-      "hash": "785a77c94a11926d97b0acaf242e0946d98c53259d043429d683957f3761bff5",
-      "codeHash": "f216075215405ec05a1a83c3b2aa24aac335209971c431d9594902cc2f643460",
-      "cssHash": "2d96a93308565b4453a3e74e61101be9452063a277bdcd017bc9976155343f9b",
-      "contractHash": "ce68e6b0f041fea0094d2de30dbaaf6656cc0cd24f3f721ad9ce60ce3616a09a",
-      "change": {
-        "fromHash": "fad357e061668548180bd502edc3efa5fea920784bb69f094470470f265d5db9",
-        "toHash": "f216075215405ec05a1a83c3b2aa24aac335209971c431d9594902cc2f643460",
-        "codeChanged": true,
-        "cssChanged": true
-      },
-      "decisions": [
-        {
-          "component": "Task overview and scope",
-          "change": "Prioritize the printer-free shoes-only return, keep the jacket non-editable, and leave starting and exact approval to the trusted host.",
-          "evidenceIds": [
-            "user-contract"
-          ]
-        },
-        {
-          "component": "Return alternatives and source conflicts",
-          "change": "Use both observed draft routes. Explain that QR drop-off fits the printer-free goal but changed the destination to store credit; retain original-payment intent and provide explicit restoration and validation.",
-          "evidenceIds": [
-            "6beef79b-2011-495e-b194-d2566350105c",
-            "ce556d2f-923c-45d7-944a-8e1905a9368b",
-            "user-contract"
-          ]
-        },
-        {
-          "component": "Current terms",
-          "change": "Render fees and refund amounts only from current task data, distinguish selected choices from observed source values, and expose unknown terms.",
-          "evidenceIds": [
-            "user-contract",
-            "6beef79b-2011-495e-b194-d2566350105c",
-            "ce556d2f-923c-45d7-944a-8e1905a9368b"
-          ]
-        },
-        {
-          "component": "Saved-confirmation recovery",
-          "change": "Explicitly handle submitted_unverified, lock further choice changes, offer a read-only check when permitted, and distinguish matching draft checks from saved confirmation. During submission, explain host inspection or recovery without enabling forbidden actions or inferring success from waiting.",
-          "evidenceIds": [
-            "preview-2",
-            "user-contract"
-          ]
-        },
-        {
-          "component": "Discovery routes",
-          "change": "Generate informational route cards from discovery screens and flows, show actual reached-state labels, and disclose incomplete exploration rather than claiming every named route reached its intended screen.",
-          "evidenceIds": [
-            "01M5R7451Y26PZWSB16W15RRKY",
-            "01M5R74ZPWYKEJK4F9MJF7DRRS",
-            "01M5R73RHDGTV5P3C6CKD2K7JK",
-            "01M5R74MA6GG4HDB9T2VNW75HB",
-            "0e685684e203ccad038d9c5b7b8f14a5feaa3a71aa3b7efe469f692185e00948",
-            "b75243d881c12e1b3745bf7f1a65a3733e8c7baf465a2e605cf895084206b2dd"
-          ]
-        },
-        {
-          "component": "Visual design and accessibility",
-          "change": "Use cream and forest colors, readable typography, visible native-control labels, keyboard focus indicators, a live status region, and a narrow-screen single-column layout.",
-          "evidenceIds": [
-            "01M5R734ZYDK2NYEEKF72WVVNG",
-            "033e2d68f5962b65a20348bd4f204f76a8ecd9bf4befc7f1b7ccf9e675f8f7e5",
-            "5ac94b9f335a346cb534605fd0a6f5033e4076c45c4fce0de6aba78c48fd3744",
-            "user-contract"
-          ]
-        }
-      ],
-      "failure": null,
-      "verification": null
     }
   ]
 }
