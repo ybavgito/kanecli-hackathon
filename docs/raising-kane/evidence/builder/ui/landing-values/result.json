@@ -1,0 +1,69 @@
+{
+  "status": "failed",
+  "summary": "The agent did not finish all of the requested checks. After confirming that the task field was empty, it reported that no actions remained even though it still needed to inspect the website URL value.\nUpdate the run plan to treat the two field-property assertions as separate required checks. After checking the empty task field, use a read-only DevTools assertion to verify that the website URL remains exactly http://127.0.0.1:5261/store.",
+  "sessionId": "065c8c8c-cf8a-4f66-be51-0a53908118a6",
+  "shots": [
+    {
+      "image": "step-0.jpg",
+      "stepId": "2-2",
+      "ordinal": 9,
+      "kind": "scroll",
+      "status": "passed",
+      "summary": "scroll: Scroll \"Just the URL Explore first\" into view",
+      "url": "http://127.0.0.1:5260/"
+    },
+    {
+      "image": "step-1.jpg",
+      "stepId": "2-3",
+      "ordinal": 10,
+      "kind": "click",
+      "status": "passed",
+      "summary": "click: Click \"Just the URL Explore first\"",
+      "url": "http://127.0.0.1:5260/"
+    },
+    {
+      "image": "step-2.jpg",
+      "stepId": "2-4",
+      "ordinal": 11,
+      "kind": "click",
+      "status": "passed",
+      "summary": "click: Click \"Use this example\"",
+      "url": "http://127.0.0.1:5260/"
+    },
+    {
+      "image": "step-3.jpg",
+      "stepId": "2-5",
+      "ordinal": 12,
+      "kind": "analyze",
+      "status": "passed",
+      "summary": "analyze: #task-goal.value equals the empty string.",
+      "url": "http://127.0.0.1:5260/"
+    },
+    {
+      "image": "step-4.jpg",
+      "stepId": "2-6",
+      "ordinal": 13,
+      "kind": "",
+      "status": "passed",
+      "summary": "wait: Waiting without changing the verified landing-page form state",
+      "url": "http://127.0.0.1:5260/"
+    },
+    {
+      "image": "step-5.jpg",
+      "stepId": "2-7",
+      "ordinal": 14,
+      "kind": "",
+      "status": "failed",
+      "summary": "wait: Waiting pause while preserving the URL-only example state",
+      "url": "http://127.0.0.1:5260/"
+    }
+  ],
+  "testFile": "inspect-the-two-landing-page-examples-and-recorded-demo_test.md",
+  "replay": {
+    "reusedJourney": false,
+    "replayedSteps": 0,
+    "authoredSteps": 3
+  },
+  "requirementsPreserved": true,
+  "healingUsed": false
+}

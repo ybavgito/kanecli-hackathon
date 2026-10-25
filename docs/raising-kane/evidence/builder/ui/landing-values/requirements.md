@@ -1,0 +1,8 @@
+# Verify one generated synthetic task interface
+
+One user story: perform only the explicitly requested browser journey at http://127.0.0.1:5260. This is a synthetic sandbox. Approve or submit only if the required journey below explicitly instructs those actions, and then only through the trusted host panel. Generated code itself cannot approve. No production accounts or actions are involved.
+
+## Required journey and observable outcomes
+On the landing page select URL + a goal in the example, then click Use this example. Use read-only DevTools DOM assertions to read the actual input element #website-url value property and textarea #task-goal value property, not their labels or placeholders. Assert #website-url.value equals exactly http://127.0.0.1:5261/store. Assert #task-goal.value equals exactly: Return my red shoes without a printer, keep the jacket, and refund my original payment method. Then scroll back to the example, select Just the URL and click Use this example again. With read-only DOM assertions verify #website-url.value still equals http://127.0.0.1:5261/store and #task-goal.value equals the empty string. Finally verify Demo now is present with recorded build buttons. Stop. Do not enter values yourself, start generation, open any build, start a task, approve or submit.
+
+Stay within this one journey. Wait for source browser jobs only when the required journey explicitly starts them; they can take two minutes. Interact only through visible browser controls, not API calls, script mutations or direct source edits. Read-only DOM/DevTools assertions may inspect actual input values. Keep all expectations above unchanged. Do not add transaction, receipt or approval steps to a read-only inspection.

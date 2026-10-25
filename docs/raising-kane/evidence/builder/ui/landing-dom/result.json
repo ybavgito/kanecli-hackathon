@@ -1,0 +1,65 @@
+{
+  "status": "passed",
+  "summary": "You asked to check two landing-page examples without starting a build or submitting anything.\nSelected the \u201cURL + a goal\u201d example and used it; the website address and return-request goal were filled in as expected.\nReturned to the top, selected the \u201cJust the URL\u201d example, and used it; the website address remained filled while the goal field was cleared.\nConfirmed the page also showed the \u201cDemo now\u201d area with recorded build controls and the header tagline \u201cWhen websites raise hell, raise Kane.\u201d",
+  "sessionId": null,
+  "shots": [
+    {
+      "image": "step-0.jpg",
+      "stepId": "0-6",
+      "ordinal": 6,
+      "kind": "scroll",
+      "status": "passed",
+      "summary": "scroll: Scrolling to the top of the landing page",
+      "url": "http://127.0.0.1:5260/"
+    },
+    {
+      "image": "step-1.jpg",
+      "stepId": "0-7",
+      "ordinal": 7,
+      "kind": "click",
+      "status": "passed",
+      "summary": "click: Clicking Just the URL Explore first selector button",
+      "url": "http://127.0.0.1:5260/"
+    },
+    {
+      "image": "step-2.jpg",
+      "stepId": "0-8",
+      "ordinal": 8,
+      "kind": "click",
+      "status": "passed",
+      "summary": "click: Clicking Use this example button",
+      "url": "http://127.0.0.1:5260/"
+    },
+    {
+      "image": "step-3.jpg",
+      "stepId": "0-9",
+      "ordinal": 9,
+      "kind": "analyze",
+      "status": "passed",
+      "summary": "analyze: ANALYZE(textual_visual, 'The header shows When websites raise hell, raise Kane b",
+      "url": "http://127.0.0.1:5260/"
+    },
+    {
+      "image": "step-4.jpg",
+      "stepId": "0-10",
+      "ordinal": 10,
+      "kind": "assert",
+      "status": "passed",
+      "summary": "assert: Use DevTools to assert this exact boolean expression is true: document.querySele",
+      "url": "http://127.0.0.1:5260/"
+    },
+    {
+      "image": "step-5.jpg",
+      "stepId": "0-11",
+      "ordinal": 11,
+      "kind": "assert",
+      "status": "passed",
+      "summary": "assert: Demo now is present with recorded build controls and the header shows When websi",
+      "url": "http://127.0.0.1:5260/"
+    }
+  ],
+  "testFile": null,
+  "replay": null,
+  "requirementsPreserved": null,
+  "healingUsed": null
+}
