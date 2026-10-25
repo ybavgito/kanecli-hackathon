@@ -47,6 +47,19 @@ test('React compiles without execution into one self-contained, hashed, unverifi
   assert.equal(await readFile(join(built.rootDir, 'source', 'App.jsx'), 'utf8'), artifact().appSource)
 })
 
+test('artifact JSX stays compatible with production React inside the dev server process', async () => {
+  const previous = process.env.NODE_ENV
+  process.env.NODE_ENV = 'development'
+  try {
+    const built = await build({ buildId: 'development-server-process' })
+    const { body } = await readGeneratedAsset({ rootDir: built.rootDir })
+    assert.doesNotMatch(body.toString(), /jsxDEV/)
+  } finally {
+    if (previous === undefined) delete process.env.NODE_ENV
+    else process.env.NODE_ENV = previous
+  }
+})
+
 test('revision storage is immutable and channels are generated independently per revision', async () => {
   const first = await build({ buildId: 'versions', revision: 1 })
   await assert.rejects(build({ buildId: 'versions', revision: 1 }), { code: 'revision_exists' })

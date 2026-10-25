@@ -155,6 +155,9 @@ export async function buildGeneratedArtifact({ artifact, contract, allowedAction
     result = await build({
       root: sourceDir, base: './', configFile: false, envFile: false, envDir: sourceDir, publicDir: false, logLevel: 'silent',
       plugins: [isolationPlugin], define: { 'process.env.NODE_ENV': '"production"' },
+      // The dev server and artifact compiler share a process. Pin the JSX
+      // transform to production so it matches the bundled React runtime.
+      esbuild: { jsxDev: false },
       build: { write: false, emptyOutDir: false, outDir: distDir, sourcemap: false, minify: true, target: 'es2022', modulePreload: false,
         lib: { entry: entryPath, name: 'RaisingKaneGenerated', formats: ['iife'], fileName: () => 'interface.js' },
       },
