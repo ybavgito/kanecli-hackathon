@@ -168,14 +168,14 @@ export default function Builder() {
   return (
     <div className="builder-page">
       <header className="app-header">
-        <a href="/?builder=1" aria-label="Raising Kane builder home">
+        <a className="builder-brand" href="/?builder=1" aria-label="Raising Kane builder home">
           {brand}
+          <small>When websites raise hell, raise Kane</small>
         </a>
         <nav>
           <a href="/?legacy=1">
-            Existing task workspace <ArrowSquareOut size={15} />
+            Task workspace <ArrowSquareOut size={15} />
           </a>
-          <span>When websites raise hell, raise Kane.</span>
         </nav>
       </header>
       <main className="builder-main">

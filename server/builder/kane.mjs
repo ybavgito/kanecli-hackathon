@@ -382,7 +382,7 @@ One user story: perform only the explicitly requested browser journey at ${url}.
 ## Required journey and observable outcomes
 ${objective}
 
-Stay within this one journey. Wait for source browser jobs only when the required journey explicitly starts them; they can take two minutes. Only use visible browser controls, not API calls, scripts or direct source edits. Keep all expectations above unchanged. Do not add transaction, receipt or approval steps to a read-only inspection.
+Stay within this one journey. Wait for source browser jobs only when the required journey explicitly starts them; they can take two minutes. Interact only through visible browser controls, not API calls, script mutations or direct source edits. Read-only DOM/DevTools assertions may inspect actual input values. Keep all expectations above unchanged. Do not add transaction, receipt or approval steps to a read-only inspection.
 `
   const snapshotDirectory = directory
   const workspace = await verificationWorkspace(

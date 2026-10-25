@@ -1,0 +1,69 @@
+{
+  "status": "passed",
+  "summary": "All 5 assurance journey steps passed.",
+  "sessionId": "6ee770ca-c069-47d0-9300-a998fe51467f",
+  "shots": [
+    {
+      "image": "step-0.jpg",
+      "stepId": "3-1",
+      "ordinal": 12,
+      "kind": "click",
+      "status": "passed",
+      "summary": "click: Clicking Close evidence button",
+      "url": "http://127.0.0.1:5260/?build=e68b8ed8-d894-457d-b3c0-e3065e5c0aa8"
+    },
+    {
+      "image": "step-1.jpg",
+      "stepId": "3-2",
+      "ordinal": 13,
+      "kind": "analyze",
+      "status": "passed",
+      "summary": "analyze: the candidate result is available on the build page",
+      "url": "http://127.0.0.1:5260/?build=e68b8ed8-d894-457d-b3c0-e3065e5c0aa8"
+    },
+    {
+      "image": "step-2.jpg",
+      "stepId": "3-3",
+      "ordinal": 14,
+      "kind": "assert",
+      "status": "passed",
+      "summary": "assert: the build page remains in the current tab and both the source evidence and candi",
+      "url": "http://127.0.0.1:5260/?build=e68b8ed8-d894-457d-b3c0-e3065e5c0aa8"
+    },
+    {
+      "image": "step-3.jpg",
+      "stepId": "4-1",
+      "ordinal": 15,
+      "kind": "click",
+      "status": "passed",
+      "summary": "click: Clicking Use my interface button in the top-right of the page",
+      "url": "http://127.0.0.1:5260/?build=e68b8ed8-d894-457d-b3c0-e3065e5c0aa8"
+    },
+    {
+      "image": "step-4.jpg",
+      "stepId": "4-2",
+      "ordinal": 16,
+      "kind": "analyze",
+      "status": "passed",
+      "summary": "analyze: the browser journey did not inspect a receipt",
+      "url": "http://127.0.0.1:5260/builder-preview/e68b8ed8-d894-457d-b3c0-e3065e5c0aa8/3?session=1afeec7f-4128-4f68-8e1a-089828f2bd16"
+    },
+    {
+      "image": "step-5.jpg",
+      "stepId": "4-3",
+      "ordinal": 17,
+      "kind": "assert",
+      "status": "passed",
+      "summary": "assert: the preview opened in the original tab, the generated interface renders with Sta",
+      "url": "http://127.0.0.1:5260/builder-preview/e68b8ed8-d894-457d-b3c0-e3065e5c0aa8/3?session=1afeec7f-4128-4f68-8e1a-089828f2bd16"
+    }
+  ],
+  "testFile": "inspect-recorded-demo-build-and-same-tab-preview-without_test.md",
+  "replay": {
+    "reusedJourney": false,
+    "replayedSteps": 0,
+    "authoredSteps": 5
+  },
+  "requirementsPreserved": true,
+  "healingUsed": false
+}

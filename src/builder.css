@@ -1077,3 +1077,31 @@
     padding-bottom: 48px;
   }
 }
+
+.builder-page .builder-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+.builder-brand > small {
+  color: #76806d;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+.builder-page .app-header nav {
+  margin-left: auto;
+}
+@media (max-width: 450px) {
+  .builder-brand > small {
+    font-size: 9px;
+  }
+  .builder-page .app-header {
+    gap: 12px;
+    padding-inline: 16px;
+  }
+  .builder-page .app-header nav {
+    font-size: 10px;
+  }
+}

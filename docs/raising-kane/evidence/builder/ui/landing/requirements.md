@@ -1,0 +1,8 @@
+# Verify one generated synthetic task interface
+
+One user story: perform only the explicitly requested browser journey at http://127.0.0.1:5260. This is a synthetic sandbox. Approve or submit only if the required journey below explicitly instructs those actions, and then only through the trusted host panel. Generated code itself cannot approve. No production accounts or actions are involved.
+
+## Required journey and observable outcomes
+Inspect only the Raising Kane landing page. Verify the heading The same website and the example controls Just the URL and URL + a goal are visible. With Just the URL selected, verify the captured preview shows the site guide with Shop, My orders and Help centre. Select URL + a goal and verify the preview changes to Return the red shoes. Keep the jacket. Click Use this example and verify the Website URL field contains the local Northstar /store URL and the optional task contains the printer-free shoes return intent. Return to the example, select Just the URL, click Use this example, and verify the optional task is now empty while Website URL remains the Northstar /store URL. Verify Demo now offers recorded verified builds. Stop on this page. Do not click Explore & simplify, open a build, start a task, approve or submit.
+
+Stay within this one journey. Wait for source browser jobs only when the required journey explicitly starts them; they can take two minutes. Only use visible browser controls, not API calls, scripts or direct source edits. Keep all expectations above unchanged. Do not add transaction, receipt or approval steps to a read-only inspection.

@@ -1,0 +1,119 @@
+[
+  {
+    "type": "test_md_step_end",
+    "step_index": 1,
+    "status": "passed",
+    "duration_s": 29.4,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:30:21.209Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 2,
+    "status": "passed",
+    "duration_s": 30.5,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:30:51.685Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 3,
+    "status": "passed",
+    "duration_s": 37.8,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:31:29.485Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 4,
+    "status": "passed",
+    "duration_s": 72.3,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:32:41.810Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 5,
+    "status": "passed",
+    "duration_s": 31.8,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:33:13.593Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 6,
+    "status": "failed",
+    "duration_s": 69.8,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:34:23.359Z"
+  },
+  {
+    "type": "test_md_summary",
+    "overall_status": "failed",
+    "duration_s": 276,
+    "steps": {
+      "total": 8,
+      "passed": 5,
+      "failed": 1,
+      "skipped": 2,
+      "replay_decisions": 0,
+      "author_decisions": 8
+    },
+    "adaptive_heal": {
+      "triggered": false
+    },
+    "commit": {
+      "committed": false,
+      "reason": "run_failed",
+      "testcase_id": "01M5R7DANVNHPX7YVW3GD47DR9"
+    },
+    "artifacts": {
+      "replaced": true
+    },
+    "upload": {
+      "performed": true,
+      "succeeded": true
+    },
+    "share_url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5R7DANVNHPX7YVW3GD47DR9/dashboard/share/US_UP44G8HWTC28ULRBJYOUTFX6GSY57J9NQN0NT3I4GIAX3IRRMBKZ1U6CXLQVULI4?type=summary&agentView=true&fqdn=summary-page",
+    "cancelled": false,
+    "v": 1,
+    "ts": "2026-10-25T00:34:29.308Z"
+  },
+  {
+    "type": "test_md_done",
+    "overall_status": "failed",
+    "duration_s": 276,
+    "session_id": "7c74ad03-eea7-4d48-9fba-8f2c0f1d9506",
+    "share_url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5R7DANVNHPX7YVW3GD47DR9/dashboard/share/US_UP44G8HWTC28ULRBJYOUTFX6GSY57J9NQN0NT3I4GIAX3IRRMBKZ1U6CXLQVULI4?type=summary&agentView=true&fqdn=summary-page",
+    "coverage": {
+      "status": "written",
+      "pct": 47
+    },
+    "v": 1,
+    "ts": "2026-10-25T00:34:29.315Z"
+  }
+]

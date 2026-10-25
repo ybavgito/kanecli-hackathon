@@ -119,5 +119,49 @@
     "modifiedEntries": [
       "tests/inspect-the-read-only-overview-without-s-39b47a08/result.yaml"
     ]
+  },
+  {
+    "file": "demo-entry-first.evidence",
+    "scope": "landing and recorded-demo UI",
+    "status": "failed",
+    "sourceSha256": "5926e5c6af1a74d8d0da477d5a3b2d35af27a51d1ac6f15d948887d70504de21",
+    "publishedSha256": "81cff449eead315cb2296689f71e7706f9855c9f70a94d773bca3052b3d16ceb",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/inspect-recorded-return-interface-withou-694b0420/result.yaml"
+    ]
+  },
+  {
+    "file": "demo-entry-corrected.evidence",
+    "scope": "landing and recorded-demo UI",
+    "status": "passed",
+    "sourceSha256": "7d1d6baf2f5080be1fdb23019ae38b4ea6e8242f9ef7d3d3f273192a1ba67ab4",
+    "publishedSha256": "70fe18fe90732adbc514cb5d5628024cea2f51a0240c86f090d1c0a627cd224d",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/inspect-recorded-demo-build-and-same-tab-68bcc585/result.yaml"
+    ]
+  },
+  {
+    "file": "landing.evidence",
+    "scope": "landing and recorded-demo UI",
+    "status": "failed",
+    "sourceSha256": "3802640847aa2a4feaaff1f7c4b6d55f436c596d361ef59341af0c74be2ac438",
+    "publishedSha256": "2caf45aed5f94764e26204dc5b8e83c30c72f2cbc798867ffe3838e3268f5e5d",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/inspect-raising-kane-landing-page-exampl-fbac7153/result.yaml"
+    ]
+  },
+  {
+    "file": "landing-retry.evidence",
+    "scope": "landing and recorded-demo UI",
+    "status": "failed",
+    "sourceSha256": "71901ae77e3388bf334dd51f6379570819484020bb4a18f56ed58ccb056b7f45",
+    "publishedSha256": "d8fedfa222db53d0bdfd6442579d3e9157fd21a59e686c24b4981a129e6aa197",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/inspect-raising-kane-landing-page-exampl-fbac7153/result.yaml"
+    ]
   }
 ]

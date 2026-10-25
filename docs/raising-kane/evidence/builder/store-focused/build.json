@@ -31,7 +31,7 @@
   "contractHash": "ce68e6b0f041fea0094d2de30dbaaf6656cc0cd24f3f721ad9ce60ce3616a09a",
   "status": "verifying",
   "createdAt": "2026-10-25T00:23:58.628Z",
-  "updatedAt": "2026-10-25T00:34:23.005Z",
+  "updatedAt": "2026-10-25T00:46:53.070Z",
   "error": null,
   "promotedRevision": null,
   "events": [
@@ -346,6 +346,118 @@
     {
       "sequence": 41,
       "at": "2026-10-25T00:34:23.005Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 3: passed."
+    },
+    {
+      "sequence": 42,
+      "at": "2026-10-25T00:39:35.769Z",
+      "phase": "building",
+      "kind": "rebuild.requested",
+      "summary": "A new bounded build attempt was requested. Earlier candidates are retained."
+    },
+    {
+      "sequence": 43,
+      "at": "2026-10-25T00:39:35.777Z",
+      "phase": "building",
+      "kind": "build.resumed",
+      "summary": "Rebuilding from retained source evidence; verification uses fresh synthetic records."
+    },
+    {
+      "sequence": 44,
+      "at": "2026-10-25T00:39:35.779Z",
+      "phase": "building",
+      "kind": "evidence.reused",
+      "summary": "Reusing 4 screens and 4 flow records captured at 2026-10-25T00:25:22.496Z. No fresh discovery is claimed."
+    },
+    {
+      "sequence": 45,
+      "at": "2026-10-25T00:39:35.781Z",
+      "phase": "building",
+      "kind": "agent.started",
+      "summary": "Building your interface from Kane\u2019s observations."
+    },
+    {
+      "sequence": 46,
+      "at": "2026-10-25T00:40:26.437Z",
+      "phase": "building",
+      "kind": "model.response",
+      "summary": "gpt-6.1-sol returned a builder response.",
+      "usage": {
+        "input_tokens": 51409,
+        "input_tokens_details": {
+          "cache_write_tokens": 51406,
+          "cached_tokens": 0
+        },
+        "output_tokens": 6046,
+        "output_tokens_details": {
+          "reasoning_tokens": 99
+        },
+        "total_tokens": 57455
+      }
+    },
+    {
+      "sequence": 47,
+      "at": "2026-10-25T00:40:26.560Z",
+      "phase": "building",
+      "kind": "artifact.built",
+      "summary": "Revision 2 compiled. Checking it before release.",
+      "revision": 2,
+      "hash": "8c9fafd9ab804b7f03cb7d174c04d487739bfdf37d74558529998f79d97a17dd"
+    },
+    {
+      "sequence": 48,
+      "at": "2026-10-25T00:40:28.290Z",
+      "phase": "exploring_preview",
+      "kind": "explore.progress",
+      "summary": "Kane Explore started in its own project."
+    },
+    {
+      "sequence": 49,
+      "at": "2026-10-25T00:40:40.621Z",
+      "phase": "exploring_preview",
+      "kind": "explore.progress",
+      "summary": "Kane has visited 1 states; 1 exploration candidates remain."
+    },
+    {
+      "sequence": 50,
+      "at": "2026-10-25T00:40:53.550Z",
+      "phase": "verifying",
+      "kind": "check.started",
+      "summary": "Kane is using the generated interface and checking source-backed outcomes."
+    },
+    {
+      "sequence": 51,
+      "at": "2026-10-25T00:41:11.791Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Designing a requirements-linked Kane journey."
+    },
+    {
+      "sequence": 52,
+      "at": "2026-10-25T00:42:13.865Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Running the assurance-designed journey against the generated interface."
+    },
+    {
+      "sequence": 53,
+      "at": "2026-10-25T00:42:58.781Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 1: passed."
+    },
+    {
+      "sequence": 54,
+      "at": "2026-10-25T00:45:12.169Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 2: passed."
+    },
+    {
+      "sequence": 55,
+      "at": "2026-10-25T00:46:53.070Z",
       "phase": "verifying",
       "kind": "check.step",
       "summary": "Journey step 3: passed."
@@ -2349,7 +2461,7 @@
   "candidates": [
     {
       "revision": 1,
-      "status": "checking",
+      "status": "interrupted",
       "createdAt": "2026-10-25T00:25:22.503Z",
       "hash": "eb2ab359b136627f0bb313c39c724a2fa3672772063b45ae71ec681c9cd0b42d",
       "codeHash": "d6a8f8f87f421b8a40fc27864731abb94d6c35f08e8e7fc604d119acce198322",
@@ -2403,6 +2515,78 @@
           "evidenceIds": [
             "user-contract",
             "01M5R734ZYDK2NYEEKF72WVVNG",
+            "033e2d68f5962b65a20348bd4f204f76a8ecd9bf4befc7f1b7ccf9e675f8f7e5",
+            "5ac94b9f335a346cb534605fd0a6f5033e4076c45c4fce0de6aba78c48fd3744"
+          ]
+        }
+      ],
+      "failure": {
+        "kind": "interrupted",
+        "message": "Verification was interrupted; no pass or failure inferred."
+      },
+      "verification": null
+    },
+    {
+      "revision": 2,
+      "status": "checking",
+      "createdAt": "2026-10-25T00:39:35.784Z",
+      "hash": "8c9fafd9ab804b7f03cb7d174c04d487739bfdf37d74558529998f79d97a17dd",
+      "codeHash": "fad357e061668548180bd502edc3efa5fea920784bb69f094470470f265d5db9",
+      "cssHash": "68c0c152e42da0755b5797f6ac3127726ca74115fd004946979613cf950322d4",
+      "contractHash": "ce68e6b0f041fea0094d2de30dbaaf6656cc0cd24f3f721ad9ce60ce3616a09a",
+      "change": {
+        "fromHash": "d6a8f8f87f421b8a40fc27864731abb94d6c35f08e8e7fc604d119acce198322",
+        "toHash": "fad357e061668548180bd502edc3efa5fea920784bb69f094470470f265d5db9",
+        "codeChanged": true,
+        "cssChanged": true
+      },
+      "decisions": [
+        {
+          "component": "Focused overview and scope",
+          "change": "Prioritize the shoes-only return, explicitly keep the jacket, and leave task start and exact approval to the trusted host.",
+          "evidenceIds": [
+            "user-contract"
+          ]
+        },
+        {
+          "component": "Observed method alternatives",
+          "change": "Explain both reached draft routes: printed labels require a printer; QR drop-off has a deduction and changed the observed destination to store credit. Do not treat either draft as completion.",
+          "evidenceIds": [
+            "6beef79b-2011-495e-b194-d2566350105c",
+            "ce556d2f-923c-45d7-944a-8e1905a9368b"
+          ]
+        },
+        {
+          "component": "Choices and source review",
+          "change": "Separate selected choices and preserved refund intent from observed source values. Render current amounts from runtime data, flag mismatches and unknown terms, and provide explicit Validate and Restore controls.",
+          "evidenceIds": [
+            "user-contract",
+            "ce556d2f-923c-45d7-944a-8e1905a9368b"
+          ]
+        },
+        {
+          "component": "Discovery route cards",
+          "change": "Generate informational cards from discovery flows and reached screens, with observed fallbacks. Show actual reached labels rather than assuming route names establish outcomes.",
+          "evidenceIds": [
+            "01M5R7451Y26PZWSB16W15RRKY",
+            "01M5R74ZPWYKEJK4F9MJF7DRRS",
+            "01M5R73RHDGTV5P3C6CKD2K7JK",
+            "01M5R74MA6GG4HDB9T2VNW75HB"
+          ]
+        },
+        {
+          "component": "Evidence limitations",
+          "change": "Keep incomplete exploration, the unreached product path, and the recorded source exception visible without inferring transaction failure or success.",
+          "evidenceIds": [
+            "0e685684e203ccad038d9c5b7b8f14a5feaa3a71aa3b7efe469f692185e00948",
+            "b75243d881c12e1b3745bf7f1a65a3733e8c7baf465a2e605cf895084206b2dd"
+          ]
+        },
+        {
+          "component": "Accessible presentation and status",
+          "change": "Use high-contrast forest text on cream, visible native-control labels, keyboard focus outlines, a live status region, responsive stacking, and disabled actions during host processing or after a receipt.",
+          "evidenceIds": [
+            "user-contract",
             "033e2d68f5962b65a20348bd4f204f76a8ecd9bf4befc7f1b7ccf9e675f8f7e5",
             "5ac94b9f335a346cb534605fd0a6f5033e4076c45c4fce0de6aba78c48fd3744"
           ]

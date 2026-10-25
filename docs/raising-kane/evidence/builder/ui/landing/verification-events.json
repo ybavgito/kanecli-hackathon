@@ -1,0 +1,95 @@
+[
+  {
+    "type": "test_md_step_end",
+    "step_index": 1,
+    "status": "passed",
+    "duration_s": 30.9,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:44:02.056Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 2,
+    "status": "passed",
+    "duration_s": 21.3,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:44:23.386Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 3,
+    "status": "passed",
+    "duration_s": 22.3,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:44:45.647Z"
+  },
+  {
+    "type": "test_md_step_end",
+    "step_index": 4,
+    "status": "failed",
+    "duration_s": 51.1,
+    "ref_kind": null,
+    "unit_kind": null,
+    "inlined_count": null,
+    "failed_sub_step_index": null,
+    "v": 1,
+    "ts": "2026-10-25T00:45:36.776Z"
+  },
+  {
+    "type": "test_md_summary",
+    "overall_status": "failed",
+    "duration_s": 130,
+    "steps": {
+      "total": 6,
+      "passed": 3,
+      "failed": 1,
+      "skipped": 2,
+      "replay_decisions": 0,
+      "author_decisions": 6
+    },
+    "adaptive_heal": {
+      "triggered": false
+    },
+    "commit": {
+      "committed": false,
+      "reason": "run_failed",
+      "testcase_id": "01M5R86ANT42PBZRN1BSAV986Q"
+    },
+    "artifacts": {
+      "replaced": true
+    },
+    "upload": {
+      "performed": true,
+      "succeeded": true
+    },
+    "share_url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5R86ANT42PBZRN1BSAV986Q/dashboard/share/US_2FNTY8WSEK4N43HXENIO1NKX8GWBTDI245YK8777K1XEVBRBB5MDVCH9TNDR4THL?type=summary&agentView=true&fqdn=summary-page",
+    "cancelled": false,
+    "v": 1,
+    "ts": "2026-10-25T00:45:42.935Z"
+  },
+  {
+    "type": "test_md_done",
+    "overall_status": "failed",
+    "duration_s": 130,
+    "session_id": "e263150d-1d1b-4e0d-83c5-a5e07969b0a5",
+    "share_url": "https://test-manager.lambdatest.com/projects/01M5QAE5ES2EK54TVKGWS6FHYC/test-cases/01M5R86ANT42PBZRN1BSAV986Q/dashboard/share/US_2FNTY8WSEK4N43HXENIO1NKX8GWBTDI245YK8777K1XEVBRBB5MDVCH9TNDR4THL?type=summary&agentView=true&fqdn=summary-page",
+    "coverage": {
+      "status": "written",
+      "pct": 44
+    },
+    "v": 1,
+    "ts": "2026-10-25T00:45:42.939Z"
+  }
+]

@@ -47,6 +47,19 @@ hashes. No previous source task, approval or receipt is reused. Fresh sessions r
 against fresh synthetic records. The UI labels recorded generation explicitly. The old
 v1 return artifact remains available alongside the new modes for reproducibility.
 
+## Landing and recorded-demo entry
+
+The corrected recorded-demo entry passed all five assurance steps: homepage, recorded
+build labeling, source evidence, candidate result and fresh preview with Start this task.
+Its first failed inspection remains attached. The redesigned landing uses actual cropped
+generated previews with a documented source for each image. Desktop (1366 px) and mobile
+(390 px) visual inspection found loaded images and no horizontal overflow.
+
+The landing's first browser journey passed the two preview modes but failed its form-value
+assertion even though the captured input and textarea contained the intended values.
+An unchanged-criteria replay failed the same assertion. Both failures are retained;
+a separate precise read-only DOM-value check is running rather than declaring them passed.
+
 ## What failed, and what changed
 
 - The synthetic merchant changes the refund destination to store credit when QR drop-off

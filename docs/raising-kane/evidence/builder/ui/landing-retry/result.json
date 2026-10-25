@@ -1,0 +1,69 @@
+{
+  "status": "failed",
+  "summary": "The verification rule appears to be checking the wrong value or wording. The visible form already shows the requested Northstar store address and a request to return red shoes without a printer while keeping the jacket and refund method.\nReview the assertion at step 3-3 and have it read the actual input and textarea values. Match the intended Northstar /store URL and printer-free return meaning rather than relying on an overly strict or stale expected string.",
+  "sessionId": "5dcfa1a8-d387-44cb-9a2f-cb3100690ae8",
+  "shots": [
+    {
+      "image": "step-0.jpg",
+      "stepId": "2-1",
+      "ordinal": 12,
+      "kind": "click",
+      "status": "passed",
+      "summary": "click: Clicking the URL + a goal option beneath the main heading",
+      "url": "http://127.0.0.1:5260/"
+    },
+    {
+      "image": "step-1.jpg",
+      "stepId": "2-2",
+      "ordinal": 13,
+      "kind": "analyze",
+      "status": "passed",
+      "summary": "analyze: Reading the headline text from the captured preview",
+      "url": "http://127.0.0.1:5260/"
+    },
+    {
+      "image": "step-2.jpg",
+      "stepId": "2-3",
+      "ordinal": 14,
+      "kind": "assert",
+      "status": "passed",
+      "summary": "assert: the captured preview displays Return the red shoes. Keep the jacket.",
+      "url": "http://127.0.0.1:5260/"
+    },
+    {
+      "image": "step-3.jpg",
+      "stepId": "3-1",
+      "ordinal": 15,
+      "kind": "click",
+      "status": "passed",
+      "summary": "click: Clicking Use this example to populate the landing page inputs",
+      "url": "http://127.0.0.1:5260/"
+    },
+    {
+      "image": "step-4.jpg",
+      "stepId": "3-2",
+      "ordinal": 16,
+      "kind": "analyze",
+      "status": "passed",
+      "summary": "analyze: ANALYZE(textual_visual, 'The optional task contains the printer-free shoes retur",
+      "url": "http://127.0.0.1:5260/"
+    },
+    {
+      "image": "step-5.jpg",
+      "stepId": "3-3",
+      "ordinal": 17,
+      "kind": "assert",
+      "status": "failed",
+      "summary": "assert: Website URL contains the local Northstar /store URL and the optional task contai",
+      "url": "http://127.0.0.1:5260/"
+    }
+  ],
+  "testFile": "inspect-raising-kane-landing-page-examples-without_test.md",
+  "replay": {
+    "reusedJourney": true,
+    "replayedSteps": 3,
+    "authoredSteps": 1
+  },
+  "requirementsPreserved": true,
+  "healingUsed": false
+}

@@ -1,0 +1,69 @@
+{
+  "status": "failed",
+  "summary": "The agent reached the correct preview but incorrectly concluded that the required control was available. The displayed return has conflicting choices: it requests an original-payment refund while the observed return would issue store credit, and the page blocks submission.\nUpdate the run to inspect the preview\u2019s blocking messages before asserting readiness. Restore or correct the return choices so the requested refund destination matches the observed return, then verify that \u201cStart this task\u201d is present.",
+  "sessionId": "7c74ad03-eea7-4d48-9fba-8f2c0f1d9506",
+  "shots": [
+    {
+      "image": "step-0.jpg",
+      "stepId": "4-4",
+      "ordinal": 24,
+      "kind": "assert",
+      "status": "passed",
+      "summary": "assert: the candidate results are inspectable",
+      "url": "http://127.0.0.1:5260/builder-preview/6f84f800-0b85-4299-825a-79a0c1e371b2/3?session=679debe8-9f8b-468c-81e7-5f7c6bca5d2e"
+    },
+    {
+      "image": "step-1.jpg",
+      "stepId": "5-1",
+      "ordinal": 25,
+      "kind": "wait",
+      "status": "passed",
+      "summary": "wait: PRIMARY: generated return interface is already open; role=main; text=\"Review you",
+      "url": "http://127.0.0.1:5260/builder-preview/6f84f800-0b85-4299-825a-79a0c1e371b2/3?session=679debe8-9f8b-468c-81e7-5f7c6bca5d2e"
+    },
+    {
+      "image": "step-2.jpg",
+      "stepId": "5-2",
+      "ordinal": 26,
+      "kind": "analyze",
+      "status": "passed",
+      "summary": "analyze: a new tab opened",
+      "url": "http://127.0.0.1:5260/builder-preview/6f84f800-0b85-4299-825a-79a0c1e371b2/3?session=679debe8-9f8b-468c-81e7-5f7c6bca5d2e"
+    },
+    {
+      "image": "step-3.jpg",
+      "stepId": "5-516f5fd4-1",
+      "ordinal": 27,
+      "kind": "wait",
+      "status": "passed",
+      "summary": "wait: PRIMARY: wait 1000 ms without changing tabs",
+      "url": "http://127.0.0.1:5260/builder-preview/6f84f800-0b85-4299-825a-79a0c1e371b2/3?session=679debe8-9f8b-468c-81e7-5f7c6bca5d2e"
+    },
+    {
+      "image": "step-4.jpg",
+      "stepId": "5-4",
+      "ordinal": 28,
+      "kind": "analyze",
+      "status": "passed",
+      "summary": "analyze: Start this task is available.",
+      "url": "http://127.0.0.1:5260/builder-preview/6f84f800-0b85-4299-825a-79a0c1e371b2/3?session=679debe8-9f8b-468c-81e7-5f7c6bca5d2e"
+    },
+    {
+      "image": "step-5.jpg",
+      "stepId": "5-5",
+      "ordinal": 29,
+      "kind": "assert",
+      "status": "failed",
+      "summary": "assert: The generated return interface renders with Start this task available.",
+      "url": "http://127.0.0.1:5260/builder-preview/6f84f800-0b85-4299-825a-79a0c1e371b2/3?session=679debe8-9f8b-468c-81e7-5f7c6bca5d2e"
+    }
+  ],
+  "testFile": "inspect-recorded-return-interface-without-performing-the_test.md",
+  "replay": {
+    "reusedJourney": false,
+    "replayedSteps": 0,
+    "authoredSteps": 6
+  },
+  "requirementsPreserved": true,
+  "healingUsed": false
+}
