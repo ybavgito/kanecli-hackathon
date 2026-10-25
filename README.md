@@ -38,27 +38,84 @@ website automation, a real merchant return, or a real appointment service.
 
 ## Run locally
 
-Use Node 24 (tested), Chrome, an authenticated Kane account with credits,
-and the checked CLI release:
+### Quick start: the recorded demos (no accounts needed)
+
+You need Node 24 (tested; the server reads `.env` with `process.loadEnvFile`, which needs
+Node 20.12 or newer) and npm.
 
 ```bash
 npm ci
-npm install -g @testmuai/kane-cli@0.10.0-rc.3
-npx @testmuai/kane-cli-skill
-kane-cli login --oauth
-npm run check:kane
 npm run dev
 ```
 
-Open **http://127.0.0.1:5173**. The source sites run on ports **5174** and **5175**.
-Set `PORT` to change the app port; sources default to the next two ports. All three
-servers bind to loopback. Use `npm run dev` for the complete application;
-`npm run preview` serves only the built frontend and cannot run workflows.
+Open **http://127.0.0.1:5173**. (`localhost` redirects there; other addresses are blocked
+on purpose.) Then use **Compare the output** or **Demo now** and choose **Open verified
+build**. The recorded demos open instantly, without Kane, Chrome or an OpenAI key. They are
+replays of verified builds, not fresh generations.
 
-Copy `.env.example` to ignored `.env` and set `OPENAI_API_KEY` to enable the runtime
-builder (`gpt-6.1-sol`). Generation has no mock fallback. The older task workspace
-can still use its explicitly labeled sample intent parser without a key. Browser
-operations in either path use real Kane jobs. Never commit credentials.
+`npm run dev` starts three servers: the app on **5173** and the two sandbox websites on
+**5174** (Northstar) and **5175** (Linden), all bound to loopback. Use it, not
+`npm run preview`, which serves only the built frontend and cannot run any workflow.
+
+### What each feature needs
+
+| You want to | You need |
+| --- | --- |
+| Browse the landing page, compare the outputs, open recorded demos | Nothing beyond `npm run dev` |
+| Start a **new** build with **Explore & simplify** | `OPENAI_API_KEY` in `.env`, Kane CLI logged in, Google Chrome |
+| Run a task on a generated interface (**Start this task**) | Kane CLI logged in, Google Chrome, Kane credits |
+
+Live builds and tasks run real Kane jobs and can take many minutes (several minutes per
+revision for a build). Don't promise a live run finishes inside a short slot.
+
+### Set up live builds and tasks
+
+```bash
+npm install -g @testmuai/kane-cli@0.10.0-rc.3   # the release candidate this app was checked on
+kane-cli login --oauth
+npm run check:kane                               # confirms Kane is installed and logged in
+cp .env.example .env                             # then set OPENAI_API_KEY in .env
+npm run dev
+```
+
+`npx @testmuai/kane-cli-skill` is optional. It only teaches a coding agent the Kane commands
+and is not needed to run the app. Generation has no mock fallback: without
+`OPENAI_API_KEY`, **Explore & simplify** is disabled and the API answers "Set OPENAI_API_KEY
+on the server to enable generation." The older task workspace (`/?legacy=1`) can use its
+labelled sample intent parser without a key. Never commit credentials.
+
+### Configuration
+
+Set these in `.env` or the environment (see `.env.example`):
+
+| Variable | Purpose | Default |
+| --- | --- | --- |
+| `OPENAI_API_KEY` | Enables new builds | unset |
+| `BUILDER_MODEL` | Model for the interface builder | `gpt-6.1-sol` |
+| `PORT` | App port; the sandbox sites use the next two ports | `5173` |
+| `RAISING_KANE_DATA_DIR` | Where records, builds and browser profiles are stored | `data/` |
+| `KANE_CLI` | Path to the Kane binary | `kane-cli` |
+| `KANE_HEADLESS` | `1` runs the older task workspace's browser headless | unset |
+
+### Other commands
+
+```bash
+npm test                                     # unit tests
+npm run build                                # production build of the frontend
+npm run verify:kane                          # Kane checks the running app (needs `npm run dev`)
+node scripts/record-demo.mjs <data-dir> <build-id> <label>   # save a verified build as a recorded demo
+```
+
+### Troubleshooting
+
+| You see | Cause and fix |
+| --- | --- |
+| Demo buttons fail with "Open Raising Kane at http://127.0.0.1:5173 …" | The app was opened from another address. Use `http://127.0.0.1:5173`. |
+| "Set OPENAI_API_KEY on the server to enable generation." | Add the key to `.env` and restart `npm run dev`. |
+| A build is `blocked` with "OpenAI builder request failed (HTTP 429)" | OpenAI rate limit or quota on that key. Wait, or use another key. |
+| "Kane CLI is not on PATH" or "not authenticated" | Install the CLI, then run `kane-cli login --oauth` and `npm run check:kane`. |
+| "Address already in use" | Another copy is running. Stop it, or set `PORT`. |
+| A recorded demo is missing from the list | Its saved artifact failed the integrity check, or it was never completed. Only ready, verified, hash-matched builds are offered. |
 
 Task records, source records, approval grants and browser profiles persist under
 ignored `data/`. Keep this directory to resume receipts after restart. This is a
