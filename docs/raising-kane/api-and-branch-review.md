@@ -96,3 +96,29 @@ its 1,100-line source broker alongside the existing transaction controller.
 Meanwhile, main received the independent generic field guide in `c2472ad`. That commit
 was merged intact before pushing the next builder checkpoint; no force push or teammate
 history rewrite was used. The generic guide is at [docs/kane-cli/field-guide.md](../kane-cli/field-guide.md).
+
+## Final comparison with PoC `e98e98e`
+
+Reviewed the code, not just its README: builder controller, source broker, generator,
+artifact compiler, verifier, public-read journey store and network corroboration module.
+The newest commit adds source-probe evidence and generator tests; it does not establish
+an end-to-end generated transaction. Its status report explicitly says that remains
+unverified because its checkout lacked an OpenAI key. Its 88 unit checks are useful,
+but test counts do not establish comparative runtime correctness.
+
+| Area | PoC advantage | Main advantage / decision |
+| --- | --- | --- |
+| URL without a task | A strictly read-only generated overview; choosing a task starts a separate focused build. This better separates discovery from commitment. | Main explicitly starts a supported task before a user-session draft, but rehearses the synthetic transaction during build even for blank intent. Keep that distinction visible. Adopt the two-stage journey later, not two controllers today. |
+| Actual generated transaction | Strong code structure and independent source oracle, but the branch reports no full live proof yet. | Main's Linden generation, seven-step Kane journey, exact source result and reload have passed. Northstar's latest progress is recorded in the builder verification report. Keep main as the shipping base. |
+| Replay | `kane-journeys.mjs` records and reuses independently corroborated **public, read-only** journeys. It checks test digests, isolates attempted healing and expires recipes. | Main now retains assurance-designed candidate tests and recordings across unchanged requirements. These are different replay paths. The PoC helper intentionally excludes our task-ID query URLs and account transactions; copying it would not speed these source jobs. |
+| Generated-code boundary | Blocks more reflective/DOM capabilities and uses a script-hash CSP. | Adapted its additional global, reflective-property and DOM-ref rejection into main, with regression cases. Both remain defense in depth, not formal JavaScript sandboxes. The broader artifact protocol is incompatible and was not copied. |
+| Source response checks | Can corroborate public facts from observed same-origin GET responses; it distinguishes HTML from JSON and unknowns from conflicts. | Main independently checks exact synthetic source records and receipts. Adding a further browser network job now would duplicate that check and increase latency. Useful when public-site reading becomes a supported product path. |
+| Artifact and action protocol | Manifest-bound `bridge.invoke`, expiring test capability and explicit source execution context. | Main uses `task, act`, an opaque generated frame, host-owned approval and the existing source grant protocol. A direct merge would break the generated-code/API contract. |
+| Verification | One-shot browser objective plus independent outcome checks. | Main has requirements ingestion, assurance-designed committed journeys, coverage, preview Explore, retained failures and replay reporting. Keep those. |
+| CI and arbitrary-site reading | Additional suites, cloud workflow and public-site discovery are already implemented. | They depend on the PoC's script names, stores and APIs. Port deliberately after the two supported generated workflows; do not install nonfunctional CI entries just to increase the feature count. |
+
+Decision: main is the release candidate. Preserve the PoC work. Its best product follow-up
+is overview → explicit task → focused generation; its best replay follow-up is the
+proven-public-read cache when main supports that reading workflow. No branch was reset,
+force-pushed or overwritten. Compatible code-boundary improvements were adapted rather
+than cherry-picking the competing builder wholesale.

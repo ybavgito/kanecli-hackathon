@@ -167,3 +167,21 @@ test('artifact serving rejects bytes changed after the recorded compilation', as
     await rm(root, { recursive: true, force: true })
   }
 })
+
+test('generated code cannot obtain DOM refs or reflective constructors', () => {
+  for (const body of [
+    'const x = self',
+    'const x = ({}).constructor',
+    'const x = e.target.ownerDocument',
+    'return <input ref={x => x} />',
+    'const x = Object.getPrototypeOf({})',
+    'const x = this',
+  ]) {
+    assert.throws(() =>
+      validateArtifact({
+        ...artifact,
+        componentCode: 'export default function TaskInterface(){' + body + '; return <p>Test</p>}',
+      }),
+    )
+  }
+})

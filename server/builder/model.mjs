@@ -200,6 +200,15 @@ export function validateArtifact(a) {
     'window',
     'document',
     'globalThis',
+    'global',
+    'self',
+    'frames',
+    'postMessage',
+    'Worker',
+    'SharedWorker',
+    'EventSource',
+    'indexedDB',
+    'caches',
     'parent',
     'top',
     'location',
@@ -225,11 +234,45 @@ export function validateArtifact(a) {
     'meta',
     'style',
   ])
-  const forbiddenProps = new Set(['dangerouslySetInnerHTML', 'src', 'href', 'srcDoc', 'formAction'])
+  const forbiddenProps = new Set([
+    'dangerouslySetInnerHTML',
+    'src',
+    'srcSet',
+    'href',
+    'srcDoc',
+    'formAction',
+    'ref',
+  ])
+  // Adapted from the PoC branch's additional generated-code boundaries.
+  const reflectiveProperties = new Set([
+    'constructor',
+    'prototype',
+    '__proto__',
+    'getPrototypeOf',
+    'setPrototypeOf',
+    'getOwnPropertyDescriptor',
+    'defineProperty',
+    'defineProperties',
+    'caller',
+    'callee',
+    'innerHTML',
+    'outerHTML',
+    'ownerDocument',
+    'defaultView',
+    'contentWindow',
+  ])
   const tree = parseAst(a.componentCode, { lang: 'jsx' }, 'component.jsx')
   function visit(node) {
     if (!node || typeof node !== 'object') return
     if (Array.isArray(node)) return node.forEach(visit)
+    if (
+      (node.type === 'MemberExpression' &&
+        (reflectiveProperties.has(node.property?.name) ||
+          reflectiveProperties.has(node.property?.value))) ||
+      node.type === 'ThisExpression' ||
+      node.type === 'MetaProperty'
+    )
+      throw Error('Unsupported generated reflective or DOM capability.')
     const unsupported = [
       'ImportDeclaration',
       'ImportExpression',
