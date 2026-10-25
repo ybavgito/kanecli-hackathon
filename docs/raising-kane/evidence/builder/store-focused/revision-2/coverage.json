@@ -1,0 +1,162 @@
+[
+  {
+    "type": "coverage",
+    "v": 1,
+    "verb": "cover",
+    "source": "project",
+    "coverage_version": 2,
+    "scope": "project",
+    "config": {
+      "rule": "newest_counted_verdict",
+      "weighting": "risk",
+      "weights": {
+        "high": 1.25,
+        "med": 1,
+        "low": 0.75,
+        "unknown": 1
+      }
+    },
+    "pct": 65,
+    "usecases": {
+      "total": 1,
+      "proven": 0,
+      "partial": 0,
+      "failing": 1,
+      "not_run": 0,
+      "not_designed": 0,
+      "no_criteria": 0
+    },
+    "criteria": {
+      "total": 20,
+      "proven": 13
+    },
+    "perUc": [
+      {
+        "id": "uc-1",
+        "title": "Complete and verify an approved synthetic return request",
+        "risk": "high",
+        "weight": 1.25,
+        "state": "failing",
+        "pct": 65,
+        "criteria": 20,
+        "proven": 13,
+        "manual_runs": 0,
+        "stale": false
+      }
+    ],
+    "perAc": {
+      "ac-1": {
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+      },
+      "ac-2": {
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+      },
+      "ac-3": {
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+      },
+      "ac-4": {
+        "state": "failing",
+        "uc": "uc-1",
+        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+      },
+      "ac-5": {
+        "state": "not_run",
+        "uc": "uc-1"
+      },
+      "ac-6": {
+        "state": "not_run",
+        "uc": "uc-1"
+      },
+      "ac-7": {
+        "state": "not_run",
+        "uc": "uc-1"
+      },
+      "ac-8": {
+        "state": "not_run",
+        "uc": "uc-1"
+      },
+      "ac-9": {
+        "state": "not_run",
+        "uc": "uc-1"
+      },
+      "ac-10": {
+        "state": "not_run",
+        "uc": "uc-1"
+      },
+      "ac-11": {
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+      },
+      "ac-12": {
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+      },
+      "ac-13": {
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+      },
+      "ac-14": {
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+      },
+      "ac-15": {
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+      },
+      "ac-16": {
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+      },
+      "ac-17": {
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+      },
+      "ac-18": {
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+      },
+      "ac-19": {
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+      },
+      "ac-20": {
+        "state": "proven",
+        "uc": "uc-1",
+        "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+      }
+    },
+    "flags": {
+      "stale_sources": 0,
+      "sources_not_fully_extracted": [],
+      "orphaned_usecases": 0
+    }
+  },
+  {
+    "type": "done",
+    "v": 1,
+    "verb": "cover",
+    "status": "complete",
+    "exit_code": 0,
+    "next": [
+      {
+        "cmd": "kane-cli testmd run .testmuai/tests/verify-red-shoes-return-conflict-approved-terms-and_test.md",
+        "why": "runs its failing test again"
+      }
+    ]
+  }
+]

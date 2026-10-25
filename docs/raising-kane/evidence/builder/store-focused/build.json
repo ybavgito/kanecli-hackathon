@@ -31,7 +31,7 @@
   "contractHash": "ce68e6b0f041fea0094d2de30dbaaf6656cc0cd24f3f721ad9ce60ce3616a09a",
   "status": "verifying",
   "createdAt": "2026-10-25T00:23:58.628Z",
-  "updatedAt": "2026-10-25T00:46:53.070Z",
+  "updatedAt": "2026-10-25T00:53:25.960Z",
   "error": null,
   "promotedRevision": null,
   "events": [
@@ -461,6 +461,112 @@
       "phase": "verifying",
       "kind": "check.step",
       "summary": "Journey step 3: passed."
+    },
+    {
+      "sequence": 56,
+      "at": "2026-10-25T00:48:39.096Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 4: passed."
+    },
+    {
+      "sequence": 57,
+      "at": "2026-10-25T00:50:13.806Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 5: passed."
+    },
+    {
+      "sequence": 58,
+      "at": "2026-10-25T00:51:42.548Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 6: failed."
+    },
+    {
+      "sequence": 59,
+      "at": "2026-10-25T00:51:50.217Z",
+      "phase": "verifying",
+      "kind": "check.failed",
+      "summary": "Revision 2 did not pass. Its evidence is retained.",
+      "revision": 2
+    },
+    {
+      "sequence": 60,
+      "at": "2026-10-25T00:51:50.219Z",
+      "phase": "repairing",
+      "kind": "repair.started",
+      "summary": "Rebuilding the interface against the same requirements."
+    },
+    {
+      "sequence": 61,
+      "at": "2026-10-25T00:52:44.763Z",
+      "phase": "repairing",
+      "kind": "model.response",
+      "summary": "gpt-6.1-sol returned a builder response.",
+      "usage": {
+        "input_tokens": 55278,
+        "input_tokens_details": {
+          "cache_write_tokens": 55275,
+          "cached_tokens": 0
+        },
+        "output_tokens": 6364,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 61642
+      }
+    },
+    {
+      "sequence": 62,
+      "at": "2026-10-25T00:52:44.884Z",
+      "phase": "repairing",
+      "kind": "artifact.built",
+      "summary": "Revision 3 compiled. Checking it before release.",
+      "revision": 3,
+      "hash": "785a77c94a11926d97b0acaf242e0946d98c53259d043429d683957f3761bff5"
+    },
+    {
+      "sequence": 63,
+      "at": "2026-10-25T00:52:46.346Z",
+      "phase": "exploring_preview",
+      "kind": "explore.progress",
+      "summary": "Kane Explore started in its own project."
+    },
+    {
+      "sequence": 64,
+      "at": "2026-10-25T00:52:59.004Z",
+      "phase": "exploring_preview",
+      "kind": "explore.progress",
+      "summary": "Kane has visited 1 states; 1 exploration candidates remain."
+    },
+    {
+      "sequence": 65,
+      "at": "2026-10-25T00:53:09.351Z",
+      "phase": "verifying",
+      "kind": "check.started",
+      "summary": "Kane is using the generated interface and checking source-backed outcomes."
+    },
+    {
+      "sequence": 66,
+      "at": "2026-10-25T00:53:09.362Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Reusing the unchanged Kane journey and its recordings. Eligible steps will replay; missing or failed steps will be authored."
+    },
+    {
+      "sequence": 67,
+      "at": "2026-10-25T00:53:09.603Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Running the assurance-designed journey against the generated interface."
+    },
+    {
+      "sequence": 68,
+      "at": "2026-10-25T00:53:25.960Z",
+      "phase": "verifying",
+      "kind": "check.step",
+      "summary": "Journey step 1: passed."
     }
   ],
   "overviewBaseline": null,
@@ -2528,7 +2634,7 @@
     },
     {
       "revision": 2,
-      "status": "checking",
+      "status": "failed",
       "createdAt": "2026-10-25T00:39:35.784Z",
       "hash": "8c9fafd9ab804b7f03cb7d174c04d487739bfdf37d74558529998f79d97a17dd",
       "codeHash": "fad357e061668548180bd502edc3efa5fea920784bb69f094470470f265d5db9",
@@ -2589,6 +2695,405 @@
             "user-contract",
             "033e2d68f5962b65a20348bd4f204f76a8ecd9bf4befc7f1b7ccf9e675f8f7e5",
             "5ac94b9f335a346cb534605fd0a6f5033e4076c45c4fce0de6aba78c48fd3744"
+          ]
+        }
+      ],
+      "failure": {
+        "kind": "interface-check",
+        "summary": "After the submit click, the automation only waited while the trusted-host area remained blank. It assumed a confirmation would appear without checking for a changed page state, a hidden confirmation, or a recovery path.\nUpdate the automation to wait for a specific confirmation signal and, if it does not appear, inspect the page state or reload and verify the saved request through a defined fallback. Avoid treating elapsed time alone as confirmation.",
+        "sourceMatch": false,
+        "taskStatus": "submitted_unverified",
+        "taskError": null,
+        "checks": [
+          {
+            "key": "order",
+            "label": "Order",
+            "expected": "ORD-1042",
+            "observed": "ORD-1042",
+            "status": "match",
+            "provenance": "source-adapter"
+          },
+          {
+            "key": "account",
+            "label": "Account",
+            "expected": "DEMO-ACCOUNT-1",
+            "observed": "DEMO-ACCOUNT-1",
+            "status": "match",
+            "provenance": "source-adapter"
+          },
+          {
+            "key": "items",
+            "label": "Return only the shoes",
+            "expected": "Red shoes \u00b7 size 8",
+            "observed": "Red running shoes",
+            "status": "match",
+            "provenance": "source-adapter"
+          },
+          {
+            "key": "quantity",
+            "label": "Quantity",
+            "expected": 1,
+            "observed": 1,
+            "status": "match",
+            "provenance": "source-adapter"
+          },
+          {
+            "key": "jacket",
+            "label": "Keep the jacket",
+            "expected": "Kept",
+            "observed": "Kept",
+            "status": "match",
+            "provenance": "source-adapter"
+          },
+          {
+            "key": "reason",
+            "label": "Return reason",
+            "expected": "Size or fit issue",
+            "observed": "Size or fit issue",
+            "status": "match",
+            "provenance": "source-adapter"
+          },
+          {
+            "key": "destination",
+            "label": "Refund destination",
+            "expected": "Original payment method",
+            "observed": "Original payment method",
+            "status": "match",
+            "provenance": "source-adapter"
+          },
+          {
+            "key": "method",
+            "label": "Return method",
+            "expected": "Printer-free QR drop-off",
+            "observed": "Printer-free QR drop-off",
+            "status": "match",
+            "provenance": "source-adapter"
+          },
+          {
+            "key": "currency",
+            "label": "Currency",
+            "expected": "USD",
+            "observed": "USD",
+            "status": "match",
+            "provenance": "source-adapter"
+          },
+          {
+            "key": "subtotal",
+            "label": "Item value",
+            "expected": "$80.00",
+            "observed": "$80.00",
+            "status": "match",
+            "provenance": "source-adapter"
+          },
+          {
+            "key": "deduction",
+            "label": "Deduction",
+            "expected": "$5.00",
+            "observed": "$5.00",
+            "status": "match",
+            "provenance": "source-adapter"
+          },
+          {
+            "key": "refund",
+            "label": "Expected refund",
+            "expected": "$75.00",
+            "observed": "$75.00",
+            "status": "match",
+            "provenance": "source-adapter"
+          }
+        ]
+      },
+      "verification": {
+        "status": "failed",
+        "summary": "After the submit click, the automation only waited while the trusted-host area remained blank. It assumed a confirmation would appear without checking for a changed page state, a hidden confirmation, or a recovery path.\nUpdate the automation to wait for a specific confirmation signal and, if it does not appear, inspect the page state or reload and verify the saved request through a defined fallback. Avoid treating elapsed time alone as confirmation.",
+        "sessionId": "0a1be705-2134-47e1-97f3-ab529eb9fc1b",
+        "shots": [
+          {
+            "image": "step-0.jpg",
+            "stepId": "5-4",
+            "ordinal": 58,
+            "kind": "wait",
+            "status": "passed",
+            "summary": "wait: PRIMARY: wait 2000 ms for the trusted host submission to finish saving",
+            "url": "http://127.0.0.1:5300/builder-preview/0f6166ea-0a24-4e54-88cf-4a0634b46c43/verify?key=043c0593-95c0-41de-855a-8b1ded330dac"
+          },
+          {
+            "image": "step-1.jpg",
+            "stepId": "5-5",
+            "ordinal": 59,
+            "kind": "wait",
+            "status": "passed",
+            "summary": "wait: PRIMARY: wait 3000 ms for the trusted host to finish saving the approved request",
+            "url": "http://127.0.0.1:5300/builder-preview/0f6166ea-0a24-4e54-88cf-4a0634b46c43/verify?key=043c0593-95c0-41de-855a-8b1ded330dac"
+          },
+          {
+            "image": "step-2.jpg",
+            "stepId": "5-6",
+            "ordinal": 60,
+            "kind": "wait",
+            "status": "passed",
+            "summary": "wait: PRIMARY: wait 5000 ms for the trusted host to complete and confirm the save",
+            "url": "http://127.0.0.1:5300/builder-preview/0f6166ea-0a24-4e54-88cf-4a0634b46c43/verify?key=043c0593-95c0-41de-855a-8b1ded330dac"
+          },
+          {
+            "image": "step-3.jpg",
+            "stepId": "5-7",
+            "ordinal": 61,
+            "kind": "wait",
+            "status": "passed",
+            "summary": "wait: PRIMARY: wait 10000 ms for the approved request submission to reach a saved conf",
+            "url": "http://127.0.0.1:5300/builder-preview/0f6166ea-0a24-4e54-88cf-4a0634b46c43/verify?key=043c0593-95c0-41de-855a-8b1ded330dac"
+          },
+          {
+            "image": "step-4.jpg",
+            "stepId": "5-8",
+            "ordinal": 62,
+            "kind": "",
+            "status": "passed",
+            "summary": "wait: Waiting while the trusted host submission remains indefinitely in the submitting state",
+            "url": "http://127.0.0.1:5300/builder-preview/0f6166ea-0a24-4e54-88cf-4a0634b46c43/verify?key=043c0593-95c0-41de-855a-8b1ded330dac"
+          },
+          {
+            "image": "step-5.jpg",
+            "stepId": "5-9",
+            "ordinal": 63,
+            "kind": "",
+            "status": "failed",
+            "summary": "wait: Waiting while the trusted host submission remains unavailable",
+            "url": "http://127.0.0.1:5300/builder-preview/0f6166ea-0a24-4e54-88cf-4a0634b46c43/verify?key=043c0593-95c0-41de-855a-8b1ded330dac"
+          }
+        ],
+        "testFile": "verify-red-shoes-return-conflict-approved-terms-and_test.md",
+        "replay": {
+          "reusedJourney": false,
+          "replayedSteps": 0,
+          "authoredSteps": 6
+        },
+        "requirementsPreserved": true,
+        "healingUsed": false,
+        "coverage": {
+          "type": "coverage",
+          "v": 1,
+          "verb": "cover",
+          "source": "project",
+          "coverage_version": 2,
+          "scope": "project",
+          "config": {
+            "rule": "newest_counted_verdict",
+            "weighting": "risk",
+            "weights": {
+              "high": 1.25,
+              "med": 1,
+              "low": 0.75,
+              "unknown": 1
+            }
+          },
+          "pct": 65,
+          "usecases": {
+            "total": 1,
+            "proven": 0,
+            "partial": 0,
+            "failing": 1,
+            "not_run": 0,
+            "not_designed": 0,
+            "no_criteria": 0
+          },
+          "criteria": {
+            "total": 20,
+            "proven": 13
+          },
+          "perUc": [
+            {
+              "id": "uc-1",
+              "title": "Complete and verify an approved synthetic return request",
+              "risk": "high",
+              "weight": 1.25,
+              "state": "failing",
+              "pct": 65,
+              "criteria": 20,
+              "proven": 13,
+              "manual_runs": 0,
+              "stale": false
+            }
+          ],
+          "perAc": {
+            "ac-1": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+            },
+            "ac-2": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+            },
+            "ac-3": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+            },
+            "ac-4": {
+              "state": "failing",
+              "uc": "uc-1",
+              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+            },
+            "ac-5": {
+              "state": "not_run",
+              "uc": "uc-1"
+            },
+            "ac-6": {
+              "state": "not_run",
+              "uc": "uc-1"
+            },
+            "ac-7": {
+              "state": "not_run",
+              "uc": "uc-1"
+            },
+            "ac-8": {
+              "state": "not_run",
+              "uc": "uc-1"
+            },
+            "ac-9": {
+              "state": "not_run",
+              "uc": "uc-1"
+            },
+            "ac-10": {
+              "state": "not_run",
+              "uc": "uc-1"
+            },
+            "ac-11": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+            },
+            "ac-12": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+            },
+            "ac-13": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+            },
+            "ac-14": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+            },
+            "ac-15": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+            },
+            "ac-16": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+            },
+            "ac-17": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+            },
+            "ac-18": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+            },
+            "ac-19": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+            },
+            "ac-20": {
+              "state": "proven",
+              "uc": "uc-1",
+              "deciding_run": "a29ef597-c47d-4ff5-b941-1b602a6f7b82"
+            }
+          },
+          "flags": {
+            "stale_sources": 0,
+            "sources_not_fully_extracted": [],
+            "orphaned_usecases": 0
+          }
+        },
+        "evidenceIngestStatus": "failed",
+        "artifactHash": "8c9fafd9ab804b7f03cb7d174c04d487739bfdf37d74558529998f79d97a17dd",
+        "contractHash": "ce68e6b0f041fea0094d2de30dbaaf6656cc0cd24f3f721ad9ce60ce3616a09a",
+        "taskId": "6e4cb661-fc02-4981-9cc0-8c84b0ab4768",
+        "sourceMatch": false,
+        "at": "2026-10-25T00:51:50.217Z"
+      }
+    },
+    {
+      "revision": 3,
+      "status": "checking",
+      "createdAt": "2026-10-25T00:51:50.222Z",
+      "hash": "785a77c94a11926d97b0acaf242e0946d98c53259d043429d683957f3761bff5",
+      "codeHash": "f216075215405ec05a1a83c3b2aa24aac335209971c431d9594902cc2f643460",
+      "cssHash": "2d96a93308565b4453a3e74e61101be9452063a277bdcd017bc9976155343f9b",
+      "contractHash": "ce68e6b0f041fea0094d2de30dbaaf6656cc0cd24f3f721ad9ce60ce3616a09a",
+      "change": {
+        "fromHash": "fad357e061668548180bd502edc3efa5fea920784bb69f094470470f265d5db9",
+        "toHash": "f216075215405ec05a1a83c3b2aa24aac335209971c431d9594902cc2f643460",
+        "codeChanged": true,
+        "cssChanged": true
+      },
+      "decisions": [
+        {
+          "component": "Task overview and scope",
+          "change": "Prioritize the printer-free shoes-only return, keep the jacket non-editable, and leave starting and exact approval to the trusted host.",
+          "evidenceIds": [
+            "user-contract"
+          ]
+        },
+        {
+          "component": "Return alternatives and source conflicts",
+          "change": "Use both observed draft routes. Explain that QR drop-off fits the printer-free goal but changed the destination to store credit; retain original-payment intent and provide explicit restoration and validation.",
+          "evidenceIds": [
+            "6beef79b-2011-495e-b194-d2566350105c",
+            "ce556d2f-923c-45d7-944a-8e1905a9368b",
+            "user-contract"
+          ]
+        },
+        {
+          "component": "Current terms",
+          "change": "Render fees and refund amounts only from current task data, distinguish selected choices from observed source values, and expose unknown terms.",
+          "evidenceIds": [
+            "user-contract",
+            "6beef79b-2011-495e-b194-d2566350105c",
+            "ce556d2f-923c-45d7-944a-8e1905a9368b"
+          ]
+        },
+        {
+          "component": "Saved-confirmation recovery",
+          "change": "Explicitly handle submitted_unverified, lock further choice changes, offer a read-only check when permitted, and distinguish matching draft checks from saved confirmation. During submission, explain host inspection or recovery without enabling forbidden actions or inferring success from waiting.",
+          "evidenceIds": [
+            "preview-2",
+            "user-contract"
+          ]
+        },
+        {
+          "component": "Discovery routes",
+          "change": "Generate informational route cards from discovery screens and flows, show actual reached-state labels, and disclose incomplete exploration rather than claiming every named route reached its intended screen.",
+          "evidenceIds": [
+            "01M5R7451Y26PZWSB16W15RRKY",
+            "01M5R74ZPWYKEJK4F9MJF7DRRS",
+            "01M5R73RHDGTV5P3C6CKD2K7JK",
+            "01M5R74MA6GG4HDB9T2VNW75HB",
+            "0e685684e203ccad038d9c5b7b8f14a5feaa3a71aa3b7efe469f692185e00948",
+            "b75243d881c12e1b3745bf7f1a65a3733e8c7baf465a2e605cf895084206b2dd"
+          ]
+        },
+        {
+          "component": "Visual design and accessibility",
+          "change": "Use cream and forest colors, readable typography, visible native-control labels, keyboard focus indicators, a live status region, and a narrow-screen single-column layout.",
+          "evidenceIds": [
+            "01M5R734ZYDK2NYEEKF72WVVNG",
+            "033e2d68f5962b65a20348bd4f204f76a8ecd9bf4befc7f1b7ccf9e675f8f7e5",
+            "5ac94b9f335a346cb534605fd0a6f5033e4076c45c4fce0de6aba78c48fd3744",
+            "user-contract"
           ]
         }
       ],

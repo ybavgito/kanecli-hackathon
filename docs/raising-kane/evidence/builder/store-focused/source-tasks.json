@@ -1,1 +1,377 @@
-[]
+[
+  {
+    "id": "6e4cb661-fc02-4981-9cc0-8c84b0ab4768",
+    "kind": "return",
+    "status": "complete",
+    "error": null,
+    "checks": [
+      {
+        "key": "order",
+        "label": "Order",
+        "expected": "ORD-1042",
+        "observed": "ORD-1042",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "account",
+        "label": "Account",
+        "expected": "DEMO-ACCOUNT-1",
+        "observed": "DEMO-ACCOUNT-1",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "items",
+        "label": "Return only the shoes",
+        "expected": "Red shoes \u00b7 size 8",
+        "observed": "Red running shoes",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "quantity",
+        "label": "Quantity",
+        "expected": 1,
+        "observed": 1,
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "jacket",
+        "label": "Keep the jacket",
+        "expected": "Kept",
+        "observed": "Kept",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "reason",
+        "label": "Return reason",
+        "expected": "Size or fit issue",
+        "observed": "Size or fit issue",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "destination",
+        "label": "Refund destination",
+        "expected": "Original payment method",
+        "observed": "Original payment method",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "method",
+        "label": "Return method",
+        "expected": "Printer-free QR drop-off",
+        "observed": "Printer-free QR drop-off",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "currency",
+        "label": "Currency",
+        "expected": "USD",
+        "observed": "USD",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "subtotal",
+        "label": "Item value",
+        "expected": "$80.00",
+        "observed": "$80.00",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "deduction",
+        "label": "Deduction",
+        "expected": "$5.00",
+        "observed": "$5.00",
+        "status": "match",
+        "provenance": "source-adapter"
+      },
+      {
+        "key": "refund",
+        "label": "Expected refund",
+        "expected": "$75.00",
+        "observed": "$75.00",
+        "status": "match",
+        "provenance": "source-adapter"
+      }
+    ],
+    "verificationFields": [
+      {
+        "key": "account_id",
+        "expected": "DEMO-ACCOUNT-1",
+        "observed": "DEMO-ACCOUNT-1",
+        "status": "match"
+      },
+      {
+        "key": "order_id",
+        "expected": "ORD-1042",
+        "observed": "ORD-1042",
+        "status": "match"
+      },
+      {
+        "key": "line_ids",
+        "expected": "SHOE-RED-8",
+        "observed": "SHOE-RED-8",
+        "status": "match"
+      },
+      {
+        "key": "quantity",
+        "expected": 1,
+        "observed": 1,
+        "status": "match"
+      },
+      {
+        "key": "reason",
+        "expected": "too_small",
+        "observed": "too_small",
+        "status": "match"
+      },
+      {
+        "key": "method",
+        "expected": "qr_dropoff",
+        "observed": "qr_dropoff",
+        "status": "match"
+      },
+      {
+        "key": "destination",
+        "expected": "original_payment",
+        "observed": "original_payment",
+        "status": "match"
+      },
+      {
+        "key": "currency",
+        "expected": "USD",
+        "observed": "USD",
+        "status": "match"
+      },
+      {
+        "key": "subtotal",
+        "expected": 8000,
+        "observed": 8000,
+        "status": "match"
+      },
+      {
+        "key": "deduction",
+        "expected": 500,
+        "observed": 500,
+        "status": "match"
+      },
+      {
+        "key": "refund",
+        "expected": 7500,
+        "observed": 7500,
+        "status": "match"
+      },
+      {
+        "key": "next_step",
+        "expected": "Show the synthetic QR code at a simulated drop-off counter.",
+        "observed": "Show the synthetic QR code at a simulated drop-off counter.",
+        "status": "match"
+      },
+      {
+        "key": "draft_revision",
+        "expected": 6,
+        "observed": 6,
+        "status": "match"
+      }
+    ],
+    "confirmationFields": [
+      {
+        "key": "account_id",
+        "expected": "DEMO-ACCOUNT-1",
+        "observed": "DEMO-ACCOUNT-1",
+        "status": "match"
+      },
+      {
+        "key": "order_id",
+        "expected": "ORD-1042",
+        "observed": "ORD-1042",
+        "status": "match"
+      },
+      {
+        "key": "line_ids",
+        "expected": "SHOE-RED-8",
+        "observed": "SHOE-RED-8",
+        "status": "match"
+      },
+      {
+        "key": "quantity",
+        "expected": 1,
+        "observed": 1,
+        "status": "match"
+      },
+      {
+        "key": "reason",
+        "expected": "too_small",
+        "observed": "too_small",
+        "status": "match"
+      },
+      {
+        "key": "method",
+        "expected": "qr_dropoff",
+        "observed": "qr_dropoff",
+        "status": "match"
+      },
+      {
+        "key": "destination",
+        "expected": "original_payment",
+        "observed": "original_payment",
+        "status": "match"
+      },
+      {
+        "key": "currency",
+        "expected": "USD",
+        "observed": "USD",
+        "status": "match"
+      },
+      {
+        "key": "subtotal",
+        "expected": 8000,
+        "observed": 8000,
+        "status": "match"
+      },
+      {
+        "key": "deduction",
+        "expected": 500,
+        "observed": 500,
+        "status": "match"
+      },
+      {
+        "key": "refund",
+        "expected": 7500,
+        "observed": 7500,
+        "status": "match"
+      },
+      {
+        "key": "next_step",
+        "expected": "Show the synthetic QR code at a simulated drop-off counter.",
+        "observed": "Show the synthetic QR code at a simulated drop-off counter.",
+        "status": "match"
+      },
+      {
+        "key": "request_id",
+        "expected": "RET-1001",
+        "observed": "RET-1001",
+        "status": "match"
+      },
+      {
+        "key": "jacket_kept",
+        "expected": true,
+        "observed": true,
+        "status": "match"
+      }
+    ],
+    "receipt": {
+      "id": "RET-1001",
+      "returnId": "RET-1001",
+      "requestId": "RET-1001",
+      "attemptId": "7ca58b92-2516-4007-94d0-bd2965084290",
+      "operationId": "7ca58b92-2516-4007-94d0-bd2965084290",
+      "proposalDigest": "19adcb24d8ee0b34f673f1d5cf6025e044988ff5c4af23430b615ebfc228108c",
+      "taskId": "6e4cb661-fc02-4981-9cc0-8c84b0ab4768",
+      "accountId": "DEMO-ACCOUNT-1",
+      "orderId": "ORD-1042",
+      "draftRevision": 6,
+      "revision": 6,
+      "lineIds": [
+        "SHOE-RED-8"
+      ],
+      "selectedLineIds": [
+        "SHOE-RED-8"
+      ],
+      "lines": [
+        {
+          "id": "SHOE-RED-8",
+          "name": "Red running shoes",
+          "variant": "Size 8",
+          "quantity": 1,
+          "priceCents": 8000
+        }
+      ],
+      "reason": "too_small",
+      "method": "qr_dropoff",
+      "refundDestination": "original_payment",
+      "currency": "USD",
+      "subtotalCents": 8000,
+      "deductionCents": 500,
+      "expectedRefundCents": 7500,
+      "nextStep": "Show the synthetic QR code at a simulated drop-off counter.",
+      "status": "return_requested_refund_pending",
+      "createdAt": "2026-10-25T00:50:53.801Z",
+      "sourceUrl": "http://127.0.0.1:5301/merchant/returns/RET-1001",
+      "verifiedAt": "2026-10-25T00:52:57.735Z",
+      "evidenceReference": "/home/harish/.testmuai/kaneai/sessions/60f4910c-526c-45a4-8d4e-0f490dec2acd/evidence/a3f582c5-c6d5-46bc-a4e0-f386bdf2c9c8.evidence",
+      "qrUrl": "http://127.0.0.1:5301/merchant/returns/RET-1001/qr"
+    },
+    "events": [
+      {
+        "at": "2026-10-25T00:42:48.144Z",
+        "text": "Your choices are saved. Reading the source record.",
+        "kind": "info"
+      },
+      {
+        "at": "2026-10-25T00:42:48.145Z",
+        "text": "Reading your source record",
+        "kind": "progress"
+      },
+      {
+        "at": "2026-10-25T00:43:31.337Z",
+        "text": "The order is confirmed. Choose the reason for your return.",
+        "kind": "success"
+      },
+      {
+        "at": "2026-10-25T00:43:38.337Z",
+        "text": "Preparing your choices on the website",
+        "kind": "progress"
+      },
+      {
+        "at": "2026-10-25T00:45:27.068Z",
+        "text": "The current source proposal matches your choices. All required browser observations were compared.",
+        "kind": "success"
+      },
+      {
+        "at": "2026-10-25T00:45:38.760Z",
+        "text": "Changing the return method",
+        "kind": "progress"
+      },
+      {
+        "at": "2026-10-25T00:47:03.664Z",
+        "text": "The website changed a choice that matters. Submission is blocked.",
+        "kind": "warning"
+      },
+      {
+        "at": "2026-10-25T00:47:10.519Z",
+        "text": "Checking every detail against your choices",
+        "kind": "progress"
+      },
+      {
+        "at": "2026-10-25T00:48:48.802Z",
+        "text": "The current source proposal matches your choices. All required browser observations were compared.",
+        "kind": "success"
+      },
+      {
+        "at": "2026-10-25T00:49:57.131Z",
+        "text": "You approved this exact proposal. The source grant is bound to these terms.",
+        "kind": "success"
+      },
+      {
+        "at": "2026-10-25T00:50:31.518Z",
+        "text": "Sending your approved request",
+        "kind": "progress"
+      },
+      {
+        "at": "2026-10-25T00:52:57.735Z",
+        "text": "Return requested; refund pending. Kane verified the saved source record.",
+        "kind": "success"
+      }
+    ],
+    "overviewBaseline": null
+  }
+]

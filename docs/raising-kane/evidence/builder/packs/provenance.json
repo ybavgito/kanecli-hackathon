@@ -121,6 +121,50 @@
     ]
   },
   {
+    "file": "store-focused-6e4cb661-2-change-method-passed.evidence",
+    "scope": "source change-method",
+    "status": "passed",
+    "sourceSha256": "331b9e861d04015393bedb5704440dba86edfd6337e5c3030735b4dee61d2bc2",
+    "publishedSha256": "5d4bbe2e179114f021b30790584e0f122385a1d7c0ce8517f8b9ea9b89fff19b",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/go-to-http-127-0-0-1-5301-merchant-taski-ba971cd8/result.yaml"
+    ]
+  },
+  {
+    "file": "store-focused-6e4cb661-3-correct-passed.evidence",
+    "scope": "source correct",
+    "status": "passed",
+    "sourceSha256": "d87db0ae99ac2c65cca07abfd83bba8ad3188f5b52110c64ca01e64e31a7152d",
+    "publishedSha256": "4d918ee14c4145f7dc35a84b949cbd6ebb8cc8fab435bff824c39540e46f4b63",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/go-to-http-127-0-0-1-5301-merchant-taski-f16566e7/result.yaml"
+    ]
+  },
+  {
+    "file": "store-focused-6e4cb661-5-verify-confirmation-passed.evidence",
+    "scope": "source verify-confirmation",
+    "status": "passed",
+    "sourceSha256": "acef49845f8dad585d8616d8834a7a4b7c0780b66e1a4b7d694fa65df33353c3",
+    "publishedSha256": "8675fb73992d6875421809232c2b1069ac4b8c1190398e336cec3952135aaa32",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/go-to-http-127-0-0-1-5301-merchant-retur-f2c87b3c/result.yaml"
+    ]
+  },
+  {
+    "file": "store-focused-revision-2-browser.evidence",
+    "scope": "generated interface",
+    "status": "failed",
+    "sourceSha256": "5715d5418e260643a2aeb8657085847dd231d16f3b36b119a8a5e9828fdf17a2",
+    "publishedSha256": "70519d7d8a0468b530f2202cbf950644756a6a32410941589e0c564c350a3fa0",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/verify-red-shoes-return-conflict-approve-1ce2fa94/result.yaml"
+    ]
+  },
+  {
     "file": "demo-entry-first.evidence",
     "scope": "landing and recorded-demo UI",
     "status": "failed",
@@ -162,6 +206,28 @@
     "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
     "modifiedEntries": [
       "tests/inspect-raising-kane-landing-page-exampl-fbac7153/result.yaml"
+    ]
+  },
+  {
+    "file": "landing-values.evidence",
+    "scope": "landing and recorded-demo UI",
+    "status": "failed",
+    "sourceSha256": "c248ef980d5fe707ef03192a485d8656b5a732460ef3fab6fc07a8fb683ec915",
+    "publishedSha256": "b06985a3223ee87ade111cdeda8a7f6277dc27c66952a46173ac472932f8cff2",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/inspect-the-two-landing-page-examples-an-77847b50/result.yaml"
+    ]
+  },
+  {
+    "file": "landing-dom.evidence",
+    "scope": "landing and recorded-demo UI",
+    "status": "passed",
+    "sourceSha256": "806a85e6487c12aa607874f3d1b60e5ea06de29db2c77adc26565fe9a8bd4af6",
+    "publishedSha256": "41904a745b33723dbcae0131a64d23cbd12a80e499245cf29a3181976b47fc84",
+    "redaction": "Only user_email and user_name YAML metadata replaced. Outcomes and screenshots unchanged.",
+    "modifiedEntries": [
+      "tests/open-http-127-0-0-1-5260-this-is-a-read--e4b88b45/result.yaml"
     ]
   }
 ]

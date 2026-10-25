@@ -58,7 +58,11 @@ generated previews with a documented source for each image. Desktop (1366 px) an
 The landing's first browser journey passed the two preview modes but failed its form-value
 assertion even though the captured input and textarea contained the intended values.
 An unchanged-criteria replay failed the same assertion. Both failures are retained;
-a separate precise read-only DOM-value check is running rather than declaring them passed.
+a separate assurance-designed value check also stopped after only one of its two final
+assertions. A bounded direct Kane mission then **passed both complete value assertions**,
+verified Demo now and the tagline placement, and did not start any build or task. These
+are separate runs with different assertion instructions; no failed result was overwritten.
+See [the successful landing check](evidence/builder/ui/landing-dom/result.json).
 
 ## What failed, and what changed
 

@@ -38,8 +38,8 @@ Start on the landing page. Toggle **Just the URL** and **URL + a goal** to show 
    screenshots, evidence-linked code decisions, English test and candidate result.
 5. Exercise one live source operation. For a short stage slot, prepare a fresh return
    draft before the presentation and disclose that preparation. Changing to QR drop-off
-   is the live action: the source resets the destination to store credit; Kane detects
-   the mismatch and approval is blocked. Restore the original choice and show the green
+   is the live action: the source resets the destination to store credit; Kane reads
+   the changed terms and Raising Kane blocks approval. Restore the original choice and show the green
    source check. Approval and submission are separate trusted-host controls.
 
 For a three-minute stage slot, show the recorded evidence while one live source check runs. A complete fresh build or full return transaction can exceed the stage slot; do not promise it finishes in seconds.

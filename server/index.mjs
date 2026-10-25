@@ -38,7 +38,8 @@ const vite = production
       server: {
         middlewareMode: true,
         hmr: { port: port + 10 },
-        watch: { ignored: ['**/data/**', '**/.testmuai/**'] },
+        // Publishing evidence must not reload a user's in-progress interface.
+        watch: { ignored: ['**/data/**', '**/.testmuai/**', '**/docs/**'] },
       },
       appType: 'spa',
     })
