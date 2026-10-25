@@ -45,7 +45,7 @@ test('focused verification requires a separate Kane receipt check after source c
   const calls = []
   const worker = async options => {
     calls.push(options)
-    return { ...browser, summary: calls.length === 1 ? 'Submitted once through generated controls.' : 'Saved receipt displayed.',
+    return { ...browser, summary: calls.length === 1 ? 'Matching draft.' : calls.length === 2 ? 'Submitted once through generated controls.' : 'Saved receipt displayed.',
       evidencePath: `/synthetic/phase-${calls.length}.evidence`, testUrl: `https://example.test/run-${calls.length}` }
   }
   let reads = 0
@@ -58,14 +58,16 @@ test('focused verification requires a separate Kane receipt check after source c
     source: session, worker, completionPollMs: 1, completionTimeoutMs: 1000 }
   const passed = await verifyGeneratedInterface(args)
   assert.equal(passed.status, 'passed')
-  assert.equal(passed.browser.journeyTestUrl, 'https://example.test/run-1')
-  assert.equal(passed.browser.testUrl, 'https://example.test/run-2')
-  assert.equal(calls.length, 2)
+  assert.equal(passed.browser.draftTestUrl, 'https://example.test/run-1')
+  assert.equal(passed.browser.journeyTestUrl, 'https://example.test/run-2')
+  assert.equal(passed.browser.testUrl, 'https://example.test/run-3')
+  assert.equal(calls.length, 3)
   assert.match(calls[0].objective, /Do not claim the task is complete in this phase/)
-  assert.match(calls[1].objective, /Do not click Submit/)
+  assert.match(calls[1].objective, /Then click Submit once/)
+  assert.match(calls[2].objective, /Do not click Submit/)
   const failed = await verifyGeneratedInterface({ ...args, worker: async options => {
     const result = await worker(options)
-    return calls.length === 4 ? { ...result, status: 'failed' } : result
+    return calls.length === 6 ? { ...result, status: 'failed' } : result
   } })
   assert.equal(failed.status, 'failed')
 })
