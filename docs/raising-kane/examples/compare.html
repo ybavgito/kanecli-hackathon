@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Same website, two intents — comparison</title>
+<style>
+  body { margin:0; font-family: system-ui,-apple-system,"Segoe UI",sans-serif; background:#f6f4ee; color:#1f3a30; }
+  h1 { font-size:22px; margin:0; padding:18px 24px 4px; }
+  p.sub { margin:0; padding:0 24px 14px; color:#5b6b64; font-size:14px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; padding:0 24px 24px; }
+  .col { background:#fffefb; border:1px solid #e3ded2; border-radius:14px; overflow:hidden; display:flex; flex-direction:column; }
+  .col h2 { margin:0; padding:12px 16px 2px; font-size:16px; }
+  .col .meta { padding:0 16px 10px; font-size:13px; color:#5b6b64; }
+  .badge { display:inline-block; font-size:11px; border-radius:6px; padding:2px 8px; margin-left:6px; }
+  .real { background:#e6efe7; color:#2f5a47; }
+  .ill { background:#fbeee4; color:#a4491f; }
+  .shot { height:78vh; overflow:auto; border-top:1px solid #e3ded2; background:#faf9f5; }
+  .shot img { width:100%; display:block; }
+  iframe { border:0; width:100%; height:78vh; border-top:1px solid #e3ded2; }
+  @media (max-width: 900px) { .grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<h1>The same website. A different way through.</h1>
+<p class="sub">Left: what the builder made from the URL alone. Right: an illustrative view of a build with a return goal.</p>
+<div class="grid">
+  <section class="col">
+    <h2>No intent <span class="badge real">Screenshot of the recorded, verified build</span></h2>
+    <div class="meta">A read-only guide to the store (Shop, My orders, Help). No task is started. Open it live from Demo now → Store overview.</div>
+    <div class="shot"><img alt="Generated no-intent overview of Northstar Outfitters" src="no-intent-overview.png"></div>
+  </section>
+  <section class="col">
+    <h2>With intent: “return the red shoes, keep the jacket” <span class="badge ill">Illustrative</span></h2>
+    <div class="meta">Centred on the shoes, the kept jacket, the method fee and the refund destination. Try QR drop-off, then restore.</div>
+    <iframe title="Return-intent preview" src="return-focused-example.html" sandbox="allow-scripts"></iframe>
+  </section>
+</div>
+</body>
+</html>

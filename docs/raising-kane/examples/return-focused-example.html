@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Return-focused interface</title>
+<style>
+  :root { --ink:#1f3a30; --muted:#5b6b64; --bg:#f6f4ee; --card:#fffefb; --line:#e3ded2; --green:#2f5a47; --warn:#a4491f; --warnbg:#fbeee4; --okbg:#e6efe7; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink); background:var(--bg); }
+  .note-bar { background:#1f3a30; color:#fff; font-size:13px; padding:8px 20px; letter-spacing:.02em; }
+  .note-bar b { color:#ffd9a8; }
+  header { background:var(--ink); color:#fff; padding:18px 28px; display:flex; justify-content:space-between; align-items:center; }
+  header strong { letter-spacing:.12em; font-size:13px; }
+  .pill { border:1px solid #ffffff55; border-radius:999px; padding:4px 12px; font-size:12px; }
+  main { max-width:760px; margin:0 auto; padding:32px 24px 56px; }
+  .eyebrow { font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  h1 { font-size:38px; line-height:1.1; margin:10px 0 12px; }
+  .lede { color:var(--muted); font-size:17px; margin:0 0 22px; }
+  .goal { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:22px; font-size:14px; }
+  .goal span { color:var(--muted); display:block; font-size:12px; margin-bottom:4px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px; margin-bottom:16px; }
+  .card h2 { margin:0 0 4px; font-size:18px; }
+  .card p.sub { margin:0 0 14px; color:var(--muted); font-size:14px; }
+  .row { display:flex; justify-content:space-between; gap:12px; padding:10px 0; border-top:1px solid var(--line); font-size:15px; }
+  .row:first-of-type { border-top:0; }
+  .tag { font-size:12px; border-radius:6px; padding:2px 8px; background:var(--okbg); color:var(--green); }
+  .tag.keep { background:#eef0f4; color:#44506a; }
+  .choices { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  button.opt { text-align:left; border:1px solid var(--line); background:#fff; border-radius:10px; padding:12px 14px; font:inherit; cursor:pointer; }
+  button.opt[aria-pressed="true"] { border-color:var(--green); background:var(--okbg); }
+  button.opt small { display:block; color:var(--muted); margin-top:3px; }
+  .conflict { display:none; background:var(--warnbg); border-left:4px solid var(--warn); padding:12px 14px; border-radius:6px; margin-top:14px; font-size:14px; }
+  .conflict.show { display:block; }
+  .conflict button, .actions button { margin-top:10px; font:inherit; border:0; border-radius:8px; padding:9px 14px; background:var(--green); color:#fff; cursor:pointer; }
+  .ok { display:none; background:var(--okbg); border-left:4px solid var(--green); padding:12px 14px; border-radius:6px; margin-top:14px; font-size:14px; }
+  .ok.show { display:block; }
+  .terms { display:grid; grid-template-columns:1fr auto; row-gap:6px; font-size:15px; }
+  .terms dd { margin:0; text-align:right; font-weight:600; }
+  .terms dt { color:var(--muted); }
+  .actions button[disabled] { background:#aab7b0; cursor:not-allowed; }
+  .note { font-size:12px; color:var(--muted); margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="note-bar"><b>Illustrative preview.</b> Synthetic records only. Nothing on this page is submitted.</div>
+<header><strong>NORTHSTAR OUTFITTERS</strong><span class="pill">Synthetic records only</span></header>
+<main>
+  <div class="eyebrow">Order ORD-1042 · Your goal</div>
+  <h1>Return the red shoes.<br>Keep the jacket.</h1>
+  <p class="lede">Only the decisions that matter for this return, with the cost of each one shown before you commit.</p>
+
+  <div class="goal"><span>What you asked for</span>“Return my red shoes without a printer, keep the jacket, and refund my original payment method.”</div>
+
+  <section class="card" aria-labelledby="items">
+    <h2 id="items">What is in this return</h2>
+    <p class="sub">Read from the order. Nothing else is touched.</p>
+    <div class="row"><span>Red running shoes · size 9</span><span class="tag">Returning · $80.00</span></div>
+    <div class="row"><span>Trail jacket</span><span class="tag keep">Keeping</span></div>
+  </section>
+
+  <section class="card" aria-labelledby="method">
+    <h2 id="method">How will you send them back?</h2>
+    <p class="sub">The method can change the fee and where the refund goes.</p>
+    <div class="choices">
+      <button class="opt" id="m-print" aria-pressed="true" type="button">Print a label<small>No fee · refund to original payment</small></button>
+      <button class="opt" id="m-qr" aria-pressed="false" type="button">Printer-free QR drop-off<small>$5.00 deduction</small></button>
+    </div>
+    <div class="conflict" id="conflict" role="alert">
+      <strong>Conflict found.</strong> The store reset your refund destination to <b>store credit</b> when you chose QR drop-off. You asked for your <b>original payment method</b>.
+      <br><button type="button" id="restore">Restore original payment</button>
+    </div>
+    <div class="ok" id="ok" role="status"><strong>Checked against the store.</strong> Refund destination is back to original payment.</div>
+  </section>
+
+  <section class="card" aria-labelledby="review">
+    <h2 id="review">Review the exact terms</h2>
+    <p class="sub">This is what would be approved. Approval stays locked until the store's saved draft matches.</p>
+    <dl class="terms">
+      <dt>Returning</dt><dd>Red running shoes only</dd>
+      <dt>Keeping</dt><dd>Trail jacket</dd>
+      <dt>Method</dt><dd id="t-method">Printer-free QR drop-off</dd>
+      <dt>Deduction</dt><dd id="t-fee">$5.00</dd>
+      <dt>Refund to</dt><dd id="t-dest">Store credit</dd>
+      <dt>Expected refund</dt><dd id="t-amt">$75.00</dd>
+    </dl>
+    <div class="actions"><button type="button" id="approve" disabled>Approve this return</button></div>
+    <p class="note" id="gate">Locked: refund destination does not match your request.</p>
+  </section>
+</main>
+<script>
+  const $ = (id) => document.getElementById(id);
+  let qr = false, restored = false;
+  function render() {
+    $('m-qr').setAttribute('aria-pressed', qr);
+    $('m-print').setAttribute('aria-pressed', !qr);
+    $('t-method').textContent = qr ? 'Printer-free QR drop-off' : 'Print a label';
+    $('t-fee').textContent = qr ? '$5.00' : '$0.00';
+    $('t-amt').textContent = qr ? '$75.00' : '$80.00';
+    const mismatch = qr && !restored;
+    $('t-dest').textContent = mismatch ? 'Store credit' : 'Original payment';
+    $('conflict').classList.toggle('show', mismatch);
+    $('ok').classList.toggle('show', qr && restored);
+    $('approve').disabled = mismatch;
+    $('gate').textContent = mismatch
+      ? 'Locked: refund destination does not match your request.'
+      : 'Ready: the store check matches your request. (Illustrative: nothing is submitted.)';
+  }
+  $('m-qr').onclick = () => { qr = true; restored = false; render(); };
+  $('m-print').onclick = () => { qr = false; restored = false; render(); };
+  $('restore').onclick = () => { restored = true; render(); };
+  $('approve').onclick = () => { $('gate').textContent = 'Illustrative only: no return was submitted.'; };
+  qr = true; render();
+</script>
+</body>
+</html>
