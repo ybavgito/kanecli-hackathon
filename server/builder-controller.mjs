@@ -146,7 +146,7 @@ export function createBuilderController({ source, baseUrl, dataDir = path.resolv
       if (hash(testSource.contract) !== job.contractDigest) throw new Error('The independent contract changed between build and test. Start a new build.')
       if (job.mode === 'overview') await testSource.inspect({ question: 'Observe this source in read-only mode for the independent overview check.' })
       token = randomBytes(32).toString('hex')
-      const capability = { token, jobId: job.id, revision: artifact.revision, session: testSource, expires: Date.now() + 900000 }
+      const capability = { token, jobId: job.id, revision: artifact.revision, session: testSource, expires: Date.now() + 1800000 }
       capabilities.set(token, capability)
       const url = `${baseUrl}/api/builds/${job.id}/verification/${artifact.revision}?token=${token}`
       const report = await verifier({ buildId: job.id, revision: artifact.revision, artifactDigest: artifact.digest,
@@ -280,7 +280,7 @@ export function createBuilderController({ source, baseUrl, dataDir = path.resolv
       if (verifyMatch && req.method === 'GET') {
         const grant = capabilities.get(url.searchParams.get('token'))
         if (!grant || grant.jobId !== job.id || grant.revision !== Number(verifyMatch[1]) || grant.expires <= Date.now()) return send(res, 403, { error: 'The synthetic verification session expired.' })
-        res.setHeader('Set-Cookie', `rk_builder_test=${grant.token}; Path=/api/builds/${job.id}/; HttpOnly; SameSite=Strict; Max-Age=900`)
+        res.setHeader('Set-Cookie', `rk_builder_test=${grant.token}; Path=/api/builds/${job.id}/; HttpOnly; SameSite=Strict; Max-Age=1800`)
         res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store',
           'Content-Security-Policy': "default-src 'none'; frame-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'" })
         res.end(verificationPage(job, grant.revision))

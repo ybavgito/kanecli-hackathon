@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { evaluateBuilderVerification } from '../../server/builder-verifier.mjs'
+import { evaluateBuilderVerification, verifyGeneratedInterface } from '../../server/builder-verifier.mjs'
 
 const browser = { status: 'passed', evidencePath: '/synthetic/test.evidence', steps: [{ status: 'done' }] }
 const source = { status: 'passed', contractHash: 'synthetic-contract', mode: 'test', synthetic: true,
@@ -39,4 +39,33 @@ test('read-only overview requires Kane evidence and an unchanged inspect record,
   assert.equal(evaluateBuilderVerification({ ...args, source: { ...overview, receipt: { id: 'transaction' } } }).status, 'failed')
   assert.equal(evaluateBuilderVerification({ ...args, source: { ...overview, mode: 'test' } }).status, 'failed')
   assert.equal(evaluateBuilderVerification({ ...args, source: { ...overview, checks: [{ id: 'no-writes', passed: false }] } }).status, 'failed')
+})
+
+test('focused verification requires a separate Kane receipt check after source completion', async () => {
+  const calls = []
+  const worker = async options => {
+    calls.push(options)
+    return { ...browser, summary: calls.length === 1 ? 'Submitted once through generated controls.' : 'Saved receipt displayed.',
+      evidencePath: `/synthetic/phase-${calls.length}.evidence`, testUrl: `https://example.test/run-${calls.length}` }
+  }
+  let reads = 0
+  const session = {
+    async state() { reads++; return reads === 1 ? { status: 'submitted_unverified' } : { status: 'complete', receipt: source.receipt, sourceReturn: {} } },
+    verifyResult() { return source },
+  }
+  const args = { buildId: 'synthetic-build', revision: 1, artifactDigest: 'synthetic-artifact',
+    contractDigest: 'synthetic-contract', contract: { kind: 'return' }, url: 'https://example.test/preview',
+    source: session, worker, completionPollMs: 1, completionTimeoutMs: 1000 }
+  const passed = await verifyGeneratedInterface(args)
+  assert.equal(passed.status, 'passed')
+  assert.equal(passed.browser.journeyTestUrl, 'https://example.test/run-1')
+  assert.equal(passed.browser.testUrl, 'https://example.test/run-2')
+  assert.equal(calls.length, 2)
+  assert.match(calls[0].objective, /Do not claim the task is complete in this phase/)
+  assert.match(calls[1].objective, /Do not click Submit/)
+  const failed = await verifyGeneratedInterface({ ...args, worker: async options => {
+    const result = await worker(options)
+    return calls.length === 4 ? { ...result, status: 'failed' } : result
+  } })
+  assert.equal(failed.status, 'failed')
 })
