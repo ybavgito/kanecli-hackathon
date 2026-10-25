@@ -26,12 +26,12 @@
     "buildId": "dfe9591a-6222-479d-993b-8c9163fd4e43",
     "recorded": "store-overview",
     "revision": 1,
-    "capture": "full generated interface, scroll-captured and stitched, 1000 px wide"
+    "capture": "full generated interface, captured natively at 2x with headless Chrome, 1400 px wide"
   },
   "focused-full.webp": {
     "buildId": "87fb50e3-35c8-49ae-8fea-06f43f171105",
     "recorded": "store-focused",
     "revision": 1,
-    "capture": "full generated interface, scroll-captured and stitched, 1000 px wide"
+    "capture": "full generated interface, captured natively at 2x with headless Chrome, 1400 px wide"
   }
 }
